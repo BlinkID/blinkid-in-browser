@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BlinkID demo</title>
+        <meta name="viewport" content="width=device-width" />
+
+        <style>
+            #cameraFeed {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -2;
+            }
+            #cameraFeedback {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+            }
+            #guide {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <video id="cameraFeed" playsinline></video>
+        <!-- Recognition events will be drawn here. -->
+        <canvas id="cameraFeedback" ></canvas>
+        <div id="guide">
+            <div id="loadingScreen">
+                <h1>Loading...</h1>
+                <progress id="loadProgress" value="0" max="100"></progress>
+            </div>
+            <input type="button" id="btnStart" value="Start scanning" onclick="app.startScanning()" hidden>
+            <div id="cameraMessage" hidden>Point the camera towards machine readable zone or barcode on your ID document.</div>
+        </div>
+    </body>
+
+    <script src="index.js"></script>
+</html>

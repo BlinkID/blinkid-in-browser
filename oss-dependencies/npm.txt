@@ -1,0 +1,706 @@
+├─ @babel/code-frame@7.8.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/babel/babel/tree/master/packages/babel-code-frame
+│  ├─ publisher: Sebastian McKenzie
+│  ├─ email: sebmck@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@babel/code-frame
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@babel/code-frame/LICENSE
+├─ @babel/helper-validator-identifier@7.9.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/babel/babel/tree/master/packages/babel-helper-validator-identifier
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@babel/helper-validator-identifier
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@babel/helper-validator-identifier/LICENSE
+├─ @babel/highlight@7.9.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/babel/babel/tree/master/packages/babel-highlight
+│  ├─ publisher: suchipi
+│  ├─ email: me@suchipi.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@babel/highlight
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@babel/highlight/LICENSE
+├─ @rollup/plugin-node-resolve@7.1.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/plugins
+│  ├─ publisher: Rich Harris
+│  ├─ email: richard.a.harris@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@rollup/plugin-node-resolve
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@rollup/plugin-node-resolve/LICENSE
+├─ @rollup/pluginutils@3.0.9
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/plugins
+│  ├─ publisher: Rich Harris
+│  ├─ email: richard.a.harris@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@rollup/pluginutils
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@rollup/pluginutils/LICENSE
+├─ @types/estree@0.0.39
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@types/estree
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@types/estree/LICENSE
+├─ @types/node@13.13.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@types/node
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@types/node/LICENSE
+├─ @types/resolve@0.0.8
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped.git
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@types/resolve
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/@types/resolve/LICENSE
+├─ abbrev@1.1.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/abbrev-js
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/abbrev
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/abbrev/LICENSE
+├─ acorn@7.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/acornjs/acorn
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/acorn
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/acorn/LICENSE
+├─ ansi-styles@3.2.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/ansi-styles
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/ansi-styles
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/ansi-styles/license
+├─ array-find-index@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/array-find-index
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/array-find-index
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/array-find-index/license
+├─ asap@2.0.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/kriskowal/asap
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/asap
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/asap/LICENSE.md
+├─ atob@2.1.2
+│  ├─ licenses: (MIT OR Apache-2.0)
+│  ├─ repository: git://git.coolaj86.com/coolaj86/atob.js
+│  ├─ publisher: AJ ONeal
+│  ├─ email: coolaj86@gmail.com
+│  ├─ url: https://coolaj86.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/atob
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/atob/LICENSE
+├─ balanced-match@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/juliangruber/balanced-match
+│  ├─ publisher: Julian Gruber
+│  ├─ email: mail@juliangruber.com
+│  ├─ url: http://juliangruber.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/balanced-match
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/balanced-match/LICENSE.md
+├─ brace-expansion@1.1.11
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/juliangruber/brace-expansion
+│  ├─ publisher: Julian Gruber
+│  ├─ email: mail@juliangruber.com
+│  ├─ url: http://juliangruber.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/brace-expansion
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/brace-expansion/LICENSE
+├─ braces@3.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/micromatch/braces
+│  ├─ publisher: Jon Schlinkert
+│  ├─ url: https://github.com/jonschlinkert
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/braces
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/braces/LICENSE
+├─ buffer-from@1.1.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/LinusU/buffer-from
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/buffer-from
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/buffer-from/LICENSE
+├─ builtin-modules@3.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/builtin-modules
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/builtin-modules
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/builtin-modules/license
+├─ chalk@2.4.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/chalk
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/chalk
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/chalk/license
+├─ color-convert@1.9.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Qix-/color-convert
+│  ├─ publisher: Heather Arthur
+│  ├─ email: fayearthur@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/color-convert
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/color-convert/LICENSE
+├─ color-name@1.1.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/dfcreative/color-name
+│  ├─ publisher: DY
+│  ├─ email: dfcreative@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/color-name
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/color-name/LICENSE
+├─ commander@2.20.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/tj/commander.js
+│  ├─ publisher: TJ Holowaychuk
+│  ├─ email: tj@vision-media.ca
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/commander
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/commander/LICENSE
+├─ concat-map@0.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/substack/node-concat-map
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/concat-map
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/concat-map/LICENSE
+├─ debug@3.2.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/visionmedia/debug
+│  ├─ publisher: TJ Holowaychuk
+│  ├─ email: tj@vision-media.ca
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/debug
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/debug/LICENSE
+├─ debuglog@1.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sam-github/node-debuglog
+│  ├─ publisher: Sam Roberts
+│  ├─ email: sam@strongloop.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/debuglog
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/debuglog/LICENSE
+├─ decode-uri-component@0.2.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/SamVerschueren/decode-uri-component
+│  ├─ publisher: Sam Verschueren
+│  ├─ email: sam.verschueren@gmail.com
+│  ├─ url: github.com/SamVerschueren
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/decode-uri-component
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/decode-uri-component/license
+├─ dezalgo@1.0.3
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/dezalgo
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/dezalgo
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/dezalgo/LICENSE
+├─ escape-string-regexp@1.0.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/escape-string-regexp
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/escape-string-regexp
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/escape-string-regexp/license
+├─ estree-walker@0.6.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Rich-Harris/estree-walker
+│  ├─ publisher: Rich Harris
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-pluginutils/node_modules/estree-walker
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-pluginutils/node_modules/estree-walker/README.md
+├─ estree-walker@1.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/Rich-Harris/estree-walker
+│  ├─ publisher: Rich Harris
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/estree-walker
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/estree-walker/README.md
+├─ fill-range@7.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jonschlinkert/fill-range
+│  ├─ publisher: Jon Schlinkert
+│  ├─ url: https://github.com/jonschlinkert
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/fill-range
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/fill-range/LICENSE
+├─ fs.realpath@1.0.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/fs.realpath
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/fs.realpath
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/fs.realpath/LICENSE
+├─ glob@7.1.6
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/node-glob
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/glob
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/glob/LICENSE
+├─ graceful-fs@4.2.3
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/node-graceful-fs
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/graceful-fs
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/graceful-fs/LICENSE
+├─ has-flag@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/has-flag
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/has-flag
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/has-flag/license
+├─ hosted-git-info@2.8.8
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/hosted-git-info
+│  ├─ publisher: Rebecca Turner
+│  ├─ email: me@re-becca.org
+│  ├─ url: http://re-becca.org
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/hosted-git-info
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/hosted-git-info/LICENSE
+├─ inflight@1.0.6
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/inflight
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/inflight
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/inflight/LICENSE
+├─ inherits@2.0.4
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/inherits
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/inherits
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/inherits/LICENSE
+├─ is-module@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/component/is-module
+│  ├─ publisher: Jonathan Ong
+│  ├─ email: me@jongleberry.com
+│  ├─ url: http://jongleberry.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/is-module
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/is-module/README.md
+├─ is-number@7.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jonschlinkert/is-number
+│  ├─ publisher: Jon Schlinkert
+│  ├─ url: https://github.com/jonschlinkert
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/is-number
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/is-number/LICENSE
+├─ jest-worker@24.9.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/facebook/jest
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/jest-worker
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/jest-worker/LICENSE
+├─ js-tokens@4.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lydell/js-tokens
+│  ├─ publisher: Simon Lydell
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/js-tokens
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/js-tokens/LICENSE
+├─ json-parse-better-errors@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/zkat/json-parse-better-errors
+│  ├─ publisher: Kat Marchán
+│  ├─ email: kzm@zkat.tech
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/json-parse-better-errors
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/json-parse-better-errors/LICENSE.md
+├─ license-checker@25.0.1
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/davglass/license-checker
+│  ├─ publisher: Dav Glass
+│  ├─ email: davglass@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/license-checker
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/license-checker/LICENSE
+├─ lodash._reinterpolate@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lodash/lodash
+│  ├─ publisher: John-David Dalton
+│  ├─ email: john.david.dalton@gmail.com
+│  ├─ url: http://allyoucanleet.com/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/lodash._reinterpolate
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/lodash._reinterpolate/LICENSE.txt
+├─ lodash.template@4.5.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lodash/lodash
+│  ├─ publisher: John-David Dalton
+│  ├─ email: john.david.dalton@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/lodash.template
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/lodash.template/LICENSE
+├─ lodash.templatesettings@4.2.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lodash/lodash
+│  ├─ publisher: John-David Dalton
+│  ├─ email: john.david.dalton@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/lodash.templatesettings
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/lodash.templatesettings/LICENSE
+├─ merge-stream@2.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/grncdr/merge-stream
+│  ├─ publisher: Stephen Sugden
+│  ├─ email: me@stephensugden.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/merge-stream
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/merge-stream/LICENSE
+├─ micromatch@4.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/micromatch/micromatch
+│  ├─ publisher: Jon Schlinkert
+│  ├─ url: https://github.com/jonschlinkert
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/micromatch
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/micromatch/LICENSE
+├─ minimatch@3.0.4
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/minimatch
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/minimatch
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/minimatch/LICENSE
+├─ minimist@1.2.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/substack/minimist
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/minimist
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/minimist/LICENSE
+├─ mkdirp@0.5.5
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/substack/node-mkdirp
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/mkdirp
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/mkdirp/LICENSE
+├─ ms@2.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/zeit/ms
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/ms
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/ms/license.md
+├─ nopt@4.0.3
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/nopt
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/nopt
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/nopt/LICENSE
+├─ normalize-package-data@2.5.0
+│  ├─ licenses: BSD-2-Clause
+│  ├─ repository: https://github.com/npm/normalize-package-data
+│  ├─ publisher: Meryn Stol
+│  ├─ email: merynstol@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/normalize-package-data
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/normalize-package-data/LICENSE
+├─ npm-normalize-package-bin@1.0.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/npm-normalize-package-bin
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: https://izs.me
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/npm-normalize-package-bin
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/npm-normalize-package-bin/LICENSE
+├─ once@1.4.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/once
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/once
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/once/LICENSE
+├─ os-homedir@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/os-homedir
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/os-homedir
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/os-homedir/license
+├─ os-tmpdir@1.0.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/os-tmpdir
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/os-tmpdir
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/os-tmpdir/license
+├─ osenv@0.1.5
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/osenv
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/osenv
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/osenv/LICENSE
+├─ path-is-absolute@1.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/path-is-absolute
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/path-is-absolute
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/path-is-absolute/license
+├─ path-parse@1.0.6
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jbgutierrez/path-parse
+│  ├─ publisher: Javier Blanco
+│  ├─ email: http://jbgutierrez.info
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/path-parse
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/path-parse/LICENSE
+├─ picomatch@2.2.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/micromatch/picomatch
+│  ├─ publisher: Jon Schlinkert
+│  ├─ url: https://github.com/jonschlinkert
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/picomatch
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/picomatch/LICENSE
+├─ read-installed@4.0.3
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/read-installed
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/read-installed
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/read-installed/LICENSE
+├─ read-package-json@2.1.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/read-package-json
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/read-package-json
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/read-package-json/LICENSE
+├─ readdir-scoped-modules@1.1.0
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/readdir-scoped-modules
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/readdir-scoped-modules
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/readdir-scoped-modules/LICENSE
+├─ resolve-url@0.2.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lydell/resolve-url
+│  ├─ publisher: Simon Lydell
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/resolve-url
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/resolve-url/LICENSE
+├─ resolve@1.17.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/browserify/resolve
+│  ├─ publisher: James Halliday
+│  ├─ email: mail@substack.net
+│  ├─ url: http://substack.net
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/resolve
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/resolve/LICENSE
+├─ rimraf@3.0.2
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/rimraf
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rimraf
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rimraf/LICENSE
+├─ rollup-plugin-banner@0.2.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/yingye/rollup-plugin-banner
+│  ├─ publisher: yingye
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-plugin-banner
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-plugin-banner/LICENSE
+├─ rollup-plugin-sourcemaps@0.4.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/maxdavidson/rollup-plugin-sourcemaps
+│  ├─ publisher: Max Davidson
+│  ├─ email: davidsonmax@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-plugin-sourcemaps
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-plugin-sourcemaps/LICENSE
+├─ rollup-plugin-terser@5.3.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/TrySound/rollup-plugin-terser
+│  ├─ publisher: Bogdan Chadkin
+│  ├─ email: trysound@yandex.ru
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-plugin-terser
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-plugin-terser/LICENSE
+├─ rollup-plugin-typescript3@1.1.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/mohd-akram/rollup-plugin-typescript
+│  ├─ publisher: Mohamed Akram
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-plugin-typescript3
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-plugin-typescript3/LICENSE
+├─ rollup-pluginutils@2.8.2
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/rollup-pluginutils
+│  ├─ publisher: Rich Harris
+│  ├─ email: richard.a.harris@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-pluginutils
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup-pluginutils/README.md
+├─ rollup@1.32.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/rollup/rollup
+│  ├─ publisher: Rich Harris
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/rollup/LICENSE.md
+├─ semver@5.7.1
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/npm/node-semver
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/semver
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/semver/LICENSE
+├─ serialize-javascript@2.1.2
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/yahoo/serialize-javascript
+│  ├─ publisher: Eric Ferraiuolo
+│  ├─ email: edf@ericf.me
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/serialize-javascript
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/serialize-javascript/LICENSE
+├─ slide@1.1.6
+│  ├─ licenses: ISC
+│  ├─ repository: https://github.com/isaacs/slide-flow-control
+│  ├─ publisher: Isaac Z. Schlueter
+│  ├─ email: i@izs.me
+│  ├─ url: http://blog.izs.me/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/slide
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/slide/LICENSE
+├─ source-map-resolve@0.5.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lydell/source-map-resolve
+│  ├─ publisher: Simon Lydell
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/source-map-resolve
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/source-map-resolve/LICENSE
+├─ source-map-support@0.5.18
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/evanw/node-source-map-support
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/source-map-support
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/source-map-support/LICENSE.md
+├─ source-map-url@0.4.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lydell/source-map-url
+│  ├─ publisher: Simon Lydell
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/source-map-url
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/source-map-url/LICENSE
+├─ source-map@0.6.1
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/mozilla/source-map
+│  ├─ publisher: Nick Fitzgerald
+│  ├─ email: nfitzgerald@mozilla.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/source-map
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/source-map/LICENSE
+├─ spdx-compare@1.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/kemitchell/spdx-compare.js
+│  ├─ publisher: Kyle E. Mitchell
+│  ├─ email: kyle@kemitchell.com
+│  ├─ url: https://kemitchell.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-compare
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-compare/LICENSE.md
+├─ spdx-correct@3.1.0
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/jslicense/spdx-correct.js
+│  ├─ publisher: Kyle E. Mitchell
+│  ├─ email: kyle@kemitchell.com
+│  ├─ url: https://kemitchell.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-correct
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-correct/LICENSE
+├─ spdx-exceptions@2.3.0
+│  ├─ licenses: CC-BY-3.0
+│  ├─ repository: https://github.com/kemitchell/spdx-exceptions.json
+│  ├─ publisher: The Linux Foundation
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-exceptions
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-exceptions/README.md
+├─ spdx-expression-parse@3.0.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/jslicense/spdx-expression-parse.js
+│  ├─ publisher: Kyle E. Mitchell
+│  ├─ email: kyle@kemitchell.com
+│  ├─ url: http://kemitchell.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-expression-parse
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-expression-parse/LICENSE
+├─ spdx-license-ids@3.0.5
+│  ├─ licenses: CC0-1.0
+│  ├─ repository: https://github.com/shinnn/spdx-license-ids
+│  ├─ publisher: Shinnosuke Watanabe
+│  ├─ url: https://github.com/shinnn
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-license-ids
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-license-ids/README.md
+├─ spdx-ranges@2.1.1
+│  ├─ licenses: (MIT AND CC-BY-3.0)
+│  ├─ repository: https://github.com/kemitchell/spdx-ranges.js
+│  ├─ publisher: The Linux Foundation
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-ranges
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-ranges/LICENSE.md
+├─ spdx-satisfies@4.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/kemitchell/spdx-satisfies.js
+│  ├─ publisher: Kyle E. Mitchell
+│  ├─ email: kyle@kemitchell.com
+│  ├─ url: https://kemitchell.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-satisfies
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/spdx-satisfies/LICENSE
+├─ supports-color@5.5.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/supports-color
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/supports-color
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/supports-color/license
+├─ supports-color@6.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/chalk/supports-color
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: sindresorhus.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/jest-worker/node_modules/supports-color
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/jest-worker/node_modules/supports-color/license
+├─ terser@4.6.11
+│  ├─ licenses: BSD-2-Clause
+│  ├─ repository: https://github.com/terser/terser
+│  ├─ publisher: Mihai Bazon
+│  ├─ email: mihai.bazon@gmail.com
+│  ├─ url: http://lisperator.net/
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/terser
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/terser/LICENSE
+├─ to-regex-range@5.0.1
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/micromatch/to-regex-range
+│  ├─ publisher: Jon Schlinkert
+│  ├─ url: https://github.com/jonschlinkert
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/to-regex-range
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/to-regex-range/LICENSE
+├─ treeify@1.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/notatestuser/treeify
+│  ├─ publisher: Luke Plaster
+│  ├─ email: notatestuser@gmail.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/treeify
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/treeify/LICENSE
+├─ tslib@1.11.1
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/Microsoft/tslib
+│  ├─ publisher: Microsoft Corp.
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/tslib
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/tslib/LICENSE.txt
+├─ typescript@3.8.3
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/Microsoft/TypeScript
+│  ├─ publisher: Microsoft Corp.
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/typescript
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/typescript/LICENSE.txt
+├─ urix@0.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/lydell/urix
+│  ├─ publisher: Simon Lydell
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/urix
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/urix/LICENSE
+├─ util-extend@1.0.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/isaacs/util-extend
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/util-extend
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/util-extend/LICENSE
+├─ validate-npm-package-license@3.0.4
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/kemitchell/validate-npm-package-license.js
+│  ├─ publisher: Kyle E. Mitchell
+│  ├─ email: kyle@kemitchell.com
+│  ├─ url: https://kemitchell.com
+│  ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/validate-npm-package-license
+│  └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/validate-npm-package-license/LICENSE
+└─ wrappy@1.0.2
+   ├─ licenses: ISC
+   ├─ repository: https://github.com/npm/wrappy
+   ├─ publisher: Isaac Z. Schlueter
+   ├─ email: i@izs.me
+   ├─ url: http://blog.izs.me/
+   ├─ path: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/wrappy
+   └─ licenseFile: /opt/jenkins/android-arm7-330051535a963599/root/E0/core-webassembly-sdks/SDKs/BlinkID/node_modules/wrappy/LICENSE
+
