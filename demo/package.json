@@ -5,7 +5,7 @@
         "start": "serve build"
     },
     "devDependencies": {
-        "@microblink/blinkid-web": "../",
+        "@microblink/blinkid-in-browser-sdk": "../",
         "@rollup/plugin-node-resolve": "^7.1.1",
         "https-localhost": "^4.5.2",
         "rimraf": "^3.0.2",

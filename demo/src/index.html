@@ -45,7 +45,11 @@
         <!-- Recognition events will be drawn here. -->
         <canvas id="cameraFeedback" ></canvas>
         <div id="guide">
-            <input type="button" id="btnStart" value="Start scanning" onclick="app.startScanning()"></button>
+            <div id="loadingScreen">
+                <h1>Loading...</h1>
+                <progress id="loadProgress" value="0" max="100"></progress>
+            </div>
+            <input type="button" id="btnStart" value="Start scanning" onclick="app.startScanning()" hidden>
             <div id="cameraMessage" hidden>Point the camera towards machine readable zone or barcode on your ID document.</div>
         </div>
     </body>

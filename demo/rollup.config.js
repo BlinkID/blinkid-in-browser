@@ -50,7 +50,7 @@ export default
                             dest: 'build'
                         },
                         {
-                            src: 'node_modules/@microblink/blinkid-web/build/*',
+                            src: 'node_modules/@microblink/blinkid-in-browser-sdk/build/*',
                             dest: 'build'
                         }
                     ]

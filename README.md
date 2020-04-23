@@ -1,12 +1,14 @@
 # _BlinkID_ In-browser SDK
 
-[![Build Status](https://travis-ci.org/BlinkID/blinkid-web.svg?branch=master)](https://travis-ci.org/BlinkID/blinkid-web) [![npm version](https://badge.fury.io/js/%40microblink%2Fblinkid-web.svg)](https://badge.fury.io/js/%40microblink%2Fblinkid-web)
+[![Build Status](https://travis-ci.org/BlinkID/blinkid-in-browser.svg?branch=master)](https://travis-ci.org/BlinkID/blinkid-in-browser) [![npm version](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk.svg)](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk)
 
 _BlinkID_ In-browser SDK enables scanning of various identity documents including driving licenses, national identity cards, passports and others. SDK provides real-time in-browser data extraction, without any need for sending images to servers for processing.
 
 Using _BlinkID_ in your web app requires a valid license key. You can obtain a trial license key by registering to [Microblink dashboard](https://microblink.com/login). After registering, you will be able to generate a license key for your web app. The license key is bound to [fully qualified domain name](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) of your web app, so please make sure you enter the correct name when asked. Also, keep in mind that if you plan to serve your web app from different domains, you will need different license keys.
 
-For more information on how to integrate __BlinkID__ SDK into your web app read the instructions below. Make sure you read the latest [Release notes](Release%20notes.md) for most recent changes and improvements. For a quick demo, check out our [integration sample app](demo).
+For more information on how to integrate _BlinkID_ SDK into your web app read the instructions below. Make sure you read the latest [Release notes](Release%20notes.md) for most recent changes and improvements. For a quick demo, check out our [integration sample app](demo).
+
+_BlinkID_ In-browser SDK is meant to be used natively in a web browser. It will not work correctly within a iOS/Android WebView or NodeJS backend service. If you are looking for Cordova/PhoneGap version, please go [here](https://github.com/BlinkID/blinkid-cordova). If you want to use BlinkID as a backend service, please go [here](https://github.com/microblink/docker).
 
 # Table of contents
 
@@ -23,7 +25,6 @@ For more information on how to integrate __BlinkID__ SDK into your web app read 
 * [Handling processing events with `MetadataCallbacks`](#metadataCallbacks)
 * [List of available recognizers](#recognizerList)
     * [Success Frame Grabber Recognizer](#successFrameGrabber)
-    * [Barcode recognizer](#barcodeRecognizer)
     * [ID barcode recognizer](#idBarcodeRecognizer)
     * [Machine Readable Travel Document recognizer](#mrtdRecognizer)
 * [Troubleshooting](#troubleshoot)
@@ -48,7 +49,7 @@ _BlinkID_ requires a browser with a support for [WebAssembly](https://webassembl
 The easiest way to add _BlinkID_ as a dev-dependency to your project is by using NPM:
 
 ```
-npm install @microblink/blinkid-web --save-dev
+npm install @microblink/blinkid-in-browser-sdk --save-dev
 ```
 
 or, if you wish to add a local package instead:
@@ -60,7 +61,7 @@ cd /path/to/your/app/folder
 npm install /path/to/SDK/folder --save-dev
 ```
 
-After adding the _@microblink/blinkid-web_ as your dev-dependency, make sure to include all files from its `build` folder in your distribution. Those files contain compiled WebAssembly module and support JS code for loading it, as well as resources needed for _BlinkID_ to work.
+After adding the _@microblink/blinkid-in-browser-sdk_ as your dev-dependency, make sure to include all files from its `build` folder in your distribution. Those files contain compiled WebAssembly module and support JS code for loading it, as well as resources needed for _BlinkID_ to work.
 
 The example in the [demo app](demo) shows how a [rollup copy plugin](https://www.npmjs.com/package/rollup-plugin-copy) can be used to achieve that. Check the [rollup.config.js](demo/rollup.config.js) from the demo app.
 
@@ -71,7 +72,7 @@ The example in the [demo app](demo) shows how a [rollup copy plugin](https://www
 2. Initialize the SDK using following code snippet:
 
     ```typescript
-    import * as MicroblinkSDK from '@microblink/blinkid-web'
+    import * as MicroblinkSDK from '@microblink/blinkid-in-browser-sdk'
 
     // check if browser is supported
     if ( MicroblinkSDK.isBrowserSupported() ) {
@@ -95,7 +96,7 @@ The example in the [demo app](demo) shows how a [rollup copy plugin](https://www
 3. Create recognizer objects that will perform image recognition, configure them and use them to create a `RecognizerRunner` object:
 
     ```typescript
-    import * as MicroblinkSDK from '@microblink/blinkid-web'
+    import * as MicroblinkSDK from '@microblink/blinkid-in-browser-sdk'
 
     const recognizer = await MicroblinkSDK.createMrtdRecognizer(wasmSDK);
     const recognizerRunner = await MicroblinkSDK.createRecognizerRunner(wasmSDK, [recognizer], true);
@@ -190,7 +191,7 @@ Each `Recognizer` has a `Result` object, which contains the data that was extrac
 Every `Recognizer` is a stateful object that can be in two possible states: _idle state_ and _working state_. While in _idle state_, you are allowed to call method `updateSettings` which will update its properties according to given settings object. At any time, you can call its `currentSettings` method to obtain its currently applied settings object. After you create a `RecognizerRunner` with array containing your recognizer, the state of the `Recognizer` will change to _working state_, in which `Recognizer` object will be used for processing. While being in _working state_, it is not possible to call method `updateSettings` (calling it will crash your web app). If you need to change configuration of your recognizer while its being used, you need to call its `currentSettings` method to obtain its current configuration, update it as you need it, create a new `Recognizer` of the same type, call `updateSettings` on it with your modified configuration and finally replace the original `Recognizer` within the `RecognizerRunner` by calling its `reconfigureRecognizers` method. When written as a pseudocode, this would look like:
 
 ```typescript
-import * as MicroblinkSDK from '@microblink/blinkid-web'
+import * as MicroblinkSDK from '@microblink/blinkid-in-browser-sdk'
 
 // assume myRecognizerInUse is used by the recognizerRunner
 const currentSettings = await myRecognizerInUse.currentSettings();
@@ -302,13 +303,6 @@ The [`SuccessFrameGrabberRecognizer`](src/Recognizers/SuccessFrameGrabberRecogni
 Since `SuccessFrameGrabberRecognizer` impersonates its slave `Recognizer` object, it is not possible to have both concrete `Recognizer` object and `SuccessFrameGrabberRecognizer` that wraps it in the same `RecognizerRunner` at the same time. Doing so will have the same effect as having multiple instances of the same `Recognizer` in the same `RecognizerRunner` - it will crash your application. For more information, see [paragraph about `RecognizerRunner`](#recognizerRunner).
 
 This recognizer is best for use cases when you need to capture the exact image that was being processed by some other `Recognizer` object at the time its `Result` became `Valid`. When that happens, `SuccessFrameGrabber's` `Result` will also become `Valid` and will contain described image. That image will be available in its `successFrame` property.
-## <a name="barcodeRecognizer"></a> Barcode recognizer
-
-The `BarcodeRecognizer` is recognizer specialized for scanning various types of barcodes.
-
-As you can see from [its source code](src/Recognizers/BlinkBarcode/BarcodeRecognizer.ts), you can enable multiple barcode symbologies within this recognizer, however keep in mind that enabling more barcode symbologies affects scanning performance - the more barcode symbologies are enabled, the slower the overall recognition performance. Also, keep in mind that some simple barcode symbologies that lack proper redundancy, such as [Code 39](https://en.wikipedia.org/wiki/Code_39), can be recognized within more complex barcodes, especially 2D barcodes, like [PDF417](https://en.wikipedia.org/wiki/PDF417).
-
-
 ## <a name="idBarcodeRecognizer"></a> ID barcode recognizer
 
 The [`IdBarcodeRecognizer`](src/Recognizers/BlinkID/IDBarcode/IdBarcodeRecognizer.ts) is recognizer specialized for scanning barcodes from various ID cards.

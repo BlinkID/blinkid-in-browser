@@ -1,5 +1,5 @@
 {
-    "name": "@microblink/blinkid-web",
+    "name": "@microblink/blinkid-in-browser-sdk",
     "version": "1.0.0-beta.0",
     "description": "A simple ID scanning library for WebAssembly-enabled browsers.",
     "main": "src/index.ts",

@@ -1,39 +1,50 @@
-import * as MicroblinkSDK from '@microblink/blinkid-web'
+import * as MicroblinkSDK from '@microblink/blinkid-in-browser-sdk'
 
-function getLicenseKey()
+const loadingScreen = document.getElementById( "loadingScreen" ) as HTMLDivElement;
+const loadProgress  = document.getElementById( 'loadProgress' ) as HTMLProgressElement;
+
+// first check if browser is supported
+if ( !MicroblinkSDK.isBrowserSupported() )
 {
-    if ( window.location.hostname == 'localhost' )
-        return "sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWKlq+ZJzK3xccLSIruDSb18DHmilDcTBqO8JYgpsBzoirfhucxge8mE9wKDIMLG3GeVOJn1Qm/IMDjREWfwQKIleuJxnFSDflBbooYUnf/zNDuoQgDXAoscf+qBbbEt6yC17HVB17UZBT/fRgEDym6D9fDTHVJOkUs2Ai1ZNsNAYQBMQx0pE3zxV4FO7YUGedd3nKdURvFKbOs002Cnev+G4Kqge7Gy+F3eIjRJHdEw+/pFO5i1/U+7pMLzSneyVWgijA"
-    else if ( window.location.hostname == 'blinkid.github.io' )
-        return "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hW4YlTvZbRuaFVwbiD8KZM6KyFj+Gxuno9ppVrGWjCzH3zaPlD0Rrt/nEJcExVA8saYUOqtODKxAki0rsatzpBjyHuWpAGQeoi49aIwCqsNGA9H8Em/IbR5sBgIu0bR94Oi/mfL0eG9F76UgX2T8cTiRGHdqE+b4u+qYvTwy5lAOESIWjb3fCYdHip9KmPxp9KHvS5veYCHYWKHH6cqXvSuhhM/JtXTdFW1UZ3VcF05Nfjx2Rp5ck+LHB9B/2vlNafX8qq6WM7UcoMc8="
-    else
-        throw new Error( 'No license key for ' + window.location.hostname );
+    loadingScreen.innerHTML = "<h1>Your browser is not supported by this SDK! <h1/>";
 }
-
-// create a load settings, defining the license key and name of the WebAssembly module
-const loadSettings = new MicroblinkSDK.WasmSDKLoadSettings( getLicenseKey() );
-
-// asynchronously load and compile the WebAssembly module.
-MicroblinkSDK.loadWasmModule( loadSettings ).then
-(
-    // function called when WebAssembly module gets ready
-    ( wasmSDK: MicroblinkSDK.WasmSDK ) =>
+else
+{
+    // create a load settings, defining the license key and name of the WebAssembly module
+    const loadSettings = new MicroblinkSDK.WasmSDKLoadSettings( getLicenseKey() );
+    // in order to provide better UX, display progress bar while loading the SDK
+    loadSettings.loadProgressCallback = ( progress: number ) =>
     {
-        console.log( "WASM loaded successfully!" );
-
-        // create an instance of MyApp and attach it to global window object
-        const app = new MyApp( wasmSDK );
-
-        // attach the app to the window object, so that it will be accessible from HTML events
-        ( window as any ).app = app;
-    },
-    // function called when there is an error in loading the WebAssembly module
-    ( reason: any ) =>
-    {
-        console.error( "Failed to load WASM! Reason: " + reason );
-        alert( "Failed to load WASM! Reason: " + reason );
+        loadProgress.value = progress;
     }
-)
+
+    // asynchronously load and compile the WebAssembly module.
+    MicroblinkSDK.loadWasmModule( loadSettings ).then
+    (
+        // function called when WebAssembly module gets ready
+        ( wasmSDK: MicroblinkSDK.WasmSDK ) =>
+        {
+            console.log( "WASM loaded successfully!" );
+
+            // hide loading screen and display scan button
+            loadingScreen.hidden = true;
+            document.getElementById( 'btnStart' )!.hidden = false;
+
+            // create an instance of MyApp and attach it to global window object
+            const app = new MyApp( wasmSDK );
+
+            // attach the app to the window object, so that it will be accessible from HTML events
+            ( window as any ).app = app;
+        },
+        // function called when there is an error in loading the WebAssembly module
+        ( reason: any ) =>
+        {
+            console.error( "Failed to load WASM! Reason: " + reason );
+            alert( "Failed to load WASM! Reason: " + reason );
+            loadingScreen.innerHTML = "<h1>Failed to load WASM! Reason: " + reason + "</h1>";
+        }
+    );
+}
 
 class MyApp
 {
@@ -101,14 +112,14 @@ class MyApp
             if ( mrtdResult.state != MicroblinkSDK.RecognizerResultState.Empty )
             {
                 console.log( mrtdResult );
-                alertMessage += "Hello, " + mrtdResult.mrzResult.secondaryID + ' ' + mrtdResult.mrzResult.primaryID + '!' + "You were born on " + mrtdResult.mrzResult.dateOfBirth.year + '-' + mrtdResult.mrzResult.dateOfBirth.month + '-' + mrtdResult.mrzResult.dateOfBirth.day + '!\n';
+                alertMessage += "Hello, " + mrtdResult.mrzResult.secondaryID + ' ' + mrtdResult.mrzResult.primaryID + '! You were born on ' + mrtdResult.mrzResult.dateOfBirth.year + '-' + mrtdResult.mrzResult.dateOfBirth.month + '-' + mrtdResult.mrzResult.dateOfBirth.day + '!\n';
             }
 
             const idBarcodeResult = await idBarcodeRecognizer.getResult();
             if ( idBarcodeResult.state != MicroblinkSDK.RecognizerResultState.Empty )
             {
                 console.log( idBarcodeResult );
-                alertMessage += "Hello, " + idBarcodeResult.firstName + ' ' + idBarcodeResult.lastName + '!' + "You were born on " + idBarcodeResult.dateOfBirth.year + '-' + idBarcodeResult.dateOfBirth.month + '-' + idBarcodeResult.dateOfBirth.day + '!\n';
+                alertMessage += "Hello, " + idBarcodeResult.firstName + ' ' + idBarcodeResult.lastName + '! You were born on ' + idBarcodeResult.dateOfBirth.year + '-' + idBarcodeResult.dateOfBirth.month + '-' + idBarcodeResult.dateOfBirth.day + '!\n';
             }
 
             if ( alertMessage.length != 0 )
@@ -211,4 +222,15 @@ class MyApp
         ctx.strokeStyle = color
         ctx.lineWidth = 5;
     }
+}
+
+// a utility function for obtaining license key for both localhost and live demo on Github
+function getLicenseKey()
+{
+    if ( window.location.hostname == 'localhost' )
+        return "sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWKlq+ZJzK3xccLSIruDSb18DHmilDcTBqO8JYgpsBzoirfhucxge8mE9wKDIMLG3GeVOJn1Qm/IMDjREWfwQKIleuJxnFSDflBbooYUnf/zNDuoQgDXAoscf+qBbbEt6yC17HVB17UZBT/fRgEDym6D9fDTHVJOkUs2Ai1ZNsNAYQBMQx0pE3zxV4FO7YUGedd3nKdURvFKbOs002Cnev+G4Kqge7Gy+F3eIjRJHdEw+/pFO5i1/U+7pMLzSneyVWgijA"
+    else if ( window.location.hostname == 'blinkid.github.io' )
+        return "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hW4YlTvZbRuaFVwbiD8KZM6KyFj+Gxuno9ppVrGWjCzH3zaPlD0Rrt/nEJcExVA8saYUOqtODKxAki0rsatzpBjyHuWpAGQeoi49aIwCqsNGA9H8Em/IbR5sBgIu0bR94Oi/mfL0eG9F76UgX2T8cTiRGHdqE+b4u+qYvTwy5lAOESIWjb3fCYdHip9KmPxp9KHvS5veYCHYWKHH6cqXvSuhhM/JtXTdFW1UZ3VcF05Nfjx2Rp5ck+LHB9B/2vlNafX8qq6WM7UcoMc8="
+    else
+        throw new Error( 'No license key for ' + window.location.hostname );
 }
