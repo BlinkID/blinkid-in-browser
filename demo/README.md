@@ -3,7 +3,7 @@ Instructions for building and running this sample app
 
 # Live version
 
-You can check the live version of this sample app by clicking [this link](https://blinkid.github.io/blinkid-web/demo/build/index.html).
+You can check the live version of this sample app by clicking [this link](https://blinkid.github.io/blinkid-in-browser/demo/build/index.html).
 
 # Building and running instructions
 
