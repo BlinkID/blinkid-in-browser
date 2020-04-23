@@ -111,6 +111,10 @@ class MyApp
                 alertMessage += "Hello, " + idBarcodeResult.firstName + ' ' + idBarcodeResult.lastName + '!' + "You were born on " + idBarcodeResult.dateOfBirth.year + '-' + idBarcodeResult.dateOfBirth.month + '-' + idBarcodeResult.dateOfBirth.day + '!\n';
             }
 
+            if ( alertMessage.length != 0 )
+            {
+                alert( alertMessage );
+            }
         }
 
         // 7. release all resources allocated on the WebAssembly heap and associated with camera stream
