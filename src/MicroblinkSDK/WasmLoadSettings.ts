@@ -34,6 +34,13 @@ export class WasmSDKLoadSettings
     wasmModuleName: string = defaultWasmModuleName;
 
     /**
+     * Write a hello message to the javascript console when license check is successfully performed.
+     * Hello message will contain the name and version of the SDK, which are required information for
+     * all support tickets.
+     */
+    allowHelloMessage: boolean = true;
+
+    /**
      * Optional callback function that will report the SDK loading progress.
      * This can be useful for displaying progress bar for users on slow connections.
      */

@@ -105,7 +105,7 @@ export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promi
                     {
                         try
                         {
-                            wasmModule.initializeWithLicenseKey( loadSettings.licenseKey, userId );
+                            wasmModule.initializeWithLicenseKey( loadSettings.licenseKey, userId, loadSettings.allowHelloMessage);
                             resolve( new WasmSDKLocal( wasmModule ) );
                             return;
                         }
