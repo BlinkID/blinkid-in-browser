@@ -44,6 +44,7 @@ export class InitMessage extends BaseRequestMessage
     readonly licenseKey: string;
     readonly userId: string;
     readonly registerLoadCallback: boolean;
+    readonly allowHelloMessage: boolean;
 
     constructor( wasmLoadSettings: WasmSDKLoadSettings, userId: string )
     {
@@ -52,6 +53,7 @@ export class InitMessage extends BaseRequestMessage
         this.licenseKey = wasmLoadSettings.licenseKey;
         this.userId = userId;
         this.registerLoadCallback = wasmLoadSettings.loadProgressCallback != null;
+        this.allowHelloMessage = wasmLoadSettings.allowHelloMessage;
     }
 };
 

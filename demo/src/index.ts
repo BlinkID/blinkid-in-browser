@@ -228,9 +228,10 @@ class MyApp
 function getLicenseKey()
 {
     if ( window.location.hostname == 'localhost' )
-        return "sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWKlq+ZJzK3xccLSIruDSb18DHmilDcTBqO8JYgpsBzoirfhucxge8mE9wKDIMLG3GeVOJn1Qm/IMDjREWfwQKIleuJxnFSDflBbooYUnf/zNDuoQgDXAoscf+qBbbEt6yC17HVB17UZBT/fRgEDym6D9fDTHVJOkUs2Ai1ZNsNAYQBMQx0pE3zxV4FO7YUGedd3nKdURvFKbOs002Cnev+G4Kqge7Gy+F3eIjRJHdEw+/pFO5i1/U+7pMLzSneyVWgijA"
+        // valid until: 2020-08-30
+        return "sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWLiw/ZJYiDFZwYqK/kA1cRcCN5ct/CCFbjudXj+A54krF7iA0qaxxnJ27Cut6gsMoAYGPOD2RYxPUstV1D+XQi45wMHn2Xi0V0LIO5nB3dWH/I+1nLUfeLCkcwxLgcLq8I8VzCsfQ2nTgNmQ4Aq/F6GjP8Hy1lXAmZdgT+uONk9FYuPPlzAUGQmIQdWnfnPHm/wwpQR2CK7H38ZEFzOi4WF1XDbMwNCeb2Zz6NzR8Xa9MyR8opPRAVAh06XZ2"
     else if ( window.location.hostname == 'blinkid.github.io' )
-        return "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hW4YlTvZbRuaFVwbiD8KZM6KyFj+Gxuno9ppVrGWjCzH3zaPlD0Rrt/nEJcExVA8saYUOqtODKxAki0rsatzpBjyHuWpAGQeoi49aIwCqsNGA9H8Em/IbR5sBgIu0bR94Oi/mfL0eG9F76UgX2T8cTiRGHdqE+b4u+qYvTwy5lAOESIWjb3fCYdHip9KmPxp9KHvS5veYCHYWKHH6cqXvSuhhM/JtXTdFW1UZ3VcF05Nfjx2Rp5ck+LHB9B/2vlNafX8qq6WM7UcoMc8="
+        return "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hW4YlTvZbRuaFVwbiD8KZM6KyFj+Gxuno8ppVrH5oPsVMXBqdigowDAY+ZokUY/jc2Wd1nrpyFP39P9e+xwhUr4CeoPrN/g4n277HKc0MyWB2FT3x8K2+zRo0XPjQxaAaD6x3aYPEgbjBO5KL0Prr6dGZLfm5rci13gQE5xBXZ++UeDzz00RM4+Oj/i6gFW8E+n7QCTmHFBaa//QmDdT2Jr9G+svdUFemdOd6wCCPvY7Gol/x5oXDz4aUSMOksnHFdCrP//8="
     else
         throw new Error( 'No license key for ' + window.location.hostname );
 }

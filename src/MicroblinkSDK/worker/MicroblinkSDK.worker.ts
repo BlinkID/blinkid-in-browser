@@ -173,7 +173,7 @@ function processInitMessage( msg: Messages.InitMessage )
             {
                 try
                 {
-                    mbWasmModule.initializeWithLicenseKey( msg.licenseKey, msg.userId );
+                    mbWasmModule.initializeWithLicenseKey( msg.licenseKey, msg.userId, msg.allowHelloMessage );
                     wasmModule = mbWasmModule;
                     notifySuccess( msg );
                 }

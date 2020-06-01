@@ -69,6 +69,11 @@ export interface IdBarcodeRecognizerResult extends RecognizerResult
     readonly employer: string;
 
     /**
+     * The additional privileges granted to the driver license owner.
+     */
+    readonly endorsements: string;
+
+    /**
      *  The first name of the document owner.
      */
     readonly firstName: string;
@@ -129,10 +134,19 @@ export interface IdBarcodeRecognizerResult extends RecognizerResult
     readonly residentialStatus: string;
 
     /**
+     * The restrictions to driving privileges for the driver license owner.
+     */
+    readonly restrictions: string;
+
+    /**
      *  The sex of the document owner.
      */
     readonly sex: string;
 
+    /**
+     * The type of vehicle the driver license owner has privilege to drive.
+     */
+    readonly vehicleClass: string;
 }
 
 /**
