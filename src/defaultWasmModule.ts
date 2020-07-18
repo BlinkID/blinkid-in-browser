@@ -1,1 +1,1 @@
-export const defaultWasmModuleName = 'BlinkIDWasmSDK';
+export const defaultWasmModuleName = "BlinkIDWasmSDK";

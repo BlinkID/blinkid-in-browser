@@ -1,8 +1,8 @@
 import { ImageOrientation } from "./DataStructures";
 
-////////////////////////////////////////////////
-// Frame capture and camera management support
-////////////////////////////////////////////////
+// ============================================ /
+// Frame capture and camera management support. /
+// ============================================ /
 
 let canvas : HTMLCanvasElement;
 
@@ -33,10 +33,10 @@ export class CapturedFrame
  * @param imageSource image source from which frame should be captured
  * @returns instance of CapturedFrame
  */
-export function captureFrame( imageSource: CanvasImageSource )
+export function captureFrame( imageSource: CanvasImageSource ): CapturedFrame
 {
-    let imageWidth: number
-    let imageHeight: number
+    let imageWidth: number;
+    let imageHeight: number;
     let videoFrame = false;
     if ( imageSource instanceof HTMLVideoElement )
     {
@@ -59,16 +59,25 @@ export function captureFrame( imageSource: CanvasImageSource )
         imageHeight = imageSource.height;
     }
 
-    canvas = canvas || document.createElement( 'canvas' ) as HTMLCanvasElement;
+    canvas = canvas || document.createElement( "canvas" );
     canvas.width = imageWidth;
     canvas.height = imageHeight;
-    const ctx = canvas.getContext( '2d' )!;
+    const ctx = canvas.getContext( "2d" );
+
+    if ( !ctx )
+    {
+        throw new Error( "Could not get canvas 2d context!" );
+    }
+
     ctx.drawImage( imageSource, 0, 0, canvas.width, canvas.height );
-    let pixelData = ctx.getImageData( 0, 0, canvas.width, canvas.height );
+    const pixelData = ctx.getImageData( 0, 0, canvas.width, canvas.height );
+
     return new CapturedFrame
     (
         pixelData,
-        ImageOrientation.NoRotation, // TODO: https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation or https://developer.mozilla.org/en-US/docs/Web/API/Window/orientation
+        // TODO: https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
+        // or https://developer.mozilla.org/en-US/docs/Web/API/Window/orientation
+        ImageOrientation.NoRotation,
         videoFrame
     );
 }

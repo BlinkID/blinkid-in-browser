@@ -1,216 +1,270 @@
-import * as Messages from './Messages'
-import { MetadataCallbacks, DisplayablePoints, DisplayableQuad } from '../MetadataCallbacks'
-import { convertEmscriptenStatusToProgress } from '../LoadProgressUtils';
+import * as Messages from "./Messages";
+import * as Utils from "../Utils";
+
+import
+{
+    MetadataCallbacks,
+    DisplayablePoints,
+    DisplayableQuad
+} from "../MetadataCallbacks";
+
+import { convertEmscriptenStatusToProgress } from "../LoadProgressUtils";
 import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
-
-const context: Worker = self as any;
-let wasmModule: any = null;
-
-let nativeRecognizerRunner: any = null;
-
-let objects: { [ key: number ] : any } = {};
-let nextObjectHandle = 0;
-
-let metadataCallbacks: MetadataCallbacks = {};
-let clearTimeoutCallback: ClearTimeoutCallback | null;
-
-function getNextObjectHandle()
-{
-    const handle = nextObjectHandle;
-    nextObjectHandle = nextObjectHandle + 1;
-    return handle;
-}
-
-context.onmessage = ( event: MessageEvent ) =>
-{
-    const msg = ( event.data );
-    switch( msg.action )
-    {
-        case Messages.InitMessage.action:
-            processInitMessage( msg as Messages.InitMessage );
-            break;
-        case Messages.InvokeFunction.action:
-            processInvokeFunction( msg as Messages.InvokeFunction );
-            break;
-        case Messages.CreateNewRecognizer.action:
-            processCreateNewRecognizer( msg as Messages.CreateNewRecognizer );
-            break;
-        case Messages.InvokeObjectMethod.action:
-            processInvokeObject( msg as Messages.InvokeObjectMethod );
-            break;
-        case Messages.CreateRecognizerRunner.action:
-            processCreateRecognizerRunner( msg as Messages.CreateRecognizerRunner );
-            break;
-        case Messages.ReconfigureRecognizerRunner.action:
-            processReconfigureRecognizerRunner( msg as Messages.ReconfigureRecognizerRunner );
-            break;
-        case Messages.DeleteRecognizerRunner.action:
-            processDeleteRecognizerRunner( msg as Messages.DeleteRecognizerRunner );
-            break;
-        case Messages.ProcessImage.action:
-            processImage( msg as Messages.ProcessImage );
-            break;
-        case Messages.ResetRecognizers.action:
-            resetRecognizers( msg as Messages.ResetRecognizers );
-            break;
-        case Messages.SetDetectionOnly.action:
-            setDetectionOnly( msg as Messages.SetDetectionOnly );
-            break;
-        case Messages.SetCameraPreviewMirrored.action:
-            setCameraPreviewMirrored( msg as Messages.SetCameraPreviewMirrored );
-            break;
-        case Messages.RegisterMetadataCallbacks.action:
-            registerMetadataCallbacks( msg as Messages.RegisterMetadataCallbacks );
-            break;
-        case Messages.SetClearTimeoutCallback.action:
-            registerClearTimeoutCallback( msg as Messages.SetClearTimeoutCallback );
-            break;
-        default:
-            console.error( "Unknown message action: " + msg.action );
-            throw new Error( "Unknown message action: " + msg.action );
-    }
-};
-
-function notifyError( originalMessage: Messages.RequestMessage, error: string )
-{
-    context.postMessage
-    (
-        new Messages.StatusMessage
-        (
-            originalMessage.messageID,
-            false,
-            error
-        )
-    );
-}
-
-function notifySuccess( originalMessage: Messages.RequestMessage )
-{
-    context.postMessage( new Messages.StatusMessage( originalMessage.messageID, true, null ) );
-}
 
 interface MessageWithParameters extends Messages.RequestMessage
 {
     readonly params: Array< Messages.WrappedParameter >
 }
 
-function unwrapParameters( msgWithParams: MessageWithParameters ): Array< any >
+export default class MicroblinkWorker
 {
-    const params: Array< any > = []
-    for ( let i in msgWithParams.params )
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-explicit-any */
+    private context: Worker = self as any;
+
+    private wasmModule: any = null;
+
+    private nativeRecognizerRunner: any = null;
+
+    private objects: { [ key: number ] : any } = {};
+
+    private nextObjectHandle = 0;
+
+    private metadataCallbacks: MetadataCallbacks = {};
+
+    private clearTimeoutCallback: ClearTimeoutCallback | null = null;
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment,
+                     @typescript-eslint/no-explicit-any */
+
+    constructor()
     {
-        const wrappedParam = msgWithParams.params[ i ];
-        let unwrappedParam = wrappedParam.parameter;
-        if ( wrappedParam.type === Messages.ParameterType.Recognizer )
+        /* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                          @typescript-eslint/no-unsafe-member-access */
+        this.context.onmessage = ( event: MessageEvent ) =>
         {
-            unwrappedParam = objects[ unwrappedParam ];
-            if ( unwrappedParam === undefined )
+            const msg = event.data;
+            switch( msg.action )
             {
-                notifyError( msgWithParams, "Cannot find object with handle: " + unwrappedParam );
-            }
-        }
-        params.push( unwrappedParam );
-    }
-    return params;
-}
-
-function scanForTransferrables( object: any ): Array< Transferable >
-{
-    if ( typeof object === 'object' )
-    {
-        const keys = Object.keys( object );
-        const transferrables: Array< Transferable > = []
-
-        for ( let i in keys )
-        {
-            const key = keys[ i ];
-            const data = object[ key ];
-            if ( data instanceof ImageData )
-            {
-                transferrables.push( data.data.buffer );
-            }
-            else if ( data instanceof Uint8Array )
-            {
-                transferrables.push( data.buffer );
-            }
-            else if ( data != null && typeof data === 'object' ) // typeof( null ) === 'object', https://www.quora.com/Why-is-null-considered-an-object-in-JavaScript
-            {
-                transferrables.push( ... scanForTransferrables( data ) );
-            }
-        }
-        return transferrables
-    }
-    else
-    {
-        return []
-    }
-}
-
-// message process functions
-
-function processInitMessage( msg: Messages.InitMessage )
-{
-    let module = undefined;
-
-    if ( msg.registerLoadCallback )
-    {
-        module = {
-            'setStatus': ( text: string ) =>
-            {
-                context.postMessage( new Messages.LoadProgressMessage( convertEmscriptenStatusToProgress( text ) ) );
+                case Messages.InitMessage.action:
+                    this.processInitMessage( msg as Messages.InitMessage );
+                    break;
+                case Messages.InvokeFunction.action:
+                    this.processInvokeFunction( msg as Messages.InvokeFunction );
+                    break;
+                case Messages.CreateNewRecognizer.action:
+                    this.processCreateNewRecognizer( msg as Messages.CreateNewRecognizer );
+                    break;
+                case Messages.InvokeObjectMethod.action:
+                    this.processInvokeObject( msg as Messages.InvokeObjectMethod );
+                    break;
+                case Messages.CreateRecognizerRunner.action:
+                    this.processCreateRecognizerRunner( msg as Messages.CreateRecognizerRunner );
+                    break;
+                case Messages.ReconfigureRecognizerRunner.action:
+                    this.processReconfigureRecognizerRunner( msg as Messages.ReconfigureRecognizerRunner );
+                    break;
+                case Messages.DeleteRecognizerRunner.action:
+                    this.processDeleteRecognizerRunner( msg as Messages.DeleteRecognizerRunner );
+                    break;
+                case Messages.ProcessImage.action:
+                    void this.processImage( msg as Messages.ProcessImage );
+                    break;
+                case Messages.ResetRecognizers.action:
+                    this.resetRecognizers( msg as Messages.ResetRecognizers );
+                    break;
+                case Messages.SetDetectionOnly.action:
+                    this.setDetectionOnly( msg as Messages.SetDetectionOnly );
+                    break;
+                case Messages.SetCameraPreviewMirrored.action:
+                    this.setCameraPreviewMirrored( msg as Messages.SetCameraPreviewMirrored );
+                    break;
+                case Messages.RegisterMetadataCallbacks.action:
+                    this.registerMetadataCallbacks( msg as Messages.RegisterMetadataCallbacks );
+                    break;
+                case Messages.SetClearTimeoutCallback.action:
+                    this.registerClearTimeoutCallback( msg as Messages.SetClearTimeoutCallback );
+                    break;
+                default:
+                    throw new Error( "Unknown message action: " + JSON.stringify( msg.action ) );
             }
         };
+        /* eslint-enable @typescript-eslint/no-unsafe-assignment,
+                         @typescript-eslint/no-unsafe-member-access */
     }
 
-    try
+    private getNextObjectHandle()
     {
-        const jsName = "./" + msg.wasmModuleName + ".js";
-        importScripts( jsName );
-        const loaderFunc = ( self as { [key: string]: any } )[ msg.wasmModuleName ];
-        loaderFunc( module ).then
+        const handle = this.nextObjectHandle;
+        this.nextObjectHandle = this.nextObjectHandle + 1;
+        return handle;
+    }
+
+    private notifyError( originalMessage: Messages.RequestMessage, error: string )
+    {
+        this.context.postMessage
         (
-            ( mbWasmModule: any ) =>
-            {
-                try
-                {
-                    mbWasmModule.initializeWithLicenseKey( msg.licenseKey, msg.userId, msg.allowHelloMessage );
-                    wasmModule = mbWasmModule;
-                    notifySuccess( msg );
-                }
-                catch ( licenseError )
-                {
-                    notifyError( msg, licenseError );
-                }
-            },
-            ( error: any ) =>
-            {
-                console.log( "Failed to load WASM in web worker due to error: " + error );
-                notifyError( msg, error );
-            }
+            new Messages.StatusMessage
+            (
+                originalMessage.messageID,
+                false,
+                error
+            )
         );
     }
-    catch( error )
-    {
-        console.log( "Failed to load WASM in web worker due to error: " + error );
-        notifyError( msg, error );
-    }
-}
 
-function processInvokeFunction( msg: Messages.InvokeFunction )
-{
-    if ( wasmModule == null )
+    private notifySuccess( originalMessage: Messages.RequestMessage )
     {
-        notifyError( msg, "WASM module is not initialized!" );
+        this.context.postMessage( new Messages.StatusMessage( originalMessage.messageID, true, null ) );
     }
-    else
+
+    /* eslint-disable @typescript-eslint/no-explicit-any,
+                      @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-unsafe-member-access,
+                      @typescript-eslint/no-unsafe-return */
+    private unwrapParameters( msgWithParams: MessageWithParameters ): Array< any >
     {
-        const funcName = msg.funcName as string;
-        const params = unwrapParameters( msg );
+        const params: Array< any > = [];
+        for ( const wrappedParam of msgWithParams.params )
+        {
+            let unwrappedParam = wrappedParam.parameter;
+            if ( wrappedParam.type === Messages.ParameterType.Recognizer )
+            {
+                unwrappedParam = this.objects[ unwrappedParam ];
+                if ( unwrappedParam === undefined )
+                {
+                    this.notifyError( msgWithParams, "Cannot find object with handle: undefined" );
+                }
+            }
+            params.push( unwrappedParam );
+        }
+        return params;
+    }
+    /* eslint-enable @typescript-eslint/no-explicit-any,
+                     @typescript-eslint/no-unsafe-assignment,
+                     @typescript-eslint/no-unsafe-member-access,
+                     @typescript-eslint/no-unsafe-return */
+
+    /* eslint-disable @typescript-eslint/no-explicit-any,
+                      @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-unsafe-member-access */
+    private scanForTransferrables( object: any ): Array< Transferable >
+    {
+        if ( typeof object === "object" )
+        {
+            const keys = Object.keys( object );
+            const transferrables: Array< Transferable > = [];
+
+            for ( const key of keys )
+            {
+                const data = object[ key ];
+                if ( data instanceof ImageData )
+                {
+                    transferrables.push( data.data.buffer );
+                }
+                else if ( data instanceof Uint8Array )
+                {
+                    transferrables.push( data.buffer );
+                }
+                else if ( data !== null && typeof data === "object" )
+                {
+                    transferrables.push( ...this.scanForTransferrables( data ) );
+                }
+            }
+            return transferrables;
+        }
+        else
+        {
+            return [];
+        }
+    }
+    /* eslint-enable @typescript-eslint/no-explicit-any,
+                     @typescript-eslint/no-unsafe-assignment,
+                     @typescript-eslint/no-unsafe-member-access */
+
+    // message process functions
+
+    /* eslint-disable @typescript-eslint/no-explicit-any,
+                      @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-unsafe-call,
+                      @typescript-eslint/no-unsafe-member-access */
+    private processInitMessage( msg: Messages.InitMessage )
+    {
+        // See https://emscripten.org/docs/api_reference/module.html
+        const module = {
+            locateFile: ( path: string ) =>
+            {
+                return Utils.getSafePath( msg.engineLocation, path );
+            }
+        };
+
+        if ( msg.registerLoadCallback )
+        {
+            Object.assign( module, {
+                setStatus: ( text: string ) =>
+                {
+                    const msg = new Messages.LoadProgressMessage( convertEmscriptenStatusToProgress( text ) );
+                    this.context.postMessage( msg );
+                }
+            } );
+        }
 
         try
         {
-            const invocationResult = wasmModule[ funcName ]( ...params );
-            context.postMessage
+            const jsName = msg.wasmModuleName + ".js";
+            const jsPath = Utils.getSafePath( msg.engineLocation, jsName );
+            importScripts( jsPath );
+            const loaderFunc = ( self as { [key: string]: any } )[ msg.wasmModuleName ];
+            loaderFunc( module ).then
+            (
+                ( mbWasmModule: any ) =>
+                {
+                    try
+                    {
+                        mbWasmModule.initializeWithLicenseKey( msg.licenseKey, msg.userId, msg.allowHelloMessage );
+                        this.wasmModule = mbWasmModule;
+                        this.notifySuccess( msg );
+                    }
+                    catch ( licenseError )
+                    {
+                        this.notifyError( msg, licenseError );
+                    }
+                },
+                ( error: any ) =>
+                {
+                    // Failed to load WASM in web worker due to error
+                    this.notifyError( msg, error );
+                }
+            );
+        }
+        catch( error )
+        {
+            // Failed to load WASM in web worker due to error
+            this.notifyError( msg, error );
+        }
+    }
+    /* eslint-enable @typescript-eslint/no-explicit-any,
+                     @typescript-eslint/no-unsafe-assignment,
+                     @typescript-eslint/no-unsafe-call,
+                     @typescript-eslint/no-unsafe-member-access */
+
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-unsafe-call,
+                      @typescript-eslint/no-unsafe-member-access */
+    private processInvokeFunction( msg: Messages.InvokeFunction ): void
+    {
+        if ( this.wasmModule === null )
+        {
+            this.notifyError( msg, "WASM module is not initialized!" );
+            return;
+        }
+
+        const funcName = msg.funcName;
+        const params = this.unwrapParameters( msg );
+
+        try
+        {
+            const invocationResult = this.wasmModule[ funcName ]( ...params );
+            this.context.postMessage
             (
                 new Messages.InvokeResultMessage
                 (
@@ -221,375 +275,444 @@ function processInvokeFunction( msg: Messages.InvokeFunction )
         }
         catch ( error )
         {
-            notifyError( msg, error );
+            this.notifyError( msg, error );
         }
     }
-}
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment,
+                     @typescript-eslint/no-unsafe-call,
+                     @typescript-eslint/no-unsafe-member-access */
 
-function processCreateNewRecognizer( msg: Messages.CreateNewRecognizer )
-{
-    if ( wasmModule == null )
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-unsafe-call,
+                      @typescript-eslint/no-unsafe-member-access */
+    private processCreateNewRecognizer( msg: Messages.CreateNewRecognizer )
     {
-        notifyError( msg, "WASM module is not initialized!" );
-    }
-    else
-    {
-        const className = msg.className as string;
-        const params = unwrapParameters( msg );
+        if ( this.wasmModule === null )
+        {
+            this.notifyError( msg, "WASM module is not initialized!" );
+            return;
+        }
+
+        const className = msg.className;
+        const params = this.unwrapParameters( msg );
 
         try
         {
-            const createdObject = new wasmModule[ className ]( ...params );
-            const newHandle = getNextObjectHandle();
-            objects[ newHandle ] = createdObject;
+            const createdObject = new this.wasmModule[ className ]( ...params );
+            const newHandle = this.getNextObjectHandle();
+            this.objects[ newHandle ] = createdObject;
 
-            context.postMessage
+            this.context.postMessage
             (
                 new Messages.ObjectCreatedMessage( msg.messageID, newHandle )
             );
         }
         catch ( error )
         {
-            notifyError( msg, error );
+            this.notifyError( msg, error );
         }
     }
-}
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-unsafe-call,
+                      @typescript-eslint/no-unsafe-member-access */
 
-function getRecognizers( recognizerHandles: Array< number > ): Array< any >
-{
-    const recognizers = [];
-    for ( let i in recognizerHandles )
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-explicit-any,
+                      @typescript-eslint/no-unsafe-return */
+    private getRecognizers( recognizerHandles: Array< number > ): Array< any >
     {
-        const handle = recognizerHandles[ i ];
-        const recognizer = objects[ handle ];
-        recognizers.push( recognizer );
-    }
-    return recognizers;
-}
-
-function processCreateRecognizerRunner( msg: Messages.CreateRecognizerRunner )
-{
-    if ( wasmModule == null )
-    {
-        notifyError( msg, "WASM module is not initialized!" );
-    }
-    else if ( nativeRecognizerRunner != null )
-    {
-        notifyError( msg, "Recognizer runner is already created! Multiple instances are not allowed!" );
-    }
-    else
-    {
-        setupMetadataCallbacks( msg.registeredMetadataCallbacks );
-        try
+        const recognizers = [];
+        for ( const handle of recognizerHandles )
         {
-            const recognizers = getRecognizers( msg.recognizerHandles );
-
-            nativeRecognizerRunner = new wasmModule.RecognizerRunner( recognizers, msg.allowMultipleResults, metadataCallbacks );
-
-            notifySuccess( msg );
+            const recognizer = this.objects[ handle ];
+            recognizers.push( recognizer );
         }
-        catch ( error )
-        {
-            notifyError( msg, error );
-        }
+        return recognizers;
     }
-}
+    /* eslint-enable @typescript-eslint/no-unsafe-assignment,
+                     @typescript-eslint/no-explicit-any,
+                     @typescript-eslint/no-unsafe-return */
 
-function processReconfigureRecognizerRunner( msg: Messages.ReconfigureRecognizerRunner )
-{
-    if ( wasmModule == null )
+    private processCreateRecognizerRunner( msg: Messages.CreateRecognizerRunner )
     {
-        notifyError( msg, "WASM module is not initialized!" );
-    }
-    else if ( nativeRecognizerRunner == null )
-    {
-        notifyError( msg, "Recognizer runner is not created! There is nothing to reconfigure!" );
-    }
-    else
-    {
-        try
+        if ( this.wasmModule === null )
         {
-            const recognizers = getRecognizers( msg.recognizerHandles );
-            nativeRecognizerRunner.reconfigureRecognizers( recognizers, msg.allowMultipleResults );
-            notifySuccess( msg );
-        } catch( error )
-        {
-            notifyError( msg, error );
+            this.notifyError( msg, "WASM module is not initialized!" );
         }
-    }
-}
-
-function processDeleteRecognizerRunner( msg: Messages.DeleteRecognizerRunner )
-{
-    if ( nativeRecognizerRunner == null )
-    {
-        notifyError( msg, "Recognizer runner is already deleted!" );
-    }
-    else
-    {
-        try
+        else if ( this.nativeRecognizerRunner !== null )
         {
-            nativeRecognizerRunner.delete();
-            nativeRecognizerRunner = null;
-            notifySuccess( msg );
-        }
-        catch( error )
-        {
-            notifyError( msg, error );
-        }
-    }
-}
-
-function processInvokeObject( msg: Messages.InvokeObjectMethod )
-{
-    try
-    {
-        const objectHandle = msg.objectHandle as number;
-        const methodName = msg.methodName as string;
-        const params = unwrapParameters( msg );
-
-        const object = objects[ objectHandle ];
-        if ( object === undefined )
-        {
-            notifyError( msg, "Cannot find object with handle: " + objectHandle );
+            this.notifyError( msg, "Recognizer runner is already created! Multiple instances are not allowed!" );
         }
         else
         {
-            const result = object[ methodName ]( ...params );
-            const transferrables = scanForTransferrables( result );
-            if ( methodName == 'delete' )
+            this.setupMetadataCallbacks( msg.registeredMetadataCallbacks );
+            try
             {
-                delete objects[ objectHandle ];
-            }
+                const recognizers = this.getRecognizers( msg.recognizerHandles );
 
-            context.postMessage
-            (
-                new Messages.InvokeResultMessage( msg.messageID, result ),
-                transferrables
-            );
+                /* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                                  @typescript-eslint/no-unsafe-member-access,
+                                  @typescript-eslint/no-unsafe-call */
+                this.nativeRecognizerRunner = new this.wasmModule.RecognizerRunner
+                (
+                    recognizers,
+                    msg.allowMultipleResults,
+                    this.metadataCallbacks
+                );
+                /* eslint-enable @typescript-eslint/no-unsafe-assignment,
+                                 @typescript-eslint/no-unsafe-member-access,
+                                 @typescript-eslint/no-unsafe-call */
+
+                this.notifySuccess( msg );
+            }
+            catch ( error )
+            {
+                this.notifyError( msg, error );
+            }
         }
     }
-    catch ( error )
-    {
-        notifyError( msg, error );
-    }
-}
 
-function processImage( msg: Messages.ProcessImage )
-{
-    if ( nativeRecognizerRunner == null )
+    private processReconfigureRecognizerRunner( msg: Messages.ReconfigureRecognizerRunner )
     {
-        notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+        if ( this.wasmModule === null )
+        {
+            this.notifyError( msg, "WASM module is not initialized!" );
+        }
+        else if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError( msg, "Recognizer runner is not created! There is nothing to reconfigure!" );
+        }
+        else
+        {
+            try
+            {
+                const recognizers = this.getRecognizers( msg.recognizerHandles );
+
+                /* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                                  @typescript-eslint/no-unsafe-member-access,
+                                  @typescript-eslint/no-unsafe-call */
+                this.nativeRecognizerRunner.reconfigureRecognizers
+                (
+                    recognizers,
+                    msg.allowMultipleResults
+                );
+                /* eslint-enable @typescript-eslint/no-unsafe-assignment,
+                                 @typescript-eslint/no-unsafe-member-access,
+                                 @typescript-eslint/no-unsafe-call */
+
+                this.notifySuccess( msg );
+            }
+            catch( error )
+            {
+                this.notifyError( msg, error );
+            }
+        }
     }
-    else
+
+    private processDeleteRecognizerRunner( msg: Messages.DeleteRecognizerRunner )
     {
+        if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError( msg, "Recognizer runner is already deleted!" );
+            return;
+        }
+
+        try
+        {
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access */
+            this.nativeRecognizerRunner.delete();
+            this.nativeRecognizerRunner = null;
+            this.notifySuccess( msg );
+            /* eslint-enable @typescript-eslint/no-unsafe-call,
+                             @typescript-eslint/no-unsafe-member-access */
+        }
+        catch( error )
+        {
+            this.notifyError( msg, error );
+        }
+    }
+
+    private processInvokeObject( msg: Messages.InvokeObjectMethod )
+    {
+        try
+        {
+            const objectHandle = msg.objectHandle;
+            const methodName = msg.methodName;
+            const params = this.unwrapParameters( msg );
+
+            const object = this.objects[ objectHandle ]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+            if ( object === undefined )
+            {
+                this.notifyError( msg, "Cannot find object with handle: " + objectHandle.toString() );
+            }
+            else
+            {
+                /* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                                  @typescript-eslint/no-unsafe-member-access,
+                                  @typescript-eslint/no-unsafe-call */
+                const result = object[ methodName ]( ...params );
+                /* eslint-enable @typescript-eslint/no-unsafe-assignment,
+                                @typescript-eslint/no-unsafe-member-access,
+                                @typescript-eslint/no-unsafe-call */
+                const transferrables = this.scanForTransferrables( result );
+                if ( methodName === "delete" )
+                {
+                    delete this.objects[ objectHandle ];
+                }
+
+                this.context.postMessage
+                (
+                    new Messages.InvokeResultMessage( msg.messageID, result ),
+                    transferrables
+                );
+            }
+        }
+        catch ( error )
+        {
+            this.notifyError( msg, error );
+        }
+    }
+
+    private processImage( msg: Messages.ProcessImage )
+    {
+        if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            return;
+        }
+
         try
         {
             const image = msg.frame;
-            const result: number = nativeRecognizerRunner.processImage( image );
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access,
+                              @typescript-eslint/no-unsafe-assignment */
+            const result: number = this.nativeRecognizerRunner.processImage( image );
+            /* eslint-enable @typescript-eslint/no-unsafe-call,
+                             @typescript-eslint/no-unsafe-member-access,
+                             @typescript-eslint/no-unsafe-assignment */
 
-            context.postMessage( new Messages.ImageProcessResultMessage( msg.messageID, result ) );
+            this.context.postMessage( new Messages.ImageProcessResultMessage( msg.messageID, result ) );
         }
         catch( error )
         {
-            notifyError( msg, error );
+            this.notifyError( msg, error );
         }
     }
-}
 
-function resetRecognizers( msg: Messages.ResetRecognizers )
-{
-    if ( nativeRecognizerRunner == null )
+    private resetRecognizers( msg: Messages.ResetRecognizers )
     {
-        notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
-    }
-    else
-    {
+        if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            return;
+        }
+
         try
         {
-            nativeRecognizerRunner.resetRecognizers( msg.hardReset );
-            notifySuccess( msg );
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access */
+            this.nativeRecognizerRunner.resetRecognizers( msg.hardReset );
+            this.notifySuccess( msg );
+            /* eslint-enable @typescript-eslint/no-unsafe-call,
+                             @typescript-eslint/no-unsafe-member-access */
         }
         catch ( error )
         {
-            notifyError( msg, error );
+            this.notifyError( msg, error );
         }
     }
-}
 
-function setDetectionOnly( msg: Messages.SetDetectionOnly )
-{
-    if ( nativeRecognizerRunner == null )
+    private setDetectionOnly( msg: Messages.SetDetectionOnly )
     {
-        notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
-    }
-    else
-    {
+        if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            return;
+        }
+
         try
         {
-            nativeRecognizerRunner.setDetectionOnlyMode( msg.detectionOnlyMode );
-            notifySuccess( msg );
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access */
+            this.nativeRecognizerRunner.setDetectionOnlyMode( msg.detectionOnlyMode );
+            this.notifySuccess( msg );
+            /* eslint-enable @typescript-eslint/no-unsafe-call,
+                             @typescript-eslint/no-unsafe-member-access */
         }
         catch ( error )
         {
-            notifyError( msg, error );
+            this.notifyError( msg, error );
         }
     }
-}
 
-function setCameraPreviewMirrored( msg: Messages.SetCameraPreviewMirrored )
-{
-    if ( nativeRecognizerRunner == null )
+    private setCameraPreviewMirrored( msg: Messages.SetCameraPreviewMirrored )
     {
-        notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
-    }
-    else
-    {
+        if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            return;
+        }
+
         try
         {
-            nativeRecognizerRunner.setCameraPreviewMirrored( msg.cameraPreviewMirrored );
-            notifySuccess( msg );
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access */
+            this.nativeRecognizerRunner.setCameraPreviewMirrored( msg.cameraPreviewMirrored );
+            this.notifySuccess( msg );
+            /* eslint-enable @typescript-eslint/no-unsafe-call,
+                             @typescript-eslint/no-unsafe-member-access */
         }
         catch ( error )
         {
-            notifyError( msg, error );
+            this.notifyError( msg, error );
         }
-    }
-}
-
-function setupMetadataCallbacks( registeredMetadataCallbacks: Messages.RegisteredMetadataCallbacks )
-{
-    // setup local callbacks
-    if ( registeredMetadataCallbacks.onDebugText )
-    {
-        metadataCallbacks.onDebugText = ( debugText: string ) =>
-        {
-            const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onDebugText, [ debugText ] );
-            context.postMessage( msg );
-        }
-    }
-    else
-    {
-        delete metadataCallbacks.onDebugText;
     }
 
-    if ( registeredMetadataCallbacks.onDetectionFailed )
+    private setupMetadataCallbacks( registeredMetadataCallbacks: Messages.RegisteredMetadataCallbacks )
     {
-        metadataCallbacks.onDetectionFailed = () =>
+        // setup local callbacks
+        if ( registeredMetadataCallbacks.onDebugText )
         {
-            const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onDetectionFailed, [] );
-            context.postMessage( msg );
-        }
-    }
-    else
-    {
-        delete metadataCallbacks.onDetectionFailed;
-    }
-
-    if ( registeredMetadataCallbacks.onPointsDetection )
-    {
-        metadataCallbacks.onPointsDetection = ( pointSet: DisplayablePoints ) =>
-        {
-            const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onPointsDetection, [ pointSet ] );
-            context.postMessage( msg );
-        }
-    }
-    else
-    {
-        delete metadataCallbacks.onPointsDetection;
-    }
-
-    if ( registeredMetadataCallbacks.onQuadDetection )
-    {
-        metadataCallbacks.onQuadDetection = ( quad: DisplayableQuad ) =>
-        {
-            const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onQuadDetection, [ quad ] );
-            context.postMessage( msg );
-        }
-    }
-    else
-    {
-        delete metadataCallbacks.onQuadDetection;
-    }
-
-    if ( registeredMetadataCallbacks.onFirstSideResult )
-    {
-        metadataCallbacks.onFirstSideResult = () =>
-        {
-            const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onFirstSideResult, [] );
-            context.postMessage( msg );
-        }
-    }
-    else
-    {
-        delete metadataCallbacks.onFirstSideResult;
-    }
-
-    if ( registeredMetadataCallbacks.onGlare )
-    {
-        metadataCallbacks.onGlare = ( hasGlare: boolean ) =>
-        {
-            const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onGlare, [ hasGlare ] );
-            context.postMessage( msg );
-        }
-    }
-    else
-    {
-        delete metadataCallbacks.onGlare;
-    }
-}
-
-function registerMetadataCallbacks( msg: Messages.RegisterMetadataCallbacks )
-{
-    if ( nativeRecognizerRunner == null )
-    {
-        notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
-    }
-    else
-    {
-        setupMetadataCallbacks( msg.registeredMetadataCallbacks );
-        try
-        {
-            nativeRecognizerRunner.setJSDelegate( metadataCallbacks );
-            notifySuccess( msg );
-        }
-        catch( error )
-        {
-            notifyError( msg, error );
-        }
-    }
-}
-
-function registerClearTimeoutCallback( msg: Messages.SetClearTimeoutCallback )
-{
-    if ( nativeRecognizerRunner == null )
-    {
-        notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
-    }
-    else
-    {
-        if ( msg.callbackNonEmpty )
-        {
-            clearTimeoutCallback = {
-                onClearTimeout: () =>
-                {
-                    const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.clearTimeoutCallback, [] );
-                    context.postMessage( msg );
-                }
-            }
+            this.metadataCallbacks.onDebugText = ( debugText: string ) =>
+            {
+                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onDebugText, [ debugText ] );
+                this.context.postMessage( msg );
+            };
         }
         else
         {
-            clearTimeoutCallback = null;
+            delete this.metadataCallbacks.onDebugText;
         }
+
+        if ( registeredMetadataCallbacks.onDetectionFailed )
+        {
+            this.metadataCallbacks.onDetectionFailed = () =>
+            {
+                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onDetectionFailed, [] );
+                this.context.postMessage( msg );
+            };
+        }
+        else
+        {
+            delete this.metadataCallbacks.onDetectionFailed;
+        }
+
+        if ( registeredMetadataCallbacks.onPointsDetection )
+        {
+            this.metadataCallbacks.onPointsDetection = ( pointSet: DisplayablePoints ) =>
+            {
+                const onPointsDetection = Messages.MetadataCallback.onPointsDetection;
+                const msg = new Messages.InvokeCallbackMessage( onPointsDetection, [ pointSet ] );
+                this.context.postMessage( msg );
+            };
+        }
+        else
+        {
+            delete this.metadataCallbacks.onPointsDetection;
+        }
+
+        if ( registeredMetadataCallbacks.onQuadDetection )
+        {
+            this.metadataCallbacks.onQuadDetection = ( quad: DisplayableQuad ) =>
+            {
+                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onQuadDetection, [ quad ] );
+                this.context.postMessage( msg );
+            };
+        }
+        else
+        {
+            delete this.metadataCallbacks.onQuadDetection;
+        }
+
+        if ( registeredMetadataCallbacks.onFirstSideResult )
+        {
+            this.metadataCallbacks.onFirstSideResult = () =>
+            {
+                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onFirstSideResult, [] );
+                this.context.postMessage( msg );
+            };
+        }
+        else
+        {
+            delete this.metadataCallbacks.onFirstSideResult;
+        }
+
+        if ( registeredMetadataCallbacks.onGlare )
+        {
+            this.metadataCallbacks.onGlare = ( hasGlare: boolean ) =>
+            {
+                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onGlare, [ hasGlare ] );
+                this.context.postMessage( msg );
+            };
+        }
+        else
+        {
+            delete this.metadataCallbacks.onGlare;
+        }
+    }
+
+    private registerMetadataCallbacks( msg: Messages.RegisterMetadataCallbacks )
+    {
+        if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            return;
+        }
+
+        this.setupMetadataCallbacks( msg.registeredMetadataCallbacks );
         try
         {
-            nativeRecognizerRunner.setClearTimeoutCallback( clearTimeoutCallback );
-            notifySuccess( msg );
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access */
+            this.nativeRecognizerRunner.setJSDelegate( this.metadataCallbacks );
+            this.notifySuccess( msg );
+            /* eslint-enable @typescript-eslint/no-unsafe-call,
+                             @typescript-eslint/no-unsafe-member-access */
         }
         catch( error )
         {
-            notifyError( msg, error );
+            this.notifyError( msg, error );
+        }
+    }
+
+    private registerClearTimeoutCallback( msg: Messages.SetClearTimeoutCallback )
+    {
+        if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            return;
+        }
+
+        if ( msg.callbackNonEmpty )
+        {
+            this.clearTimeoutCallback = {
+                onClearTimeout: () =>
+                {
+                    const clearTimeoutCallback = Messages.MetadataCallback.clearTimeoutCallback;
+                    const msg = new Messages.InvokeCallbackMessage( clearTimeoutCallback, [] );
+                    this.context.postMessage( msg );
+                }
+            };
+        }
+        else
+        {
+            this.clearTimeoutCallback = null;
+        }
+
+        try
+        {
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access */
+            this.nativeRecognizerRunner.setClearTimeoutCallback( this.clearTimeoutCallback );
+            this.notifySuccess( msg );
+            /* eslint-enable @typescript-eslint/no-unsafe-call,
+                             @typescript-eslint/no-unsafe-member-access */
+        }
+        catch( error )
+        {
+            this.notifyError( msg, error );
         }
     }
 }

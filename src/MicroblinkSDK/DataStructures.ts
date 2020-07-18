@@ -1,10 +1,10 @@
-import { CapturedFrame } from "./FrameCapture"
-import { MetadataCallbacks } from "./MetadataCallbacks"
-import { ClearTimeoutCallback } from "./ClearTimeoutCallback"
+import { CapturedFrame } from "./FrameCapture";
+import { MetadataCallbacks } from "./MetadataCallbacks";
+import { ClearTimeoutCallback } from "./ClearTimeoutCallback";
 
-////////////////////////////////////////////////
-// DATA STRUCTURES
-////////////////////////////////////////////////
+// ============================================ /
+// DATA STRUCTURES                              /
+// ============================================ /
 
 /**
  * Specifies the orientation of the contents of the image.
@@ -46,7 +46,7 @@ export enum ImageOrientation
      * is mounted horizontally (i.e. produced image is in "landscape" orienation).
      */
     Rotated180
-};
+}
 
 /**
  * Specifies the state of the recognition result.
@@ -59,7 +59,7 @@ export enum RecognizerResultState
     Uncertain,
     /** All required data has been recognized. */
     Valid
-};
+}
 
 /**
  * Specifies an abstract object placed on the WebAssembly heap.
@@ -73,7 +73,7 @@ export interface WasmNativeObject
      * Cleans up the object from the WebAssembly heap.
      */
     delete(): Promise< void >;
-};
+}
 
 /**
  * Specifies the abstract recognition result.
@@ -82,13 +82,15 @@ export interface RecognizerResult
 {
     /** State of the recognition result. See the documentation for RecognizerResultState for more information. */
     readonly state: RecognizerResultState;
-};
+}
 
 /**
  * Specifies the abstract settings for the Recognizer object.
  */
+/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface RecognizerSettings
 {}
+/* eslint-enable @typescript-eslint/no-empty-interface */
 
 /**
  * Specifies an abstract Recognizer object. The Recognizer object is the basic unit of processing.
@@ -136,7 +138,8 @@ export interface RecognizerRunner extends WasmNativeObject
      * recognizer objects are un-associated from this RecognizerRunner and are elligible for calling
      * the updateSettings() method on them after that.
      * @param recognizers Array of recognizer objects that should be associated with the RecognizerRunner.
-     * @param allowMultipleResults Whether or not it is allowed to return multiple results from single image. See README.md for more details about this option.
+     * @param allowMultipleResults Whether or not it is allowed to return multiple results from single image.
+     *        See README.md for more details about this option.
      */
     reconfigureRecognizers( recognizers: Array< Recognizer >, allowMultipleResults: boolean ): Promise< void >;
 
@@ -150,8 +153,10 @@ export interface RecognizerRunner extends WasmNativeObject
     setMetadataCallbacks( metadataCallbacks: MetadataCallbacks ): Promise< void >;
 
     /**
-     * Resets the state of all recognizers in current recognition chain, i.e. deletes the cached data from multiple recognitions.
-     * @param hardReset If set to false, combined recognizers will not be reset. If set to true, all recognizers will be reset.
+     * Resets the state of all recognizers in current recognition chain, i.e. deletes the cached data from multiple
+     * recognitions.
+     * @param hardReset If set to false, combined recognizers will not be reset. If set to true, all recognizers will be
+     *        reset.
      */
     resetRecognizers( hardReset: boolean ): Promise< void >;
 
@@ -177,7 +182,7 @@ export interface RecognizerRunner extends WasmNativeObject
      * @param mirrored Whether or not metadatacallbacks should adjust coordinates for mirrored image.
      */
     setCameraPreviewMirrored( mirrored: boolean ): Promise< void >;
-};
+}
 
 /**
  * @hidden
@@ -187,9 +192,17 @@ export interface RecognizerRunner extends WasmNativeObject
  */
 export interface WasmModuleProxy
 {
-    createRecognizerRunner( recognizers: Array< Recognizer >, allowMultipleResults: boolean, metadataCallbacks: MetadataCallbacks ): Promise< RecognizerRunner >;
+    createRecognizerRunner
+    (
+        recognizers:            Array< Recognizer >,
+        allowMultipleResults:   boolean,
+        metadataCallbacks:      MetadataCallbacks
+    ): Promise< RecognizerRunner >;
+
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     newRecognizer( className: string, ...constructorArgs: any[] ): Promise< Recognizer >;
-};
+    /* eslint-enable @typescript-eslint/no-explicit-any */
+}
 
 /**
  * Specifies a main object that is used for communication with the WebAssembly module.

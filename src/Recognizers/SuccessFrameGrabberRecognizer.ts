@@ -1,4 +1,10 @@
-import { Recognizer, RecognizerResult, WasmSDK, ImageOrientation } from '../MicroblinkSDK/DataStructures'
+import
+{
+    Recognizer,
+    RecognizerResult,
+    WasmSDK,
+    ImageOrientation
+} from "../MicroblinkSDK/DataStructures";
 
 /**
  * The result object of the SuccessFrameGrabberRecognizer.
@@ -18,20 +24,21 @@ export interface SuccessFrameGrabberRecognizerResult extends RecognizerResult
 }
 
 /**
- * Recognizer that can wrap another recognizer and capture the frame on which the wrapped recognizer
- * has succeeded to recognize.
+ * Recognizer that can wrap another recognizer and capture the frame on which
+ * the wrapped recognizer has succeeded to recognize.
  */
 export interface SuccessFrameGrabberRecognizer< T extends Recognizer > extends Recognizer
 {
     /**
-     * Reference to recognizer that is being wrapped by this SuccessFrameGrabberRecognizer
+     * Reference to recognizer that is being wrapped by this
+     * SuccessFrameGrabberRecognizer.
      */
     readonly wrappedRecognizer: T;
 
     /**
-     * Returns the current result of the recognition. Note that result will not contain
-     * the result of the wrapped recognizer. To obtain that result, call getResult on
-     * wrapped recognizer.
+     * Returns the current result of the recognition. Note that result will not
+     * contain the result of the wrapped recognizer. To obtain that result, call
+     * getResult on wrapped recognizer.
      */
     getResult(): Promise< SuccessFrameGrabberRecognizerResult >;
 
@@ -42,18 +49,27 @@ export interface SuccessFrameGrabberRecognizer< T extends Recognizer > extends R
 }
 
 /**
- * This function is used to create a new instance of `SuccessFrameGrabberRecognizer`.
- * @param wasmSDK Instance of WasmSDK which will be used to communicate with the WebAssembly module.
- * @param slaveRecognizer Instance of Recognizer that will be wrapped
+ * Creates a new instance of `SuccessFrameGrabberRecognizer`.
+ * @param wasmSDK Instance of WasmSDK which will be used to communicate with the
+ *        WebAssembly module.
+ * @param slaveRecognizer Instance of Recognizer that will be wrapped.
  */
-export async function createSuccessFrameGrabberRecognizer< T extends Recognizer >( wasmSDK: WasmSDK, slaveRecognizer: T ): Promise< SuccessFrameGrabberRecognizer< T > >
+export async function createSuccessFrameGrabberRecognizer< T extends Recognizer >
+(
+    wasmSDK:            WasmSDK,
+    slaveRecognizer:    T
+): Promise< SuccessFrameGrabberRecognizer < T > >
 {
     // taken from https://stackoverflow.com/a/53615996
-    let sfgr = await wasmSDK.mbWasmModule.newRecognizer( "SuccessFrameGrabberRecognizer", slaveRecognizer ) as SuccessFrameGrabberRecognizer< T >;
+    const sfgr = await wasmSDK.mbWasmModule.newRecognizer
+    (
+        "SuccessFrameGrabberRecognizer",
+        slaveRecognizer
+    ) as SuccessFrameGrabberRecognizer< T >;
     type MutableSFGR = {
-        -readonly [K in keyof SuccessFrameGrabberRecognizer< T >]: SuccessFrameGrabberRecognizer< T >[ K ]
+        -readonly [ K in keyof SuccessFrameGrabberRecognizer< T > ]: SuccessFrameGrabberRecognizer< T >[ K ]
     }
-    let mutableSFGR: MutableSFGR = sfgr;
+    const mutableSFGR: MutableSFGR = sfgr;
     mutableSFGR.wrappedRecognizer = slaveRecognizer;
     return sfgr;
 }

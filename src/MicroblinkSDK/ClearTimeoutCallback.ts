@@ -5,7 +5,8 @@
  * finished scanning of the first side and needs a clean timeout start for the
  * recognition of the back side.
  */
-export interface ClearTimeoutCallback {
+export interface ClearTimeoutCallback
+{
     /**
      * Called when recognition process wants to clear any timeouts imposed on it.
      */

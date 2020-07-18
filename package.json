@@ -1,16 +1,56 @@
 {
     "name": "@microblink/blinkid-in-browser-sdk",
-    "version": "1.0.0-beta.1",
+    "version": "5.5.0",
     "description": "A simple ID scanning library for WebAssembly-enabled browsers.",
-    "main": "src/index.ts",
-    "files": [
-        "build",
-        "src",
-        "README.md",
-        "Release notes.md"
+    "homepage": "https://github.com/BlinkID/blinkid-in-browser",
+    "repository": "github:BlinkID:blinkid-in-browser",
+    "bugs": "https://github.com/BlinkID/blinkid-in-browser/issues",
+    "keywords": [
+        "webassembly",
+        "ocr",
+        "identity-documents",
+        "identity-document",
+        "browser",
+        "optical-character-recognition",
+        "mrz",
+        "mrtd",
+        "pdf417"
     ],
+    "main": "lib/blinkid-sdk.js",
+    "module": "es/blinkid-sdk.js",
+    "unpkg": "dist/blinkid-sdk.js",
+    "types": "types/index.d.ts",
+    "files": [
+        "dist",
+        "es",
+        "lib",
+        "resources",
+        "src",
+        "types"
+    ],
+    "scripts": {
+        "build": "rollup -c",
+        "check-types": "tsc --noEmit",
+        "clean": "rimraf dist es lib types resources/*worker*",
+        "lint": "eslint --ext ts -c .eslintrc.json src",
+        "pretest": "npm run build",
+        "prepublishOnly": "npm run clean && npm run check-types && npm run lint && npm test",
+        "test": "echo \"Not implemented!\""
+    },
     "devDependencies": {
-        "typescript": "^3.8.3",
-        "tslib": "^1.11.1"
+        "@babel/cli": "^7.10.3",
+        "@babel/core": "^7.10.3",
+        "@babel/preset-env": "^7.10.3",
+        "@rollup/plugin-babel": "^5.0.4",
+        "@rollup/plugin-node-resolve": "^8.0.1",
+        "@typescript-eslint/eslint-plugin": "^3.4.0",
+        "@typescript-eslint/parser": "^3.4.0",
+        "eslint": "^7.3.1",
+        "rimraf": "^3.0.2",
+        "rollup": "^2.15.0",
+        "rollup-plugin-terser": "^6.1.0",
+        "rollup-plugin-typescript2": "^0.27.1",
+        "tslib": "^2.0.0",
+        "typescript": "^3.8.3"
     }
 }

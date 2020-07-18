@@ -1,4 +1,4 @@
-import { MBDate } from '../../../MicroblinkSDK/DataStructures'
+import { MBDate } from "../../../MicroblinkSDK/DataStructures";
 
 /**
  * Supported MRTD document types

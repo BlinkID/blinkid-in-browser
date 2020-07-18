@@ -1,5 +1,12 @@
-import { Recognizer, RecognizerResult, RecognizerSettings, WasmSDK } from '../../MicroblinkSDK/DataStructures'
-import { BarcodeData } from './BarcodeData'
+import
+{
+    Recognizer,
+    RecognizerResult,
+    RecognizerSettings,
+    WasmSDK
+} from "../../MicroblinkSDK/DataStructures";
+
+import { BarcodeData } from "./BarcodeData";
 
 /**
  * A settings object that is used for configuring the BarcodeRecognizer.
