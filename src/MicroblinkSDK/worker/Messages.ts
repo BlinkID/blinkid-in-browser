@@ -1,5 +1,5 @@
 import { CapturedFrame } from "../FrameCapture";
-import { WasmSDKLoadSettings } from '../WasmLoadSettings'
+import { WasmSDKLoadSettings } from "../WasmLoadSettings";
 
 let nextMessageID = 0;
 
@@ -10,9 +10,9 @@ function getNextMessageID()
     return msgId;
 }
 
-//////////////////////////////////////////
+// ===================================== /
 // Request messages
-//////////////////////////////////////////
+// ===================================== /
 
 export interface RequestMessage
 {
@@ -28,6 +28,7 @@ export interface TransferrableMessage
 abstract class BaseRequestMessage implements RequestMessage
 {
     readonly action: string;
+
     readonly messageID: number;
 
     protected constructor( action: string )
@@ -39,12 +40,19 @@ abstract class BaseRequestMessage implements RequestMessage
 
 export class InitMessage extends BaseRequestMessage
 {
-    static readonly action: string = 'init';
+    static readonly action: string = "init";
+
     readonly wasmModuleName: string;
+
     readonly licenseKey: string;
+
     readonly userId: string;
+
     readonly registerLoadCallback: boolean;
+
     readonly allowHelloMessage: boolean;
+
+    readonly engineLocation: string;
 
     constructor( wasmLoadSettings: WasmSDKLoadSettings, userId: string )
     {
@@ -52,10 +60,11 @@ export class InitMessage extends BaseRequestMessage
         this.wasmModuleName = wasmLoadSettings.wasmModuleName;
         this.licenseKey = wasmLoadSettings.licenseKey;
         this.userId = userId;
-        this.registerLoadCallback = wasmLoadSettings.loadProgressCallback != null;
+        this.registerLoadCallback = wasmLoadSettings.loadProgressCallback !== null;
         this.allowHelloMessage = wasmLoadSettings.allowHelloMessage;
+        this.engineLocation = wasmLoadSettings.engineLocation;
     }
-};
+}
 
 export enum ParameterType
 {
@@ -65,14 +74,16 @@ export enum ParameterType
 
 export interface WrappedParameter
 {
-    parameter: any;
+    parameter: any; // eslint-disable-line @typescript-eslint/no-explicit-any
     type: ParameterType;
 }
 
 export class InvokeFunction extends BaseRequestMessage
 {
-    static readonly action: string = 'invokeFunction';
+    static readonly action: string = "invokeFunction";
+
     readonly funcName: string;
+
     readonly params: Array< WrappedParameter >;
 
     constructor( funcName: string, params: Array< WrappedParameter > )
@@ -85,8 +96,10 @@ export class InvokeFunction extends BaseRequestMessage
 
 export class CreateNewRecognizer extends BaseRequestMessage
 {
-    static readonly action: string = 'createNewNativeObject';
+    static readonly action: string = "createNewNativeObject";
+
     readonly className: string;
+
     readonly params: Array< WrappedParameter >;
 
     constructor( className: string, params: Array< WrappedParameter > )
@@ -99,12 +112,20 @@ export class CreateNewRecognizer extends BaseRequestMessage
 
 export class CreateRecognizerRunner extends BaseRequestMessage
 {
-    static readonly action: string = 'createRecognizerRunner';
+    static readonly action: string = "createRecognizerRunner";
+
     readonly recognizerHandles: Array< number >;
+
     readonly allowMultipleResults: boolean;
+
     readonly registeredMetadataCallbacks: RegisteredMetadataCallbacks;
 
-    constructor( recognizerHandles: Array< number >, allowMultipleResults: boolean, registeredMetadataCallbacks: RegisteredMetadataCallbacks )
+    constructor
+    (
+        recognizerHandles           : Array< number >,
+        allowMultipleResults        : boolean,
+        registeredMetadataCallbacks : RegisteredMetadataCallbacks
+    )
     {
         super( CreateRecognizerRunner.action );
         this.recognizerHandles = recognizerHandles;
@@ -115,8 +136,10 @@ export class CreateRecognizerRunner extends BaseRequestMessage
 
 export class ReconfigureRecognizerRunner extends BaseRequestMessage
 {
-    static readonly action: string = 'reconfigureRecognizerRunner';
+    static readonly action: string = "reconfigureRecognizerRunner";
+
     readonly recognizerHandles: Array< number >;
+
     readonly allowMultipleResults: boolean;
 
     constructor( recognizerHandles: Array< number >, allowMultipleResults: boolean )
@@ -129,7 +152,7 @@ export class ReconfigureRecognizerRunner extends BaseRequestMessage
 
 export class DeleteRecognizerRunner extends BaseRequestMessage
 {
-    static readonly action: string = 'deleteRecognizerRunner';
+    static readonly action: string = "deleteRecognizerRunner";
 
     constructor()
     {
@@ -139,9 +162,12 @@ export class DeleteRecognizerRunner extends BaseRequestMessage
 
 export class InvokeObjectMethod extends BaseRequestMessage
 {
-    static readonly action: string = 'invokeObject';
+    static readonly action: string = "invokeObject";
+
     readonly objectHandle: number;
+
     readonly methodName: string;
+
     readonly params: Array< WrappedParameter >;
 
     constructor( objectHandle: number, methodName: string, params: Array< WrappedParameter > )
@@ -155,7 +181,8 @@ export class InvokeObjectMethod extends BaseRequestMessage
 
 export class ProcessImage extends BaseRequestMessage implements TransferrableMessage
 {
-    static readonly action: string = 'processImage';
+    static readonly action: string = "processImage";
+
     readonly frame: CapturedFrame;
 
     constructor( image: CapturedFrame )
@@ -168,11 +195,12 @@ export class ProcessImage extends BaseRequestMessage implements TransferrableMes
     {
         return [ this.frame.imageData.data.buffer ];
     }
-};
+}
 
 export class ResetRecognizers extends BaseRequestMessage
 {
-    static readonly action: string = 'resetRecognizers';
+    static readonly action: string = "resetRecognizers";
+
     readonly hardReset: boolean
 
     constructor( hardReset: boolean )
@@ -184,17 +212,23 @@ export class ResetRecognizers extends BaseRequestMessage
 
 export class RegisteredMetadataCallbacks
 {
-    onDebugText:       boolean = false;
-    onDetectionFailed: boolean = false;
-    onQuadDetection:   boolean = false;
-    onPointsDetection: boolean = false;
-    onFirstSideResult: boolean = false;
-    onGlare:           boolean = false;
+    onDebugText       = false;
+
+    onDetectionFailed = false;
+
+    onQuadDetection   = false;
+
+    onPointsDetection = false;
+
+    onFirstSideResult = false;
+
+    onGlare           = false;
 }
 
 export class RegisterMetadataCallbacks extends BaseRequestMessage
 {
-    static readonly action: string  = 'registerMetadataCallbacks';
+    static readonly action: string = "registerMetadataCallbacks";
+
     readonly registeredMetadataCallbacks: RegisteredMetadataCallbacks;
 
     constructor( registeredMetadataCallbacks: RegisteredMetadataCallbacks )
@@ -206,8 +240,9 @@ export class RegisterMetadataCallbacks extends BaseRequestMessage
 
 export class SetDetectionOnly extends BaseRequestMessage
 {
-    static readonly action: string = 'setDetectionOnly';
-    readonly detectionOnlyMode: boolean
+    static readonly action: string = "setDetectionOnly";
+
+    readonly detectionOnlyMode: boolean;
 
     constructor( detectionOnlyMode: boolean )
     {
@@ -218,8 +253,9 @@ export class SetDetectionOnly extends BaseRequestMessage
 
 export class SetClearTimeoutCallback extends BaseRequestMessage
 {
-    static readonly action: string = 'setClearTimeoutCallback'
-    readonly callbackNonEmpty: boolean
+    static readonly action: string = "setClearTimeoutCallback";
+
+    readonly callbackNonEmpty: boolean;
 
     constructor( callbackNonEmpty: boolean )
     {
@@ -230,7 +266,8 @@ export class SetClearTimeoutCallback extends BaseRequestMessage
 
 export class SetCameraPreviewMirrored extends BaseRequestMessage
 {
-    static readonly action: string = 'setCameraPreviewMirrored';
+    static readonly action: string = "setCameraPreviewMirrored";
+
     readonly cameraPreviewMirrored: boolean
 
     constructor( cameraPreviewMirrored: boolean )
@@ -240,9 +277,9 @@ export class SetCameraPreviewMirrored extends BaseRequestMessage
     }
 }
 
-//////////////////////////////////////////
+// ===================================== /
 // Response messages
-//////////////////////////////////////////
+// ===================================== /
 
 export interface ResponseMessage
 {
@@ -252,7 +289,9 @@ export interface ResponseMessage
 export class StatusMessage implements ResponseMessage
 {
     readonly messageID: number;
+
     readonly success: boolean = true;
+
     readonly error: string | null = null;
 
     constructor( msgID: number, success: boolean, error: string | null )
@@ -263,6 +302,9 @@ export class StatusMessage implements ResponseMessage
     }
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any,
+                  @typescript-eslint/explicit-module-boundary-types,
+                  @typescript-eslint/no-unsafe-assignment */
 export class InvokeResultMessage extends StatusMessage
 {
     readonly result: any;
@@ -273,6 +315,9 @@ export class InvokeResultMessage extends StatusMessage
         this.result = result;
     }
 }
+/* eslint-enable @typescript-eslint/no-explicit-any,
+                 @typescript-eslint/explicit-module-boundary-types,
+                 @typescript-eslint/no-unsafe-assignment */
 
 export class ObjectCreatedMessage extends StatusMessage
 {
@@ -296,13 +341,14 @@ export class ImageProcessResultMessage extends StatusMessage
     }
 }
 
-//////////////////////////////////////////
+// ===================================== /
 // Load progress messages
-//////////////////////////////////////////
+// ===================================== /
 
 export class LoadProgressMessage
 {
     readonly isLoadProgressMessage = true;
+
     readonly progress: number;
 
     constructor( progress: number )
@@ -312,9 +358,9 @@ export class LoadProgressMessage
 }
 
 
-//////////////////////////////////////////
+// ===================================== /
 // Metadata callback messages
-//////////////////////////////////////////
+// ===================================== /
 
 export enum MetadataCallback
 {
@@ -327,10 +373,13 @@ export enum MetadataCallback
     onGlare
 }
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export class InvokeCallbackMessage
 {
     readonly isCallbackMessage: boolean = true;
+
     readonly callbackType:      MetadataCallback;
+
     readonly callbackParameters: any[];
 
     constructor( callbackType: MetadataCallback, callbackParams: any[] )
@@ -339,3 +388,4 @@ export class InvokeCallbackMessage
         this.callbackParameters = callbackParams;
     }
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */

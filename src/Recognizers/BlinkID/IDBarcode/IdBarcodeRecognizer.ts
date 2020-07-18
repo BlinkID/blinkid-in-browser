@@ -1,18 +1,27 @@
-import { Recognizer, RecognizerResult, RecognizerSettings, MBDate, WasmSDK } from '../../../MicroblinkSDK/DataStructures'
-import { BarcodeData } from '../../BlinkBarcode/BarcodeData'
+import
+{
+    Recognizer,
+    RecognizerResult,
+    RecognizerSettings,
+    MBDate,
+    WasmSDK
+} from "../../../MicroblinkSDK/DataStructures";
+
+import { BarcodeData } from "../../BlinkBarcode/BarcodeData";
 
 /**
  * A settings object that is used for configuring the IdBarcodeRecognizer.
  */
 export class IdBarcodeRecognizerSettings implements RecognizerSettings
-{}
+{
+
+}
 
 /**
  * The result of image recognition when using the IdBarcodeRecognizer.
  */
 export interface IdBarcodeRecognizerResult extends RecognizerResult
 {
-
     /**
      *  THe additional address information of the document owner.
      */

@@ -2,8 +2,9 @@ import
 {
     RecognizerRunner,
     RecognizerResultState
-} from './DataStructures'
-import { captureFrame } from './FrameCapture'
+} from "./DataStructures";
+
+import { captureFrame } from "./FrameCapture";
 
 /**
  * Preferred type of camera to be used when opening the camera feed.
@@ -30,8 +31,10 @@ export enum NotSupportedReason
     /** Unable to start playing because camera is already in use. */
     CameraInUse = "CameraInUse",
     /** Camera is currently not available due to a OS or hardware error. */
-    CameraNotAvailable = "CameraNotAvailable"
-};
+    CameraNotAvailable = "CameraNotAvailable",
+    /** There is no provided video element to which the camera feed should be redirected. */
+    VideoElementNotProvided = "VideoElementNotProvided"
+}
 
 /**
  * The error object thrown when VideoRecognizer fails to open the camera feed.
@@ -41,12 +44,14 @@ export class VideoRecognizerError extends Error
     /** The reason why opening the camera failed. */
     readonly reason: NotSupportedReason;
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     constructor( reason: NotSupportedReason, ...params: any[] )
     {
         super( ...params );
         this.reason = reason;
         this.name = "VideoRecognizerError";
     }
+    /* eslint-enable @typescript-eslint/no-explicit-any */
 }
 
 /**
@@ -56,9 +61,9 @@ export enum VideoRecognitionMode
 {
     /** Normal recognition */
     Recognition,
-    /** Will perform indefinite scan. Useful for profiling the performance of scan (using onDebugText metadata callback) */
+    /** Indefinite scan. Useful for profiling the performance of scan (using onDebugText metadata callback) */
     RecognitionTest,
-    /** Will perform only detection. Useful for profiling the performance of detection (using onDebugText metadata callback) */
+    /** Only detection. Useful for profiling the performance of detection (using onDebugText metadata callback) */
     DetectionTest
 }
 
@@ -68,32 +73,49 @@ export enum VideoRecognitionMode
  *                         RecognizerResultState.Empty are returned, this indicates that the scanning
  *                         was cancelled or timeout has been reached.
  */
-export type OnScanningDone = ( recognitionState: RecognizerResultState ) => void;
+export type OnScanningDone = ( recognitionState: RecognizerResultState ) => Promise< void > | void;
 
 /**
- * A wrapper around RecognizerRunner that can use it to perform recognition of video feeds - either from live camera or from predefined video file.
+ * A wrapper around RecognizerRunner that can use it to perform recognition of video feeds - either from live camera or
+ * from predefined video file.
  */
 export class VideoRecognizer
 {
     /**
-     * Creates a new VideoRecognizer by opening a camera stream and attaching it to given HTMLVideoElement. If camera cannot be accessed,
-     * the returned promise will be rejected.
+     * Creates a new VideoRecognizer by opening a camera stream and attaching it to given HTMLVideoElement. If camera
+     * cannot be accessed, the returned promise will be rejected.
      * @param cameraFeed HTMLVideoELement to which camera stream should be attached
      * @param recognizerRunner RecognizerRunner that should be used for video stream recognition.
-     * @param preferredCameraType Whether back facing or front facing camera is preferred. Obeyed only if there is a choice (i.e. if device has only front-facing camera, the opened camera will be a front-facing camera, regardless of preference)
+     * @param preferredCameraType Whether back facing or front facing camera is preferred. Obeyed only if there is
+     *        a choice (i.e. if device has only front-facing camera, the opened camera will be a front-facing camera,
+     *        regardless of preference)
      */
-    static async createVideoRecognizerFromCameraStream( cameraFeed: HTMLVideoElement, recognizerRunner: RecognizerRunner, preferredCameraType: PreferredCameraType = PreferredCameraType.BackFacingCamera ): Promise< VideoRecognizer >
+    static async createVideoRecognizerFromCameraStream
+    (
+        cameraFeed:             HTMLVideoElement,
+        recognizerRunner:       RecognizerRunner,
+        preferredCameraType:    PreferredCameraType = PreferredCameraType.BackFacingCamera
+    ): Promise< VideoRecognizer >
     {
+        // TODO: refactor this function into async/await syntax, instead of reject use throw
+        /* eslint-disable */
         return new Promise< VideoRecognizer >
         (
-            async ( resolve: any, reject: any ) =>
+            async ( resolve, reject ) =>
             {
+                // Check for tag name intentionally left out, so it's possible to use VideoRecognizer with custom elements.
+                if ( !cameraFeed || !( cameraFeed instanceof Element ) )
+                {
+                    const errorMessage = "Video element, i.e. camera feed is not provided!";
+                    reject( new VideoRecognizerError( NotSupportedReason.VideoElementNotProvided, errorMessage ) );
+                    return;
+                }
                 if ( navigator.mediaDevices && navigator.mediaDevices.getUserMedia )
                 {
                     try
                     {
                         const selectedCamera = await selectCamera( preferredCameraType );
-                        if ( selectedCamera == null )
+                        if ( selectedCamera === null )
                         {
                             reject( new VideoRecognizerError( NotSupportedReason.CameraNotFound ) );
                             return;
@@ -120,29 +142,31 @@ export class VideoRecognizer
                         };
                         if ( selectedCamera.deviceId === "" )
                         {
+                            const isPreferredBackFacing = preferredCameraType === PreferredCameraType.BackFacingCamera;
                             ( constraints.video as MediaTrackConstraints ).facingMode =
                             {
-                                ideal: preferredCameraType === PreferredCameraType.BackFacingCamera ? "environment" : "user"
-                            }
+                                ideal: isPreferredBackFacing ? "environment" : "user"
+                            };
                         }
                         else
                         {
                             ( constraints.video as MediaTrackConstraints ).deviceId =
                             {
                                 exact: selectedCamera.deviceId
-                            }
+                            };
                         }
 
                         const stream = await navigator.mediaDevices.getUserMedia( constraints );
                         cameraFeed.controls = false;
                         cameraFeed.srcObject = stream;
                         // mirror the camera view for front-facing camera
-                        if ( selectedCamera.facing == PreferredCameraType.FrontFacingCamera )
+                        if ( selectedCamera.facing === PreferredCameraType.FrontFacingCamera )
                         {
                             cameraFeed.style.transform = "scaleX(-1)";
                         }
                         // TODO: await maybe not needed here
-                        await recognizerRunner.setCameraPreviewMirrored( selectedCamera.facing == PreferredCameraType.FrontFacingCamera );
+                        const isFrontCamera = selectedCamera.facing === PreferredCameraType.FrontFacingCamera;
+                        await recognizerRunner.setCameraPreviewMirrored( isFrontCamera );
                         resolve( new VideoRecognizer( cameraFeed, recognizerRunner ) );
                     }
                     catch( error )
@@ -150,19 +174,19 @@ export class VideoRecognizer
                         let errorReason = NotSupportedReason.CameraInUse;
                         switch( error.name )
                         {
-                            case 'NotFoundError':
-                            case 'OverconstrainedError':
+                            case "NotFoundError":
+                            case "OverconstrainedError":
                                 errorReason = NotSupportedReason.CameraNotFound;
                                 break;
-                            case 'NotAllowedError':
-                            case 'SecurityError':
+                            case "NotAllowedError":
+                            case "SecurityError":
                                 errorReason = NotSupportedReason.CameraNotAllowed;
                                 break;
-                            case 'AbortError':
-                            case 'NotReadableError':
+                            case "AbortError":
+                            case "NotReadableError":
                                 errorReason = NotSupportedReason.CameraNotAvailable;
                                 break;
-                            case 'TypeError': // this should never happen. If it does, rethrow it
+                            case "TypeError": // this should never happen. If it does, rethrow it
                                 throw error;
                         }
                         reject( new VideoRecognizerError( errorReason, error.message ) );
@@ -174,20 +198,26 @@ export class VideoRecognizer
                 }
             }
         );
+        /* eslint-enable */
     }
 
     /**
-     * Creates a new VideoRecognizer by attaching the given URL to video to given HTMLVideoElement and using it to display video frames while
-     * processing them.
+     * Creates a new VideoRecognizer by attaching the given URL to video to given HTMLVideoElement and using it to
+     * display video frames while processing them.
      * @param videoPath URL of the video file that should be recognized.
      * @param videoFeed HTMLVideoElement to which video file will be attached
      * @param recognizerRunner RecognizerRunner that should be used for video stream recognition.
      */
-    static async createVideoRecognizerFromVideoPath( videoPath: string, videoFeed: HTMLVideoElement, recognizerRunner: RecognizerRunner ): Promise< VideoRecognizer >
+    static async createVideoRecognizerFromVideoPath
+    (
+        videoPath        : string,
+        videoFeed        : HTMLVideoElement,
+        recognizerRunner : RecognizerRunner
+    ): Promise< VideoRecognizer >
     {
         return new Promise
         (
-            ( resolve: any ) =>
+            ( resolve: ( videoRecognizer: VideoRecognizer ) => void ) =>
             {
                 videoFeed.src = videoPath;
                 videoFeed.currentTime = 0;
@@ -205,33 +235,38 @@ export class VideoRecognizer
      * Sets the video recognition mode to be used.
      * @param videoRecognitionMode the video recognition mode to be used.
      */
-    async setVideoRecognitionMode( videoRecognitionMode: VideoRecognitionMode )
+    async setVideoRecognitionMode( videoRecognitionMode: VideoRecognitionMode ): Promise< void >
     {
         this.videoRecognitionMode = videoRecognitionMode;
-        await this.recognizerRunner.setDetectionOnlyMode( this.videoRecognitionMode === VideoRecognitionMode.DetectionTest );
+        const isDetectionMode = this.videoRecognitionMode === VideoRecognitionMode.DetectionTest;
+        await this.recognizerRunner.setDetectionOnlyMode( isDetectionMode );
     }
 
     /**
-     * Starts the recognition of the video stream associated with this VideoRecognizer. The stream will be
-     * unpaused and recognition loop will start. After recognition completes, a onScanningDone callback will be invoked
-     * with state of the recognition.
-     * NOTE: As soon as the execution of the callback completes, the recognition loop will continue and recognition state
-     *       will be retained. To clear the recognition state, use resetRecognizers (within your callback). To pause the recognition
-     *       loop, use pauseRecognition (within your callback) - to resume it later use resumeRecognition. To completely stop the
-     *       recognition and video feed, while keeping the ability to use this VideoRecognizer later, use pauseVideoFeed. To
-     *       completely stop the recognition and video feed and release all the resources involved with video stream, use releaseVideoFeed.
+     * Starts the recognition of the video stream associated with this VideoRecognizer. The stream will be unpaused and
+     * recognition loop will start. After recognition completes, a onScanningDone callback will be invoked with state of
+     * the recognition.
+     *
+     * NOTE: As soon as the execution of the callback completes, the recognition loop will continue and recognition
+     *       state will be retained. To clear the recognition state, use resetRecognizers (within your callback). To
+     *       pause the recognition loop, use pauseRecognition (within your callback) - to resume it later use
+     *       resumeRecognition. To completely stop the recognition and video feed, while keeping the ability to use this
+     *       VideoRecognizer later, use pauseVideoFeed. To completely stop the recognition and video feed and release
+     *       all the resources involved with video stream, use releaseVideoFeed.
+     *
      * @param onScanningDone Callback that will be invoked when recognition completes.
-     * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether recognition was successful or not.
+     * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether
+     *.       recognition was successful or not.
      */
-    startRecognition( onScanningDone: OnScanningDone, recognitionTimeoutMs: number = 30000 ): void
+    startRecognition( onScanningDone: OnScanningDone, recognitionTimeoutMs = 30000 ): void
     {
-        if ( this.videoFeed == null )
+        if ( this.videoFeed === null )
         {
-            throw new Error( 'The associated video feed has been released!' );
+            throw new Error( "The associated video feed has been released!" );
         }
         if ( !this.videoFeed.paused )
         {
-            throw new Error( 'The associated video feed is not paused. Use resumeRecognition instead!' );
+            throw new Error( "The associated video feed is not paused. Use resumeRecognition instead!" );
         }
 
         this.cancelled = false;
@@ -239,16 +274,21 @@ export class VideoRecognizer
         this.clearTimeout();
         this.recognitionTimeoutMs = recognitionTimeoutMs;
         this.onScanningDone = onScanningDone;
-        this.recognizerRunner.setClearTimeoutCallback( { onClearTimeout: () => this.clearTimeout() } );
+        void this.recognizerRunner.setClearTimeoutCallback( { onClearTimeout: () => this.clearTimeout() } );
         this.videoFeed.play().then
         (
             () => this.playPauseEvent(),
             () =>
             {
                 alert( "Auto-play prevented by browser security rules! Please start video manually!" );
-                this.videoFeed!.controls = true;
-                this.videoFeed!.addEventListener( 'play' , () => this.playPauseEvent() );
-                this.videoFeed!.addEventListener( 'pause', () => this.playPauseEvent() );
+
+                if ( !this.videoFeed )
+                {
+                    return;
+                }
+                this.videoFeed.controls = true;
+                this.videoFeed.addEventListener( "play" , () => this.playPauseEvent() );
+                this.videoFeed.addEventListener( "pause", () => this.playPauseEvent() );
             }
         );
     }
@@ -260,13 +300,15 @@ export class VideoRecognizer
      * stream, use function releaseVideoFeed.
      * This is a simple version of startRecognition that should be used for most cases, like when you only need
      * to perform one scan per video session.
-     * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether recognition was successful or not.
+     *
+     * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether
+     *        recognition was successful or not.
      */
-    async recognize( recognitionTimeoutMs: number = 30000 ): Promise< RecognizerResultState >
+    async recognize( recognitionTimeoutMs = 30000 ): Promise< RecognizerResultState >
     {
         return new Promise
         (
-            ( resolve: ( recognitionStatus: RecognizerResultState ) => void, reject: any) =>
+            ( resolve: ( recognitionStatus: RecognizerResultState ) => void, reject ) =>
             {
                 try
                 {
@@ -293,7 +335,7 @@ export class VideoRecognizer
      * startRecognition will be immediately called. This also means that the promise returned from method
      * recognize will be resolved immediately.
      */
-    cancelRecognition()
+    cancelRecognition(): void
     {
         this.cancelled = true;
     }
@@ -303,10 +345,14 @@ export class VideoRecognizer
      * Note that this pauses both the camera feed and recognition. If you just want to pause
      * recognition, while keeping the camera feed active, call method pauseRecognition.
      */
-    pauseVideoFeed()
+    pauseVideoFeed(): void
     {
         this.pauseRecognition();
-        this.videoFeed!.pause();
+
+        if ( this.videoFeed )
+        {
+            this.videoFeed.pause();
+        }
     }
 
     /**
@@ -316,7 +362,7 @@ export class VideoRecognizer
      * the recognition (unless there is already processing in-flight that may call the callback just before
      * pausing the actual recognition loop).
      */
-    pauseRecognition()
+    pauseRecognition(): void
     {
         this.recognitionPaused = true;
     }
@@ -325,7 +371,7 @@ export class VideoRecognizer
      * Convenience method for invoking resetRecognizers on associated RecognizerRunner.
      * @param hardReset Same as in RecognizerRunner.resetRecognizers.
      */
-    async resetRecognizers( hardReset: boolean )
+    async resetRecognizers( hardReset: boolean ): Promise< void >
     {
         await this.recognizerRunner.resetRecognizers( hardReset );
     }
@@ -345,21 +391,34 @@ export class VideoRecognizer
      * If video feed is paused, you should use recognize or startRecognition methods.
      * @param resetRecognizers Indicates whether resetRecognizers should be invoked while resuming the recognition
      */
-    resumeRecognition( resetRecognizers: boolean )
+    resumeRecognition( resetRecognizers: boolean ): void
     {
         this.cancelled = false;
         this.timedOut = false;
         this.recognitionPaused = false;
-        if ( this.videoFeed!.paused )
+        if ( this.videoFeed && this.videoFeed.paused )
         {
-            throw new Error( "Cannot resume recognition while video feed is paused! You need to use recognize or startRecognition" );
+            const msg = "Cannot resume recognition while video feed is paused! Use recognize or startRecognition";
+            throw new Error( msg );
         }
         setTimeout
         (
-            async () =>
+            () =>
             {
-                if ( resetRecognizers ) await this.resetRecognizers( true );
-                this.recognitionLoop();
+                if ( resetRecognizers )
+                {
+                    this.resetRecognizers( true ).then
+                    (
+                        () => void this.recognitionLoop()
+                    ).catch
+                    (
+                        () => { throw new Error( "Could not reset recognizers!" ); }
+                    );
+                }
+                else
+                {
+                    void this.recognitionLoop();
+                }
             },
             1
         );
@@ -371,11 +430,11 @@ export class VideoRecognizer
      * This method should be called after you no longer plan on performing video recognition to let browser know
      * that it can release resources related to any media streams used.
      */
-    releaseVideoFeed()
+    releaseVideoFeed(): void
     {
-        if ( this.videoFeed != null )
+        if ( this.videoFeed !== null )
         {
-            if ( this.videoFeed.srcObject != null )
+            if ( this.videoFeed.srcObject !== null )
             {
                 if ( !this.videoFeed.paused ) this.cancelRecognition();
                 ( this.videoFeed.srcObject as MediaStream ).getTracks().forEach( track => track.stop() );
@@ -385,18 +444,26 @@ export class VideoRecognizer
         }
     }
 
-/***************************************************************************************************************************
- * PRIVATE AREA
- ***************************************************************************************************************************/
+    /** *********************************************************************************************
+     * PRIVATE AREA
+     */
 
     private videoFeed: HTMLVideoElement | null = null;
+
     private recognizerRunner: RecognizerRunner;
-    private cancelled: boolean = false;
-    private timedOut: boolean = false;
-    private recognitionPaused: boolean = false;
-    private recognitionTimeoutMs: number = 30000;
-    private timeoutID: number = 0;
+
+    private cancelled = false;
+
+    private timedOut = false;
+
+    private recognitionPaused = false;
+
+    private recognitionTimeoutMs = 30000;
+
+    private timeoutID = 0;
+
     private videoRecognitionMode: VideoRecognitionMode = VideoRecognitionMode.Recognition;
+
     private onScanningDone: OnScanningDone | null = null;
 
     private constructor( videoFeed: HTMLVideoElement, recognizerRunner: RecognizerRunner )
@@ -407,29 +474,34 @@ export class VideoRecognizer
 
     private playPauseEvent()
     {
-        if ( this.videoFeed!.paused )
+        if ( this.videoFeed && this.videoFeed.paused )
+        {
             this.cancelRecognition();
+        }
         else
+        {
             this.resumeRecognition( true );
+        }
     }
 
     private async recognitionLoop()
     {
-        // const capBegin = performance.now();
-        const cameraFrame = captureFrame( this.videoFeed! );
-        // const capEnd = performance.now();
-        // console.log( "Frame capture took " + ( capEnd - capBegin ) + " ms" );
-        // const procBegin = performance.now();
-        const processResult = await this.recognizerRunner.processImage( cameraFrame );
-        // const procEnd = performance.now();
-        // console.log( "Wasm process took " + ( procEnd - procBegin ) + " ms" );
-        if ( processResult == RecognizerResultState.Valid || this.cancelled || this.timedOut )
+        if ( !this.videoFeed )
         {
-            if ( this.videoRecognitionMode == VideoRecognitionMode.Recognition || this.cancelled )
+            throw new Error( "Missing video feed!" );
+        }
+        const cameraFrame = captureFrame( this.videoFeed );
+        const processResult = await this.recognizerRunner.processImage( cameraFrame );
+        if ( processResult === RecognizerResultState.Valid || this.cancelled || this.timedOut )
+        {
+            if ( this.videoRecognitionMode === VideoRecognitionMode.Recognition || this.cancelled )
             {
                 // valid results, clear the timeout and invoke the callback
                 this.clearTimeout();
-                this.onScanningDone!( processResult );
+                if ( this.onScanningDone )
+                {
+                    void this.onScanningDone( processResult );
+                }
                 // after returning from callback, resume scanning if not paused
             }
             else
@@ -440,13 +512,12 @@ export class VideoRecognizer
                 this.clearTimeout();
             }
         }
-        else if ( processResult != RecognizerResultState.Empty )
+        else if ( processResult !== RecognizerResultState.Empty )
         {
-            if ( this.timeoutID == 0 )
+            if ( this.timeoutID === 0 )
             {
                 // first non-empty result - start timeout
-                this.timeoutID = window.setTimeout
-                (
+                this.timeoutID = window.setTimeout(
                     () => { this.timedOut = true; },
                     this.recognitionTimeoutMs
                 );
@@ -455,7 +526,7 @@ export class VideoRecognizer
         if ( !this.recognitionPaused )
         {
             // ensure browser events are processed and then recognize another frame
-            setTimeout( () => { this.recognitionLoop(); }, 1 );
+            setTimeout( () => { void this.recognitionLoop(); }, 1 );
         }
     }
 
@@ -509,7 +580,7 @@ const backCameraKeywords: string[] = [
     "stražnja",
     "belakang",
     "बैक"
-  ];
+];
 
 function isBackCameraLabel( label: string ): boolean
 {
@@ -518,10 +589,14 @@ function isBackCameraLabel( label: string ): boolean
     return backCameraKeywords.some( keyword => lowercaseLabel.includes( keyword ) );
 }
 
-class SelectedCamera {
+class SelectedCamera
+{
     readonly deviceId: string;
+
     readonly groupId: string;
+
     readonly facing: PreferredCameraType;
+
     readonly label: string;
 
     constructor( mdi: MediaDeviceInfo, facing: PreferredCameraType )
@@ -535,27 +610,36 @@ class SelectedCamera {
 
 async function selectCamera( preferredCameraType: PreferredCameraType ): Promise< SelectedCamera | null >
 {
-    let frontCameras: SelectedCamera[] = [];
-    let backCameras: SelectedCamera[] = [];
+    const frontCameras: SelectedCamera[] = [];
+    const backCameras: SelectedCamera[] = [];
 
     {
         let devices = await navigator.mediaDevices.enumerateDevices();
         // if permission is not given, label of video devices will be empty string
-        if ( devices.filter( device => device.kind === 'videoinput' ).every( device => device.label === "" ) )
+        if ( devices.filter( device => device.kind === "videoinput" ).every( device => device.label === "" ) )
         {
-            const stream = await navigator.mediaDevices.getUserMedia( { video: { facingMode: { ideal: 'environment' } }, audio: false } );
+            const stream = await navigator.mediaDevices.getUserMedia
+            (
+                {
+                    video:
+                    {
+                        facingMode: { ideal: "environment" }
+                    },
+                    audio: false
+                }
+            );
 
-            // enumerate devices again - now the label field should be non-empty, as we have a stream active (even if we didn't get persistent permission for camera)
+            // enumerate devices again - now the label field should be non-empty, as we have a stream active
+            // (even if we didn't get persistent permission for camera)
             devices = await navigator.mediaDevices.enumerateDevices();
 
             // close the stream, as we don't need it anymore
             stream.getTracks().forEach( track => track.stop() );
         }
 
-        const cameras = devices.filter( device => device.kind === 'videoinput' );
-        for ( let i in cameras )
+        const cameras = devices.filter( device => device.kind === "videoinput" );
+        for ( const camera of cameras )
         {
-            const camera = cameras[ i ];
             if ( isBackCameraLabel( camera.label ) )
             {
                 backCameras.push( new SelectedCamera( camera, PreferredCameraType.BackFacingCamera ) );
@@ -569,13 +653,13 @@ async function selectCamera( preferredCameraType: PreferredCameraType ): Promise
     if ( frontCameras.length > 0 || backCameras.length > 0 )
     {
         // decide from which array the camera will be selected
-        let cameraPool: SelectedCamera[] = (backCameras.length > 0 ? backCameras : frontCameras);
+        let cameraPool: SelectedCamera[] = ( backCameras.length > 0 ? backCameras : frontCameras );
         // if there is at least one back facing camera and user prefers back facing camera, use that as a selection pool
         if ( preferredCameraType === PreferredCameraType.BackFacingCamera && backCameras.length > 0 )
         {
             cameraPool = backCameras;
         }
-        // if there is at least one front facing camera and user prefers front facing camera, use that as a selection pool
+        // if there is at least one front facing camera and is preferred by user, use that as a selection pool
         if ( preferredCameraType === PreferredCameraType.FrontFacingCamera && frontCameras.length > 0 )
         {
             cameraPool = frontCameras;
@@ -594,8 +678,9 @@ async function selectCamera( preferredCameraType: PreferredCameraType ): Promise
             (
                 camera =>
                 {
-                    const match = camera.label.match( /\b([0-9]+)MP?\b/i );
-                    if (match != null)
+                    const regExp = RegExp( /\b([0-9]+)MP?\b/, "i" );
+                    const match = regExp.exec( camera.label );
+                    if ( match !== null )
                     {
                         return parseInt( match[1], 10 );
                     }

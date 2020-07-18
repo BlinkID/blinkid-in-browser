@@ -1,4 +1,5 @@
-import { CapturedFrame } from "../FrameCapture"
+import { CapturedFrame } from "../FrameCapture";
+
 import
 {
     RecognizerResultState,
@@ -6,35 +7,60 @@ import
     WasmModuleProxy,
     WasmSDK,
     Recognizer
-} from "../DataStructures"
-import { MetadataCallbacks } from "../MetadataCallbacks"
-import { ClearTimeoutCallback } from '../ClearTimeoutCallback'
+} from "../DataStructures";
 
-////////////////////////////////////////////////
-// Local Proxy implementation
-////////////////////////////////////////////////
+import { MetadataCallbacks } from "../MetadataCallbacks";
+import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
 
+// ============================================ /
+// Local Proxy Implementation                   /
+// ============================================ /
+
+/* eslint-disable @typescript-eslint/no-unsafe-member-access,
+                  @typescript-eslint/no-unsafe-call,
+                  @typescript-eslint/no-explicit-any,
+                  @typescript-eslint/no-unsafe-assignment */
 class WasmLocalRecognizerRunner implements RecognizerRunner
 {
     private nativeRecognizerRunner: any;
 
     constructor( nativeRecognizerRunner: any )
     {
+        if ( !nativeRecognizerRunner )
+        {
+            throw new Error( "Native RecognizerRunner cannot be empty!" );
+        }
         this.nativeRecognizerRunner = nativeRecognizerRunner;
     }
 
     processImage( image: CapturedFrame ): Promise< RecognizerResultState >
     {
-        const result: number = this.nativeRecognizerRunner.processImage( image );
-        return Promise.resolve( result );
+        return new Promise
+        (
+            ( resolve, reject ) =>
+            {
+                if ( !this.nativeRecognizerRunner )
+                {
+                    reject( "Property nativeRecognizerRunner is not available!" );
+                    return;
+                }
+                const result: number = this.nativeRecognizerRunner.processImage( image );
+                resolve( result );
+            }
+        );
     }
 
-    reconfigureRecognizers( recognizers: Array< Recognizer >, allowMultipleResults: boolean ): Promise< void >
+    reconfigureRecognizers( recognizers: Array< Recognizer >, allowMultipleResults: boolean ): Promise< void >
     {
         return new Promise
         (
-            ( resolve: any, reject: any ) =>
+            ( resolve, reject ) =>
             {
+                if ( !this.nativeRecognizerRunner )
+                {
+                    reject( "Property nativeRecognizerRunner is not available!" );
+                    return;
+                }
                 try
                 {
                     this.nativeRecognizerRunner.reconfigureRecognizers( recognizers, allowMultipleResults );
@@ -50,42 +76,107 @@ class WasmLocalRecognizerRunner implements RecognizerRunner
 
     setMetadataCallbacks( metadataCallbacks: MetadataCallbacks ): Promise< void >
     {
-        this.nativeRecognizerRunner.setJSDelegate( metadataCallbacks );
-        return Promise.resolve();
+        return new Promise
+        (
+            ( resolve, reject ) =>
+            {
+                if ( !this.nativeRecognizerRunner )
+                {
+                    reject( "Property nativeRecognizerRunner is not available!" );
+                    return;
+                }
+                this.nativeRecognizerRunner.setJSDelegate( metadataCallbacks );
+                resolve();
+            }
+        );
     }
 
     resetRecognizers( hardReset: boolean ): Promise< void >
     {
-        this.nativeRecognizerRunner.resetRecognizers( hardReset );
-        return Promise.resolve();
+        return new Promise
+        (
+            ( resolve, reject ) =>
+            {
+                if ( !this.nativeRecognizerRunner )
+                {
+                    reject( "Property nativeRecognizerRunner is not available!" );
+                    return;
+                }
+                this.nativeRecognizerRunner.resetRecognizers( hardReset );
+                resolve();
+            }
+        );
     }
 
     setDetectionOnlyMode( detectionOnly: boolean ): Promise< void >
     {
-        this.nativeRecognizerRunner.setDetectionOnlyMode( detectionOnly );
-        return Promise.resolve();
+        return new Promise
+        (
+            ( resolve, reject ) =>
+            {
+                if ( !this.nativeRecognizerRunner )
+                {
+                    reject( "Property nativeRecognizerRunner is not available!" );
+                    return;
+                }
+                this.nativeRecognizerRunner.setDetectionOnlyMode( detectionOnly );
+                resolve();
+            }
+        );
     }
 
     setClearTimeoutCallback( clearTimeoutCallback: ClearTimeoutCallback | null ): Promise< void >
     {
-        this.nativeRecognizerRunner.setClearTimeoutCallback( clearTimeoutCallback );
-        return Promise.resolve();
+        return new Promise
+        (
+            ( resolve, reject ) =>
+            {
+                if ( !this.nativeRecognizerRunner )
+                {
+                    reject( "Property nativeRecognizerRunner is not available!" );
+                    return;
+                }
+                this.nativeRecognizerRunner.setClearTimeoutCallback( clearTimeoutCallback );
+                resolve();
+            }
+        );
     }
 
     setCameraPreviewMirrored( mirrored: boolean ): Promise< void >
     {
-        this.nativeRecognizerRunner.setCameraPreviewMirrored( mirrored );
-        return Promise.resolve();
+        return new Promise
+        (
+            ( resolve, reject ) =>
+            {
+                if ( !this.nativeRecognizerRunner )
+                {
+                    reject( "Property nativeRecognizerRunner is not available!" );
+                    return;
+                }
+                this.nativeRecognizerRunner.setCameraPreviewMirrored( mirrored );
+                resolve();
+            }
+        );
     }
 
     delete(): Promise< void >
     {
-        this.nativeRecognizerRunner.delete();
-        this.nativeRecognizerRunner = null;
-        return Promise.resolve();
+        return new Promise
+        (
+            ( resolve ) =>
+            {
+                this.nativeRecognizerRunner.delete();
+                this.nativeRecognizerRunner = null;
+                resolve();
+            }
+        );
     }
-};
+}
 
+/* eslint-disable @typescript-eslint/no-unsafe-assignment,
+                  @typescript-eslint/no-unsafe-call,
+                  @typescript-eslint/no-unsafe-member-access,
+                  @typescript-eslint/no-explicit-any */
 class WasmModuleLocalProxy implements WasmModuleProxy
 {
     private readonly realWasmModule: any;
@@ -102,20 +193,37 @@ class WasmModuleLocalProxy implements WasmModuleProxy
         return Promise.resolve( nativeRecognizer );
     }
 
-    createRecognizerRunner( recognizers: Array< Recognizer >, allowMultipleResults: boolean = false, metadataCallbacks: MetadataCallbacks = {} ): Promise< RecognizerRunner >
+    createRecognizerRunner
+    (
+        recognizers:            Array< Recognizer >,
+        allowMultipleResults    = false,
+        metadataCallbacks:      MetadataCallbacks = {}
+    ): Promise< RecognizerRunner >
     {
-        const nativeRecognizerRunner = new this.realWasmModule.RecognizerRunner( recognizers, allowMultipleResults, metadataCallbacks );
+        const nativeRecognizerRunner = new this.realWasmModule.RecognizerRunner
+        (
+            recognizers,
+            allowMultipleResults,
+            metadataCallbacks
+        );
         return Promise.resolve( new WasmLocalRecognizerRunner( nativeRecognizerRunner ) );
     }
-};
+}
+/* eslint-enable @typescript-eslint/no-unsafe-assignment,
+                 @typescript-eslint/no-unsafe-call,
+                 @typescript-eslint/no-unsafe-member-access,
+                 @typescript-eslint/no-explicit-any */
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types,
+                  @typescript-eslint/no-explicit-any */
 export class WasmSDKLocal implements WasmSDK
 {
     readonly mbWasmModule: WasmModuleProxy;
 
     constructor( wasmModule: any )
     {
-        // this.mbWasmModule = new Proxy( new WasmModuleLocalProxy( wasmModule ), wasmModuleLocalProxyHandler );
         this.mbWasmModule = new WasmModuleLocalProxy( wasmModule );
     }
 }
+/* eslint-enable @typescript-eslint/explicit-module-boundary-types,
+                 @typescript-eslint/no-explicit-any */

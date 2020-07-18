@@ -61,7 +61,7 @@ export enum DetectionStatus
     CameraTooNear,
     /** Document detected, but document is too close to the edge of the frame */
     DocumentTooCloseToEdge
-};
+}
 
 /**
  * Interface representing any displayable object.
@@ -84,6 +84,7 @@ export interface Point
 {
     /** X-coordinate of the point */
     x: number
+
     /** Y-coordinate of the point */
     y: number
 }
@@ -95,10 +96,13 @@ export interface DisplayableQuad extends Displayable
 {
     /** Top-left point of the quadrilateral */
     topLeft: Point
+
     /** Top-right point of the quadrilateral */
     topRight: Point
+
     /** Bottom-left point of the quadrilateral */
     bottomLeft: Point
+
     /** Bottom-right point of the quadrilateral */
     bottomRight: Point
 }

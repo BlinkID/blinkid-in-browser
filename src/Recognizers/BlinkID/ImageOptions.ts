@@ -44,7 +44,13 @@ export class ExtensionFactors
      * @param leftFactor image extension factor relative to full image width in LEFT direction
      * @param rightFactor image extension factor relative to full image width in RIGHT direction
      */
-    constructor( upFactor: number = 0.0, downFactor: number = 0.0, leftFactor: number = 0.0, rightFactor: number = 0.0 )
+    constructor
+    (
+        upFactor = 0.0,
+        downFactor = 0.0,
+        leftFactor = 0.0,
+        rightFactor = 0.0
+    )
     {
         this.checkExtensionFactor( upFactor    );
         this.checkExtensionFactor( downFactor  );
@@ -58,8 +64,9 @@ export class ExtensionFactors
 
     private checkExtensionFactor( factor: number )
     {
-        if (factor > 1.0 || factor < -1.0) {
-            throw new Error( 'Extension factor must be in range [-1.0, 1.0]')
+        if ( factor > 1.0 || factor < -1.0 )
+        {
+            throw new Error( "Extension factor must be in range [-1.0, 1.0]" );
         }
     }
 }
@@ -138,11 +145,11 @@ export interface SignatureImageOptions
     signatureImageDpi: number;
 }
 
-export function validateDpi( dpi: number )
+export function validateDpi( dpi: number ): void
 {
     if ( dpi < 100 || dpi > 400 )
     {
-        throw new Error( 'DPI must be from interval [100, 400]' );
+        throw new Error( "DPI must be from interval [100, 400]" );
     }
 }
 

@@ -1,6 +1,20 @@
-import { FullDocumentImageOptions, validateDpi, ExtensionFactors, ImageResult } from '../ImageOptions'
-import { MrzResult } from './MrtdStructures'
-import { Recognizer, RecognizerResult, RecognizerSettings, WasmSDK } from '../../../MicroblinkSDK/DataStructures'
+import
+{
+    FullDocumentImageOptions,
+    validateDpi,
+    ExtensionFactors,
+    ImageResult
+} from "../ImageOptions";
+
+import { MrzResult } from "./MrtdStructures";
+
+import
+{
+    Recognizer,
+    RecognizerResult,
+    RecognizerSettings,
+    WasmSDK
+} from "../../../MicroblinkSDK/DataStructures";
 
 
 /**
@@ -26,14 +40,19 @@ export class MrtdRecognizerSettings implements RecognizerSettings, FullDocumentI
 
     // implementation of the FullDocumentImageOptions interface
     returnFullDocumentImage        = false;
+
     returnEncodedFullDocumentImage = false;
+
     private _fullDocumentImageDpi  = 250;
-    get fullDocumentImageDpi() { return this._fullDocumentImageDpi; }
+
+    get fullDocumentImageDpi(): number { return this._fullDocumentImageDpi; }
+
     set fullDocumentImageDpi( value: number )
     {
         validateDpi( value );
         this._fullDocumentImageDpi = value;
     }
+
     fullDocumentImageExtensionFactors = new ExtensionFactors();
 }
 
