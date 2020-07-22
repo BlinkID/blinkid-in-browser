@@ -30,6 +30,7 @@
     ],
     "scripts": {
         "build": "rollup -c",
+        "build:worker": "rollup -c --environment BUILD:worker",
         "check-types": "tsc --noEmit",
         "clean": "rimraf dist es lib types resources/*worker*",
         "lint": "eslint --ext ts -c .eslintrc.json src",

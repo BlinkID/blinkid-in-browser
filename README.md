@@ -6,7 +6,14 @@ _BlinkID_ In-browser SDK enables scanning of various identity documents, includi
 
 For more information on how to integrate the _BlinkID_ SDK into your web app read the instructions below. Make sure you read the latest [changelog](CHANGELOG.md) for most recent changes and improvements.
 
-Check the live version of the sample app on [this link](https://blinkid.github.io/blinkid-in-browser/examples/umd/index.html). Also, check out [examples](examples) to see how to integrate the _BlinkID_ SDK in different environments.
+Check out the live examples to see the _BlinkID_ SDK in action:
+
+1. [Scan front side of identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/blinkid-camera/javascript/index.html)
+2. [Scan front side of identity document from image file](https://blinkid.github.io/blinkid-in-browser/examples/blinkid-file/javascript/index.html)
+3. [Scan both sides of identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/combined/javascript/index.html)
+4. [Scan barcode from identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/idbarcode/javascript/index.html)
+
+Finally, check out the [examples directory](examples) to see the source code of the aforementioned examples.
 
 _BlinkID_ In-browser SDK is meant to be used natively in a web browser. It will not work correctly within a iOS/Android WebView or NodeJS backend service. If you are looking for Cordova/PhoneGap version, please go [here](https://github.com/BlinkID/blinkid-cordova). If you want to use BlinkID as a backend service, please go [here](https://github.com/microblink/docker).
 
@@ -41,7 +48,7 @@ _BlinkID_ In-browser SDK is meant to be used natively in a web browser. It will 
 
 # <a name="integration"></a> Integration instructions
 
-This repository contains WebAssembly file and it's support JS files which contains the core implementation of _BlinkID_ functionalities.
+This repository contains WebAssembly file and support JS files which contains the core implementation of _BlinkID_ functionalities.
 
 In order to make integration of the WebAssembly easier and more developer friendly, a JavaScript/TypeScript support code is also provided, giving an easy to use integration API to the developer.
 
