@@ -29,15 +29,8 @@ body
     align-items: center;
 }
 
-#loading
-{
-    display: block;
-}
-
-#view-landing,
-#view-scan-from-camera,
-#view-scan-from-file,
-#view-results
+#screen-initial,
+#screen-scanning
 {
     display: block;
     width: 100%;
@@ -66,11 +59,6 @@ textarea
 
 /* Camera feedback */
 #screen-scanning
-{
-    position: relative;
-}
-
-#view-scan-from-camera
 {
     position: relative;
 }

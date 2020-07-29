@@ -278,18 +278,25 @@ export class VideoRecognizer
         this.videoFeed.play().then
         (
             () => this.playPauseEvent(),
-            () =>
+            /* eslint-disable @typescript-eslint/no-explicit-any */
+            ( nativeError: any ) =>
             {
-                alert( "Auto-play prevented by browser security rules! Please start video manually!" );
+                if ( !this.allowManualVideoPlayout )
+                {
+                    console.warn( "Native error", nativeError );
+                    throw new Error( "The play() request was interrupted or prevented by browser security rules!" );
+                }
 
                 if ( !this.videoFeed )
                 {
                     return;
                 }
+
                 this.videoFeed.controls = true;
                 this.videoFeed.addEventListener( "play" , () => this.playPauseEvent() );
                 this.videoFeed.addEventListener( "pause", () => this.playPauseEvent() );
             }
+            /* eslint-enable @typescript-eslint/no-explicit-any */
         );
     }
 
@@ -466,10 +473,22 @@ export class VideoRecognizer
 
     private onScanningDone: OnScanningDone | null = null;
 
-    private constructor( videoFeed: HTMLVideoElement, recognizerRunner: RecognizerRunner )
+    private allowManualVideoPlayout = false;
+
+    private constructor
+    (
+        videoFeed: HTMLVideoElement,
+        recognizerRunner: RecognizerRunner,
+        allowManualVideoPlayout = false
+    )
     {
         this.videoFeed = videoFeed;
         this.recognizerRunner = recognizerRunner;
+
+        if ( allowManualVideoPlayout )
+        {
+            this.allowManualVideoPlayout = allowManualVideoPlayout;
+        }
     }
 
     private playPauseEvent()

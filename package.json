@@ -3,7 +3,7 @@
     "version": "5.5.0",
     "description": "A simple ID scanning library for WebAssembly-enabled browsers.",
     "homepage": "https://github.com/BlinkID/blinkid-in-browser",
-    "repository": "github:BlinkID:blinkid-in-browser",
+    "repository": "github:BlinkID/blinkid-in-browser",
     "bugs": "https://github.com/BlinkID/blinkid-in-browser/issues",
     "keywords": [
         "webassembly",
@@ -16,6 +16,9 @@
         "mrtd",
         "pdf417"
     ],
+    "engines": {
+        "node": ">=12.0.0"
+    },
     "main": "lib/blinkid-sdk.js",
     "module": "es/blinkid-sdk.js",
     "unpkg": "dist/blinkid-sdk.js",
