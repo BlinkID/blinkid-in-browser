@@ -164,6 +164,10 @@ export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promi
                             {
                                 loadSettings.loadProgressCallback( convertEmscriptenStatusToProgress( text ) );
                             }
+                        },
+                        locateFile: ( path: string ) =>
+                        {
+                            return Utils.getSafePath( loadSettings.engineLocation, path );
                         }
                     };
                 }
@@ -182,7 +186,7 @@ export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promi
                             resolve( new WasmSDKLocal( wasmModule ) );
                             return;
                         }
-                        catch( licenseError )
+                        catch ( licenseError )
                         {
                             reject( licenseError );
                             return;

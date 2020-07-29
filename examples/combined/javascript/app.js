@@ -39,7 +39,7 @@ function main() {
     loadSettings.loadProgressCallback = (progress) =>
         (progressEl.value = progress);
     // Set relative or absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = "";
+    loadSettings.engineLocation = "https://localhost/build/prod/bin";
     // Set relative or absolute location of WebWorker file which is responsible for loading of WASM and support JS files
     loadSettings.workerLocation = "resources";
     // 3. Load SDK
@@ -77,7 +77,7 @@ async function startScan(sdk) {
         onQuadDetection: (quad) => drawQuad(quad),
         onDetectionFailed: () => updateScanFeedback("Detection failed", true),
         // This callback is required for combined experience.
-        onFirstSideResult: () => updateScanFeedback("Flip the document", true),
+        onFirstSideResult: () => alert("Flip the document"),
     };
     // 2. Create a RecognizerRunner object which orchestrates the recognition with one or more
     //    recognizer objects.
@@ -96,6 +96,12 @@ async function startScan(sdk) {
         cameraFeed,
         recognizerRunner
     );
+    // @ts-ignore
+    window.forceStop = () => {
+        videoRecognizer?.releaseVideoFeed();
+        recognizerRunner?.delete();
+        combinedGenericIDRecognizer?.delete();
+    };
     // 4. Start the recognition and get results from callback
     try {
         videoRecognizer.startRecognition(

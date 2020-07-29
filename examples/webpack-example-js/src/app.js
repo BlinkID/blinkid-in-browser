@@ -1,21 +1,21 @@
 /**
- * This example app demonstrates how to use BlinkID In-browser SDK to achieve the following:
+ * BlinkID In-browser SDK demo app which demonstrates how to:
  *
  * - Change default SDK settings
- * - Scan front and back side of the identity document with web camera (combined experience)
+ * - Scan front side of the identity document with web camera
  * - Provide visual feedback to the end-user during the scan
  */
 import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 
 // General UI helpers
-const initialMessageEl = document.getElementById( "msg" ) as HTMLHeadingElement;
-const progressEl = document.getElementById( "load-progress" ) as HTMLProgressElement;
+const initialMessageEl = document.getElementById( "msg" );
+const progressEl = document.getElementById( "load-progress" );
 
 // UI elements for scanning feedback
-const cameraFeed = document.getElementById( "camera-feed" ) as HTMLVideoElement;
-const cameraFeedback = document.getElementById( "camera-feedback" ) as HTMLCanvasElement;
-const drawContext = cameraFeedback.getContext( "2d" ) as CanvasRenderingContext2D;
-const scanFeedback = document.getElementById( "camera-guides" ) as HTMLParagraphElement;
+const cameraFeed = document.getElementById( "camera-feed" );
+const cameraFeedback = document.getElementById( "camera-feedback" );
+const drawContext = cameraFeedback.getContext( "2d" );
+const scanFeedback = document.getElementById( "camera-guides" );
 
 /**
  * Check browser support, customize settings and load WASM SDK.
@@ -46,28 +46,28 @@ function main()
     loadSettings.allowHelloMessage = true;
 
     // In order to provide better UX, display progress bar while loading the SDK
-    loadSettings.loadProgressCallback = ( progress: number ) => progressEl!.value = progress;
+    loadSettings.loadProgressCallback = progress => progressEl.value = progress;
 
     // Set relative or absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = "https://localhost/build/prod/bin";
+    loadSettings.engineLocation = "/resources";
 
     // Set relative or absolute location of WebWorker file which is responsible for loading of WASM and support JS files
-    loadSettings.workerLocation = "resources";
+    loadSettings.workerLocation = "/resources";
 
     // 3. Load SDK
     BlinkIDSDK.loadWasmModule( loadSettings ).then
     (
-        ( sdk: BlinkIDSDK.WasmSDK ) =>
+        ( sdk ) =>
         {
             document.getElementById( "screen-initial" )?.classList.add( "hidden" );
             document.getElementById( "screen-start" )?.classList.remove( "hidden" );
-            document.getElementById( "start-scan" )?.addEventListener( "click", ( ev: any ) =>
+            document.getElementById( "start-scan" )?.addEventListener( "click", ( ev ) =>
             {
                 ev.preventDefault();
                 startScan( sdk );
             });
         },
-        ( error: any ) =>
+        ( error ) =>
         {
             initialMessageEl.innerText = "Failed to load SDK!";
             console.error( "Failed to load SDK!", error );
@@ -78,23 +78,22 @@ function main()
 /**
  * Scan single side of identity document with web camera.
  */
-async function startScan( sdk: BlinkIDSDK.WasmSDK )
+async function startScan( sdk )
 {
     document.getElementById( "screen-start" )?.classList.add( "hidden" );
     document.getElementById( "screen-scanning" )?.classList.remove( "hidden" );
 
     // 1. Create a recognizer objects which will be used to recognize single image or stream of images.
     //
-    // GenericCombine ID Recognizer - scan ID documents on both sides
-    const combinedGenericIDRecognizer = await BlinkIDSDK.createBlinkIdCombinedRecognizer( sdk );
+    // Generic ID Recognizer - scan various ID documents
+    // ID Barcode Recognizer - scan barcodes from various ID documents
+    const genericIDRecognizer = await BlinkIDSDK.createBlinkIdRecognizer( sdk );
+    const idBarcodeRecognizer = await BlinkIDSDK.createIdBarcodeRecognizer( sdk );
 
-    // Create a callbacks object that will receive recognition events, such as detected object location etc.
+    // [OPTIONAL] Create a callbacks object that will receive recognition events, such as detected object location etc.
     const callbacks = {
-        onQuadDetection: ( quad: BlinkIDSDK.DisplayableQuad ) => drawQuad( quad ),
-        onDetectionFailed: () => updateScanFeedback( "Detection failed", true ),
-
-        // This callback is required for combined experience.
-        onFirstSideResult: () => alert( "Flip the document" )
+        onQuadDetection: ( quad ) => drawQuad( quad ),
+        onDetectionFailed: () => updateScanFeedback( "Detection failed", true )
     }
 
     // 2. Create a RecognizerRunner object which orchestrates the recognition with one or more
@@ -104,10 +103,10 @@ async function startScan( sdk: BlinkIDSDK.WasmSDK )
         // SDK instance to use
         sdk,
         // List of recognizer objects that will be associated with created RecognizerRunner object
-        [ combinedGenericIDRecognizer ],
+        [ genericIDRecognizer, idBarcodeRecognizer ],
         // [OPTIONAL] Should recognition pipeline stop as soon as first recognizer in chain finished recognition
         false,
-        // Callbacks object that will receive recognition events
+        // [OPTIONAL] Callbacks object that will receive recognition events
         callbacks
     );
 
@@ -118,81 +117,63 @@ async function startScan( sdk: BlinkIDSDK.WasmSDK )
         recognizerRunner
     );
 
-    // @ts-ignore
-    window.forceStop = () =>
+    // 4. Start the recognition and await for the results
+    const processResult = await videoRecognizer.recognize();
+
+    // 5. If recognition was successful, obtain the result and display it
+    if ( processResult !== BlinkIDSDK.RecognizerResultState.Empty )
     {
-        videoRecognizer?.releaseVideoFeed();
-        recognizerRunner?.delete();
-        combinedGenericIDRecognizer?.delete();
+        const genericIDResults = await genericIDRecognizer.getResult();
+        if ( genericIDResults.state !== BlinkIDSDK.RecognizerResultState.Empty )
+        {
+            console.log( "BlinkIDGeneric results", genericIDResults );
+            alert
+            (
+`Hello, ${ genericIDResults.firstName || genericIDResults.mrz.secondaryID } ${ genericIDResults.lastName || genericIDResults.mrz.primaryID }!
+You were born on ${ genericIDResults.dateOfBirth.year || genericIDResults.mrz.dateOfBirth.year }-${ genericIDResults.dateOfBirth.month || genericIDResults.mrz.dateOfBirth.month }-${ genericIDResults.dateOfBirth.day || genericIDResults.mrz.dateOfBirth.day }.`
+            );
+        }
+
+        const idBarcodeResult = await idBarcodeRecognizer.getResult();
+        if ( idBarcodeResult.state !== BlinkIDSDK.RecognizerResultState.Empty )
+        {
+            console.log( "IDBarcode results", idBarcodeResult );
+            alert
+            (
+`Hello, ${ idBarcodeResult.firstName } ${ idBarcodeResult.lastName }!
+You were born on ${ idBarcodeResult.dateOfBirth.year }-${ idBarcodeResult.dateOfBirth.month }-${ idBarcodeResult.dateOfBirth.day }.`
+            );
+        }
+    }
+    else
+    {
+        alert( "Could not extract information!" );
     }
 
-    // 4. Start the recognition and get results from callback
-    try
-    {
-        videoRecognizer.startRecognition
-        (
-            // 5. Obtain the results
-            async ( recognitionState: BlinkIDSDK.RecognizerResultState ) =>
-            {
-                if ( !videoRecognizer)
-                {
-                    return;
-                }
+    // 7. Release all resources allocated on the WebAssembly heap and associated with camera stream
 
-                // Pause recognition before performing any async operation
-                videoRecognizer.pauseRecognition();
+    // Release browser resources associated with the camera stream
+    videoRecognizer?.releaseVideoFeed();
 
-                if ( recognitionState === BlinkIDSDK.RecognizerResultState.Empty )
-                {
-                    return;
-                }
+    // Release memory on WebAssembly heap used by the RecognizerRunner
+    recognizerRunner?.delete();
 
-                const result = await combinedGenericIDRecognizer.getResult();
+    // Release memory on WebAssembly heap used by the recognizer
+    genericIDRecognizer?.delete();
+    idBarcodeRecognizer?.delete();
 
-                if ( result.state === BlinkIDSDK.RecognizerResultState.Empty )
-                {
-                    return;
-                }
+    // Clear any leftovers drawn to canvas
+    clearDrawCanvas();
 
-                // Inform the user about results
-                console.log( "BlinkIDCombined results", result );
-                alert
-                (
-`Hello, ${ result.firstName || result.mrz.secondaryID } ${ result.lastName || result.mrz.primaryID }!
-You were born on ${ result.dateOfBirth.year || result.mrz.dateOfBirth.year }-${ result.dateOfBirth.month || result.mrz.dateOfBirth.month }-${ result.dateOfBirth.day || result.mrz.dateOfBirth.day }.`
-                );
-
-                // 6. Release all resources allocated on the WebAssembly heap and associated with camera stream
-
-                // Release browser resources associated with the camera stream
-                videoRecognizer?.releaseVideoFeed();
-
-                // Release memory on WebAssembly heap used by the RecognizerRunner
-                recognizerRunner?.delete();
-
-                // Release memory on WebAssembly heap used by the recognizer
-                combinedGenericIDRecognizer?.delete();
-
-                // Clear any leftovers drawn to canvas
-                clearDrawCanvas();
-
-                // Hide scanning screen and show scan button again
-                document.getElementById( "screen-start" )?.classList.remove( "hidden" );
-                document.getElementById( "screen-scanning" )?.classList.add( "hidden" );
-            }
-        );
-    }
-    catch ( error )
-    {
-        console.error( "Error during initialization of VideoRecognizer:", error );
-        return;
-    }
+    // Hide scanning screen and show scan button again
+    document.getElementById( "screen-start" )?.classList.remove( "hidden" );
+    document.getElementById( "screen-scanning" )?.classList.add( "hidden" );
 }
 
 /**
  * Utility functions for drawing detected quadrilateral onto canvas.
  */
-function drawQuad( quad: BlinkIDSDK.DisplayableQuad )
+function drawQuad( quad )
 {
     clearDrawCanvas();
 
@@ -214,7 +195,7 @@ function drawQuad( quad: BlinkIDSDK.DisplayableQuad )
  * This function will make sure that coordinate system associated with detectionResult
  * canvas will match the coordinate system of the image being recognized.
  */
-function applyTransform( transformMatrix: Float32Array )
+function applyTransform( transformMatrix )
 {
     const canvasAR = cameraFeedback.width / cameraFeedback.height;
     const videoAR = cameraFeed.videoWidth / cameraFeed.videoHeight;
@@ -275,7 +256,7 @@ function clearDrawCanvas()
     );
 }
 
-function setupColor( displayable: BlinkIDSDK.Displayable )
+function setupColor( displayable )
 {
     let color = "#FFFF00FF";
 
@@ -293,7 +274,7 @@ function setupColor( displayable: BlinkIDSDK.Displayable )
     drawContext.lineWidth = 5;
 }
 
-function setupMessage( displayable: BlinkIDSDK.Displayable )
+function setupMessage( displayable )
 {
     switch ( displayable.detectionStatus )
     {
@@ -326,7 +307,7 @@ let scanFeedbackLock = false;
  * The purpose of this function is to ensure that scan feedback message is
  * visible for at least 1 second.
  */
-function updateScanFeedback( message: string, force?: boolean )
+function updateScanFeedback( message, force )
 {
     if ( scanFeedbackLock && !force )
     {

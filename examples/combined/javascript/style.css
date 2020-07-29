@@ -56,6 +56,10 @@ textarea {
 }
 
 /* Camera feedback */
+#screen-scanning {
+  position: relative;
+}
+
 #view-scan-from-camera {
   position: relative;
 }
