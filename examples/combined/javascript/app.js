@@ -39,7 +39,7 @@ function main() {
     loadSettings.loadProgressCallback = (progress) =>
         (progressEl.value = progress);
     // Set relative or absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = "https://localhost/build/prod/bin";
+    loadSettings.engineLocation = "";
     // Set relative or absolute location of WebWorker file which is responsible for loading of WASM and support JS files
     loadSettings.workerLocation = "resources";
     // 3. Load SDK
