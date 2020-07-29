@@ -30,6 +30,7 @@ _BlinkID_ In-browser SDK is meant to be used natively in a web browser. It will 
     * [Recognizing still images](#stillImagesRecognition)
     * [Configuration of SDK](#sdkConfiguration)
     * [Deployment guidelines](#deploymentGuidelines)
+* [The `Recognizer` concept, `RecognizerRunner` and `VideoRecognizer`](#availableRecognizers)
     * [The `Recognizer` concept](#recognizerConcept)
     * [`RecognizerRunner`](#recognizerRunner)
     * [Performing recognition of video streams using `VideoRecognizer`](#videoRecognizer)
@@ -399,6 +400,10 @@ if ( window.location.hostname === "example.com" ) // Place your production domai
 }
 ...
 ```
+
+# <a name="availableRecognizers"></a> The `Recognizer` concept, `RecognizerRunner` and `VideoRecognizer`
+
+This section will first describe [what is a `Recognizer`](#recognizerConcept) and how it should be used to perform recognition of the images, videos and camera stream. Next, we will describe what is a [`RecognizerRunner`](#recognizerRunner) and how it can be used to tweak the recognition procedure. Finally, a [`VideoRecognizer`](#videoRecognizer) will be described and how it builds on top of `RecognizerRunner` in order to provide support for recognizing a video or a camera stream.
 
 ## <a name="recognizerConcept"></a> The `Recognizer` concept
 

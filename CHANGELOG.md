@@ -1,5 +1,16 @@
 # Release notes
 
+## 5.5.1
+
+- Removed `alert()` from [VideoRecognizer](src/MicroblinkSDK/VideoRecognizer.ts) and added `allowManualVideoPlayout` to constructor of `VideoRecognizer` class
+- Added `locateFile` method to [MicroblinkSDK](src/MicroblinkSDK/MicroblinkSDK.ts) to fix problem when SDK is not using web worker
+- File `package.json`
+    - Added field `engines` to explicitly specify Node version which was used during development
+    - Fixed typo in `repository` field so NPM package can be used with yarn, closes [#5](https://github.com/BlinkID/blinkid-in-browser/issues/5)
+- Documentation
+    - Added more information and renamed section "Optimal deployment of your web app" to "Deployment guidelines"
+    - Added links to Codepen examples and official demo app
+
 ## 5.5.0
 
 - Change of available recognizers
