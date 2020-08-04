@@ -3,6 +3,9 @@
  */
 export interface DriverLicenseDetailedInfo
 {
+    /** The driver license conditions. */
+    readonly conditions: string;
+
     /**
      * The restrictions to driving privileges for the driver license owner.
      */

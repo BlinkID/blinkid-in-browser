@@ -43,23 +43,23 @@ function getUserID(): string
  *
  * This function is here as a placeholder so it can be copied to standalone JS file or directly into 'index.html'.
  */
-export function isES6Supported(): boolean
-{
-    if ( typeof Symbol === "undefined" )
-    {
-        return false;
-    }
-    try
-    {
-        eval( "class Foo {}" );
-        eval( "var bar = (x) => x+1" );
-    }
-    catch ( e )
-    {
-        return false;
-    }
-    return true;
-}
+// export function isES6Supported(): boolean
+// {
+//     if ( typeof Symbol === "undefined" )
+//     {
+//         return false;
+//     }
+//     try
+//     {
+//         eval( "class Foo {}" );
+//         eval( "var bar = (x) => x+1" );
+//     }
+//     catch ( e )
+//     {
+//         return false;
+//     }
+//     return true;
+// }
 
 /**
  * Checks if browser is supported by the SDK. The minimum requirements for the browser is

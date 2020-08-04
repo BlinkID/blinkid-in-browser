@@ -96,7 +96,10 @@ export enum Country
     BRAZIL = 84,
     NORWAY = 85,
     OMAN = 86,
-    COUNT = 87
+    ECUADOR = 87,
+    EL_SALVADOR = 88,
+    SRI_LANKA = 89,
+    COUNT = 90
 }
 
 export enum Region
@@ -199,5 +202,6 @@ export enum DocumentType
     MILITARY_ID = 21,
     MyKAS = 22,
     SOCIAL_SECURITY_CARD = 23,
-    COUNT = 24
+    HEALTH_INSURANCE_CARD = 24,
+    COUNT = 25
 }

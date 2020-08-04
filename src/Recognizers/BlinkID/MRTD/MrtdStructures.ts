@@ -15,7 +15,13 @@ export enum MrtdDocumentType
     /** US Green Card */
     MRTD_TYPE_GREEN_CARD,
     /** Malaysian PASS type IMM13P */
-    MRTD_TYPE_MYS_PASS_IMM13P
+    MRTD_TYPE_MYS_PASS_IMM13P,
+    /** Driver's license */
+    MRTD_TYPE_DL,
+    /** Internal travel document */
+    MRTD_TYPE_INTERNAL_TRAVEL_DOCUMENT,
+    /** Number of elements in this enum */
+    MRTD_TYPE_COUNT
 }
 
 /**

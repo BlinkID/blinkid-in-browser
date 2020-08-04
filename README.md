@@ -111,6 +111,16 @@ Do not add those files to the main app bundle, but rather place them on a public
 
 For more information on how to setup aforementioned resources, check out the [Configuration of SDK](#sdkConfiguration) section.
 
+### Versions and backward compatibility
+
+Even though the API is not going to change between minor versions, structure of results for various recognizers can change between minor versions.
+
+This is due to improvements that are made on recognizers with every minor release.
+
+It's a good practice to always lock on minor version and to check `CHANGELOG.md` before upgrading to new minor version.
+
+For example, in `package.json` you should have something like `"@microblink/blinkid-in-browser-sdk": "~4.1.1"` instead of default value `"@microblink/blinkid-in-browser-sdk": "^4.1.1"`.
+
 ## <a name="firstScan"></a> Performing your first scan
 
 *Note: following code snippets are written in TypeScript, but it's possible to use them in plain JavaScript.*
@@ -562,7 +572,7 @@ The [`IdBarcodeRecognizer`](src/Recognizers/BlinkID/IDBarcode/IdBarcodeRecognize
 
 The [`BlinkIdRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts) scans and extracts data from the single side of the supported document.
 
-You can find the list of the currently supported documents [here](docs/BlinkIDRecognizer.md).
+You can find the list of the currently supported documents [here](docs/BlinkIDRecognizer.md). For detailed information about which fields can be extracted from each document, [check this link](docs/BlinkIDDocumentFields.md).
 
 We will continue expanding this recognizer by adding support for new document types in the future. Star this repo to stay updated.
 
@@ -572,7 +582,7 @@ Use [`BlinkIdCombinedRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdCombine
 
 The [`BlinkIdCombinedRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdCombinedRecognizer.ts) also performs data matching and returns a flag if the extracted data captured from the front side matches the data from the back.
 
-You can find the list of the currently supported documents [here](docs/BlinkIDRecognizer.md).
+You can find the list of the currently supported documents [here](docs/BlinkIDRecognizer.md). For detailed information about which fields can be extracted from each document, [check this link](docs/BlinkIDDocumentFields.md).
 
 We will continue expanding this recognizer by adding support for new document types in the future. Star this repo to stay updated.
 # <a name="troubleshoot"></a> Troubleshooting
