@@ -1,6 +1,11 @@
+import { AnonymizationMode } from "./AnonymizationMode";
+import { BarcodeResult } from "./BarcodeResult";
 import { ClassInfo } from "./ClassInfo";
-import { DocumentImageColorStatus, DocumentImageMoireStatus } from "./DocumentStatuses";
 import { DriverLicenseDetailedInfo } from "./DriverLicenseDetailedInfo";
+import { ImageAnalysisResult } from "./ImageAnalysisResult";
+import { ProcessingStatus } from "./ProcessingStatus";
+import { RecognitionMode } from "./RecognitionMode";
+import { VIZResult } from "./VIZResult";
 
 import
 {
@@ -22,10 +27,16 @@ import
     WasmSDK
 } from "../../../MicroblinkSDK/DataStructures";
 
-// required for final SDK
+// required for the final SDK
+export * from "./AddressDetailedInfo";
+export * from "./AnonymizationMode";
+export * from "./BarcodeResult";
 export * from "./ClassInfo";
 export * from "./DriverLicenseDetailedInfo";
-export * from "./DocumentStatuses";
+export * from "./ImageAnalysisResult";
+export * from "./ProcessingStatus";
+export * from "./RecognitionMode";
+export * from "./VIZResult";
 
 /**
  * A settings object that is used for configuring the BlinkIdRecognizer.
@@ -55,10 +66,17 @@ export class BlinkIdRecognizerSettings implements RecognizerSettings, FullDocume
     validateResultCharacters = true;
 
     /**
-     * Whether sensitive data should be anonymized in full document image result.
+     * Whether sensitive data should be removed from images, result fields or both.
      * The setting only applies to certain documents.
      */
-    anonymizeImage = true;
+    anonymizationMode = AnonymizationMode.FullResult;
+
+    /**
+     * Padding is a minimum distance from the edge of the frame and it is defined
+     * as a percentage of the frame width. Recommended value is '0.02'.
+     * By default, this is set to '0.0' which means that padding edge and image edge are the same.
+     */
+    paddingEdge = 0.0;
 
     // implementation of the FullDocumentImageOptions interface
     returnFullDocumentImage        = false;
@@ -94,9 +112,9 @@ export class BlinkIdRecognizerSettings implements RecognizerSettings, FullDocume
 }
 
 /**
- * The result of image recognition when using the BlinkIdRecognizer.
+ * The base result of image recognition when using either the BlinkIdRecognizer or BlinkIdCombindedRecognizer.
  */
-export interface BlinkIdRecognizerResult extends RecognizerResult
+export interface BaseBlinkIdRecognizerResult extends RecognizerResult
 {
     /**
      *  THe additional address information of the document owner.
@@ -114,14 +132,14 @@ export interface BlinkIdRecognizerResult extends RecognizerResult
     readonly address: string;
 
     /**
+     * The data extracted from the barcode.
+     */
+    readonly barcode: BarcodeResult;
+
+    /**
      *  The class info
      */
     readonly classInfo: ClassInfo;
-
-    /**
-     *  The conditions
-     */
-    readonly conditions: string;
 
     /**
      *  The date of birth of the document owner.
@@ -149,18 +167,6 @@ export interface BlinkIdRecognizerResult extends RecognizerResult
     readonly documentAdditionalNumber: string;
 
     /**
-     * Indicates whether scanned image was colored or not.
-     * Available only if allowed by the given license key.
-     */
-    readonly documentImageColorStatus: DocumentImageColorStatus;
-
-    /**
-     * Indicates whether Moire pattern was detected on the document.
-     * Available only if allowed by the given license key.
-     */
-    readonly documentImageMoireStatus: DocumentImageMoireStatus;
-
-    /**
      *  The document number.
      */
     readonly documentNumber: string;
@@ -184,11 +190,6 @@ export interface BlinkIdRecognizerResult extends RecognizerResult
      *  The first name of the document owner.
      */
     readonly firstName: string;
-
-    /**
-     *  The full document image
-     */
-    readonly fullDocumentImage: ImageResult;
 
     /**
      *  The full name of the document owner.
@@ -236,6 +237,11 @@ export interface BlinkIdRecognizerResult extends RecognizerResult
     readonly placeOfBirth: string;
 
     /**
+     * Status of the last recognition process.
+     */
+    readonly processingStatus: ProcessingStatus;
+
+    /**
      *  The profession of the document owner.
      */
     readonly profession: string;
@@ -244,6 +250,11 @@ export interface BlinkIdRecognizerResult extends RecognizerResult
      *  The race of the document owner.
      */
     readonly race: string;
+
+    /**
+     * Recognition mode used to scan current document.
+     */
+    readonly recognitionMode: RecognitionMode;
 
     /**
      *  The religion of the document owner.
@@ -259,6 +270,27 @@ export interface BlinkIdRecognizerResult extends RecognizerResult
      *  The sex of the document owner.
      */
     readonly sex: string;
+
+    /**
+     * The data extracted from the visual inspection zone.
+     */
+    readonly viz: VIZResult;
+}
+
+/**
+ * The result of image recognition when using the BlinkIdRecognizer.
+ */
+export interface BlinkIdRecognizerResult extends BaseBlinkIdRecognizerResult
+{
+    /**
+     *  The full document image
+     */
+    readonly fullDocumentImage: ImageResult;
+
+    /**
+     * Result of document image analysis.
+     */
+    readonly imageAnalysisResult: ImageAnalysisResult;
 }
 
 /**

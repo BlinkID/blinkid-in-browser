@@ -1,5 +1,94 @@
 # Release notes
 
+## 5.7.0
+
+### **New features:**
+
+- IDBarcodeRecognizer now returns:
+    - Street, postal code, city and jurisdiction.
+- In BlinkIDRecognizer and BlinkIDCombinedRecognizer, we added:
+    - Support for US driver licenses with **vertical** orientations:
+        - Alabama
+        - Arizona
+        - California
+        - Colorado
+        - Connecticut
+        - Georgia
+        - Illinois
+        - Iowa
+        - Kansas
+        - Kentucky
+        - Maryland
+        - Massachusetts
+        - Minnesota
+        - Missouri
+        - New Jersey
+        - Ohio
+        - Pennsylvania
+        - South Carolina
+        - Tennessee
+        - Texas
+        - Utah
+        - Washington
+        - Wisconsin
+    - **Support for new document types**:
+        - Croatia Health Insurance Card / front side / BETA
+        - Ecuador ID / front side
+        - El Salvador ID / BETA
+        - Sri Lanka ID / BETA
+    - **Driver licenses no longer in BETA**:
+        - Canada Nova Scotia
+        - Canada Yukon
+        - Norway
+    - **Back side** support:
+        - Kenya ID
+    - We added support for new MRZ formats on:
+        - Guatemala ID
+        - Kenya ID
+        - Mexico consular ID
+        - Northern Cyprus ID
+        - Chinese Mainland Travel Permits (Hong Kong, Macau and Taiwan)
+- Added **result anonymization**. With this option enabled, results are not returned for protected fields on documents listed here. The full document image will also have this data blacked out.
+    - Protected fields are:
+        - Document number on Hong Kong ID
+        - MRZ on Hong Kong passports and Chinese mainland travel permits for Hong Kong
+        - Personal ID number on Netherlands driver licence
+        - Personal ID number and MRZ on Netherlands ID
+        - MRZ on Netherlands passports
+        - Document number on Singapore driver license, ID, Fin Card, Resident ID
+        - Personal ID number on Singapore Employment Pass
+        - Document number and personal ID number on Singapore Work Permit
+        - MRZ on Singapore passports
+    - By using `setAnonymizationMode` method, you can choose the AnonymizationMode: `ImageOnly`, `ResultFieldsOnly`, `FullResult` or `None`.
+    - FullResult anonymization (both images and data) is set by default.
+
+### **Improvements to existing features:**
+
+- We made changes to the result structure of BlinkIdCombinedRecognizer and BlinkIdRecognizer:
+    - Barcode data is now encapsulated in its own result structure: `BarcodeResult`.
+    - Data from all OCR-ed fields, without MRZ data, is now encapsulated in a `VIZResult` structure, representing the "Visual Inspection Zone" data. In BlinkIdCombinedRecognizer, front side data is available in its own structure (frontVizResult), back side data in its own (backVizResult), so you can now access data from each side separately.
+    - The main part of the result, outside these structures, is filled according to these rules:
+        - The document number is filled with MRZ data, if present.
+        - The remaining data is then filled from the barcode.
+        - The remaining data is filled from back side visual inspection zone (OCR data outside of MRZ).
+        - The remaining data is filled from the front side visual inspection zone.
+        - The remaining data is filled from the MRZ.
+- Members `colorStatus` and `moireStatus` can now be found in the result's `imageAnalysisResult` (`frontImageAnalysisResult` and `backImageAnalysisResult` in `BlinkIDCombinedRecognizer`).
+- We added **blur detection status** to `imageAnalysisResult`.
+    - We extended `ImageAnalysisResult` with information on whether the document contains a photo, MRZ and/or barcode.
+        - We renamed `DocumentImageMoireStatus` to `ImageAnalysisDetectionStatus` so it can be reused for other status information.
+    - We added a `RecognitionModeFilter` setting. This makes it possible to control for which group of documents (MrzId, MrzVisa, MrzPassport, PhotoId, FullRecognition) recognition is enabled or disabled.
+    - We added a `RecognitionMode` result member detailing which of the aforementioned recognition modes was used to obtain the result.
+    - We added a fallback method that extracts ‘sex’ and ‘nationality’ fields from the MRZ in case they aren’t present in the VIZ or the barcode. Previously, only ‘dates’, ‘names’ and ‘document numbers’ had the fallback method.
+    - Unsuccessfully parsed dates now preserve original string instead of returning empty string.
+
+### **Bug fixes:**
+
+- We fixed US driver's license address extraction (Oregon, Mississippi, Rhode Island).
+- Added `ProcessingStatus` enumeration detailing why the result state was empty or uncertain.
+- Improved barcode error detection and correction.
+- Tweaked document detection feedback thresholds (that let the user know when the document is too close or too far away). This allows for a more natural scanning experience of passports in landscape mode, as the document can now be closer to the camera.
+
 ## 5.5.1
 
 - Removed `alert()` from [VideoRecognizer](src/MicroblinkSDK/VideoRecognizer.ts) and added `allowManualVideoPlayout` to constructor of `VideoRecognizer` class

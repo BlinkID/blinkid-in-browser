@@ -13,6 +13,9 @@ npm install
 # Create file "dist/app.js"
 npm run build
 
+# Copy resources from NPM package
+cp -r node_modules/@microblink/blinkid-in-browser-sdk/resources/ dist/
+
 # Serve "dist" folder with any HTTP/S server
 http-server dist/
 ```

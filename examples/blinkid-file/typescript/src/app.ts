@@ -82,9 +82,7 @@ async function startScan( sdk: BlinkIDSDK.WasmSDK, fileList: FileList )
     // 1. Create a recognizer objects which will be used to recognize single image or stream of images.
     //
     // Generic ID Recognizer - scan various ID documents
-    // ID Barcode Recognizer - scan barcodes from various ID documents
     const genericIDRecognizer = await BlinkIDSDK.createBlinkIdRecognizer( sdk );
-    const idBarcodeRecognizer = await BlinkIDSDK.createIdBarcodeRecognizer( sdk );
 
     // 2. Create a RecognizerRunner object which orchestrates the recognition with one or more
     //    recognizer objects.
@@ -119,7 +117,6 @@ async function startScan( sdk: BlinkIDSDK.WasmSDK, fileList: FileList )
 
         // Release memory on WebAssembly heap used by the recognizer
         genericIDRecognizer?.delete();
-        idBarcodeRecognizer?.delete();
         inputImageFile.value = "";
         return;
     }
@@ -144,17 +141,6 @@ async function startScan( sdk: BlinkIDSDK.WasmSDK, fileList: FileList )
 You were born on ${ genericIDResults.dateOfBirth.year || genericIDResults.mrz.dateOfBirth.year }-${ genericIDResults.dateOfBirth.month || genericIDResults.mrz.dateOfBirth.month }-${ genericIDResults.dateOfBirth.day || genericIDResults.mrz.dateOfBirth.day }.`
             );
         }
-
-        const idBarcodeResult = await idBarcodeRecognizer.getResult();
-        if ( idBarcodeResult.state !== BlinkIDSDK.RecognizerResultState.Empty )
-        {
-            console.log( "IDBarcode results", idBarcodeResult );
-            alert
-            (
-`Hello, ${ idBarcodeResult.firstName } ${ idBarcodeResult.lastName }!
-You were born on ${ idBarcodeResult.dateOfBirth.year }-${ idBarcodeResult.dateOfBirth.month }-${ idBarcodeResult.dateOfBirth.day }.`
-            );
-        }
     }
     else
     {
@@ -168,7 +154,6 @@ You were born on ${ idBarcodeResult.dateOfBirth.year }-${ idBarcodeResult.dateOf
 
     // Release memory on WebAssembly heap used by the recognizer
     genericIDRecognizer?.delete();
-    idBarcodeRecognizer?.delete();
 
     // Hide scanning screen and show scan button again
     inputImageFile.value = "";

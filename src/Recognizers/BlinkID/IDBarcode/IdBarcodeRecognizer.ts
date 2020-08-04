@@ -23,11 +23,6 @@ export class IdBarcodeRecognizerSettings implements RecognizerSettings
 export interface IdBarcodeRecognizerResult extends RecognizerResult
 {
     /**
-     *  THe additional address information of the document owner.
-     */
-    readonly additionalAddressInformation: string;
-
-    /**
      *  The additional name information of the document owner.
      */
     readonly additionalNameInformation: string;
@@ -41,6 +36,11 @@ export interface IdBarcodeRecognizerResult extends RecognizerResult
      *  The raw, unparsed barcode data.
      */
     readonly barcodeData: BarcodeData;
+
+    /**
+     * The city address portion of the document owner.
+     */
+    readonly city: string;
 
     /**
      *  The date of birth of the document owner.
@@ -98,6 +98,11 @@ export interface IdBarcodeRecognizerResult extends RecognizerResult
     readonly issuingAuthority: string;
 
     /**
+     * The jurisdiction code address portion of the document owner.
+     */
+    readonly jurisdiction: string;
+
+    /**
      *  The last name of the document owner.
      */
     readonly lastName: string;
@@ -121,6 +126,11 @@ export interface IdBarcodeRecognizerResult extends RecognizerResult
      *  The place of birth of the document owner.
      */
     readonly placeOfBirth: string;
+
+    /**
+     * The postal code address portion of the document owner.
+     */
+    readonly postalCode: string;
 
     /**
      *  The profession of the document owner.
@@ -151,6 +161,11 @@ export interface IdBarcodeRecognizerResult extends RecognizerResult
      *  The sex of the document owner.
      */
     readonly sex: string;
+
+    /**
+     * The street address portion of the document owner.
+     */
+    readonly street: string;
 
     /**
      * The type of vehicle the driver license owner has privilege to drive.

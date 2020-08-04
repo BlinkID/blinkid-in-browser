@@ -15,7 +15,7 @@
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
-    "@microblink/blinkid-in-browser-sdk": "^5.5.0",
+    "@microblink/blinkid-in-browser-sdk": "~5.5.1",
     "babel-loader": "^8.1.0",
     "typescript": "^3.9.7",
     "webpack": "^4.44.0",

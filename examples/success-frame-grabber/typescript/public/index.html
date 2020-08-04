@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Example: BlinkID Success Frame Grabber</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="screen-initial">
+            <h1 id="msg">Loading...</h1>
+            <progress id="load-progress" value="0" max="100"></progress>
+        </div>
+
+        <div id="screen-start" class="hidden">
+            <a href="#" id="start-scan">Start scan</a>
+        </div>
+
+        <div id="screen-scanning" class="hidden">
+            <video id="camera-feed" playsinline></video>
+            <!-- Recognition events will be drawn here. -->
+            <canvas id="camera-feedback"></canvas>
+            <p id="camera-guides">Point the camera towards front side of a document.</p>
+        </div>
+    </body>
+    <script src="app.js"></script>
+</html>

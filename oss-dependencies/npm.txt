@@ -12,21 +12,21 @@
 │  ├─ email: sebmck@gmail.com
 │  ├─ path: node_modules/@babel/code-frame
 │  └─ licenseFile: node_modules/@babel/code-frame/LICENSE
-├─ @babel/compat-data@7.10.5
+├─ @babel/compat-data@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
 │  ├─ url: https://babeljs.io/team
 │  ├─ path: node_modules/@babel/compat-data
 │  └─ licenseFile: node_modules/@babel/compat-data/LICENSE
-├─ @babel/core@7.10.5
+├─ @babel/core@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: Sebastian McKenzie
 │  ├─ email: sebmck@gmail.com
 │  ├─ path: node_modules/@babel/core
 │  └─ licenseFile: node_modules/@babel/core/LICENSE
-├─ @babel/generator@7.10.5
+├─ @babel/generator@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: Sebastian McKenzie
@@ -89,7 +89,7 @@
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/helper-hoist-variables
 │  └─ licenseFile: node_modules/@babel/helper-hoist-variables/LICENSE
-├─ @babel/helper-member-expression-to-functions@7.10.5
+├─ @babel/helper-member-expression-to-functions@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: Justin Ridgewell
@@ -103,7 +103,7 @@
 │  ├─ email: loganfsmyth@gmail.com
 │  ├─ path: node_modules/@babel/helper-module-imports
 │  └─ licenseFile: node_modules/@babel/helper-module-imports/LICENSE
-├─ @babel/helper-module-transforms@7.10.5
+├─ @babel/helper-module-transforms@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: Logan Smyth
@@ -144,7 +144,12 @@
 │  ├─ email: loganfsmyth@gmail.com
 │  ├─ path: node_modules/@babel/helper-simple-access
 │  └─ licenseFile: node_modules/@babel/helper-simple-access/LICENSE
-├─ @babel/helper-split-export-declaration@7.10.4
+├─ @babel/helper-skip-transparent-expression-wrappers@7.11.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/babel/babel
+│  ├─ path: node_modules/@babel/helper-skip-transparent-expression-wrappers
+│  └─ licenseFile: node_modules/@babel/helper-skip-transparent-expression-wrappers/LICENSE
+├─ @babel/helper-split-export-declaration@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/helper-split-export-declaration
@@ -173,7 +178,7 @@
 │  ├─ email: me@suchipi.com
 │  ├─ path: node_modules/@babel/highlight
 │  └─ licenseFile: node_modules/@babel/highlight/LICENSE
-├─ @babel/parser@7.10.5
+├─ @babel/parser@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: Sebastian McKenzie
@@ -195,11 +200,21 @@
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/plugin-proposal-dynamic-import
 │  └─ licenseFile: node_modules/@babel/plugin-proposal-dynamic-import/LICENSE
+├─ @babel/plugin-proposal-export-namespace-from@7.10.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/babel/babel
+│  ├─ path: node_modules/@babel/plugin-proposal-export-namespace-from
+│  └─ licenseFile: node_modules/@babel/plugin-proposal-export-namespace-from/LICENSE
 ├─ @babel/plugin-proposal-json-strings@7.10.4
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/plugin-proposal-json-strings
 │  └─ licenseFile: node_modules/@babel/plugin-proposal-json-strings/LICENSE
+├─ @babel/plugin-proposal-logical-assignment-operators@7.11.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/babel/babel
+│  ├─ path: node_modules/@babel/plugin-proposal-logical-assignment-operators
+│  └─ licenseFile: node_modules/@babel/plugin-proposal-logical-assignment-operators/LICENSE
 ├─ @babel/plugin-proposal-nullish-coalescing-operator@7.10.4
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
@@ -210,7 +225,7 @@
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/plugin-proposal-numeric-separator
 │  └─ licenseFile: node_modules/@babel/plugin-proposal-numeric-separator/LICENSE
-├─ @babel/plugin-proposal-object-rest-spread@7.10.4
+├─ @babel/plugin-proposal-object-rest-spread@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/plugin-proposal-object-rest-spread
@@ -220,7 +235,7 @@
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/plugin-proposal-optional-catch-binding
 │  └─ licenseFile: node_modules/@babel/plugin-proposal-optional-catch-binding/LICENSE
-├─ @babel/plugin-proposal-optional-chaining@7.10.4
+├─ @babel/plugin-proposal-optional-chaining@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/plugin-proposal-optional-chaining
@@ -250,11 +265,21 @@
 │  ├─ repository: https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-dynamic-import
 │  ├─ path: node_modules/@babel/plugin-syntax-dynamic-import
 │  └─ licenseFile: node_modules/@babel/plugin-syntax-dynamic-import/LICENSE
+├─ @babel/plugin-syntax-export-namespace-from@7.8.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-export-namespace-from
+│  ├─ path: node_modules/@babel/plugin-syntax-export-namespace-from
+│  └─ licenseFile: node_modules/@babel/plugin-syntax-export-namespace-from/LICENSE
 ├─ @babel/plugin-syntax-json-strings@7.8.3
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-json-strings
 │  ├─ path: node_modules/@babel/plugin-syntax-json-strings
 │  └─ licenseFile: node_modules/@babel/plugin-syntax-json-strings/LICENSE
+├─ @babel/plugin-syntax-logical-assignment-operators@7.10.4
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/babel/babel
+│  ├─ path: node_modules/@babel/plugin-syntax-logical-assignment-operators
+│  └─ licenseFile: node_modules/@babel/plugin-syntax-logical-assignment-operators/LICENSE
 ├─ @babel/plugin-syntax-nullish-coalescing-operator@7.8.3
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-nullish-coalescing-operator
@@ -417,7 +442,7 @@
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/plugin-transform-shorthand-properties
 │  └─ licenseFile: node_modules/@babel/plugin-transform-shorthand-properties/LICENSE
-├─ @babel/plugin-transform-spread@7.10.4
+├─ @babel/plugin-transform-spread@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/plugin-transform-spread
@@ -447,7 +472,7 @@
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ path: node_modules/@babel/plugin-transform-unicode-regex
 │  └─ licenseFile: node_modules/@babel/plugin-transform-unicode-regex/LICENSE
-├─ @babel/preset-env@7.10.4
+├─ @babel/preset-env@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: Henry Zhu
@@ -458,7 +483,7 @@
 │  ├─ licenses: MIT
 │  ├─ path: node_modules/@babel/preset-modules
 │  └─ licenseFile: node_modules/@babel/preset-modules/README.md
-├─ @babel/runtime@7.10.5
+├─ @babel/runtime@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: Sebastian McKenzie
@@ -472,24 +497,24 @@
 │  ├─ email: sebmck@gmail.com
 │  ├─ path: node_modules/@babel/template
 │  └─ licenseFile: node_modules/@babel/template/LICENSE
-├─ @babel/traverse@7.10.5
+├─ @babel/traverse@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: Sebastian McKenzie
 │  ├─ email: sebmck@gmail.com
 │  ├─ path: node_modules/@babel/traverse
 │  └─ licenseFile: node_modules/@babel/traverse/LICENSE
-├─ @babel/types@7.10.5
+├─ @babel/types@7.11.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: Sebastian McKenzie
 │  ├─ email: sebmck@gmail.com
 │  ├─ path: node_modules/@babel/types
 │  └─ licenseFile: node_modules/@babel/types/LICENSE
-├─ @microblink/blinkid-in-browser-sdk@5.5.1
+├─ @microblink/blinkid-in-browser-sdk@5.7.0
 │  ├─ licenses: Custom: https://travis-ci.org/BlinkID/blinkid-in-browser.svg
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
-│  ├─ path: /Users/mbp/Projects/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
+│  ├─ path: /opt/fast/jenkins/jenkinsData/E1/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
 │  └─ licenseFile: README.md
 ├─ @rollup/plugin-babel@5.1.0
 │  ├─ licenses: MIT
@@ -541,32 +566,32 @@
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/resolve
 │  └─ licenseFile: node_modules/@types/resolve/LICENSE
-├─ @typescript-eslint/eslint-plugin@3.7.1
+├─ @typescript-eslint/eslint-plugin@3.8.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/typescript-eslint/typescript-eslint
 │  ├─ path: node_modules/@typescript-eslint/eslint-plugin
 │  └─ licenseFile: node_modules/@typescript-eslint/eslint-plugin/LICENSE
-├─ @typescript-eslint/experimental-utils@3.7.1
+├─ @typescript-eslint/experimental-utils@3.8.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/typescript-eslint/typescript-eslint
 │  ├─ path: node_modules/@typescript-eslint/experimental-utils
 │  └─ licenseFile: node_modules/@typescript-eslint/experimental-utils/LICENSE
-├─ @typescript-eslint/parser@3.7.1
+├─ @typescript-eslint/parser@3.8.0
 │  ├─ licenses: BSD-2-Clause
 │  ├─ repository: https://github.com/typescript-eslint/typescript-eslint
 │  ├─ path: node_modules/@typescript-eslint/parser
 │  └─ licenseFile: node_modules/@typescript-eslint/parser/LICENSE
-├─ @typescript-eslint/types@3.7.1
+├─ @typescript-eslint/types@3.8.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/typescript-eslint/typescript-eslint
 │  ├─ path: node_modules/@typescript-eslint/types
 │  └─ licenseFile: node_modules/@typescript-eslint/types/LICENSE
-├─ @typescript-eslint/typescript-estree@3.7.1
+├─ @typescript-eslint/typescript-estree@3.8.0
 │  ├─ licenses: BSD-2-Clause
 │  ├─ repository: https://github.com/typescript-eslint/typescript-eslint
 │  ├─ path: node_modules/@typescript-eslint/typescript-estree
 │  └─ licenseFile: node_modules/@typescript-eslint/typescript-estree/LICENSE
-├─ @typescript-eslint/visitor-keys@3.7.1
+├─ @typescript-eslint/visitor-keys@3.8.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/typescript-eslint/typescript-eslint
 │  ├─ path: node_modules/@typescript-eslint/visitor-keys
@@ -576,7 +601,7 @@
 │  ├─ repository: https://github.com/acornjs/acorn-jsx
 │  ├─ path: node_modules/acorn-jsx
 │  └─ licenseFile: node_modules/acorn-jsx/LICENSE
-├─ acorn@7.3.1
+├─ acorn@7.4.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/acornjs/acorn
 │  ├─ path: node_modules/acorn
@@ -784,7 +809,7 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/callsites
 │  └─ licenseFile: node_modules/callsites/license
-├─ caniuse-lite@1.0.30001107
+├─ caniuse-lite@1.0.30001110
 │  ├─ licenses: CC-BY-4.0
 │  ├─ repository: https://github.com/ben-eb/caniuse-lite
 │  ├─ publisher: Ben Briggs
@@ -996,7 +1021,7 @@
 │  ├─ repository: https://github.com/eslint/doctrine
 │  ├─ path: node_modules/doctrine
 │  └─ licenseFile: node_modules/doctrine/LICENSE
-├─ electron-to-chromium@1.3.512
+├─ electron-to-chromium@1.3.518
 │  ├─ licenses: ISC
 │  ├─ repository: https://github.com/kilian/electron-to-chromium
 │  ├─ publisher: Kilian Valkhof
@@ -1050,7 +1075,7 @@
 │  ├─ url: https://github.com/mysticatea
 │  ├─ path: node_modules/eslint-visitor-keys
 │  └─ licenseFile: node_modules/eslint-visitor-keys/LICENSE
-├─ eslint@7.5.0
+├─ eslint@7.6.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/eslint/eslint
 │  ├─ publisher: Nicholas C. Zakas
@@ -1239,18 +1264,6 @@
 │  ├─ url: http://blog.izs.me/
 │  ├─ path: node_modules/fs.realpath
 │  └─ licenseFile: node_modules/fs.realpath/LICENSE
-├─ fsevents@1.2.13
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/strongloop/fsevents
-│  ├─ publisher: Philipp Dunkel
-│  ├─ email: pip@pipobscure.com
-│  ├─ path: node_modules/fsevents
-│  └─ licenseFile: node_modules/fsevents/LICENSE
-├─ fsevents@2.1.3
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/fsevents/fsevents
-│  ├─ path: node_modules/rollup/node_modules/fsevents
-│  └─ licenseFile: node_modules/rollup/node_modules/fsevents/LICENSE
 ├─ function-bind@1.1.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/Raynos/function-bind
@@ -1575,7 +1588,7 @@
 │  ├─ url: https://github.com/jonschlinkert
 │  ├─ path: node_modules/isobject
 │  └─ licenseFile: node_modules/isobject/LICENSE
-├─ jest-worker@26.1.0
+├─ jest-worker@26.2.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/facebook/jest
 │  ├─ path: node_modules/jest-worker

@@ -66,9 +66,7 @@ async function startScan(sdk, fileList) {
     // 1. Create a recognizer objects which will be used to recognize single image or stream of images.
     //
     // Generic ID Recognizer - scan various ID documents
-    // ID Barcode Recognizer - scan barcodes from various ID documents
     const genericIDRecognizer = await BlinkIDSDK.createBlinkIdRecognizer(sdk);
-    const idBarcodeRecognizer = await BlinkIDSDK.createIdBarcodeRecognizer(sdk);
     // 2. Create a RecognizerRunner object which orchestrates the recognition with one or more
     //    recognizer objects.
     const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
@@ -95,7 +93,6 @@ async function startScan(sdk, fileList) {
         recognizerRunner?.delete();
         // Release memory on WebAssembly heap used by the recognizer
         genericIDRecognizer?.delete();
-        idBarcodeRecognizer?.delete();
         inputImageFile.value = "";
         return;
     }
@@ -123,12 +120,6 @@ You were born on ${
                 genericIDResults.mrz.dateOfBirth.day
             }.`);
         }
-        const idBarcodeResult = await idBarcodeRecognizer.getResult();
-        if (idBarcodeResult.state !== BlinkIDSDK.RecognizerResultState.Empty) {
-            console.log("IDBarcode results", idBarcodeResult);
-            alert(`Hello, ${idBarcodeResult.firstName} ${idBarcodeResult.lastName}!
-You were born on ${idBarcodeResult.dateOfBirth.year}-${idBarcodeResult.dateOfBirth.month}-${idBarcodeResult.dateOfBirth.day}.`);
-        }
     } else {
         alert("Could not extract information!");
     }
@@ -137,7 +128,6 @@ You were born on ${idBarcodeResult.dateOfBirth.year}-${idBarcodeResult.dateOfBir
     recognizerRunner?.delete();
     // Release memory on WebAssembly heap used by the recognizer
     genericIDRecognizer?.delete();
-    idBarcodeRecognizer?.delete();
     // Hide scanning screen and show scan button again
     inputImageFile.value = "";
     document.getElementById("screen-start")?.classList.remove("hidden");

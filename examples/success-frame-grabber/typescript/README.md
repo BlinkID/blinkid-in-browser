@@ -1,8 +1,6 @@
-# BlinkID In-browser: usage with webpack
+# BlinkID In-browser: usage with SuccessFrameGrabber
 
 This example contains simple demo app which uses BlinkID In-browser SDK for scanning of identity documents.
-
-Environment: Webpack, Babel, TypeScript.
 
 ## Usage
 
@@ -14,7 +12,7 @@ npm install
 npm run build
 
 # Copy resources from NPM package
-cp -r node_modules/@microblink/blinkid-in-browser-sdk/resources/ dist/
+cp -r node_modules/@microblink/blinkid-in-browser-sdk/resources/* dist/
 
 # Serve "dist" folder with any HTTP/S server
 http-server dist/

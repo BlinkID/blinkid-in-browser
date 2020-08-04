@@ -1,16 +1,13 @@
-import { BlinkIdRecognizerSettings } from "./BlinkIdRecognizer";
-import { ClassInfo } from "./ClassInfo";
+import { BlinkIdRecognizerSettings, BaseBlinkIdRecognizerResult } from "./BlinkIdRecognizer";
 import { CombinedRecognizerResult } from "../CombinedRecognizer";
-import { DocumentImageColorStatus, DocumentImageMoireStatus } from "./DocumentStatuses";
-import { DriverLicenseDetailedInfo } from "./DriverLicenseDetailedInfo";
+import { ImageAnalysisResult } from "./ImageAnalysisResult";
 import { ImageResult } from "../ImageOptions";
-import { MrzResult } from "../MRTD/MrtdStructures";
+import { VIZResult } from "./VIZResult";
 
 import
 {
     Recognizer,
     DigitalSignatureOptions,
-    MBDate,
     DigitalSignature,
     WasmSDK
 } from "../../../MicroblinkSDK/DataStructures";
@@ -27,111 +24,12 @@ export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings
 /**
  * The result of image recognition when using the BlinkIdCombinedRecognizer.
  */
-export interface BlinkIdCombinedRecognizerResult extends CombinedRecognizerResult
+export interface BlinkIdCombinedRecognizerResult extends BaseBlinkIdRecognizerResult, CombinedRecognizerResult
 {
-    /**
-     *  THe additional address information of the document owner.
-     */
-    readonly additionalAddressInformation: string;
-
-    /**
-     *  The additional name information of the document owner.
-     */
-    readonly additionalNameInformation: string;
-
-    /**
-     *  The address of the document owner.
-     */
-    readonly address: string;
-
-    /**
-     *  The class info
-     */
-    readonly classInfo: ClassInfo;
-
-    /**
-     *  The conditions
-     */
-    readonly conditions: string;
-
-    /**
-     *  The date of birth of the document owner.
-     */
-    readonly dateOfBirth: MBDate;
-
-    /**
-     *  The date of expiry of the document.
-     */
-    readonly dateOfExpiry: MBDate;
-
-    /**
-     *  Determines if date of expiry is permanent.
-     */
-    readonly dateOfExpiryPermanent: boolean;
-
-    /**
-     *  The date of issue of the document.
-     */
-    readonly dateOfIssue: MBDate;
-
     /**
      *  The digital signature
      */
     readonly digitalSignature: DigitalSignature;
-
-    /**
-     *  The additional number of the document.
-     */
-    readonly documentAdditionalNumber: string;
-
-    /**
-     * Indicates whether scanned image of the front side was colored or not.
-     * Available only if allowed by the given license key.
-     */
-    readonly documentFrontImageColorStatus: DocumentImageColorStatus;
-
-    /**
-     * Indicates whether scanned image of the back side was colored or not.
-     * Available only if allowed by the given license key.
-     */
-    readonly documentBackImageColorStatus: DocumentImageColorStatus;
-
-    /**
-     * Indicates whether Moire pattern was detected on the front side of the document.
-     * Available only if allowed by the given license key.
-     */
-    readonly documentFrontImageMoireStatus: DocumentImageMoireStatus;
-
-    /**
-     * Indicates whether Moire pattern was detected on the back side of the document.
-     * Available only if allowed by the given license key.
-     */
-    readonly documentBackImageMoireStatus: DocumentImageMoireStatus;
-
-    /**
-     *  The document number.
-     */
-    readonly documentNumber: string;
-
-    /**
-     *  The driver license detailed info
-     */
-    readonly driverLicenseDetailedInfo: DriverLicenseDetailedInfo;
-
-    /**
-     *  The employer of the document owner.
-     */
-    readonly employer: string;
-
-    /**
-     *  The face image
-     */
-    readonly faceImage: ImageResult;
-
-    /**
-     *  The first name of the document owner.
-     */
-    readonly firstName: string;
 
     /**
      *  The full document back image
@@ -144,74 +42,24 @@ export interface BlinkIdCombinedRecognizerResult extends CombinedRecognizerResul
     readonly fullDocumentFrontImage: ImageResult;
 
     /**
-     *  The full name of the document owner.
+     * Result of analysis of the image of the front side of the document.
      */
-    readonly fullName: string;
+    readonly frontImageAnalysisResult: ImageAnalysisResult;
 
     /**
-     *  The issuing authority of the document.
+     * Result of analysis of the image of the back side of the document.
      */
-    readonly issuingAuthority: string;
+    readonly backImageAnalysisResult: ImageAnalysisResult;
 
     /**
-     *  The last name of the document owner.
+     * The data extracted from the front side visual inspection zone.
      */
-    readonly lastName: string;
+    readonly frontViz: VIZResult;
 
     /**
-     *  The localized name of the document owner.
+     * The data extracted from the back side visual inspection zone.
      */
-    readonly localizedName: string;
-
-    /**
-     *  The marital status of the document owner.
-     */
-    readonly maritalStatus: string;
-
-    /**
-     *  The data extracted from the machine readable zone.
-     */
-    readonly mrz: MrzResult;
-
-    /**
-     *  The nationality of the documet owner.
-     */
-    readonly nationality: string;
-
-    /**
-     *  The personal identification number.
-     */
-    readonly personalIdNumber: string;
-
-    /**
-     *  The place of birth of the document owner.
-     */
-    readonly placeOfBirth: string;
-
-    /**
-     *  The profession of the document owner.
-     */
-    readonly profession: string;
-
-    /**
-     *  The race of the document owner.
-     */
-    readonly race: string;
-
-    /**
-     *  The religion of the document owner.
-     */
-    readonly religion: string;
-
-    /**
-     *  The residential status of the document owner.
-     */
-    readonly residentialStatus: string;
-
-    /**
-     *  The sex of the document owner.
-     */
-    readonly sex: string;
+    readonly backViz: VIZResult;
 }
 
 /**
