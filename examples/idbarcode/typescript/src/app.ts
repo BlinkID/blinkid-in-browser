@@ -121,10 +121,11 @@ async function startScan( sdk: BlinkIDSDK.WasmSDK )
         if ( idBarcodeResult.state !== BlinkIDSDK.RecognizerResultState.Empty )
         {
             console.log( "IDBarcode results", idBarcodeResult );
+            const address = idBarcodeResult.address;
             alert
             (
 `Hello, ${ idBarcodeResult.firstName } ${ idBarcodeResult.lastName }!
-You were born on ${ idBarcodeResult.dateOfBirth.year }-${ idBarcodeResult.dateOfBirth.month }-${ idBarcodeResult.dateOfBirth.day }.`
+You were born on ${ idBarcodeResult.dateOfBirth.year }-${ idBarcodeResult.dateOfBirth.month }-${ idBarcodeResult.dateOfBirth.day }${ address ? " and you live at " + address : "" }.`
             );
         }
     }
