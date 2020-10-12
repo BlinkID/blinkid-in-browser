@@ -132,8 +132,8 @@
         margin-bottom: 1.5rem;
       }
     </style>
-    <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.1/dist/ui/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-    <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.1/dist/ui/blinkid-in-browser.js"></script>
+    <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.1/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+    <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.1/ui/dist/blinkid-in-browser.js"></script>
     <script type="text/javascript">
       window.getSafePathname = p => p[ p.length - 1 ] === '/' ? p : p.split( '/' ).slice( 0, -1 ).join( '/' ) + '/';
       /**
@@ -251,7 +251,7 @@
         blinkid.licenseKey = window.licenseKey;
         blinkid.recognizers = ['BlinkIdRecognizer'];
         window.setTimeout(() => {
-          blinkid.translations = { 
+          blinkid.translations = {
             'action-message': 'Alternative CTA'
           };
         }, 3000);
@@ -287,7 +287,7 @@
         blinkid.recognizers = ['BlinkIdRecognizer'];
 
         window.setTimeout(() => {
-          blinkid.translations = { 
+          blinkid.translations = {
             'action-message': 'Alternative CTA'
           };
         }, 3000);
@@ -433,7 +433,7 @@
 
         customizatorForm.addEventListener('submit', ev => {
           ev.preventDefault();
-          
+
           document.querySelector(
             '#example-customization .box'
           ).style.background = document.getElementById('customization-background').value;
