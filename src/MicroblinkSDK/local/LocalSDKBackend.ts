@@ -220,9 +220,12 @@ export class WasmSDKLocal implements WasmSDK
 {
     readonly mbWasmModule: WasmModuleProxy;
 
-    constructor( wasmModule: any )
+    readonly showOverlay: boolean;
+
+    constructor( wasmModule: any, showOverlay: boolean )
     {
         this.mbWasmModule = new WasmModuleLocalProxy( wasmModule );
+        this.showOverlay = showOverlay;
     }
 }
 /* eslint-enable @typescript-eslint/explicit-module-boundary-types,

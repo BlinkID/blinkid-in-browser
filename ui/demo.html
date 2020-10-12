@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>BlinkID UI: examples</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body {
+        margin: 0;
+        padding: 1.5rem;
+      }
+
+      html {
+        font-family: "Avenir Next", sans-serif;
+        font-size: 16px;
+        line-height: 24px;
+
+        background-color: #f0f0f0;
+
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+
+      header, section {
+        max-width: 640px;
+        width: 100%;
+
+        margin: 0 auto 1.5rem auto;
+        padding: 1.5rem;
+
+        background-color: #fff;
+      }
+
+      section > *:last-child {
+        margin-bottom: 0 !important;
+      }
+
+      h1, h2, h3 {
+        margin: 0 0 1.5rem 0;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0 0 0 1.5rem;
+      }
+
+      li {
+        margin: 0 0 0.75rem 0;
+        padding: 0;
+      }
+
+      p {
+        margin: 0 0 1.5rem 0;
+      }
+
+      pre {
+        margin: 1.5rem 0;
+        padding: 0.75rem;
+
+        background-color: #333;
+        border: 1px solid rgba(120, 120, 128, 0.2);
+        color: #fff;
+
+        font-size: 13px;
+        line-height: 21px;
+      }
+
+      hr, form {
+        margin: 0 0 1.5rem 0;
+        padding: 0;
+      }
+
+      fieldset {
+        margin: 0 0 0.75rem 0;
+        padding: 0;
+
+        border: none;
+
+        text-align: right;
+      }
+
+      fieldset:last-of-type {
+        margin-bottom: 1.5rem;
+      }
+
+      input {
+        width: 250px;
+
+        margin: 0 0 0 0.75rem;
+        padding: 0 0.5rem;
+
+        font-family: "Avenir Next", sans-serif;
+        font-size: 0.875rem;
+        line-height: 1.5rem;
+        border: 1px solid rgba(120, 120, 128, 0.2);
+      }
+
+      button[type="submit"] {
+        display: block;
+        width: 100%;
+        max-width: 200px;
+
+        margin: 0 auto;
+        padding: 0;
+
+        background-color: #333;
+        border: none;
+        border-radius: 0;
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+        color: #fff;
+
+        font-family: "Avenir Next", sans-serif;
+        font-size: 1rem;
+        line-height: 2rem;
+
+        text-align: center;
+        text-transform: uppercase;
+      }
+
+      .box {
+        margin: 0 0 1.5rem 0;
+        padding: 1.5rem;
+        border: 1px solid #f0f0f0;
+      }
+
+      blinkid-in-browser:not(:last-child) {
+        margin-bottom: 1.5rem;
+      }
+    </style>
+    <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.0/dist/ui/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+    <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.0/dist/ui/blinkid-in-browser.js"></script>
+    <script type="text/javascript">
+      window.getSafePathname = p => p[ p.length - 1 ] === '/' ? p : p.split( '/' ).slice( 0, -1 ).join( '/' ) + '/';
+      /**
+       *  "licensee": "localhost"
+       *  "licenseID": "D6MGSSLDOD7OLT81"
+       *  "upToVersion": "8.0.0"
+       */
+      window.licenseKey = 'sRwAAAYJbG9jYWxob3N0r/lOPg4/w35CpJnWqljeBtfhmzhTZhKEF801n/2bqLzhGTSx+P5F5I9jIPXhcHgj4003yVz+wVcgSaWONnylfUJqC+K0cm4dTltU/Hq7FL1TWDMYEOXXpZANuATnur6mH+FyfhuVpNiRwZ+IomE3x/ho4rzHZ3IMqX1y9B25bEcgAKm5671nTnXAN1BekdjtlOFpeHOSljIl5E9VYJUTBwqG5VeDChdJ3iTLxf5NfyZSYFTnjY+yJn3d0ysqamAwZ/pdK8YvXJxnk6mcCt4M6zNkzoytrsIabcsuQO3/0SJjKEB/7/dWoiC+R5owb7FNUA==';
+
+      if (window.location.hostname === 'blinkid.github.io') {
+        window.licenseKey = 'sRwAAAYYYXJ0aWZhY3RzLm1pY3JvYmxpbmsuY29tY/TlXVlxFZe5OuLM4FWYZ3wlmlTLktzdyDo+ox/sZQdKfrnLwxLw74MQwZLlL9xDVKukh8EQng6VZ7jg/7Ihdo76KDbbFUKUXMbgQa3I+H9dmURO7ia11boIslSBKu9XuKsGEZmof0NEGt4oYfEVxQCgRRzbG7JK3EgE0Bfb8zZ88+dDUu3utcHDaDCEiSVZmr/WfCanYBY6R4rZ4hjMkm1tA5twBzi4vB9mcj4ZeuUhhZVfXzIVj+aK9x0wH+oYPv4Lf10JCjzXXKaTyEdobJgOK7nX5yJrymAiEtgssZjHuxwVJMQKw9Oz9pjDxvYtfw==';
+      }
+
+      window.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.0/resources";
+      if (window.location.hostname === 'blinkid.github.io') {
+        window.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.0/resources";
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>BlinkID UI: examples</h1>
+      <p>The goal of this page is to display minimal example and features of BlinkID UI component.</p>
+      <p><em><strong>Important:</strong> to use BlinkID UI component it's required to have a valid license key. It's possible to obtain a free trial license key by registering to <a href="https://microblink.com/login" target="_blank">Microblink dashboard.</a></em></p>
+    </header>
+
+    <section id="example-minimal">
+      <h2>Minimal example</h2>
+      <p>UI component with default behaviour where it's required to set valid license key, engine location and recognizer.</p>
+      <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
+      <p><em><strong>Note:</strong> since this page has multiple components, only this one has enabled drag and drop feature.</em></p>
+      <blinkid-in-browser></blinkid-in-browser>
+<pre>&lt;blinkid-in-browser
+  engine-location="http://localhost/resources/"
+  license-key="LICENSE-KEY-GOES-HERE"
+  recognizers="BlinkIdRecognizer"
+&gt;&lt;/blinkid-in-browser&gt;</pre>
+    </section>
+    <script type="text/javascript">
+      (function (){
+        const blinkid = document.querySelector('#example-minimal blinkid-in-browser');
+
+        blinkid.engineLocation = window.engineLocation;
+        blinkid.licenseKey = window.licenseKey;
+        blinkid.recognizers = ['BlinkIdRecognizer'];
+      })();
+    </script>
+    <section id="example-combined">
+      <h2>Scan both sides</h2>
+      <p>UI component with default behaviour where it's required to set valid license key and recognizer.</p>
+      <p><em>Recognizer: <strong>BlinkIdCombinedRecognizer</strong></em></p>
+      <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
+<pre>&lt;blinkid-in-browser
+  engine-location="http://localhost/resources/"
+  license-key="LICENSE-KEY-GOES-HERE"
+  recognizers="BlinkIdCombinedRecognizer"
+&gt;&lt;/blinkid-in-browser&gt;</pre>
+    </section>
+    <script type="text/javascript">
+      (function (){
+        const blinkid = document.querySelector('#example-combined blinkid-in-browser');
+
+        blinkid.engineLocation = window.engineLocation;
+        blinkid.licenseKey = window.licenseKey;
+
+        blinkid.recognizers = ['BlinkIdCombinedRecognizer'];
+      })();
+    </script>
+    <section id="example-barcode">
+      <h2>Scan identity document with barcode</h2>
+      <p>UI component with default behaviour where it's required to set valid license key and recognizer.</p>
+      <p><em>Recognizer: <strong>IdBarcodeRecognizer</strong></em></p>
+      <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
+<pre>&lt;blinkid-in-browser
+  engine-location="http://localhost/resources/"
+  license-key="LICENSE-KEY-GOES-HERE"
+  recognizers="IdBarcodeRecognizer"
+&gt;&lt;/blinkid-in-browser&gt;</pre>
+    </section>
+    <script type="text/javascript">
+      (function (){
+        const blinkid = document.querySelector('#example-barcode blinkid-in-browser');
+
+        blinkid.engineLocation = window.engineLocation;
+        blinkid.licenseKey = window.licenseKey;
+
+        blinkid.recognizers = ['IdBarcodeRecognizer'];
+      })();
+    </script>
+    <section id="example-localization">
+      <h2>Custom messages</h2>
+      <p>It's possible to change default text messages which are displayed to the user.</p>
+      <p>Use attribute/property <code>translations</code> to change default messages.</p>
+      <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
+      <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
+<pre>&lt;blinkid-in-browser
+  engine-location="http://localhost/resources/"
+  license-key="LICENSE-KEY-GOES-HERE"
+  recognizers="BlinkIdRecognizer"
+&gt;&lt;/blinkid-in-browser&gt;
+&lt;script&gt;
+  const blinkid = document.querySelector('blinkid-in-browser');
+
+  // See src/utils/translations.ts for possible translation keys
+  blinkid.translations = {
+    'action-message': 'Alternative CTA'
+  };
+&lt;/script&gt;</pre>
+    </section>
+    <script type="text/javascript">
+      (function (){
+        const blinkid = document.querySelector('#example-localization blinkid-in-browser');
+
+        blinkid.engineLocation = window.engineLocation;
+        blinkid.licenseKey = window.licenseKey;
+        blinkid.recognizers = ['BlinkIdRecognizer'];
+        window.setTimeout(() => {
+          blinkid.translations = { 
+            'action-message': 'Alternative CTA'
+          };
+        }, 3000);
+      })();
+    </script>
+
+    <section id="example-localization-rtl">
+      <h2>RTL support</h2>
+      <p>Set HTML attribute <code>dir="rtl"</code>.</p>
+      <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
+      <blinkid-in-browser fullscreen-drop="false" dir="rtl"></blinkid-in-browser>
+<pre>&lt;blinkid-in-browser
+  engine-location="http://localhost/resources/"
+  license-key="LICENSE-KEY-GOES-HERE"
+  recognizers="BlinkIdRecognizer"
+  dir="rtl"
+&gt;&lt;/blinkid-in-browser&gt;
+&lt;script&gt;
+  const blinkid = document.querySelector('blinkid-in-browser');
+
+  // See src/utils/translations.ts for possible translation keys
+  blinkid.translations = {
+    'action-message': 'Alternative CTA'
+  };
+&lt;/script&gt;</pre>
+    </section>
+    <script type="text/javascript">
+      (function (){
+        const blinkid = document.querySelector('#example-localization-rtl blinkid-in-browser');
+
+        blinkid.engineLocation = window.engineLocation;
+        blinkid.licenseKey = window.licenseKey;
+        blinkid.recognizers = ['BlinkIdRecognizer'];
+
+        window.setTimeout(() => {
+          blinkid.translations = { 
+            'action-message': 'Alternative CTA'
+          };
+        }, 3000);
+      })();
+    </script>
+
+    <section id="example-customization">
+      <h2>UI customization</h2>
+      <p>It's possible to customize UI of BlinkID component by using preset CSS variables.</p>
+      <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
+      <div class="box">
+        <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
+      </div>
+      <h3>Customizator</h3>
+      <form id="customizator-form">
+        <fieldset>
+          <label for="customization-background">Background behind component</label>
+          <input type="text" id="customization-background" value="transparent" />
+        </fieldset>
+        <hr />
+        <div id="customizator-variables"></div>
+        <button type="submit">Save</button>
+      </form>
+      <h3>CSS variables</h3>
+<pre>
+/* Global font family */
+--mb-font-family:                             inherit;
+
+/* Component (UI with buttons) */
+--mb-component-background:                    #FFF;
+
+--mb-component-font-color:                    #000;
+--mb-component-font-size:                     14px;
+--mb-component-font-style:                    normal;
+--mb-component-font-weight:                   400;
+--mb-component-letter-spacing:                normal;
+--mb-component-line-height:                   20px;
+--mb-component-text-transform:                none;
+
+--mb-component-border-color:                  rgba(120, 120, 128, 0.2);
+--mb-component-border-radius:                 5px;
+--mb-component-border-style:                  solid;
+--mb-component-border-width:                  1px;
+
+--mb-component-box-shadow:                    none;
+
+--mb-component-button-background:             #FFF;
+--mb-component-button-border-color:           rgba(120, 120, 128, 0.2);
+--mb-component-button-border-color-disabled:  rgba(116, 116, 128, 0.08);
+--mb-component-button-border-radius:          20px;
+--mb-component-button-border-style:           solid;
+--mb-component-button-border-width:           1px;
+
+--mb-component-button-box-shadow:             0px 1px 4px rgba(0, 0, 0, 0.1);
+--mb-component-button-box-shadow-disabled:    none;
+
+/* User feedback (messages below buttons) */
+--mb-feedback-font-color-error:               #FF2D55;
+--mb-feedback-font-color-info:                rgba(60, 60, 67, 0.7);
+--mb-feedback-font-size:                      12px;
+--mb-feedback-font-style:                     normal;
+--mb-feedback-font-weight:                    400;
+--mb-feedback-letter-spacing:                 normal;
+--mb-feedback-line-height:                    16px;
+--mb-feedback-text-transform:                 none;
+
+/* Overlays */
+--mb-overlay-draganddrop-background:          rgba(72, 178, 232, 0.25);
+--mb-overlay-draganddrop-background-error:    rgba(255, 45, 85, 0.25);
+--mb-overlay-draganddrop-border-color-error:  #FF2D55;
+--mb-overlay-draganddrop-border-style-error:  dashed;
+</pre>
+    </section>
+    <script type="text/javascript">
+      (function (){
+        const blinkid = document.querySelector('#example-customization blinkid-in-browser');
+
+        blinkid.engineLocation = window.engineLocation;
+        blinkid.licenseKey = window.licenseKey;
+        blinkid.recognizers = ['BlinkIdRecognizer'];
+      })();
+    </script>
+
+    <script type="text/javascript">
+      function run() {
+        const customizatorVariables = document.getElementById('customizator-variables');
+        const cssVariables = [
+          { name: '--mb-font-family', value: 'inherit' },
+          { name: '--mb-component-background', value: '#FFF' },
+          { name: '--mb-component-font-color', value: '#000' },
+          { name: '--mb-component-font-size', value: '14px' },
+          { name: '--mb-component-font-style', value: 'normal' },
+          { name: '--mb-component-font-weight', value: '400' },
+          { name: '--mb-component-letter-spacing', value: 'normal' },
+          { name: '--mb-component-line-height', value: '20px' },
+          { name: '--mb-component-text-transform', value: 'none' },
+          { name: '--mb-component-border-color', value: 'rgba(120, 120, 128, 0.2)' },
+          { name: '--mb-component-border-radius', value: '5px' },
+          { name: '--mb-component-border-style', value: 'solid' },
+          { name: '--mb-component-border-width', value: '1px' },
+          { name: '--mb-component-box-shadow', value: 'none' },
+          { name: '--mb-component-button-background', value: '#FFF' },
+          { name: '--mb-component-button-border-color', value: 'rgba(120, 120, 128, 0.2)' },
+          { name: '--mb-component-button-border-color-disabled', value: 'rgba(116, 116, 128, 0.08)' },
+          { name: '--mb-component-button-border-radius', value: '20px' },
+          { name: '--mb-component-button-border-style', value: 'solid' },
+          { name: '--mb-component-button-border-width', value: '1px' },
+          { name: '--mb-component-button-box-shadow', value: '0px 1px 4px rgba(0, 0, 0, 0.1)' },
+          { name: '--mb-component-button-box-shadow-disabled', value: 'none' },
+          { name: '--mb-feedback-font-color-error', value: '#FF2D55' },
+          { name: '--mb-feedback-font-color-info', value: 'rgba(60, 60, 67, 0.7)' },
+          { name: '--mb-feedback-font-size', value: '12px' },
+          { name: '--mb-feedback-font-style', value: 'normal' },
+          { name: '--mb-feedback-font-weight', value: '400' },
+          { name: '--mb-feedback-letter-spacing', value: 'normal' },
+          { name: '--mb-feedback-line-height', value: '16px' },
+          { name: '--mb-feedback-text-transform', value: 'none' },
+          { name: '--mb-overlay-draganddrop-background', value: 'rgba(72, 178, 232, 0.25)' },
+          { name: '--mb-overlay-draganddrop-background-error', value: 'rgba(255, 45, 85, 0.25)' },
+          { name: '--mb-overlay-draganddrop-border-color-error', value: '#FF2D55' },
+          { name: '--mb-overlay-draganddrop-border-style-error', value: 'dashed' }
+        ];
+
+        for (const variable of cssVariables) {
+          const id = `css${ variable.name }`;
+          const fieldsetEl  = document.createElement('fieldset');
+          const labelEl     = document.createElement('label');
+          const inputEl     = document.createElement('input');
+
+          labelEl.setAttribute('for', id);
+          labelEl.innerText = variable.name;
+          inputEl.setAttribute('type', 'text');
+          inputEl.setAttribute('id', id)
+          inputEl.value = variable.value
+
+          fieldsetEl.appendChild(labelEl);
+          fieldsetEl.appendChild(inputEl);
+
+          customizatorVariables.appendChild(fieldsetEl);
+        }
+
+        const customizatorForm = document.getElementById('customizator-form');
+
+        customizatorForm.addEventListener('submit', ev => {
+          ev.preventDefault();
+          
+          document.querySelector(
+            '#example-customization .box'
+          ).style.background = document.getElementById('customization-background').value;
+
+          const cssVariables = document.querySelectorAll('#customizator-variables input');
+          const targetUI = document.querySelector('#example-customization blinkid-in-browser');
+
+          for (let i = 0; i < cssVariables.length; ++i) {
+            const variableName = cssVariables[i].getAttribute('id').replace('css', '');
+            targetUI.style.setProperty(variableName, cssVariables[i].value);
+          }
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => run());
+    </script>
+
+  </body>
+</html>

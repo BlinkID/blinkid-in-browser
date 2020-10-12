@@ -10,6 +10,7 @@ import
 
 import { convertEmscriptenStatusToProgress } from "../LoadProgressUtils";
 import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
+import * as License from "../License";
 
 interface MessageWithParameters extends Messages.RequestMessage
 {
@@ -33,6 +34,10 @@ export default class MicroblinkWorker
     private metadataCallbacks: MetadataCallbacks = {};
 
     private clearTimeoutCallback: ClearTimeoutCallback | null = null;
+
+    private lease?: number;
+
+    private inFlightHeartBeatTimeoutId?: number;
     /* eslint-enable @typescript-eslint/no-unsafe-assignment,
                      @typescript-eslint/no-explicit-any */
 
@@ -58,7 +63,7 @@ export default class MicroblinkWorker
                     this.processInvokeObject( msg as Messages.InvokeObjectMethod );
                     break;
                 case Messages.CreateRecognizerRunner.action:
-                    this.processCreateRecognizerRunner( msg as Messages.CreateRecognizerRunner );
+                    void this.processCreateRecognizerRunner( msg as Messages.CreateRecognizerRunner );
                     break;
                 case Messages.ReconfigureRecognizerRunner.action:
                     this.processReconfigureRecognizerRunner( msg as Messages.ReconfigureRecognizerRunner );
@@ -99,7 +104,7 @@ export default class MicroblinkWorker
         return handle;
     }
 
-    private notifyError( originalMessage: Messages.RequestMessage, error: string )
+    private notifyError( originalMessage: Messages.RequestMessage, error: License.LicenseErrorResponse | string )
     {
         this.context.postMessage
         (
@@ -115,6 +120,11 @@ export default class MicroblinkWorker
     private notifySuccess( originalMessage: Messages.RequestMessage )
     {
         this.context.postMessage( new Messages.StatusMessage( originalMessage.messageID, true, null ) );
+    }
+
+    private notifyInitSuccess( originalMessage: Messages.RequestMessage, showOverlay: boolean )
+    {
+        this.context.postMessage( new Messages.InitSuccessMessage( originalMessage.messageID, true, showOverlay ) );
     }
 
     /* eslint-disable @typescript-eslint/no-explicit-any,
@@ -135,9 +145,44 @@ export default class MicroblinkWorker
                     this.notifyError( msgWithParams, "Cannot find object with handle: undefined" );
                 }
             }
+            else if ( wrappedParam.type === Messages.ParameterType.RecognizerSettings )
+            {
+                // restore removed functions
+                unwrappedParam = this.restoreFunctions( unwrappedParam );
+            }
             params.push( unwrappedParam );
         }
         return params;
+    }
+
+    private restoreFunctions( settings: any ): any
+    {
+        const keys = Object.keys( settings );
+        for ( const key of keys )
+        {
+            const data = settings[ key ];
+            if
+            (
+                typeof data        === "object" &&
+                       data        !== null     &&
+                       "parameter" in  data     &&
+                       "type"      in  data     &&
+                       data.type   === Messages.ParameterType.Callback
+            )
+            {
+                settings[ key ] = ( ...args: any[] ): void =>
+                {
+                    const msg = new Messages.InvokeCallbackMessage
+                    (
+                        Messages.MetadataCallback.recognizerCallback,
+                        [ data.parameter ].concat( args )
+                    );
+                    // TODO: scan for transferrables and transfer them, instead of copying
+                    this.context.postMessage( msg );
+                };
+            }
+        }
+        return settings;
     }
     /* eslint-enable @typescript-eslint/no-explicit-any,
                      @typescript-eslint/no-unsafe-assignment,
@@ -181,6 +226,138 @@ export default class MicroblinkWorker
                      @typescript-eslint/no-unsafe-assignment,
                      @typescript-eslint/no-unsafe-member-access */
 
+    private registerHeartBeat( lease: number )
+    {
+        // unregister any in-flight heartbeats
+        this.unregisterHeartBeat();
+        this.lease = lease;
+
+        const currentTimestamp = Math.floor( Date.now() / 1000 );
+        let heartBeatDelay = lease - currentTimestamp;
+        if ( heartBeatDelay > 120 )
+        {
+            // if interval is larger than 2 minutes, register heartbeat at 2 minutes before expiry
+            heartBeatDelay -= 120;
+        }
+        else
+        {
+            // otherwise, use half the delay
+            heartBeatDelay /= 2;
+        }
+        this.inFlightHeartBeatTimeoutId = setTimeout
+        (
+            () =>
+            {
+                void this.obtainNewServerPermission( true );
+            },
+            heartBeatDelay * 1000
+        );
+
+    }
+
+    private unregisterHeartBeat()
+    {
+        if ( this.lease ) delete this.lease;
+        if ( this.inFlightHeartBeatTimeoutId )
+        {
+            clearTimeout( this.inFlightHeartBeatTimeoutId );
+            delete this.inFlightHeartBeatTimeoutId;
+        }
+    }
+
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access,
+                      @typescript-eslint/no-unsafe-call
+    */
+    private async obtainNewServerPermission
+    (
+        attemptOnNetworkError: boolean
+    ): Promise< License.ServerPermissionSubmitResultStatus >
+    {
+        if ( this.wasmModule )
+        {
+            const activeTokenInfo = this.wasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
+            const unlockResult = await License.obtainNewServerPermission( activeTokenInfo, this.wasmModule );
+            switch( unlockResult.status )
+            {
+                case License.ServerPermissionSubmitResultStatus.Ok:
+                case License.ServerPermissionSubmitResultStatus.RemoteLock:
+                    // register new heart beat
+                    this.registerHeartBeat( unlockResult.lease );
+                    break;
+                case License.ServerPermissionSubmitResultStatus.NetworkError:
+                case License.ServerPermissionSubmitResultStatus.PayloadSignatureVerificationFailed:
+                case License.ServerPermissionSubmitResultStatus.PayloadCorrupted:
+                    if ( attemptOnNetworkError )
+                    {
+                        console.warn
+                        (
+                            "Problem with obtaining server permission. Will attempt in 10 seconds " +
+                            License.ServerPermissionSubmitResultStatus[ unlockResult.status ]
+                        );
+                        // try again in 10 seconds
+                        this.inFlightHeartBeatTimeoutId = setTimeout
+                        (
+                            () =>
+                            {
+                                void this.obtainNewServerPermission( false );
+                            },
+                            10 * 1000
+                        );
+                    }
+                    else
+                    {
+                        console.error
+                        (
+                            "Problem with obtaining server permission. " +
+                            License.ServerPermissionSubmitResultStatus[ unlockResult.status ]
+                        );
+                    }
+                    break;
+                case License.ServerPermissionSubmitResultStatus.IncorrectTokenState: // should never happen
+                case License.ServerPermissionSubmitResultStatus.PermissionExpired: // should never happen
+                    console.error
+                    (
+                        "Internal error: " +
+                        License.ServerPermissionSubmitResultStatus[ unlockResult.status ]
+                    );
+                    break;
+            }
+            return unlockResult.status;
+        }
+        else
+        {
+            console.error( "Internal inconsistency! Wasm module not initialized where it's expected to be!" );
+            return License.ServerPermissionSubmitResultStatus.IncorrectTokenState;
+        }
+    }
+
+    private willSoonExpire(): boolean
+    {
+        if ( this.lease )
+        {
+            const tokenInfo = this.wasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
+
+            if ( tokenInfo.unlockResult === License.LicenseTokenState.Valid )
+            {
+                const currentTimestamp = Math.floor( Date.now() / 1000 );
+                const timeToExpiry = this.lease - currentTimestamp;
+
+                return timeToExpiry < 30;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+    /* eslint-enable @typescript-eslint/no-unsafe-member-access,
+                     @typescript-eslint/no-unsafe-call
+    */
+
     // message process functions
 
     /* eslint-disable @typescript-eslint/no-explicit-any,
@@ -190,43 +367,64 @@ export default class MicroblinkWorker
     private processInitMessage( msg: Messages.InitMessage )
     {
         // See https://emscripten.org/docs/api_reference/module.html
-        const module = {
+        let module =
+        {
             locateFile: ( path: string ) =>
             {
-                return Utils.getSafePath( msg.engineLocation, path );
+                const engineLocation = msg.engineLocation === "" ? self.location.origin : msg.engineLocation;
+                return Utils.getSafePath( engineLocation, path );
             }
         };
 
         if ( msg.registerLoadCallback )
         {
-            Object.assign( module, {
-                setStatus: ( text: string ) =>
+            module = Object.assign
+            (
+                module,
                 {
-                    const msg = new Messages.LoadProgressMessage( convertEmscriptenStatusToProgress( text ) );
-                    this.context.postMessage( msg );
+                    setStatus: ( text: string ) =>
+                    {
+                        const msg = new Messages.LoadProgressMessage( convertEmscriptenStatusToProgress( text ) );
+                        this.context.postMessage( msg );
+                    }
                 }
-            } );
+            );
         }
 
         try
         {
+            const engineLocation = msg.engineLocation === "" ? self.location.origin : msg.engineLocation;
             const jsName = msg.wasmModuleName + ".js";
-            const jsPath = Utils.getSafePath( msg.engineLocation, jsName );
+            const jsPath = Utils.getSafePath( engineLocation, jsName );
             importScripts( jsPath );
             const loaderFunc = ( self as { [key: string]: any } )[ msg.wasmModuleName ];
             loaderFunc( module ).then
             (
-                ( mbWasmModule: any ) =>
+                async ( mbWasmModule: any ) =>
                 {
-                    try
+                    const licenseResult = await License.unlockWasmSDK
+                    (
+                        msg.licenseKey,
+                        msg.allowHelloMessage,
+                        msg.userId,
+                        mbWasmModule
+                    );
+                    if ( licenseResult.error === null )
                     {
-                        mbWasmModule.initializeWithLicenseKey( msg.licenseKey, msg.userId, msg.allowHelloMessage );
                         this.wasmModule = mbWasmModule;
-                        this.notifySuccess( msg );
+                        if ( licenseResult.lease )
+                        {
+                            this.registerHeartBeat( licenseResult.lease );
+                        }
+                        else
+                        {
+                            this.unregisterHeartBeat();
+                        }
+                        this.notifyInitSuccess( msg, !!licenseResult.showOverlay );
                     }
-                    catch ( licenseError )
+                    else
                     {
-                        this.notifyError( msg, licenseError );
+                        this.notifyError( msg, licenseResult.error );
                     }
                 },
                 ( error: any ) =>
@@ -333,7 +531,7 @@ export default class MicroblinkWorker
                      @typescript-eslint/no-explicit-any,
                      @typescript-eslint/no-unsafe-return */
 
-    private processCreateRecognizerRunner( msg: Messages.CreateRecognizerRunner )
+    private async processCreateRecognizerRunner( msg: Messages.CreateRecognizerRunner )
     {
         if ( this.wasmModule === null )
         {
@@ -348,6 +546,24 @@ export default class MicroblinkWorker
             this.setupMetadataCallbacks( msg.registeredMetadataCallbacks );
             try
             {
+                if ( this.willSoonExpire() )
+                {
+                    const serverPermissionResult = await this.obtainNewServerPermission( false );
+                    if ( serverPermissionResult !== License.ServerPermissionSubmitResultStatus.Ok )
+                    {
+                        const resultStatus = License.ServerPermissionSubmitResultStatus[ serverPermissionResult ];
+                        this.notifyError
+                        (
+                            msg,
+                            new License.LicenseErrorResponse(
+                                License.LicenseErrorType[ resultStatus as keyof typeof License.LicenseErrorType ],
+                                `Cannot initialize recognizers because of invalid server permission: ${resultStatus}`
+                            )
+                        );
+                        return;
+                    }
+                }
+
                 const recognizers = this.getRecognizers( msg.recognizerHandles );
 
                 /* eslint-disable @typescript-eslint/no-unsafe-assignment,

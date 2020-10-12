@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>BlinkID UI Component</title>
+
+    <script type="module" src="../dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+    <script nomodule src="../dist/blinkid-in-browser.js"></script>
+    <style type="text/css">
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+
+        width: 100%;
+        height: 100%;
+      }
+
+      html {
+        font-family: "Avenir Next", sans-serif;
+      }
+
+      body {
+        background-color: #fff;
+        box-sizing: border-box;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <blinkid-in-browser
+      engine-location="http://localhost:3333/resources"
+      license-key="sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWKmMezUjG2iJrUNT3apaewMTaVKaMGOw0jBgCJnqPawuszZTY9KnqfdA+M3uPXbMpFZkj2FmSVqjtqrRhxjsul6HzP6Pzu/hDDpraYh8n29ASxzs5rZOEaoOIh1sLg8Lla40FA/PQEJOGX/hZXbqHO/EbdEEbH0D0/h6SpBs2O6Gb8XRQtqi/gu5C8LkUeMTgcKOciHcFnG2S591BSFkpWR+sexoKFwpKxhl1WfuWdfcl/C54mq1D1vZXAAg="
+      recognizers="BlinkIdRecognizer"
+    ></blinkid-in-browser>
+
+    <script type="text/javascript">
+      const blinkId = document.querySelector('blinkid-in-browser');
+
+      blinkId.addEventListener('fatalError', ev => {
+        console.log('fatalError', ev.detail);
+      });
+
+      blinkId.addEventListener('ready', ev => {
+        console.log('ready', ev.detail);
+      });
+
+      blinkId.addEventListener('scanError', ev => {
+        console.log('scanError', ev.detail);
+      });
+
+      blinkId.addEventListener('scanSuccess', ev => {
+        console.log('scanSuccess', ev.detail);
+      });
+
+      blinkId.addEventListener('feedback', ev => {
+        console.log('feedback', ev.detail);
+      });
+    </script>
+  </body>
+</html>

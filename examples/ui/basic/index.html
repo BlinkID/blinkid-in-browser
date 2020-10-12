@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+        <title>Example: BlinkID UI</title>
+
+        <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+        <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.0/ui/dist/blinkid-in-browser.js"></script>
+        <style type="text/css">
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+
+                width: 100%;
+                height: 100%;
+            }
+
+            html {
+                font-family: "Avenir Next", sans-serif;
+            }
+
+            body {
+                background-color: #fff;
+                box-sizing: border-box;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <blinkid-in-browser
+            license-key="sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWKmMezUjG2iJrUNT3apaewMTaVKaMGOw0jBgCJnqPawuszZTY9KnqfdA+M3uPXbMpFZkj2FmSVqjtqrRhxjsul6HzP6Pzu/hDDpraYh8n29ASxzs5rZOEaoOIh1sLg8Lla40FA/PQEJOGX/hZXbqHO/EbdEEbH0D0/h6SpBs2O6Gb8XRQtqi/gu5C8LkUeMTgcKOciHcFnG2S591BSFkpWR+sexoKFwpKxhl1WfuWdfcl/C54mq1D1vZXAAg="
+            recognizers="BlinkIdRecognizer"
+        ></blinkid-in-browser>
+
+        <script type="text/javascript">
+            // Important: if attributes or properties are changed, whole component is rerendered
+            const blinkId = document.querySelector( "blinkid-in-browser" );
+
+            if ( window.location.hostname === "blinkid.github.io" )
+            {
+                blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hW4YlTvZbRuaFbqJLokhSr8TQq3rdHCxMKbenVPSAqXgiLOPjCorvn3zHCetBFnpcM7K5x1pyRKcSGOQq3KQr+Tukqn7iaVB1n5JcDvv+uCcf3TomfzEvtFYnNoyhxfwmXGAScc66eNLGU2CowiCmiymgjz7FJPZcPwvDy9u+MIW9fDZKaAQGFHvFUvGk59VODGmaIYfX8Z3ZHer8lnVxVOJUShEv+izBNXAXJLm/Mxfa6Y3Uscf7ZRMiGP5/LNLxXjc3Ig==";
+            }
+
+            blinkId.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.0/resources/";
+
+            blinkId.addEventListener
+            (
+                "fatalError",
+                ev => console.log( "fatalError", ev.detail )
+            );
+
+            blinkId.addEventListener
+            (
+                "ready",
+                ev => console.log( "ready", ev.detail )
+            );
+
+            blinkId.addEventListener
+            (
+                "scanError",
+                ev => console.log( "scanError", ev.detail )
+            );
+
+            blinkId.addEventListener
+            (
+                "scanSuccess",
+                ev => console.log( "scanSuccess", ev.detail )
+            );
+
+            blinkId.addEventListener
+            (
+                "feedback",
+                ev => console.log( "feedback", ev.detail )
+            );
+        </script>
+    </body>
+</html>

@@ -113,6 +113,11 @@ export interface IdBarcodeRecognizerResult extends RecognizerResult
     readonly maritalStatus: string;
 
     /**
+     * The middle name of the document owner.
+     */
+    readonly middleName: string;
+
+    /**
      *  The nationality of the documet owner.
      */
     readonly nationality: string;

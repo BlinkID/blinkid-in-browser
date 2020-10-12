@@ -27,12 +27,7 @@ function main()
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWLTU/ZA2BhS3o3LZMmRuJbp0XFwCzZVKrccPrgK1awyZuoVNEw6e8yEZpqNdfTREVwWa6aUv/WNEhYPdUNDaL6F2EC8+hA9Z8Vmj6SHBADdtxwsOb5D3jQ+bQRLdK8ag5hbugO0dPaHvuuXovlb5dcbkLf/TYpynp3oNubkDsxob3WuSg11yQG3lbM+s+eSvTxZK69gnv35f2ik8n3FJ0YrJIEiJm5QYZ/Ct9skd55fUkSMPKVAe9vxXdRg==";
-
-    if ( window.location.hostname === "blinkid.github.io" )
-    {
-        licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hW4YlTvZbRuaCOIfilh+3gcCzd2iDxc1K/ub5T7/ysAxgSEt2TN4k033dE/XPuz81FDaUUXiWlEdkSFFF8J5ScPmnjswoLujXCrT6j0b2ZY66/wGwO9nM9C9qdSZhOKO+8DDv0xL0adz1pgtXFuwSzjsRTN8uqBrK0dFeVYIyKJzScJKzOmbJ+60NfedBeY7s7vWCKQfT4oy3pCmaFaatTf+Q0aBPmn3rjDd9Bkmc+TgRnJzeX19nrqNTFODxecSD5xui";
-    }
+    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWKmMezUjG2iJrUNT3apaewMTaVKaMGOw0jBgCJnqPawuszZTY9KnqfdA+M3uPXbMpFZkj2FmSVqjtqrRhxjsul6HzP6Pzu/hDDpraYh8n29ASxzs5rZOEaoOIh1sLg8Lla40FA/PQEJOGX/hZXbqHO/EbdEEbH0D0/h6SpBs2O6Gb8XRQtqi/gu5C8LkUeMTgcKOciHcFnG2S591BSFkpWR+sexoKFwpKxhl1WfuWdfcl/C54mq1D1vZXAAg=";
 
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings( licenseKey );
@@ -45,11 +40,8 @@ function main()
     // In order to provide better UX, display progress bar while loading the SDK
     loadSettings.loadProgressCallback = ( progress: number ) => progressEl!.value = progress;
 
-    // Set relative or absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = "";
-
-    // Set relative or absolute location of WebWorker file which is responsible for loading of WASM and support JS files
-    loadSettings.workerLocation = "resources";
+    // Set absolute location of the engine, i.e. WASM and support JS files
+    loadSettings.engineLocation = window.location.origin;
 
     // 3. Load SDK
     BlinkIDSDK.loadWasmModule( loadSettings ).then
@@ -121,11 +113,18 @@ async function startScan( sdk: BlinkIDSDK.WasmSDK )
         if ( idBarcodeResult.state !== BlinkIDSDK.RecognizerResultState.Empty )
         {
             console.log( "IDBarcode results", idBarcodeResult );
-            const address = idBarcodeResult.address;
+
+            const firstName = idBarcodeResult.firstName;
+            const lastName = idBarcodeResult.lastName;
+            const dateOfBirth = {
+                year: idBarcodeResult.dateOfBirth.year,
+                month: idBarcodeResult.dateOfBirth.month,
+                day: idBarcodeResult.dateOfBirth.day
+            }
+
             alert
             (
-`Hello, ${ idBarcodeResult.firstName } ${ idBarcodeResult.lastName }!
-You were born on ${ idBarcodeResult.dateOfBirth.year }-${ idBarcodeResult.dateOfBirth.month }-${ idBarcodeResult.dateOfBirth.day }${ address ? " and you live at " + address : "" }.`
+                `Hello, ${ firstName } ${ lastName }!\nYou were born on ${ dateOfBirth.year }-${ dateOfBirth.month }-${ dateOfBirth.day }.`
             );
         }
     }

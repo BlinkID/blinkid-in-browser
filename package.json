@@ -1,6 +1,6 @@
 {
     "name": "@microblink/blinkid-in-browser-sdk",
-    "version": "5.7.0",
+    "version": "5.8.0",
     "description": "A simple ID scanning library for WebAssembly-enabled browsers.",
     "homepage": "https://github.com/BlinkID/blinkid-in-browser",
     "repository": "github:BlinkID/blinkid-in-browser",
@@ -29,17 +29,23 @@
         "lib",
         "resources",
         "src",
-        "types"
+        "types",
+        "ui/dist",
+        "ui/loader"
     ],
     "scripts": {
         "build": "rollup -c",
-        "build:worker": "rollup -c --environment BUILD:worker",
         "check-types": "tsc --noEmit",
-        "clean": "rimraf dist es lib types resources/*worker*",
+        "clean": "rimraf build dist es lib resources types ui/dist ui/docs ui/loader",
         "lint": "eslint --ext ts -c .eslintrc.json src",
         "pretest": "npm run build",
         "prepublishOnly": "npm run clean && npm run check-types && npm run lint && npm test",
-        "test": "echo \"Not implemented!\""
+        "test": "echo \"Not implemented!\"",
+        "ui:build": "stencil build --docs --config=ui/stencil.config.ts",
+        "ui:generate": "stencil generate",
+        "ui:start": "cp -r resources ui/resources && stencil build --dev --watch --serve --config=ui/stencil.config.ts",
+        "ui:test": "stencil test --spec --e2e",
+        "ui:test.watch": "stencil test --spec --e2e --watchAll"
     },
     "devDependencies": {
         "@babel/cli": "^7.10.3",
@@ -47,9 +53,11 @@
         "@babel/preset-env": "^7.10.3",
         "@rollup/plugin-babel": "^5.0.4",
         "@rollup/plugin-node-resolve": "^8.0.1",
+        "@stencil/core": "~1.17.3",
+        "@stencil/sass": "^1.3.2",
         "@typescript-eslint/eslint-plugin": "^3.4.0",
         "@typescript-eslint/parser": "^3.4.0",
-        "eslint": "^7.3.1",
+        "eslint": "7.6.0",
         "rimraf": "^3.0.2",
         "rollup": "^2.15.0",
         "rollup-plugin-terser": "^6.1.0",

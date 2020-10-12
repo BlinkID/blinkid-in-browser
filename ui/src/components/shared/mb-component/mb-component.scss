@@ -1,0 +1,225 @@
+@import "../styles/globals-sass";
+
+:host {
+  box-sizing: border-box;
+  position: relative;
+
+  display: block;
+  width: 100%;
+
+  background: var(--mb-component-background);
+
+  color: var(--mb-component-font-color);
+  font-size: var(--mb-component-font-size);
+  font-style: var(--mb-component-font-style);
+  font-weight: var(--mb-component-font-weight);
+  letter-spacing: var(--mb-component-letter-spacing);
+  line-height: var(--mb-component-line-height);
+  text-transform: var(--mb-component-text-transform);
+
+  border-color: var(--mb-component-border-color);
+  border-radius: var(--mb-component-border-radius);
+  border-style: var(--mb-component-border-style);
+  border-width: var(--mb-component-border-width);
+
+  box-shadow: var(--mb-component-box-shadow);
+}
+
+/**
+ * Screens
+ */
+:host #screen-loading.visible {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: $padding-unit-large;
+}
+
+:host #screen-action.visible {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .action-label {
+    display: block;
+    margin: 0 $padding-unit-large 0 0;
+
+    &:dir(rtl) {
+      background-color: black;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    width: 2 * $button-size + $padding-unit-medium;
+
+    mb-button:last-child {
+      margin: 0 0 0 $padding-unit-medium;
+    }
+  }
+}
+
+:host([dir="rtl"]) #screen-action.visible {
+  .action-label {
+    margin: 0 0 0 $padding-unit-large;
+  }
+
+  .action-buttons {
+    mb-button:last-child {
+      margin: 0 $padding-unit-medium 0 0;
+    }
+  }
+}
+
+:host #screen-error.visible {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  .icon-alert {
+    display: flex;
+    margin-right: 10px;
+  }
+}
+
+:host #screen-error:not(.visible),
+:host #screen-action:not(.visible),
+:host #screen-loading:not(.visible) {
+  :host & {
+    border: none;
+  }
+}
+
+/**
+ * Overlays
+ */
+:host #overlay-drag-and-drop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  .drag-and-drop-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+
+  .drag-and-drop-message {
+    max-width: 360px;
+    margin: $padding-unit-medium + $padding-unit-small 0 0 0;
+    text-align: center;
+
+    color: var(--mb-component-font-color);
+    font-size: var(--mb-component-font-size);
+    font-style: var(--mb-component-font-style);
+    font-weight: var(--mb-component-font-weight);
+    letter-spacing: var(--mb-component-letter-spacing);
+    line-height: var(--mb-component-line-height);
+    text-transform: var(--mb-component-text-transform);
+  }
+}
+
+:host #overlay-drag-and-drop.visible {
+  background-color: var(--mb-overlay-draganddrop-background);
+}
+
+:host #overlay-drag-and-drop.visible.error {
+  background-color: var(--mb-overlay-draganddrop-background-error);
+}
+
+:host #overlay-drag-and-drop.non-fullscreen.visible {
+  flex-direction: row;
+
+  background-color: var(--mb-component-background);
+
+  border-color: var(--mb-component-border-color);
+  border-radius: var(--mb-component-border-radius);
+  border-style: var(--mb-component-border-style);
+  border-width: var(--mb-component-border-width);
+
+  .drag-and-drop-message {
+    margin: 0 0 0 $padding-unit-medium;
+  }
+}
+
+:host #overlay-drag-and-drop.non-fullscreen.visible.error {
+  border-color: var(--mb-overlay-draganddrop-border-color-error);
+  border-style: var(--mb-overlay-draganddrop-border-style-error);
+}
+
+:host #drag-and-drop-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: transparent;
+}
+
+:host #overlay-gallery-experience.visible {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  background-color: var(--mb-overlay-gallery-experience-background);
+  color: var(--mb-overlay-gallery-experience-font-color);
+}
+
+:host #overlay-gallery-experience.visible p {
+  margin: $padding-unit-medium 0 0 0;
+  font-size: var(--mb-overlay-gallery-experience-font-size);
+  font-weight: var(--mb-overlay-gallery-experience-font-weight);
+  line-height: var(--mb-overlay-gallery-experience-line-height);
+}
+
+:host #overlay-camera-experience {
+  justify-content: center;
+  align-items: center;
+
+  background-color: #000;
+
+  .holder {
+    position: relative;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  video {
+    display: block;
+
+    width: 100%;
+    height: auto;
+  }
+
+  mb-camera-experience {
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+:host #overlay-camera-experience.visible {
+  display: flex;
+  z-index: 1000;
+}
+
+:host input[type="file"] {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+}
