@@ -34,9 +34,9 @@
         "ui/loader"
     ],
     "scripts": {
-        "build": "rollup -c",
+        "build": "rollup -c && npm run ui:build",
         "check-types": "tsc --noEmit",
-        "clean": "rimraf build dist es lib resources types ui/dist ui/docs ui/loader",
+        "clean": "rimraf build dist es lib types ui/dist ui/docs ui/loader",
         "lint": "eslint --ext ts -c .eslintrc.json src",
         "pretest": "npm run build",
         "prepublishOnly": "npm run clean && npm run check-types && npm run lint && npm test",

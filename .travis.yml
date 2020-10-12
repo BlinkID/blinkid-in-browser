@@ -4,4 +4,3 @@ node_js:
 script:
   - npm run prepublishOnly
   - npm run build
-  - npm run ui:build
