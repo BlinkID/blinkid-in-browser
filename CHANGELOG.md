@@ -1,5 +1,9 @@
 # Release notes
 
+## 5.8.1
+
+* Fixed NPM package to include UI component.
+
 ## 5.8.0
 
 ### New additions to our supported documents list
