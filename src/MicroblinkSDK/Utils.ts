@@ -15,17 +15,23 @@ export function getSafePath( path: string, fileName: string ): string
     {
         return fileName;
     }
-    if ( path.endsWith( "/" ) )
+    else if ( path.endsWith( "/" ) )
     {
         if ( fileName.startsWith( "/" ) )
         {
             return path + fileName.substring( 1 );
         }
-        return path + fileName;
+        else
+        {
+            return path + fileName;
+        }
     }
-    if ( fileName.startsWith( "/" ) )
+    else if ( fileName.startsWith( "/" ) )
     {
         return path + fileName;
     }
-    return path + "/" + fileName;
+    else
+    {
+        return path + "/" + fileName;
+    }
 }

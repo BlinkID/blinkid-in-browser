@@ -13,6 +13,8 @@ export interface BarcodeResult
 
     /** The first name of the document owner. */
     readonly firstName: string;
+    /** The middle name of the document owner. */
+    readonly middleName: string;
     /** The last name of the document owner. */
     readonly lastName: string;
     /** The full name of the document owner. */

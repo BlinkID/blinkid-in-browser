@@ -1,8 +1,9 @@
 export * from "./MicroblinkSDK/MicroblinkSDK";
 
 // export all recognizers
+export * from "./Recognizers/SuccessFrameGrabberRecognizer";
+
 export * from "./Recognizers/BlinkBarcode/BarcodeData";
-export * from "./Recognizers/BlinkBarcode/BarcodeRecognizer";
 
 export * from "./Recognizers/BlinkID/Generic/BlinkIdCombinedRecognizer";
 export * from "./Recognizers/BlinkID/Generic/BlinkIdRecognizer";

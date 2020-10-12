@@ -1,18 +1,15 @@
-import { WasmSDKLocal } from "./local/LocalSDKBackend";
+
 import { WasmSDKWorker } from "./worker/WorkerSDKBackend";
 import { Recognizer, RecognizerRunner, WasmSDK } from "./DataStructures";
 import { MetadataCallbacks } from "./MetadataCallbacks";
 import { WasmSDKLoadSettings } from "./WasmLoadSettings";
-import { convertEmscriptenStatusToProgress } from "./LoadProgressUtils";
-import * as Utils from "./Utils";
+
 
 export * from "./DataStructures";
 export * from "./MetadataCallbacks";
 export * from "./FrameCapture";
 export * from "./VideoRecognizer";
-export * from "../Recognizers/SuccessFrameGrabberRecognizer";
 export * from "./WasmLoadSettings";
-
 
 // taken from https://stackoverflow.com/a/2117523/213057
 /* eslint-disable */
@@ -26,13 +23,21 @@ function uuidv4(): string
 
 function getUserID(): string
 {
-    let userId = localStorage.getItem( "mb-user-id" );
-    if ( userId === null )
+    try
     {
-        userId = uuidv4();
-        localStorage.setItem( "mb-user-id", userId );
+        let userId = localStorage.getItem( "mb-user-id" );
+        if ( userId === null )
+        {
+            userId = uuidv4();
+            localStorage.setItem( "mb-user-id", userId );
+        }
+        return userId;
     }
-    return userId;
+    catch ( error )
+    {
+        // local storage is disabled, generate new user ID every time
+        return uuidv4();
+    }
 }
 
 /**
@@ -115,11 +120,6 @@ export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promi
                 reject( "Missing WASM module name!" );
                 return;
             }
-            if ( typeof loadSettings.workerLocation !== "string" )
-            {
-                reject( "Setting property 'workerLocation' must be a string!" );
-                return;
-            }
             if ( typeof loadSettings.engineLocation !== "string" )
             {
                 reject( "Setting property 'engineLocation' must be a string!" );
@@ -127,77 +127,26 @@ export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promi
             }
             // obtain user ID from local storage
             const userId = getUserID();
-            if ( loadSettings.useWebWorker )
-            {
-                try
-                {
-                    // prepare the worker
-                    // TODO: add configuration option to determine whether to load minified or standard worker file?
-                    const workerFileName = `${ loadSettings.wasmModuleName || "MicroblinkSDK" }.worker.min.js`;
-                    const workerPath = Utils.getSafePath( loadSettings.workerLocation, workerFileName );
-                    const worker = new Worker( workerPath );
 
-                    WasmSDKWorker.createWasmWorker( worker, loadSettings, userId ).then
-                    (
-                        wasmSDK =>
-                        {
-                            resolve( wasmSDK );
-                        },
-                        reject
-                    );
-                }
-                catch ( initError )
-                {
-                    reject( initError );
-                }
-            }
-            else
+
+            try
             {
-                const loaderFunc = ( self as { [key: string]: any } )[ loadSettings.wasmModuleName ];
-                let module = undefined;
-                if ( typeof loadSettings.loadProgressCallback === "function" )
-                {
-                    module = {
-                        setStatus: ( text: string ) =>
-                        {
-                            if ( loadSettings.loadProgressCallback )
-                            {
-                                loadSettings.loadProgressCallback( convertEmscriptenStatusToProgress( text ) );
-                            }
-                        },
-                        locateFile: ( path: string ) =>
-                        {
-                            return Utils.getSafePath( loadSettings.engineLocation, path );
-                        }
-                    };
-                }
-                loaderFunc( module ).then
+                const blob = new Blob( [ String.raw`@PLACEHOLDER:worker` ], { type: "application/javascript" } );
+                const url = URL.createObjectURL( blob );
+                const worker = new Worker( url );
+
+                WasmSDKWorker.createWasmWorker( worker, loadSettings, userId ).then
                 (
-                    ( wasmModule: any ) =>
+                    wasmSDK =>
                     {
-                        try
-                        {
-                            wasmModule.initializeWithLicenseKey
-                            (
-                                loadSettings.licenseKey,
-                                userId,
-                                loadSettings.allowHelloMessage
-                            );
-                            resolve( new WasmSDKLocal( wasmModule ) );
-                            return;
-                        }
-                        catch ( licenseError )
-                        {
-                            reject( licenseError );
-                            return;
-                        }
+                        resolve( wasmSDK );
                     },
-                    ( reason: any ) =>
-                    {
-                        reject( reason );
-                        return;
-                    }
+                    reject
                 );
+            }
+            catch ( initError )
+            {
+                reject( initError );
             }
         }
     );

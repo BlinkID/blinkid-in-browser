@@ -1,5 +1,6 @@
 import { CapturedFrame } from "../FrameCapture";
 import { WasmSDKLoadSettings } from "../WasmLoadSettings";
+import { LicenseErrorResponse } from "../License";
 
 let nextMessageID = 0;
 
@@ -69,7 +70,15 @@ export class InitMessage extends BaseRequestMessage
 export enum ParameterType
 {
     Any,
-    Recognizer
+    Recognizer,
+    RecognizerSettings,
+    Callback
+}
+
+export interface CallbackAddress
+{
+    readonly recognizerHandle: number;
+    readonly callbackName: string;
 }
 
 export interface WrappedParameter
@@ -292,13 +301,28 @@ export class StatusMessage implements ResponseMessage
 
     readonly success: boolean = true;
 
-    readonly error: string | null = null;
+    readonly error: LicenseErrorResponse | string | null = null;
 
-    constructor( msgID: number, success: boolean, error: string | null )
+    constructor( msgID: number, success: boolean, error: LicenseErrorResponse | string | null )
     {
         this.messageID = msgID;
         this.success = success;
         this.error = error;
+    }
+}
+
+export class InitSuccessMessage implements ResponseMessage
+{
+    readonly messageID: number;
+
+    readonly success: boolean = true;
+
+    readonly showOverlay: boolean = true;
+
+    constructor( msgID: number, success: boolean, showOverlay: boolean )
+    {
+        this.messageID = msgID;
+        this.showOverlay = showOverlay;
     }
 }
 
@@ -370,7 +394,8 @@ export enum MetadataCallback
     onPointsDetection,
     onFirstSideResult,
     clearTimeoutCallback,
-    onGlare
+    onGlare,
+    recognizerCallback
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

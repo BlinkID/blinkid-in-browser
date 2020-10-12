@@ -9,11 +9,12 @@ import { VIZResult } from "./VIZResult";
 
 import
 {
-    FullDocumentImageOptions,
-    FaceImageOptions,
-    validateDpi,
     ExtensionFactors,
-    ImageResult
+    FaceImageOptions,
+    FullDocumentImageOptions,
+    ImageResult,
+    SignatureImageOptions,
+    validateDpi
 } from "../ImageOptions";
 
 import { MrzResult } from "../MRTD/MrtdStructures";
@@ -39,9 +40,23 @@ export * from "./RecognitionMode";
 export * from "./VIZResult";
 
 /**
+ * A barcode scanning started callback function.
+ */
+export type BarcodeScanningStartedCallback = () => void;
+
+/**
+ * A classifier callback function.
+ * @param supported True if document is supported for recognition, false otherwise.
+ */
+export type ClassifierCallback = ( supported: boolean ) => void;
+
+/**
  * A settings object that is used for configuring the BlinkIdRecognizer.
  */
-export class BlinkIdRecognizerSettings implements RecognizerSettings, FullDocumentImageOptions, FaceImageOptions
+export class BlinkIdRecognizerSettings implements RecognizerSettings,
+                                                  FullDocumentImageOptions,
+                                                  FaceImageOptions,
+                                                  SignatureImageOptions
 {
     /**
      *  Defines whether blured frames filtering is allowed"
@@ -70,6 +85,23 @@ export class BlinkIdRecognizerSettings implements RecognizerSettings, FullDocume
      * The setting only applies to certain documents.
      */
     anonymizationMode = AnonymizationMode.FullResult;
+
+    /**
+     * Called when barcode scanning step starts.
+     */
+    barcodeScanningStartedCallback: BarcodeScanningStartedCallback | null = null;
+
+    /**
+     * Called when recognizer classifies a document.
+     */
+    classifierCallback: ClassifierCallback | null = null;
+
+    /**
+     * If set to `null`, all supported documents will be recognized.
+     * Otherwise, only classes from given array will be recognized and all other
+     * documents will be treated as "not supported" (observable via classifierCallback).
+     */
+    allowedDocumentClasses: Array< ClassInfo > | null = null;
 
     /**
      * Padding is a minimum distance from the edge of the frame and it is defined
@@ -108,6 +140,21 @@ export class BlinkIdRecognizerSettings implements RecognizerSettings, FullDocume
     {
         validateDpi( value );
         this._faceImageDpi = value;
+    }
+
+    // implementation of the SignatureImageOptions interface
+    returnSignatureImage        = false;
+
+    returnEncodedSignatureImage = false;
+
+    private _signatureImageDpi  = 250;
+
+    get signatureImageDpi(): number { return this._signatureImageDpi; }
+
+    set signatureImageDpi( value: number )
+    {
+        validateDpi( value );
+        this._signatureImageDpi = value;
     }
 }
 
@@ -270,6 +317,11 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
      *  The sex of the document owner.
      */
     readonly sex: string;
+
+    /**
+     * The image of the signature
+     */
+    readonly signatureImage: ImageResult;
 
     /**
      * The data extracted from the visual inspection zone.

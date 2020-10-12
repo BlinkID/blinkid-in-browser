@@ -1,0 +1,62 @@
+/**
+ * CSS variables
+ *
+ * Note: when adding or modifying these values during development, Stencil must
+ * be reloaded for the changes to take effect.
+ */
+:host {
+  /* Global font family */
+  --mb-font-family:                             inherit;
+
+  /* Component (UI with buttons) */
+  --mb-component-background:                    #FFF;
+
+  --mb-component-font-color:                    #000;
+  --mb-component-font-size:                     14px;
+  --mb-component-font-style:                    normal;
+  --mb-component-font-weight:                   400;
+  --mb-component-letter-spacing:                normal;
+  --mb-component-line-height:                   20px;
+  --mb-component-text-transform:                none;
+
+  --mb-component-border-color:                  rgba(120, 120, 128, 0.2);
+  --mb-component-border-radius:                 5px;
+  --mb-component-border-style:                  solid;
+  --mb-component-border-width:                  1px;
+
+  --mb-component-box-shadow:                    none;
+
+  --mb-component-button-background:             #FFF;
+  --mb-component-button-border-color:           rgba(120, 120, 128, 0.2);
+  --mb-component-button-border-color-focus:     rgba(72, 178, 232, 0.5);
+  --mb-component-button-border-color-hover:     rgba(60, 60, 67, 0.29);
+  --mb-component-button-border-color-disabled:  rgba(116, 116, 128, 0.08);
+  --mb-component-button-border-radius:          20px;
+  --mb-component-button-border-style:           solid;
+  --mb-component-button-border-width:           1px;
+
+  --mb-component-button-box-shadow:             0px 1px 4px rgba(0, 0, 0, 0.1);
+  --mb-component-button-box-shadow-disabled:    none;
+
+  /* User feedback (messages below buttons) */
+  --mb-feedback-font-color-error:               #FF2D55;
+  --mb-feedback-font-color-info:                rgba(60, 60, 67, 0.7);
+  --mb-feedback-font-size:                      12px;
+  --mb-feedback-font-style:                     normal;
+  --mb-feedback-font-weight:                    400;
+  --mb-feedback-letter-spacing:                 normal;
+  --mb-feedback-line-height:                    16px;
+  --mb-feedback-text-transform:                 none;
+
+  /* Overlays */
+  --mb-overlay-draganddrop-background:          rgba(72, 178, 232, 0.25);
+  --mb-overlay-draganddrop-background-error:    rgba(255, 45, 85, 0.25);
+  --mb-overlay-draganddrop-border-color-error:  #FF2D55;
+  --mb-overlay-draganddrop-border-style-error:  dashed;
+
+  --mb-overlay-gallery-experience-background:   rgba(0, 0, 0, 0.6);
+  --mb-overlay-gallery-experience-font-color:   #FFF;
+  --mb-overlay-gallery-experience-font-size:    16px;
+  --mb-overlay-gallery-experience-font-weight:  500;
+  --mb-overlay-gallery-experience-line-height:  24px;
+}

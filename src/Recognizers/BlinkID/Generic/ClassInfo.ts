@@ -99,7 +99,9 @@ export enum Country
     ECUADOR = 87,
     EL_SALVADOR = 88,
     SRI_LANKA = 89,
-    COUNT = 90
+    PERU = 90,
+    URUGUAY = 91,
+    COUNT = 92
 }
 
 export enum Region
@@ -173,7 +175,11 @@ export enum Region
     WISCONSIN = 66,
     WYOMING = 67,
     YUKON = 68,
-    COUNT = 69
+    CIUDAD_DE_MEXICO = 69,
+    JALISCO = 70,
+    NEWFOUNDLAND_AND_LABRADOR = 71,
+    NUEVO_LEON = 72,
+    COUNT = 73
 }
 
 export enum DocumentType
@@ -203,5 +209,7 @@ export enum DocumentType
     MyKAS = 22,
     SOCIAL_SECURITY_CARD = 23,
     HEALTH_INSURANCE_CARD = 24,
-    COUNT = 25
+    PASSPORT = 25,
+    S_PASS = 26,
+    COUNT = 27
 }

@@ -30,12 +30,7 @@ function main()
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWLTU/ZA2BhS3o3LZMmRuJbp0XFwCzZVKrccPrgK1awyZuoVNEw6e8yEZpqNdfTREVwWa6aUv/WNEhYPdUNDaL6F2EC8+hA9Z8Vmj6SHBADdtxwsOb5D3jQ+bQRLdK8ag5hbugO0dPaHvuuXovlb5dcbkLf/TYpynp3oNubkDsxob3WuSg11yQG3lbM+s+eSvTxZK69gnv35f2ik8n3FJ0YrJIEiJm5QYZ/Ct9skd55fUkSMPKVAe9vxXdRg==";
-
-    if ( window.location.hostname === "blinkid.github.io" )
-    {
-        licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hW4YlTvZbRuaCOIfilh+3gcCzd2iDxc1K/ub5T7/ysAxgSEt2TN4k033dE/XPuz81FDaUUXiWlEdkSFFF8J5ScPmnjswoLujXCrT6j0b2ZY66/wGwO9nM9C9qdSZhOKO+8DDv0xL0adz1pgtXFuwSzjsRTN8uqBrK0dFeVYIyKJzScJKzOmbJ+60NfedBeY7s7vWCKQfT4oy3pCmaFaatTf+Q0aBPmn3rjDd9Bkmc+TgRnJzeX19nrqNTFODxecSD5xui";
-    }
+    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPig/w35CpJnWKmMezUjG2iJrUNT3apaewMTaVKaMGOw0jBgCJnqPawuszZTY9KnqfdA+M3uPXbMpFZkj2FmSVqjtqrRhxjsul6HzP6Pzu/hDDpraYh8n29ASxzs5rZOEaoOIh1sLg8Lla40FA/PQEJOGX/hZXbqHO/EbdEEbH0D0/h6SpBs2O6Gb8XRQtqi/gu5C8LkUeMTgcKOciHcFnG2S591BSFkpWR+sexoKFwpKxhl1WfuWdfcl/C54mq1D1vZXAAg=";
 
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings( licenseKey );
@@ -48,11 +43,8 @@ function main()
     // In order to provide better UX, display progress bar while loading the SDK
     loadSettings.loadProgressCallback = ( progress: number ) => progressEl!.value = progress;
 
-    // Set relative or absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = "";
-
-    // Set relative or absolute location of WebWorker file which is responsible for loading of WASM and support JS files
-    loadSettings.workerLocation = "resources";
+    // Set absolute location of the engine, i.e. WASM and support JS files
+    loadSettings.engineLocation = window.location.origin;
 
     // 3. Load SDK
     BlinkIDSDK.loadWasmModule( loadSettings ).then
@@ -126,7 +118,7 @@ async function startScan( sdk: BlinkIDSDK.WasmSDK )
             // 5. Obtain the results
             async ( recognitionState: BlinkIDSDK.RecognizerResultState ) =>
             {
-                if ( !videoRecognizer)
+                if ( !videoRecognizer )
                 {
                     return;
                 }
@@ -148,10 +140,18 @@ async function startScan( sdk: BlinkIDSDK.WasmSDK )
 
                 // Inform the user about results
                 console.log( "BlinkIDCombined results", result );
+
+                const firstName = result.firstName || result.mrz.secondaryID;
+                const lastName = result.lastName || result.mrz.primaryID;
+                const dateOfBirth = {
+                    year: result.dateOfBirth.year || result.mrz.dateOfBirth.year,
+                    month: result.dateOfBirth.month || result.mrz.dateOfBirth.month,
+                    day: result.dateOfBirth.day || result.mrz.dateOfBirth.day
+                }
+
                 alert
                 (
-`Hello, ${ result.firstName || result.mrz.secondaryID } ${ result.lastName || result.mrz.primaryID }!
-You were born on ${ result.dateOfBirth.year || result.mrz.dateOfBirth.year }-${ result.dateOfBirth.month || result.mrz.dateOfBirth.month }-${ result.dateOfBirth.day || result.mrz.dateOfBirth.day }.`
+                    `Hello, ${ firstName } ${ lastName }!\n You were born on ${ dateOfBirth.year }-${ dateOfBirth.month }-${ dateOfBirth.day }.`
                 );
 
                 // 6. Release all resources allocated on the WebAssembly heap and associated with camera stream

@@ -218,6 +218,8 @@ export interface WasmSDK
      * Only for internal use. It's API may change in the future without any notice.
      */
     readonly mbWasmModule: WasmModuleProxy;
+
+    showOverlay: boolean;
 }
 
 /**

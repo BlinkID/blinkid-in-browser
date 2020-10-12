@@ -1,0 +1,78 @@
+@import "../styles/globals-sass";
+
+:host {
+  box-sizing: border-box;
+
+  display: none;
+
+  width: $button-size;
+  height: $button-size;
+
+  background: var(--mb-component-button-background);
+  border-color: var(--mb-component-button-border-color);
+
+  border-radius: var(--mb-component-button-border-radius);
+  border-style: var(--mb-component-button-border-style);
+  border-width: var(--mb-component-button-border-width);
+
+  box-shadow: var(--mb-component-button-box-shadow);
+
+  a {
+    display: block;
+
+    width: calc(#{$button-size} - 2 * var(--mb-component-button-border-width));
+    height: calc(#{$button-size} - 2 * var(--mb-component-button-border-width));
+
+    text-decoration: none;
+  }
+
+  a:hover,
+  a:active,
+  a:focus {
+    cursor: pointer;
+  }
+}
+
+:host(:focus) {
+  border-color: var(--mb-component-button-border-color-focus);
+  outline: 0;
+}
+:host(:hover) {
+  border-color: var(--mb-component-button-border-color-hover);
+}
+
+:host(.disabled) {
+  border-color: var(--mb-component-button-border-color-disabled);
+  box-shadow: var(--mb-component-button-box-shadow-disabled);
+
+  a {
+    cursor: default;
+    outline: 0;
+  }
+}
+
+:host(.visible) {
+  display: block;
+}
+
+:host(.visible.icon) {
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/**
+ * Action buttons
+ */
+
+:host label {
+  cursor: inherit;
+}
+
+:host img {
+  display: block;
+  width: $button-icon-size;
+  height: $button-icon-size;
+}

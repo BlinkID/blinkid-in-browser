@@ -1,0 +1,131 @@
+/**
+ * SASS variables, not customizable via CSS variables
+ */
+$padding-unit-small: 4px;
+$padding-unit-medium: 8px;
+$padding-unit-large: 16px;
+
+$button-size: 40px;
+$button-icon-size: 20px;
+
+$breakpoint-width-tablet: 768px;
+$breakpoint-width-desktop: 1280px;
+$breakpoint-width-mobile-landscape: 568px;
+
+/**
+ * Camera experiences
+ */
+$base-unit: 4px;
+
+$base-colors: (
+  // Primary
+  primary-blue: (
+    onlight:    ( name: "primary-blue", background: #48B2E8, foreground: #ffffff ),
+    ondark:     ( name: "primary-blue", background: #48B2E8, foreground: #ffffff )
+  ),
+
+  primary-black: (
+    onlight:    ( name: "primary-black", background: #000000, foreground: #ffffff ),
+    ondark:     ( name: "primary-black", background: #000000, foreground: #ffffff )
+  ),
+
+  primary-white: (
+    onlight:    ( name: "primary-white", background: #ffffff, foreground: #000000 ),
+    ondark:     ( name: "primary-white", background: #ffffff, foreground: #000000 )
+  ),
+
+  // Semantic
+  semantic-success: (
+    onlight:    ( name: "semantic-success", background: #00BFA5, foreground: #000000 ),
+    ondark:     ( name: "semantic-success", background: #66D9C9, foreground: #000000 )
+  ),
+
+  semantic-error: (
+    onlight:    ( name: "semantic-error", background: #FF2D55, foreground: #ffffff ),
+    ondark:     ( name: "semantic-error", background: #FF617F, foreground: #000000 )
+  ),
+
+  semantic-warning: (
+    onlight:    ( name: "semantic-warning", background: #FBC32B, foreground: #000000 ),
+    ondark:     ( name: "semantic-warning", background: #FCD25F, foreground: #000000 )
+  ),
+
+  semantic-info: (
+    onlight:    ( name: "semantic-info", background: #71CEEF, foreground: #000000 ),
+    ondark:     ( name: "semantic-info", background: #97E2FD, foreground: #000000 )
+  ),
+
+  // Text
+  text-primary: (
+    onlight:    ( name: "text-primary", foreground: #000000 ),
+    ondark:     ( name: "text-primary", foreground: #ffffff )
+  ),
+
+  text-secondary: (
+    onlight:    ( name: "text-secondary", foreground: #75757A ),
+    ondark:     ( name: "text-secondary", foreground: #AEAEB5 )
+  ),
+
+  text-tertiary: (
+    onlight:    ( name: "text-tertiary", foreground: #9B9B9F ),
+    ondark:     ( name: "text-tertiary", foreground: #86868B )
+  ),
+
+  text-quaternary: (
+    onlight:    ( name: "text-quaternary", foreground: rgba(#3c3c43, 0.3) ),
+    ondark:     ( name: "text-quaternary", foreground: #5E5E61 )
+  ),
+
+  // Background
+  background-primary: (
+    onlight:    ( name: "background-primary", foreground: #ffffff ),
+    ondark:     ( name: "background-primary", foreground: #000000 )
+  ),
+
+  background-secondary: (
+    onlight:    ( name: "background-secondary", foreground: #EFEFF4 ),
+    ondark:     ( name: "background-secondary", foreground: #1C1C1E )
+  ),
+
+  background-tertiary: (
+    onlight:    ( name: "background-tertiary", foreground: #EDEDED ),
+    ondark:     ( name: "background-tertiary", foreground: #2A2A2A )
+  ),
+
+  // Fill
+  fill-primary: (
+    onlight:    ( name: "fill-primary", foreground: rgba(#787880, 0.2) ),
+    ondark:     ( name: "fill-primary", foreground: #404043 )
+  ),
+
+  fill-secondary: (
+    onlight:    ( name: "fill-secondary", foreground: #E6E6E7 ),
+    ondark:     ( name: "fill-secondary", foreground: #3D3D3F )
+  ),
+
+  fill-tertiary: (
+    onlight:    ( name: "fill-tertiary", foreground: #EBEBEC ),
+    ondark:     ( name: "fill-tertiary", foreground: #353538 )
+  ),
+
+  fill-quaternary: (
+    onlight:    ( name: "fill-quaternary", foreground: #F0F0F1 ),
+    ondark:     ( name: "fill-quaternary", foreground: #303032 )
+  ),
+
+  // Separator
+  separator: (
+    onlight:    ( name: "separator", foreground: #C6C6C8 ),
+    ondark:     ( name: "separator", foreground: #38383A )
+    )
+);
+
+$base-gutters: (
+  xxs:    (name: "xxs",   value: $base-unit),
+  xs:     (name: "xs",    value: $base-unit * 2),
+  sm:     (name: "sm",    value: $base-unit * 3),
+  md:     (name: "md",    value: $base-unit * 4),
+  lg:     (name: "lg",    value: $base-unit * 5),
+  xl:     (name: "xl",    value: $base-unit * 6),
+  xxl:    (name: "xxs",   value: $base-unit * 7)
+);

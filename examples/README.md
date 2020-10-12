@@ -6,8 +6,11 @@ Provided examples should help you with integration of this SDK with your app.
 2. Scan identity document from file - `blinkid-file`.
 3. Scan both sides of an identity document from camera - `combined`.
 4. Scan barcode on identity document from camera - `idbarcode`.
+5. Extract image frame from which data has been extracted - `success-frame-grabber`.
+6. Example usage for UI components - `ui`.
+7. Setup build system using Webpack - `webpack`.
 
-Each example has two different versions, placed in folders `javascript` and `typescript`.
+Each example, except UI components, has JavaScript and TypeScript version.
 
 Deployment:
 
@@ -29,8 +32,7 @@ To run TypeScript examples:
     # Build an application in folder 'dist/'
     npm run build
     ```
-2. Copy WASM and WebWorker resources which are loaded during runtime.
-    * Copy folder `node_modules/@microblink/blinkid-in-browser-sdk/resources/` to folder `dist/`.
+2. Runtime resources are copied to `dist/` folder during build action, check `rollup.config.js` or `webpack.config.js` files.
 3. Serve `dist/` folder, e.g. `serve dist/`.
 
 ## JavaScript Examples
@@ -38,4 +40,5 @@ To run TypeScript examples:
 To run JavaScript examples:
 
 1. Serve `javascript/` folder, e.g. `serve javascript/`.
-    * WASM and WebWorker resources are already placed in the `javascript/` folder.
+    * Make sure to have internet connection since runtime resources are loaded from the CDN.
+    * Alternatively, change resource paths and provide JS bundles.

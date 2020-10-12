@@ -1,5 +1,6 @@
 import * as Messages from "./Messages";
 import { CapturedFrame } from "../FrameCapture";
+import { LicenseErrorResponse } from "../License";
 
 import
 {
@@ -26,7 +27,10 @@ interface EventHandler
     ( msg: Messages.ResponseMessage ): void;
 }
 
-function defaultEventHandler( resolve: () => void, reject: ( reason: string | null ) => void ): EventHandler
+function defaultEventHandler(
+    resolve: () => void,
+    reject: ( reason: LicenseErrorResponse | string | null ) => void
+): EventHandler
 {
     return ( msg: Messages.ResponseMessage ) =>
     {
@@ -44,7 +48,7 @@ function defaultEventHandler( resolve: () => void, reject: ( reason: string | nu
 
 function defaultResultEventHandler(
     successResolver: EventHandler,
-    reject: ( reason: string | null ) => void
+    reject: ( reason: LicenseErrorResponse | string | null ) => void
 ): EventHandler
 {
     return ( msg: Messages.ResponseMessage ) =>
@@ -88,18 +92,21 @@ function wrapParameters( params: Array< any > ): Array< Messages.WrappedParamete
 
 export class RemoteRecognizer implements Recognizer
 {
+    /* eslint-disable lines-between-class-members, @typescript-eslint/ban-types */
     private readonly wasmSDKWorker : WasmSDKWorker;
-
     private          objectHandle  : number;
-
     readonly         recognizerName: string;
+    private          callbacks     : Map< string, Function >;
+    /* eslint-enable lines-between-class-members */
 
     constructor( wasmWorker: WasmSDKWorker, recognizerName: string, remoteObjHandle: number )
     {
         this.wasmSDKWorker = wasmWorker;
         this.objectHandle = remoteObjHandle;
         this.recognizerName = recognizerName;
+        this.callbacks = new Map< string, Function >();
     }
+    /* eslint-enable @typescript-eslint/ban-types */
 
     getRemoteObjectHandle(): number
     {
@@ -137,6 +144,54 @@ export class RemoteRecognizer implements Recognizer
         );
     }
 
+    private clearAllCallbacks()
+    {
+        this.callbacks.clear();
+        this.wasmSDKWorker.unregisterRecognizerCallbacks( this.objectHandle );
+    }
+
+    /* eslint-disable @typescript-eslint/no-explicit-any,
+                      @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-unsafe-member-access,
+                      @typescript-eslint/no-unsafe-return
+    */
+    // convert each function member into wrapped parameter, containing address where callback needs to be delivered
+    private removeFunctions( settings: any ): any
+    {
+        // clear any existing callbacks
+        this.clearAllCallbacks();
+
+        const keys = Object.keys( settings );
+        let needsRegistering = false;
+        for ( const key of keys )
+        {
+            const data = settings[ key ];
+            if ( typeof data === "function" )
+            {
+                this.callbacks.set( key, data );
+                const wrappedFunction: Messages.WrappedParameter = {
+                    parameter: {
+                        recognizerHandle: this.objectHandle,
+                        callbackName: key
+                    } as Messages.CallbackAddress, // in order to know to which instance callback needs to be delivered
+                    type: Messages.ParameterType.Callback
+                };
+                settings[ key ] = wrappedFunction;
+                needsRegistering = true;
+            }
+        }
+        if ( needsRegistering )
+        {
+            this.wasmSDKWorker.registerRecognizerCallbacks( this.objectHandle, this );
+        }
+        return settings;
+    }
+    /* eslint-enable @typescript-eslint/no-explicit-any,
+                     @typescript-eslint/no-unsafe-assignment,
+                     @typescript-eslint/no-unsafe-member-access,
+                     @typescript-eslint/no-unsafe-return
+    */
+
     updateSettings( newSettings: RecognizerSettings ): Promise< void >
     {
         return new Promise< void >
@@ -149,22 +204,39 @@ export class RemoteRecognizer implements Recognizer
                     return;
                 }
 
+                /* eslint-disable @typescript-eslint/no-unsafe-assignment */
                 const msg = new Messages.InvokeObjectMethod
                 (
                     this.objectHandle,
                     "updateSettings",
                     [
                         {
-                            parameter: newSettings,
-                            type: Messages.ParameterType.Any
+                            parameter: this.removeFunctions( newSettings ),
+                            type: Messages.ParameterType.RecognizerSettings
                         }
                     ]
                 );
+                /* eslint-enable @typescript-eslint/no-unsafe-assignment */
                 const handler = defaultEventHandler( resolve, reject );
                 this.wasmSDKWorker.postMessage( msg, handler );
             }
         );
     }
+
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    invokeCallback( callbackName: string, args: any[] ): void
+    {
+        const callback = this.callbacks.get( callbackName );
+        if ( callback !== undefined )
+        {
+            callback( ...args );
+        }
+        else
+        {
+            console.warn( "Cannot find callback", callbackName );
+        }
+    }
+    /* eslint-enable @typescript-eslint/no-explicit-any */
 
     getResult(): Promise< RecognizerResult >
     {
@@ -203,6 +275,8 @@ export class RemoteRecognizer implements Recognizer
                     reject( "Invalid object handle: " + this.objectHandle.toString() );
                     return;
                 }
+
+                this.clearAllCallbacks();
 
                 const msg = new Messages.InvokeObjectMethod( this.objectHandle, "delete", [] );
                 const handler = defaultEventHandler
@@ -475,28 +549,35 @@ class WasmModuleWorkerProxy implements WasmModuleProxy
 
 export class WasmSDKWorker implements WasmSDK
 {
-    readonly mbWasmModule: WasmModuleWorkerProxy;
+    /* eslint-disable lines-between-class-members */
+            readonly mbWasmModule            : WasmModuleWorkerProxy;
+    private readonly mbWasmWorker            : Worker;
+    private          eventHandlers           : { [ key: number ] : EventHandler } = {};
+    private          metadataCallbacks       : MetadataCallbacks = {};
+    private          loadCallback            : OptionalLoadProgressCallback;
+    private          clearTimeoutCallback    : ClearTimeoutCallback | null = null;
+    private          recognizersWithCallbacks: Map< number, RemoteRecognizer >;
+    public           showOverlay             : boolean;
+    /* eslint-enable lines-between-class-members */
 
-    private readonly mbWasmWorker: Worker;
-
-    private eventHandlers: { [ key: number ] : EventHandler } = {};
-
-    private metadataCallbacks: MetadataCallbacks = {};
-
-    private loadCallback: OptionalLoadProgressCallback;
-
-    private clearTimeoutCallback: ClearTimeoutCallback | null = null;
-
-    private constructor( worker: Worker, loadProgressCallback: OptionalLoadProgressCallback )
+    private constructor
+    (
+        worker: Worker,
+        loadProgressCallback: OptionalLoadProgressCallback,
+        rejectHandler: ( message: string ) => void
+    )
     {
         this.mbWasmWorker = worker;
         this.mbWasmWorker.onmessage = ( event: MessageEvent ) => { this.handleWorkerEvent( event ); };
         this.mbWasmWorker.onerror = () =>
         {
-            throw new Error( "Problem during initialization of worker file..." );
+            rejectHandler( "Problem during initialization of worker file!" );
+            return;
         };
         this.mbWasmModule = new WasmModuleWorkerProxy( this );
         this.loadCallback = loadProgressCallback;
+        this.recognizersWithCallbacks = new Map< number, RemoteRecognizer >();
+        this.showOverlay = false;
     }
 
     postMessage( message: Messages.RequestMessage, eventHandler: EventHandler ): void
@@ -530,6 +611,16 @@ export class WasmSDKWorker implements WasmSDK
     registerClearTimeoutCallback( callback: ClearTimeoutCallback | null ): void
     {
         this.clearTimeoutCallback = callback;
+    }
+
+    registerRecognizerCallbacks( remoteRecognizerHandle: number, recognizer: RemoteRecognizer ): void
+    {
+        this.recognizersWithCallbacks.set( remoteRecognizerHandle, recognizer );
+    }
+
+    unregisterRecognizerCallbacks( remoteRecognizerHandle: number ): void
+    {
+        this.recognizersWithCallbacks.delete( remoteRecognizerHandle );
     }
 
     private handleWorkerEvent( event: MessageEvent )
@@ -581,6 +672,25 @@ export class WasmSDKWorker implements WasmSDK
                         this.metadataCallbacks.onGlare( msg.callbackParameters[ 0 ] as boolean );
                     }
                     break;
+                case Messages.MetadataCallback.recognizerCallback:
+                {
+                    // first parameter is address, other parameters are callback parameters
+                    const address = msg.callbackParameters.shift() as Messages.CallbackAddress;
+                    const recognizer = this.recognizersWithCallbacks.get( address.recognizerHandle );
+                    if ( recognizer !== undefined )
+                    {
+                        recognizer.invokeCallback( address.callbackName, msg.callbackParameters );
+                    }
+                    else
+                    {
+                        console.warn
+                        (
+                            "Cannot find recognizer to deliver callback message. Maybe it's destroyed?",
+                            address
+                        );
+                    }
+                    break;
+                }
                 default:
                     throw new Error( `Unknown callback type: ${ Messages.MetadataCallback[ msg.callbackType ] }` );
             }
@@ -614,12 +724,13 @@ export class WasmSDKWorker implements WasmSDK
         (
             ( resolve, reject ) =>
             {
-                const wasmWorker = new WasmSDKWorker( worker, wasmLoadSettings.loadProgressCallback );
+                const wasmWorker = new WasmSDKWorker( worker, wasmLoadSettings.loadProgressCallback, reject );
                 const initMessage = new Messages.InitMessage( wasmLoadSettings, userId );
-                const initEventHandler = defaultEventHandler
+                const initEventHandler = defaultResultEventHandler
                 (
-                    () =>
+                    ( msg: Messages.ResponseMessage ) =>
                     {
+                        wasmWorker.showOverlay = ( msg as Messages.InitSuccessMessage ).showOverlay;
                         resolve( wasmWorker );
                     },
                     reject

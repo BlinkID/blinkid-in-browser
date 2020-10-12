@@ -1,3 +1,5 @@
+import { Point, Quadrilateral } from "./Geometry";
+
 /**
  * Interface representing possible events that can occur during image processing.
  * All functions in this interface are optional and will be called only if they are
@@ -78,34 +80,10 @@ export interface Displayable
 }
 
 /**
- * Interface representing a point in image.
- */
-export interface Point
-{
-    /** X-coordinate of the point */
-    x: number
-
-    /** Y-coordinate of the point */
-    y: number
-}
-
-/**
  * Interface representing quadrilateral in image.
  */
-export interface DisplayableQuad extends Displayable
-{
-    /** Top-left point of the quadrilateral */
-    topLeft: Point
-
-    /** Top-right point of the quadrilateral */
-    topRight: Point
-
-    /** Bottom-left point of the quadrilateral */
-    bottomLeft: Point
-
-    /** Bottom-right point of the quadrilateral */
-    bottomRight: Point
-}
+export interface DisplayableQuad extends Displayable, Quadrilateral
+{}
 
 /**
  * Interface representing list of points in image.

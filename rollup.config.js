@@ -1,3 +1,5 @@
+import { readFileSync, writeFileSync } from 'fs'
+
 import babel from '@rollup/plugin-babel'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import typescript from 'rollup-plugin-typescript2'
@@ -21,7 +23,37 @@ const terserConfig = {
     }
 }
 
+function replaceWorker(workerFile) {
+    return {
+        name: 'replace-placeholder',
+        writeBundle: (options, bundle) => {
+            const outputFilePath = options.file
+            const outputFileName = outputFilePath.split('/').pop()
+            const incompleteCode = bundle[outputFileName].code
+
+            const workerContent = readFileSync(workerFile, 'utf8')
+
+            const completeCode = incompleteCode.replace('@PLACEHOLDER:worker', workerContent)
+
+            writeFileSync(outputFilePath, completeCode)
+        }
+    }
+}
+
 const config = {
+    worker: {
+        input: 'src/worker.ts',
+        output: {
+            file: 'resources/BlinkIDWasmSDK.worker.min.js',
+            format: 'iife'
+        },
+        plugins: [
+            nodeResolve(),
+            typescript({ tsconfigOverride: { compilerOptions: { declaration: false, types: [] } } }),
+            babel({ babelHelpers: 'bundled' }),
+            terser(terserConfig)
+        ]
+    },
     cjs: {
         input: 'src/index.ts',
         output: {
@@ -33,7 +65,8 @@ const config = {
         plugins: [
             nodeResolve(),
             typescript({ useTsconfigDeclarationDir: true }),
-            babel({ babelHelpers: 'bundled' })
+            babel({ babelHelpers: 'bundled' }),
+            replaceWorker('resources/BlinkIDWasmSDK.worker.min.js')
         ]
     },
     es: {
@@ -48,7 +81,8 @@ const config = {
         plugins: [
             nodeResolve(),
             typescript({ tsconfigOverride: { compilerOptions: { declaration: false, sourceMap: true } } }),
-            babel({ babelHelpers: 'bundled' })
+            babel({ babelHelpers: 'bundled' }),
+            replaceWorker('resources/BlinkIDWasmSDK.worker.min.js')
         ]
     },
     esModule: {
@@ -63,7 +97,8 @@ const config = {
             nodeResolve(),
             typescript({ tsconfigOverride: { compilerOptions: { declaration: false } } }),
             babel({ babelHelpers: 'bundled' }),
-            terser(terserConfig)
+            terser(terserConfig),
+            replaceWorker('resources/BlinkIDWasmSDK.worker.min.js')
         ]
     },
     umdDev: {
@@ -79,7 +114,8 @@ const config = {
         plugins: [
             nodeResolve(),
             typescript({ tsconfigOverride: { compilerOptions: { declaration: false, sourceMap: true } } }),
-            babel({ babelHelpers: 'bundled' })
+            babel({ babelHelpers: 'bundled' }),
+            replaceWorker('resources/BlinkIDWasmSDK.worker.min.js')
         ]
     },
     umdProd: {
@@ -95,45 +131,17 @@ const config = {
             nodeResolve(),
             typescript({ tsconfigOverride: { compilerOptions: { declaration: false } } }),
             babel({ babelHelpers: 'bundled' }),
-            terser(terserConfig)
-        ]
-    },
-    workerDev: {
-        input: 'src/worker.ts',
-        output: {
-            file: 'resources/BlinkIDWasmSDK.worker.js',
-            format: 'iife',
-            sourcemap: true,
-            banner: bannerMsg
-        },
-        plugins: [
-            nodeResolve(),
-            typescript({ tsconfigOverride: { compilerOptions: { declaration: false, sourceMap: true } } }),
-            babel({ babelHelpers: 'bundled' })
-        ]
-    },
-    workerProd: {
-        input: 'src/worker.ts',
-        output: {
-            file: 'resources/BlinkIDWasmSDK.worker.min.js',
-            format: 'iife',
-            banner: bannerMsg
-        },
-        plugins: [
-            nodeResolve(),
-            typescript({ tsconfigOverride: { compilerOptions: { declaration: false } } }),
-            babel({ babelHelpers: 'bundled' }),
-            terser(terserConfig)
+            terser(terserConfig),
+            replaceWorker('resources/BlinkIDWasmSDK.worker.min.js')
         ]
     }
 }
 
 export default [
+    config.worker,
     config.cjs,
     config.es,
     config.esModule,
     config.umdDev,
-    config.umdProd,
-    config.workerDev,
-    config.workerProd
+    config.umdProd
 ]
