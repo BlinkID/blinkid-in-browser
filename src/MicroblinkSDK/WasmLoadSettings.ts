@@ -36,8 +36,8 @@ export class WasmSDKLoadSettings
      * Absolute location of WASM and related JS/data files. Useful when resource files should be loaded over CDN, or
      * when web frameworks/libraries are used which store resources in specific locations, e.g. inside "assets" folder.
      *
-     * Important: if the engine is hosted on another origin, CORS must be enabled between two hosts. That is, server where
-     * engine is hosted must have 'Access-Control-Allow-Origin' header for the location of the web app.
+     * Important: if the engine is hosted on another origin, CORS must be enabled between two hosts. That is, server
+     * where engine is hosted must have 'Access-Control-Allow-Origin' header for the location of the web app.
      *
      * Important: SDK and WASM resources must be from the same version of a package.
      *
