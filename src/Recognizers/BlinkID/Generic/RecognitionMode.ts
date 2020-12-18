@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * RecognitionMode enum defines possible recognition modes by BlinkID(Combined)Recognizer.
  */
 export enum RecognitionMode

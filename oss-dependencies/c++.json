@@ -6,7 +6,7 @@
         "description": "Free peer-reviewed portable C++ source libraries."
     },
     {
-        "package": "ConcurrentQueue/1.0.4@microblink/stable",
+        "package": "ConcurrentQueue/3.0.0@microblink/stable",
         "url": "https://github.com/microblink/concurrentqueue",
         "license": "Dual licensed under Simplified BSD License and Boost Software License - Version 1.0",
         "description": "A fast multi-producer, multi-consumer lock-free concurrent queue for C++11"
@@ -30,7 +30,7 @@
         "description": "err - yet another take on C++ error handling"
     },
     {
-        "package": "Functionoid/1.1.7@microblink/stable",
+        "package": "Functionoid/3.0.1@microblink/stable",
         "url": "https://github.com/microblink/functionoid",
         "license": "Boost Software License, Version 1.0",
         "description": "a complete C++17 rewrite of boost/std::function"
@@ -60,31 +60,31 @@
         "description": "Obfuscation library based on C++11/14 and metaprogramming"
     },
     {
-        "package": "OpenCV/3.2.0.9@microblink/stable",
+        "package": "OpenCV/3.2.0.11@microblink/stable",
         "url": "https://bitbucket.org/microblink/opencvfork/src",
         "license": "MIT",
         "description": "Microblink's fork of OpenCV"
     },
     {
-        "package": "OpenCVAnalysis/3.2.0.9@microblink/stable",
+        "package": "OpenCVAnalysis/3.2.0.11@microblink/stable",
         "url": "https://bitbucket.org/microblink/opencvfork/src",
         "license": "MIT",
         "description": null
     },
     {
-        "package": "OpenCVCore/3.2.0.9@microblink/stable",
+        "package": "OpenCVCore/3.2.0.11@microblink/stable",
         "url": "https://bitbucket.org/microblink/opencvfork/src",
         "license": "MIT",
         "description": null
     },
     {
-        "package": "OpenCVImageIO/3.2.0.9@microblink/stable",
+        "package": "OpenCVImageIO/3.2.0.11@microblink/stable",
         "url": "https://bitbucket.org/microblink/opencvfork/src",
         "license": "MIT",
         "description": null
     },
     {
-        "package": "OpenCVProcessing/3.2.0.9@microblink/stable",
+        "package": "OpenCVProcessing/3.2.0.11@microblink/stable",
         "url": "https://bitbucket.org/microblink/opencvfork/src",
         "license": "MIT",
         "description": null
@@ -102,10 +102,10 @@
         "description": "A fast JSON parser/generator for C++ with both SAX/DOM style API"
     },
     {
-        "package": "Sweater/3.2.6@microblink/stable",
+        "package": "Sweater/8.0.1@microblink/stable",
         "url": "https://github.com/microblink/sweater",
         "license": "MIT",
-        "description": "Humble Outed Dispatch"
+        "description": "Humble Outer Dispatch"
     },
     {
         "package": "UTFCpp/3.1.1@microblink/stable",
@@ -120,7 +120,7 @@
         "description": "ZXing (\"Zebra Crossing\") barcode scanning library for Java, Android"
     },
     {
-        "package": "Zlib/1.2.8.9@microblink/stable",
+        "package": "Zlib/1.2.8.11@microblink/stable",
         "url": "https://bitbucket.org/microblink/opencvfork/src",
         "license": "MIT",
         "description": null

@@ -1,31 +1,31 @@
-# _BlinkID_ In-browser SDK
+# BlinkID In-browser SDK
 
 [![Build Status](https://travis-ci.org/BlinkID/blinkid-in-browser.svg?branch=master)](https://travis-ci.org/BlinkID/blinkid-in-browser) [![npm version](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk.svg)](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk)
 
-_BlinkID_ In-browser SDK enables scanning of various identity documents, including driving licenses, national identity cards, passports and others. The SDK provides real-time in-browser data extraction, without any need for sending images to servers for processing.
+BlinkID In-browser SDK enables scanning of various identity documents, including driving licenses, national identity cards, passports and others. The SDK provides real-time in-browser data extraction, without any need for sending images to servers for processing.
 
-For more information on how to integrate the _BlinkID_ SDK into your web app read the instructions below. Make sure you read the latest [changelog](CHANGELOG.md) for most recent changes and improvements.
+For more information on how to integrate BlinkID SDK into your web app, read the [instructions](#integration) below. Make sure you read the latest [CHANGELOG.md](CHANGELOG.md) file to see the most recent changes and improvements.
 
-Check out the [official demo app](https://demo.microblink.com/in-browser-sdk/blinkid/index.html) or live examples to see the _BlinkID_ SDK in action:
+Check out the [official demo app](https://demo.microblink.com/in-browser-sdk/blinkid/index.html) or live examples of BlinkID SDK in action:
 
-1. [_BlinkID_ SDK with built-in UI](https://blinkid.github.io/blinkid-in-browser/ui/demo.html)
-    * See minimal example for UI component at [Codepen](https://codepen.io/microblink/pen/GRZGQab)
-2. [Scan front side of identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/blinkid-camera/javascript/index.html)
+1. [BlinkID SDK with built-in UI](https://blinkid.github.io/blinkid-in-browser/ui/demo.html)
+    * See what the bare UI looks like at [Codepen](https://codepen.io/microblink/pen/GRZGQab)
+2. [Scan the front side of an identity document with a web camera](https://blinkid.github.io/blinkid-in-browser/examples/blinkid-camera/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/gOPJoRp)
-3. [Scan front side of identity document from image file](https://blinkid.github.io/blinkid-in-browser/examples/blinkid-file/javascript/index.html)
+3. [Scan the front side of an identity document by uploading its image](https://blinkid.github.io/blinkid-in-browser/examples/blinkid-file/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/ExPzzda)
-4. [Scan both sides of identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/combined/javascript/index.html)
+4. [Scan both sides of an identity document with a web camera](https://blinkid.github.io/blinkid-in-browser/examples/combined/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/BajeeMx)
-5. [Scan barcode from identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/idbarcode/javascript/index.html)
+5. [Scan barcode from an identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/idbarcode/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/NWxVVJO)
 
-Finally, check out the [examples directory](examples) to see the source code of the aforementioned examples.
+To see the source code of the above examples, check out the [examples directory](examples). If you'd like to run examples of the UI component, either through the browser or locally, see the [ui/examples](ui/examples) directory.
 
-_BlinkID_ In-browser SDK is meant to be used natively in a web browser. It will not work correctly within a iOS/Android WebView or NodeJS backend service. If you are looking for Cordova/PhoneGap version, please go [here](https://github.com/BlinkID/blinkid-cordova). If you want to use BlinkID as a backend service, please go [here](https://github.com/microblink/docker).
+Please keep in mind that BlinkID In-browser SDK is meant to be used natively in a web browser. It will not work correctly within a iOS/Android WebView or NodeJS backend service. If you are looking for Cordova/PhoneGap version, please go [here](https://github.com/BlinkID/blinkid-cordova). If you want to use BlinkID as a backend service, check out [BlinkID Cloud API](https://microblink.com/products/blinkid/cloud-api) or [BlinkID Self-hosted API](https://microblink.com/products/blinkid/self-hosted-api).
 
-# Table of contents
+## Table of contents
 
-* [Integration instructions](#integration)
+* [Components of SDK](#components-of-sdk)
     * [Obtaining a license key](#obtainingalicensekey)
     * [Installation](#installation)
     * [Performing your first scan](#firstScan)
@@ -43,37 +43,56 @@ _BlinkID_ In-browser SDK is meant to be used natively in a web browser. It will 
     * [ID barcode recognizer](#idBarcodeRecognizer)
     * [BlinkID recognizer](#blinkidRecognizer)
     * [BlinkID combined recognizer](#blinkidCombinedRecognizer)
-* [UI component](#uiComponent)
 * [Troubleshooting](#troubleshoot)
     * [Integration problems](#integrationProblems)
     * [SDK problems](#sdkProblems)
         * [Licensing problems](#licensingProblems)
         * [Other problems](#otherProblems)
 * [FAQ and known issues](#faq)
-* [Additional info](#info)
 
+## <a name="components-of-sdk"></a> Components of SDK
 
-# <a name="integration"></a> Integration instructions
+BlinkID In-browser SDK consists of: 
 
-This repository contains WebAssembly file and support JS files which contains the core implementation of _BlinkID_ functionalities.
+* WASM library that recognizes a document a user is holding and extracts an image of the most suitable frame from the camera feed. 
+* Web component with a prebuilt and customizable UI, which acts as a wrapper for the WASM library to provide a straightforward integration. 
 
-In order to make integration of the WebAssembly easier and more developer friendly, a JavaScript/TypeScript support code is also provided, giving an easy to use integration API to the developer.
+You can add it to your website or web app in two ways:
 
-This repository also contains a sample JS/TS integration app which demonstrates how you can integrate the _BlinkID_ into your web app.
+1. For the simplest form of integration, use a web component with a prebuilt and customizable UI.
+    * Follow the integration instructions in the [ui/README.md](ui/README.md) file.
+    * You can find the source code of example applications in the [ui/examples](ui/examples) directory.
+2. For an advanced form of integration where UI has to be built from scratch, use a WASM library instead.
+    * See the integration instructions [here](#integration).
+    * Find the source code of example applications in the [examples](examples) directory.## <a name="integration"></a> Integration instructions
 
-_BlinkID_ requires a browser with a support for [WebAssembly](https://webassembly.org), but works best with latest versions of Firefox, Chrome, Safari and Microsoft Edge. It's worth noting that scan performance depends on the device processing capabilities.
+This repository contains WebAssembly files and supporting JS files which contain the core implementation of BlinkID functionalities.
 
-## <a name="obtainingalicensekey"></a> Obtaining a license key
+In order to make integration of the WebAssembly easier and more developer friendly, a JavaScript/TypeScript support code is also provided, giving you an  easy-to-use integration API.
 
-Using _BlinkID_ in your web app requires a valid license key.
+This repository also contains a sample JS/TS integration app which demonstrates how you can integrate the BlinkID into your web app.
+
+BlinkID will work in any browser that supports [WebAssembly](https://webassembly.org), but works best with the latest versions of Firefox, Chrome, Safari and Microsoft Edge. It's worth noting that scan performance depends on the device processing capabilities.
+
+### <a name="obtainingalicensekey"></a> Obtaining a license key
+
+Using BlinkID in your web app requires a valid license key.
 
 You can obtain a free trial license key by registering to [Microblink dashboard](https://microblink.com/login). After registering, you will be able to generate a license key for your web app.
 
-The license key is bound to [fully qualified domain name](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) of your web app, so please make sure you enter the correct name when asked. Also, keep in mind that if you plan to serve your web app from different domains, you will need different license keys.
+Make sure you enter a [fully qualified domain name](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) of your web app when filling out the form — the license key will be bound to it. Also, if you plan to serve your web app from different domains, you'll need a license key for each one.
 
-## <a name="installation"></a> Installation
+**Keep in mind:** Versions BlinkID 5.8.0 and above require an internet connection to work under our new License Management Program.
 
-It's recommended to install the stable version via NPM or Yarn:
+This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of identity documents still happens offline, in the browser itself. 
+
+Once the validation is complete, you can continue using the SDK in an offline mode (or over a private network) until the next check.
+
+We've added error callback to Microblink SDK to inform you about the status of your license key.
+
+### <a name="installation"></a> Installation
+
+We recommend you install a stable version via NPM or Yarn:
 
 ```sh
 # NPM
@@ -83,18 +102,18 @@ npm install @microblink/blinkid-in-browser-sdk
 yarn add @microblink/blinkid-in-browser-sdk
 ```
 
-Which then can be used with a module bundler in Node environment:
+Which can then be used with a module bundler in Node environment:
 
 ```javascript
 import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 ```
 
-Source code of BlinkIDSDK is written in TypeScript and types are exposed in the public NPM package, so it's possible
+Source code of `BlinkIDSDK` is written in TypeScript and types are exposed in the public NPM package, so it's possible
 to use the SDK in both JavaScript and TypeScript projects.
 
 ---
 
-Alternatively, it's possible to use UMD builds, which can be loaded from [the `dist` folder on unpkg](https://unpkg.com/@microblink/blinkid-in-browser-sdk/dist/). The UMD builds make _BlinkID_ available as a `window.BlinkIDSDK` global variable:
+Alternatively, it's possible to use UMD builds, which can be loaded from [the `dist` folder on unpkg](https://unpkg.com/@microblink/blinkid-in-browser-sdk/dist/). The UMD builds make `BlinkIDSDK` available as a `window.BlinkIDSDK` global variable:
 
 ```html
 <script src="https://unpkg.com/@microblink/blinkid-in-browser-sdk/dist/blinkid-sdk.min.js"></script>
@@ -106,31 +125,33 @@ Finally, it's possible to use ES builds, which can be downloaded from [the `es` 
 import * as BlinkIDSDK from "./es/blinkid-sdk.js";
 ```
 
-### WASM Resources
+**Important:** Unpkg CDN is used here due to simplicity of usage. It's not intended to be used in production!
 
-After adding the _BlinkID_ SDK to your project, make sure to include all files from its `resources` folder in your distribution. Those files contain compiled WebAssembly module and support JS code.
+#### WASM Resources
 
-Do not add those files to the main app bundle, but rather place them on a publicly available location so SDK can load them at the appropriate time. For example, place the resources in `my-angular-app/src/assets/` folder if using `ng new`, or place the resources in `my-react-app/public/` folder if using `create-react-app`.
+After adding BlinkID SDK to your project, make sure to include all files from its `resources` folder in your distribution. Those files contain a compiled WebAssembly module and support JS code.
+
+Do not add those files to the main app bundle, but rather place them on a publicly available location so that the SDK can load them at an appropriate time. For example, place the resources in `my-angular-app/src/assets/` folder if using `ng new` or in `my-react-app/public/` folder if using `create-react-app`.
 
 For more information on how to setup aforementioned resources, check out the [Configuration of SDK](#sdkConfiguration) section.
 
-### Versions and backward compatibility
+#### Versions and backward compatibility
 
-Even though the API is not going to change between minor versions, structure of results for various recognizers can change between minor versions.
+Even though the API is not going to change between minor versions, the structure of results for various recognizers might change between minor versions.
 
-This is due to improvements that are made on recognizers with every minor release.
+This is due to the improvements we make to our recognizers with every minor release. We suggest you familiarize yourself with what [Recognizer, RecognizerRunner and VideoRecognizer](#availableRecognizers) are before moving on.
 
-It's a good practice to always lock on minor version and to check `CHANGELOG.md` before upgrading to new minor version.
+It's a good practice to always lock your minor version and check the [CHANGELOG.md](CHANGELOG.md) file before upgrading to a new minor version.
 
-For example, in `package.json` you should have something like `"@microblink/blinkid-in-browser-sdk": "~4.1.1"` instead of default value `"@microblink/blinkid-in-browser-sdk": "^4.1.1"`.
+For example, in `package.json` you should have something like `"@microblink/blinkid-in-browser-sdk": "~4.1.1"` instead of the default `"@microblink/blinkid-in-browser-sdk": "^4.1.1"`.
 
-## <a name="firstScan"></a> Performing your first scan
+### <a name="firstScan"></a> Performing your first scan
 
-*Note: following code snippets are written in TypeScript, but it's possible to use them in plain JavaScript.*
+*Note: the following code snippets are written in TypeScript, but it's possible to use them in plain JavaScript.*
 
-1. Make sure to have a valid license key. Information on how to get a license key can be seen in the [Obtaining a license key](#obtainingalicensekey) section.
+1. Make sure you have a valid license key. See [Obtaining a license key](#obtainingalicensekey).
 
-2. Add SDK to your web app by using one of the options provided in the [Installation](#installation) section.
+2. Add the SDK to your web app by using one of the options provided in the [Installation](#installation) section.
 
 3. Initialize the SDK using the following code snippet:
 
@@ -161,7 +182,7 @@ For example, in `package.json` you should have something like `"@microblink/blin
     }
     ```
 
-4. Create recognizer objects that will perform image recognition, configure them and use them to create a `RecognizerRunner` object:
+4. Create recognizer objects that will perform image recognition, configure them to your needs (to scan specific types of identity documents, for example) and use them to create a `RecognizerRunner` object:
 
     ```typescript
     import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
@@ -188,8 +209,8 @@ For example, in `package.json` you should have something like `"@microblink/blin
         if ( error.name === "VideoRecognizerError" )
         {
             // Reason is of type BlinkIDSDK.NotSupportedReason and contains information why video
-            // recognizer could not be used. Usually this happens when user didn't give permission
-            // to use the camera or when a hardware or OS error occurs.
+            // recognizer could not be used. Usually this happens when user didn't grant access to a
+            // camera or when a hardware or OS error occurs.
             const reason = ( error as BlinkIDSDK.VideoRecognizerError ).reason;
         }
     }
@@ -217,17 +238,15 @@ For example, in `package.json` you should have something like `"@microblink/blin
     recognizer.delete();
     ```
 
-    Note that after releasing those objects it is not valid to call any methods on them, as they are literally destroyed. This is required to release memory resources on WebAssembly heap which are not automatically released with JavaScript's garbage collector. Also, note that results returned from `getResult` method are placed on JavaScript's heap and will be cleaned by garbage collector, just like any other normal JavaScript object.
+    Note that after releasing those objects it is not valid to call any methods on them, as they are literally destroyed. This is required to release memory resources on WebAssembly heap which are not automatically released with JavaScript's garbage collector. Also, note that results returned from `getResult` method are placed on JavaScript's heap and will be cleaned by its garbage collector, just like any other normal JavaScript object.
 
-For more information about available recognizers and `RecognizerRunner`, see [RecognizerRunner and available recognizers](#availableRecognizers).
-
-## <a name="stillImagesRecognition"></a> Recognizing still images
+### <a name="stillImagesRecognition"></a> Recognizing still images
 
 If you just want to perform recognition of still images and do not need live camera recognition, you can do that as well.
 
-1. Initialize recognizers and `RecognizerRunner` just as in the [steps 1-4 above](#firstScan).
+1. Initialize recognizers and `RecognizerRunner` as described in the [steps 1-4 above](#firstScan).
 
-2. Make sure you have the image set to a `HTMLImageElement`. If you only have the URL of the image that needs recognizing, You can attach it to the image element with following code snippet:
+2. Make sure you have the image set to a `HTMLImageElement`. If you only have the URL of the image that needs recognizing, you can attach it to the image element with following code snippet:
 
     ```typescript
     const imageElement = document.getElementById( "imageToProcess" ) as HTMLImageElement;
@@ -242,13 +261,13 @@ If you just want to perform recognition of still images and do not need live cam
     const processResult = await recognizerRunner.processImage( imageFrame );
     ```
 
-4. Proceed as in [steps 6-7 above](#firstScan). Note that in there is no `VideoRecognizer` here that needs freeing its resources, but `RecognizerRunner` and recognizers must be deleted using the `delete` method.
+4. Proceed as in [steps 6-7 above](#firstScan). Note that you don't have to release any resources of `VideoRecognizer` here as we were only recognizing a single image, but `RecognizerRunner` and recognizers must be deleted using the `delete` method.
 
-## <a name="sdkConfiguration"></a> Configuration of SDK
+### <a name="sdkConfiguration"></a> Configuration of SDK
 
-It's possible to modify default behaviour of the SDK before WASM module is loaded.
+You can modify the default behaviour of the SDK before a WASM module is loaded.
 
-Following code snippet shows how to configure the SDK and which non-development options are available:
+Check out the following code snippet to learn how to configure the SDK and which non-development options are available:
 
 ```typescript
 // Create instance of WASM SDK load settings
@@ -268,10 +287,10 @@ loadSettings.allowHelloMessage = true;
  * Absolute location of WASM and related JS/data files. Useful when resource files should be loaded over CDN, or
  * when web frameworks/libraries are used which store resources in specific locations, e.g. inside "assets" folder.
  *
- * Important: if engine is hosted on another origin, CORS must be enabled between two hosts. That is, server where
+ * Important: if the engine is hosted on another origin, CORS must be enabled between two hosts. That is, server where
  * engine is hosted must have 'Access-Control-Allow-Origin' header for the location of the web app.
  *
- * Important: SDK and WASM resources must be from the same version of package.
+ * Important: SDK and WASM resources must be from the same version of a package.
  *
  * Default value is empty string, i.e. "". In case of empty string, value of "window.location.origin" property is
  * going to be used.
@@ -281,7 +300,7 @@ loadSettings.engineLocation = "";
 /**
  * Optional callback function that will report the SDK loading progress.
  *
- * This can be useful for displaying progress bar for users on slow connections.
+ * This can be useful for displaying progress bar to users with slow connections.
  *
  * Default value is "null".
  *
@@ -294,41 +313,41 @@ loadSettings.loadProgressCallback = null;
 BlinkIDSDK.loadWasmModule( loadSettings ).then( ... );
 ```
 
-There are some additonal development options which can be seen in the configuration class [WasmLoadSettings](src/MicroblinkSDK/WasmLoadSettings.ts).
+There are some additional options which can be seen in the configuration class [WasmLoadSettings](src/MicroblinkSDK/WasmLoadSettings.ts).
 
-## <a name="deploymentGuidelines"></a> Deployment guidelines
+### <a name="deploymentGuidelines"></a> Deployment guidelines
 
-This section contains information on how to deploy a web app which uses _BlinkID_ In-browser SDK.
+This section contains information on how to deploy a web app which uses BlinkID In-browser SDK.
 
-### HTTPS
+#### HTTPS
 
-Make sure to serve the web app on HTTPS protocol.
+Make sure to serve the web app over a HTTPS connection.
 
-Otherwise, web camera and loading of remote scripts will be blocked by web browser due to security policies.
+Otherwise, the browser will block access to a web camera and remote scripts due to security policies.
 
-### Deployment of WASM files
+#### Deployment of WASM files
 
 _Files: resources/BlinkIDWasmSDK.{data,js,wasm}_
 
-#### Server Configuration
+##### Server Configuration
 
-When browser loads the `.wasm` file it needs to compile it to the native code. This is unlike JavaScript code, which is interpreted and compiled to native code only if needed ([JIT, a.k.a. Just-in-time compilation](https://en.wikipedia.org/wiki/Just-in-time_compilation)). Therefore, before _BlinkID_ is loaded, the browser must download and compile the provided `.wasm` file.
+If you know how WebAssembly works, then you'll know a browser will load the `.wasm` file it needs to compile it to the native code. This is unlike JavaScript code, which is interpreted and compiled to native code only if needed ([JIT, a.k.a. Just-in-time compilation](https://en.wikipedia.org/wiki/Just-in-time_compilation)). Therefore, before BlinkID is loaded, the browser must download and compile the provided `.wasm` file.
 
 In order to make this faster, you should configure your web server to serve `.wasm` files with `Content-Type: application/wasm`. This will instruct the browser that this is a WebAssembly file, which most modern browsers will utilize to perform streaming compilation, i.e. they will start compiling the WebAssembly code as soon as first bytes arrive from the server, instead of waiting for the entire file to download.
 
-For more information about streaming compilation, check [this article on MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/instantiateStreaming).
+For more information about streaming compilation, check [this article from MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WebAssembly/instantiateStreaming).
 
 If your server supports serving compressed files, you should utilize that to minimize the download size of your web app. It's easy to notice that `.wasm` file is not a small file, but it is very compressible. This is also true for all other files that you need to serve for your web app.
 
-For more information about configuring your web server for using compression and for optimal delivery of your web app that uses _BlinkID_ SDK, you should also check the [official Emscripten documentation](https://emscripten.org/docs/compiling/Deploying-Pages.html#optimizing-download-sizes).
+For more information about configuring your web server to compress and optimally deliver BlinkID SDK in your web app, see the [official Emscripten documentation](https://emscripten.org/docs/compiling/Deploying-Pages.html#optimizing-download-sizes).
 
-#### Location of WASM and related support files
+##### Location of WASM and related support files
 
-It's possible to host WASM and related support files on a location different than the one where web app is located.
+You can host WASM and related support files in a location different from the one where your web app is located.
 
-For example, it's possible to host WASM and related support files on `https://cdn.example.com`, while the web app is hosted on `https://example.com`.
+For example, your WASM and related support files can be located in `https://cdn.example.com`, while the web app is hosted on `https://example.com`.
 
-In that case it's important to set [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin) in response from `https://cdn.example.com`. i.e. set header `Access-Control-Allow-Origin` with proper value.
+In that case it's important to set [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin) in response from `https://cdn.example.com`. i.e. set header `Access-Control-Allow-Origin` with proper value so that the web page knows it’s okay to take on the request.
 
 If WASM engine is not placed in the same folder as web app, don't forget to configure instance of `WasmSDKLoadSettings` with proper location:
 
@@ -340,18 +359,18 @@ loadSettings.engineLocation = "https://cdn.example.com/wasm";
 ...
 ```
 
-### Setting up multiple licenses
+#### Setting up multiple licenses
 
-Since license key of _BlinkID_ SDK is tied to the domain name, it's required to initialize the SDK with different license keys based on the location of the web app.
+As mentioned, the license key of BlinkID SDK is tied to your domain name, so it's required to initialize the SDK with different license keys based on the location of your web app.
 
-A common scenario is to have different license keys for development on the local machine, staging environment and production environment.
+A common scenario is to have different license keys for development on the local machine, staging environment and production environment. Our team will be happy to issue multiple trial licenses if needs be. See [Obtaining a license key](#obtainingalicensekey).
 
-There are two most common approaches regarding setup of license key:
+There are two most common approaches regarding setup of your license key(s):
 
-1. Multiple apps: build different versions of web app for different environments
-2. Single app: build single version of web app which has logic to determine which license key to use
+1. Multiple apps: build different versions of your web app for different environments
+2. Single app: build a single version of your web app which has logic to determine which license key to use
 
-#### Multiple apps
+##### Multiple apps
 
 Common approach when working with modern frameworks/libraries.
 
@@ -359,7 +378,7 @@ Common approach when working with modern frameworks/libraries.
 * [Building and serving Angular apps](https://angular.io/guide/build)
 * [Vue.js: Modes and Environment Variables](https://cli.vuejs.org/guide/mode-and-env.html#environment-variables)
 
-#### Single app
+##### Single app
 
 Simple approach, where handling of license key is done inside the web app.
 
@@ -380,23 +399,31 @@ if ( window.location.hostname === "example.com" ) // Place your production domai
 ...
 ```
 
-# <a name="availableRecognizers"></a> The `Recognizer` concept, `RecognizerRunner` and `VideoRecognizer`
+## <a name="availableRecognizers"></a> The `Recognizer` concept, `RecognizerRunner` and `VideoRecognizer`
 
-This section will first describe [what is a `Recognizer`](#recognizerConcept) and how it should be used to perform recognition of the images, videos and camera stream. Next, we will describe what is a [`RecognizerRunner`](#recognizerRunner) and how it can be used to tweak the recognition procedure. Finally, a [`VideoRecognizer`](#videoRecognizer) will be described and how it builds on top of `RecognizerRunner` in order to provide support for recognizing a video or a camera stream.
+This section will first describe [what a `Recognizer`](#recognizerConcept) is and how it should be used to perform recognition of images, videos and camera stream. We'll also describe what [`RecognizerRunner`](#recognizerRunner) is and how it can be used to tweak the recognition procedure. Finally, we'll describe what [`VideoRecognizer`](#videoRecognizer) is and explain how it builds on top of `RecognizerRunner` in order to provide support for recognizing a video or a camera stream.
 
-## <a name="recognizerConcept"></a> The `Recognizer` concept
+### <a name="recognizerConcept"></a> The `Recognizer` concept
 
-The `Recognizer` is the basic unit of processing within the _BlinkID_ SDK. Its main purpose is to process the image and extract meaningful information from it. As you will see [later](#recognizerList), the _BlinkID_ SDK has lots of different `Recognizer` objects that have various purposes.
+The `Recognizer` is the basic unit tasked with reading identity documents within the BlinkID SDK. Its main purpose is to process the image and extract meaningful information from it. As you will see later, BlinkID SDK has lots of different `Recognizer` objects you can set up to recognize various documents.
 
-The `Recognizer` is the object on the WebAssembly heap, which means that it will not be automatically cleaned up by the garbage collector once it's not required anymore. Once you are done with using it, you **must** call the `delete` method on it to release the memory on the WebAssembly heap. Failing to do so will result in memory leak on the WebAssembly heap which may result with crash of the browser tab running your web app.
+The `Recognizer` is the object on the WebAssembly heap, which means that it will not be automatically cleaned up by the garbage collector once it's not required anymore. Once you are done using it, you must call the `delete` method on it to release the memory on the WebAssembly heap. Failing to do so will result in memory leak on the WebAssembly heap which may result in a crash of the browser tab running your web app.
 
 Each `Recognizer` has a `Result` object, which contains the data that was extracted from the image. The `Result` for each specific `Recognizer` can be obtained by calling its `getResult` method, which will return a `Result` object placed on the JS heap, i.e. managed by the garbage collector. Therefore, you don't need to call any delete-like methods on the `Result` object.
 
 Every `Recognizer` is a stateful object that can be in two possible states: _idle state_ and _working state_.
 
-While in _idle state_, you are allowed to call method `updateSettings` which will update its properties according to given settings object. At any time, you can call its `currentSettings` method to obtain its currently applied settings object.
+While in _idle state_, you are allowed to call method `updateSettings` which will update its properties according to the given settings object. At any time, you can call its `currentSettings` method to obtain its currently applied settings object.
 
-After you create a `RecognizerRunner` with array containing your recognizer, the state of the `Recognizer` will change to _working state_, in which `Recognizer` object will be used for processing. While being in _working state_, it is not possible to call method `updateSettings` (calling it will crash your web app). If you need to change configuration of your recognizer while its being used, you need to call its `currentSettings` method to obtain its current configuration, update it as you need it, create a new `Recognizer` of the same type, call `updateSettings` on it with your modified configuration and finally replace the original `Recognizer` within the `RecognizerRunner` by calling its `reconfigureRecognizers` method.
+After you create a `RecognizerRunner` with an array containing your recognizer, the state of the `Recognizer` will change to _working state_, in which `Recognizer` object will be used for processing. While being in _working state_, it is not possible to call method `updateSettings` (calling it will crash your web app).
+
+If you need to change configuration of your recognizer while it's being used, you need to:
+
+1. Call its `currentSettings` method to obtain its current configuration
+2. Update it as you need it
+3. Create a new `Recogizer` of the same type
+4. Call `updateSettings` on it with your modified configuration
+5. Replace the original `Recognizer` within the `RecognizerRunner` by calling its `reconfigureRecognizers` method
 
 When written as a pseudocode, this would look like:
 
@@ -418,27 +445,29 @@ await recognizerRunner.reconfigureRecognizers( [ newRecognizer ], true ); // use
 await myRecognizerInUse.delete();
 ```
 
-While `Recognizer` object works, it changes its internal state and its result. The `Recognizer` object's `Result` always starts in `Empty` state. When corresponding `Recognizer` object performs the recognition of given image, its `Result` can either stay in `Empty` state (in case `Recognizer` failed to perform recognition), move to `Uncertain` state (in case `Recognizer` performed the recognition, but not all mandatory information was extracted) or move to `Valid` state (in case `Recognizer` performed recognition and all mandatory information was successfully extracted from the image).
+While `Recognizer` object works, it changes its internal state and its result. The `Recognizer` object's `Result` always starts in `Empty` state. When corresponding `Recognizer` object performs the recognition of a given image, its `Result` can either stay in `Empty` state (in case `Recognizer` failed to perform recognition), move to `Uncertain` state (in case `Recognizer` performed the recognition, but not all mandatory information was extracted) or move to `Valid` state (in case `Recognizer` performed recognition and all mandatory information was successfully extracted from the image).
 
-## <a name="recognizerRunner"></a> `RecognizerRunner`
+### <a name="recognizerRunner"></a> `RecognizerRunner`
 
 The `RecognizerRunner` is the object that manages the chain of individual `Recognizer` objects within the recognition process.
 
-It must be created by `createRecognizerRunner` method of the `WasmModuleProxy` interface, which is a member of `WasmSDK` interface which is resolved in a promise returned by the `loadWasmModule` function you've seen [above](#firstScan). The function requires a two parameters: an array of `Recognizer` objects that will be used for processing and a `boolean` indicating whether multiple `Recognizer` objects are allowed to have their `Results` enter the `Valid` state.
+It must be created by `createRecognizerRunner` method of the `WasmModuleProxy` interface, which is a member of `WasmSDK` interface which is resolved in a promise returned by the `loadWasmModule` function you've seen [above](#firstScan). The function requires two parameters: an array of `Recognizer` objects that will be used for processing and a `boolean` indicating whether multiple `Recognizer` objects are allowed to have their `Results` enter the `Valid` state.
 
-To explain further the `boolean` parameter, we first need to understand how `RecognizerRunner` performs image processing.
+To explain the `boolean` parameter further, we first need to understand how `RecognizerRunner` performs image processing.
 
-When the `processImage` method is called, it processes the image with the first `Recognizer` in chain. If the `Recognizer's` `Result` object changes its state to `Valid`, then if the above `boolean` parameter is `false`, the recognition chain will be broken and promise returned by the method will be immediately resolved. If the above parameter is `true`, then the image will also be processed with other `Recognizer` objects in chain, regardless of the state of their `Result` objects. If, after processing the image with the first `Recognizer` in chain, its `Result` object's state is not changed to `Valid`, the `RecognizerRunner` will use the next `Recognizer` object in chain for processing the image and so on - until the end of the chain (if no results become valid or always if above parameter is `true`) or until it finds the recognizer that has successfully processed the image and changed its `Result's` state to `Valid` (if above parameter is `false`).
+When the `processImage` method is called, it processes the image with the first `Recognizer` in the chain. If `Recognizer's` `Result` object changes its state to `Valid`, and if the above `boolean` parameter is `false`, the recognition chain will be stopped and `Promise` returned by the method will be immediately resolved. If the above parameter is `true`, then the image will also be processed with other `Recognizer` objects in chain, regardless of the state of their `Result` objects.
 
-You cannot change the order of the `Recognizer` objects within the chain - no matter the order in which you give `Recognizer` objects to `RecognizerRunner` (either to its creation function `createRecognizerRunner` or to its `reconfigureRecognizers` method), they are internally ordered in a way that provides best possible performance and accuracy.
+That means if after processing the image with the first `Recognizer` in the chain, its `Result` object's state is not changed to `Valid`, the `RecognizerRunner` will use the next `Recognizer` object in chain for processing the image and so on - until the end of the chain (if no results become valid or always if above parameter is `true`) or until it finds the recognizer that has successfully processed the image and changed its `Result's` state to `Valid` (if above parameter is `false`).
 
-Also, in order for _BlinkID_ SDK to be able to order `Recognizer` objects in recognition chain in the best way possible, it is not allowed to have multiple instances of `Recognizer` objects of the same type within the chain. Attempting to do so will crash your application.
+You cannot change the order of the `Recognizer` objects within the chain - regardless of the order in which you give `Recognizer` objects to `RecognizerRunner` (either to its creation function `createRecognizerRunner` or to its `reconfigureRecognizers` method), they are internally ordered in a way that ensures the best performance and accuracy possible.
 
-## <a name="videoRecognizer"></a> Performing recognition of video streams using `VideoRecognizer`
+Also, in order for BlinkID SDK to be able to sort `Recognizer` objects in the recognition chain the best way, it is not allowed to have multiple instances of `Recognizer` objects of the same type within the chain. Attempting to do so will crash your application.
+
+### <a name="videoRecognizer"></a> Performing recognition of video streams using `VideoRecognizer`
 
 Using `RecognizerRunner` directly could be difficult in cases when you want to perform recognition of the video or the live camera stream. Additionally, handling camera management from the web browser can be [sometimes challenging](https://stackoverflow.com/questions/59636464/how-to-select-proper-backfacing-camera-in-javascript). In order to make this much easier, we provided a `VideoRecognizer` class.
 
-To perform live camera recognition using the `VideoRecognizer`, you will need an already set up `RecognizerRunner` object and a reference to `HTMLVideoElement` to which camera stream will be attached.
+To perform live camera recognition using the `VideoRecognizer`, you will need an already configured `RecognizerRunner` object and a reference to `HTMLVideoElement` to which camera stream will be attached.
 
 To perform the recognition, you should simply write:
 
@@ -446,7 +475,7 @@ To perform the recognition, you should simply write:
 const cameraFeed = <HTMLVideoElement> document.getElementById( "cameraFeed" );
 try
 {
-    const videoRecognizer = await MicroblinkSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
+    const videoRecognizer = await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
         cameraFeed,
         recognizerRunner
     );
@@ -460,12 +489,12 @@ catch ( error )
 
 The `recognize` method of the `VideoRecognizer` will start the video capture and recognition loop from the camera and will return a `Promise` that will be resolved when either `processImage` of the given `RecognizerRunner` returns `Valid` for some frame or the timeout given to `recognize` method is reached (if no timeout is given, a default one is used).
 
-### Recognizing a video file
+#### Recognizing a video file
 
-If, instead of performing recognition of live video stream, you want to perform recognition of pre-recorded video file, you should simply construct `VideoRecognizer` using a different function, as shown below:
+If, instead of performing recognition of live video stream, you want to perform recognition of a pre-recorded video, you should simply construct `VideoRecognizer` using a different function, as shown below:
 
 ```typescript
-const videoRecognizer = await MicroblinkSDK.createVideoRecognizerFromVideoPath(
+const videoRecognizer = await BlinkIDSDK.createVideoRecognizerFromVideoPath(
     videoPath,
     htmlVideoElement,
     recognizerRunner
@@ -473,14 +502,16 @@ const videoRecognizer = await MicroblinkSDK.createVideoRecognizerFromVideoPath(
 const processResult = await videoRecognizer.recognize();
 ```
 
-## <a name="customUXWithVideoRecognizer"></a> Custom UX with `VideoRecognizer`
+### <a name="customUXWithVideoRecognizer"></a> Custom UX with `VideoRecognizer`
 
-The procedure for using `VideoRecognizer` described [above](#videoRecognizer) is quite simple, but has some limits. For example, you can only perform one shot scan with it. As soon as the promise returned by `recognize` method resolves, the camera feed is paused and you need to start new recognition. However, if you need to perform multiple recognitions in single camera session, without pausing the camera preview, you can use the `startRecognition` method, as described in the example below;
+The procedure for using `VideoRecognizer` described [above](#videoRecognizer) is quite simple, but has some limits. For example, you can only perform one shot scan with it. As soon as the promise returned by `recognize` method resolves, the camera feed is paused and you need to start new recognition.
+
+However, if you need to perform multiple recognitions in single camera session, without pausing the camera preview, you can use the `startRecognition` method, as described in the example below:
 
 ```typescript
 videoRecognizer.startRecognition
 (
-    ( recognitionState: MicroblinkSDK.RecognizerResultState ) =>
+    ( recognitionState: BlinkIDSDK.RecognizerResultState ) =>
     {
         // Pause recognition before performing any async operation - this will make sure that
         // recognition will not continue while returning the control flow back from this function.
@@ -507,36 +538,38 @@ videoRecognizer.startRecognition
 );
 ```
 
-# <a name="metadataCallbacks"></a> Handling processing events with `MetadataCallbacks`
+## <a name="metadataCallbacks"></a> Handling processing events with `MetadataCallbacks`
 
-Processing events, also known as _Metadata callbacks_ are purely intended for giving processing feedback on UI or to capture some debug information during development of your web app using _BlinkID_ SDK.
+Processing events, also known as _Metadata callbacks_ are purely intended to provide users with on-screen scanning guidance or to capture some debug information during development of your web app using BlinkID SDK.
 
-Callbacks for all events are bundled into the [MetadataCallbacks](src/MicroblinkSDK/MetadataCallbacks.ts) object. We suggest that you check for more information about available callbacks and events to which you can handle in the [source code of the `MetadataCallbacks` interface](src/MicroblinkSDK/MetadataCallbacks.ts).
+Callbacks for all events are bundled into the [MetadataCallbacks](src/MicroblinkSDK/MetadataCallbacks.ts) object. We suggest that you have a look at the available callbacks and events which you can handle in the [source code of the `MetadataCallbacks` interface](src/MicroblinkSDK/MetadataCallbacks.ts).
 
-You can associate your implementation of `MetadataCallbacks` interface with `RecognizerRunner` either during creation or by invoking its method `setMetadataCallbacks`. Please note that both those methods need to pass information about available callbacks to the native code and for efficiency reasons this is done at the time `setMetadataCallbacks` method is called and **not every time** when change occurs within the `MetadataCallbacks` object. This means that if you, for example, set `onQuadDetection` to `MetadataCallbacks` after you already called `setMetadataCallbacks` method, the `onQuadDetection` will not be registered with the native code and therefore it will not be called.
+You can link the `MetadataCallbacks` interface with `RecognizerRunner` either during creation or by invoking its method `setMetadataCallbacks`. Please note that both those methods need to pass information about available callbacks to the native code. For efficiency reasons this happens at the time `setMetadataCallbacks` is called, **not every time** a change occurs within the `MetadataCallbacks` object.
 
-Similarly, if you, for example, remove the `onQuadDetection` from `MetadataCallbacks` object after you already called `setMetadataCallbacks` method, your app will crash in attempt to invoke non-existing function when our processing code attempts to invoke it. We **deliberately** do not perform null check here because of two reasons:
+This means that if you, for example, set `onQuadDetection` to `MetadataCallbacks` after you already called `setMetadataCallbacks` method, the `onQuadDetection` will not be registered with the native code and therefore it will not be called.
+
+Similarly, if you remove the `onQuadDetection` from `MetadataCallbacks` object after you already called `setMetadataCallbacks` method, your app will crash in attempt to invoke a non-existing function when our processing code attempts to invoke it. We **deliberately** do not perform null check here because of two reasons:
 
 - It is inefficient
 - Having no callback, while still being registered to native code is illegal state of your program and it should therefore crash
 
-**Remember**, each time you make some changes to `MetadataCallbacks` object, you need to apply those changes to to your `RecognizerRunner` by calling its `setMetadataCallbacks` method.
+**Remember** that whenever you make some changes to the `MetadataCallbacks` object, you need to apply those changes to your `RecognizerRunner` by calling its `setMetadataCallbacks` method.
 
-# <a name="recognizerList"></a> List of available recognizers
+## <a name="recognizerList"></a> List of available recognizers
 
-This section will give a list of all `Recognizer` objects that are available within _BlinkID_ SDK, their purpose and recommendations how they should be used to get best performance and user experience.
-## <a name="successFrameGrabber"></a> Success Frame Grabber Recognizer
+This section will give a list of all `Recognizer` objects that are available within BlinkID SDK, their purpose and recommendations on how they should be used to achieve  best performance and user experience.
+### <a name="successFrameGrabber"></a> Success Frame Grabber Recognizer
 
 The [`SuccessFrameGrabberRecognizer`](src/Recognizers/SuccessFrameGrabberRecognizer.ts) is a special `Recognizer` that wraps some other `Recognizer` and impersonates it while processing the image. However, when the `Recognizer` being impersonated changes its `Result` into `Valid` state, the `SuccessFrameGrabberRecognizer` captures the image and saves it into its own `Result` object.
 
 Since `SuccessFrameGrabberRecognizer` impersonates its slave `Recognizer` object, it is not possible to have both concrete `Recognizer` object and `SuccessFrameGrabberRecognizer` that wraps it in the same `RecognizerRunner` at the same time. Doing so will have the same effect as having multiple instances of the same `Recognizer` in the same `RecognizerRunner` - it will crash your application. For more information, see [paragraph about `RecognizerRunner`](#recognizerRunner).
 
 This recognizer is best for use cases when you need to capture the exact image that was being processed by some other `Recognizer` object at the time its `Result` became `Valid`. When that happens, `SuccessFrameGrabber's` `Result` will also become `Valid` and will contain described image. That image will be available in its `successFrame` property.
-## <a name="idBarcodeRecognizer"></a> ID barcode recognizer
+### <a name="idBarcodeRecognizer"></a> ID barcode recognizer
 
-The [`IdBarcodeRecognizer`](src/Recognizers/BlinkID/IDBarcode/IdBarcodeRecognizer.ts) is recognizer specialized for scanning barcodes from various ID cards.
+The [`IdBarcodeRecognizer`](src/Recognizers/BlinkID/IDBarcode/IdBarcodeRecognizer.ts) is a recognizer specialized for scanning barcodes from various ID cards.
 
-## <a name="blinkidRecognizer"></a> BlinkID recognizer
+### <a name="blinkidRecognizer"></a> BlinkID recognizer
 
 The [`BlinkIdRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts) scans and extracts data from the single side of the supported document.
 
@@ -544,7 +577,7 @@ You can find the list of the currently supported documents [here](docs/BlinkIDRe
 
 We will continue expanding this recognizer by adding support for new document types in the future. Star this repo to stay updated.
 
-## <a name="blinkidCombinedRecognizer"></a> BlinkID combined recognizer
+### <a name="blinkidCombinedRecognizer"></a> BlinkID combined recognizer
 
 Use [`BlinkIdCombinedRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdCombinedRecognizer.ts) for scanning both sides of the supported document. First, it scans and extracts data from the front, then scans and extracts data from the back, and finally, combines results from both sides.
 
@@ -553,218 +586,61 @@ The [`BlinkIdCombinedRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdCombine
 You can find the list of the currently supported documents [here](docs/BlinkIDRecognizer.md). For detailed information about which fields can be extracted from each document, [check this link](docs/BlinkIDDocumentFields.md).
 
 We will continue expanding this recognizer by adding support for new document types in the future. Star this repo to stay updated.
-# <a name="uiComponent"></a> UI component
+## <a name="troubleshoot"></a> Troubleshooting
 
-_BlinkID_ In-browser UI component acts as an UI layer built on top of core SDK. UI component is customizable HTML element which provides UI for scanning of various identity documents from images and from camera feed.
+### <a name="integrationProblems"></a> Integration problems
 
-One of the main goals of UI component is to simplify integration of _BlinkID_ in web apps for various use cases.
+In case you're having issues integrating our SDK, the first thing you should do is revisit our [integration instructions](#firstScan) and make sure to closely follow each step.
 
-## <a name="ui-installation"></a> Installation
+If you have followed the instructions to the letter and you still have problems, please contact us at [help.microblink.com](https://help.microblink.com).
 
-To use the UI component, JS file with custom element must be loaded and WASM engine must be available.
+When contacting us, please make sure you include the following information:
 
-### Installation via CDN
+* Log from the web console.
+* High resolution scan/photo of the document that you are trying to scan.
+* Information about the device and browser that you are using — we need the exact version of the browser and operating system it runs on. Also, if it runs on a mobile device, we also need the model of the device in question (camera management is specific to browser, OS and device).
+* Please stress out that you are reporting a problem related to the WebAssembly version of the BlinkID SDK.
 
-```html
-<!-- Load custom element via `<script>` tag with fallback for older browsers -->
-<script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-<script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk/ui/dist/blinkid-in-browser.js"></script>
-
-<!-- Custom element is now available and location of WASM engine must be provided -->
-<!-- IMPORTANT: location of WASM engine must be an absolute path -->
-<blinkid-in-browser license-key="..." engine-location="https://unpkg.com/@microblink/blinkid-in-browser-sdk/resources/"></blinkid-in-browser>
-```
-
-### Installation via NPM
-
-```sh
-# Install latest version of UI component via NPM or Yarn
-npm install @microblink/blinkid-in-browser-sdk # OR yarn add @microblink/blinkid-in-browser-sdk
-
-# Copy JS file to folder where other JS assets are located
-cp -r node_modules/@microblink/blinkid-in-browser-sdk/ui/dist/* src/public/js/
-
-# Copy WASM resources from SDK to folder where other static assets are located
-cp -r node_modules/@microblink/blinkid-in-browser-sdk/resources/* src/public/assets/
-```
-
-```html
-<!-- Load custom element via `<script>` tag with fallback for older browsers -->
-<script type="module" src="public/js/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-<script nomodule src="public/js/blinkid-in-browser.js"></script>
-
-<!-- Custom element is now available and location of WASM engine must be provided -->
-<!-- IMPORTANT: location of WASM engine must be an absolute path
-<blinkid-in-browser license-key="..." engine-location="http://localhost/public/assets/"></blinkid-in-browser>
-```
-
-### WASM resources
-
-After adding the _BlinkID_ UI component to your project, make sure to include all files from _BlinkID_ SDK package and its `resources` folder in your distribution. Those files contain compiled WebAssembly module and support JS code.
-
-Do not add those files to the main app bundle, but rather place them on a publicly available location so SDK can load them at the appropriate time. For example, place the resources in `my-angular-app/src/assets/` folder if using `ng new`, or place the resources in `my-react-app/public/` folder if using `create-react-app`.
-
-## <a name="ui-usage"></a> Usage
-
-_BlinkID_ UI component acts as any other HTML element. It has custom attributes, properties and events.
-
-Required parameters are license key, engine location and list of active recognizers.
-
-### Minimal example
-
-```html
-<blinkid-in-browser
-    engine-location="http://localhost/resources"
-    license-key="place-your-license-key-here"
-    recoginzers="BlinkIdRecognizer"
-></blinkid-in-browser>
-
-<script>
-    // Register listener for successful scan event to obtain results
-    const blinkid = document.querySelector('blinkid-in-browser');
-
-    blinkid.addEventListener('scanSuccess', ev => {
-        // Since UI component uses custom events, data is placed in `detail` property
-        console.log('Results', ev.detail);
-    });
-</script>
-```
-
-### Advanced example
-
-```html
-<!-- UI component can be customized with JS attributes or HTML properties -->
-<blinkid-in-browser></blinkid-in-browser>
-
-<script>
-    const blinkid = document.querySelector('blinkid-in-browser');
-
-    /**
-     * Mandatory properties
-     */
-
-    // Absolute path to location of WASM resource files
-    blinkid.engineLocation = 'http://localhost/resources';
-
-    // License key
-    blinkid.licenseKey = 'place-your-license-key-here';
-
-    // Recognizers - logic which should be used to extract data
-    //             - see section about recognizer concept for more information
-    blinkid.recognizers = ['BlinkIdRecognizer'];
-
-    /**
-     * Optional properties
-     *
-     * See ui/docs/components/blinkid-in-browser/readme.md for more information.
-     */
-    blinkid.allowHelloMessage     = true;
-    blinkid.recognizerOptions     = undefined;
-    blinkid.includeSuccessFrame   = false;
-    blinkid.enableDrag            = true;
-    blinkid.hideFeedback          = false;
-    blinkid.hideLoadingAndErrorUi = false;
-    blinkid.scanFromCamera        = true;
-    blinkid.scanFromImage         = true;
-    blinkid.translations          = undefined;
-    blinkid.iconCamera            = undefined;
-    blinkid.iconGallery           = undefined;
-    blinkid.iconInvalidFormat     = undefined;
-    blinkid.iconSpinner           = undefined;
-
-    /**
-     * Events
-     */
-
-    // Event emitted when UI component cannot initialize
-    blinkid.addEventListener('fatalError', ev => {
-        console.log('fatalError', ev.detail);
-    });
-
-    // Event emitted when UI component is ready to use
-    blinkid.addEventListener('ready', ev => {
-        console.log('ready', ev.detail);
-    });
-
-    // Event emitted in case of error during scan action
-    blinkid.addEventListener('scanError', ev => {
-        console.log('scanError', ev.detail);
-    });
-
-    // Event emitted when scan is successful
-    blinkid.addEventListener('scanSuccess', ev => {
-        console.log('scanSuccess', ev.detail);
-    });
-
-    // Event emitted when UI component wants to display a feedback message to the user
-    blinkid.addEventListener('feedback', ev => {
-        console.log('feedback', ev.detail);
-    });
-</script>
-
-<!-- UI customization -->
-<style>
-    /**
-     * UI component relies on CSS variables which can be used to override default styles.
-     *
-     * All CSS variables are defined in `ui/src/components/shared/styles/_globals.scss` file.
-     */
-    blinkid-in-browser {
-        --mb-font-family:           inherit;
-        --mb-component-background:  #FFF;
-        --mb-component-font-color:  #000;
-        --mb-component-font-size:   14px;
-    }
-</style>
-```
-
-### Examples and API documentation
-
-Demo app with multiple UI components alongside with source code can be found in the [ui/demo.html](ui/demo.html) file.
-
-Example apps are located in the [examples](examples) directory, where minimal JavaScript example is located in the [examples/ui](examples/ui) directory, while minimal TypeScript example is located in the [examples/ui-ts](examples/ui-ts) directory.
-
-Complete API documentation of UI components is located in the [docs directory](ui/docs).
-# <a name="troubleshoot"></a> Troubleshooting
-
-## <a name="integrationProblems"></a> Integration problems
-
-In case of problems with the integration of the SDK, first make sure that you have tried integrating the SDK exactly as described [in integration instructions](#firstScan).
-
-If you have followed the instructions to the letter and you still have the problems, please contact us at [help.microblink.com](https://help.microblink.com)
-
-## <a name="sdkProblems"></a> SDK problems
+### <a name="sdkProblems"></a> SDK problems
 
 In case of problems with using the SDK, you should do as follows:
 
-### <a name="licensingProblems"></a> Licensing problems
+#### <a name="licensingProblems"></a> Licensing problems
 
-If you are getting "invalid license key" error or having other license-related problems (e.g. some feature is not enabled that should be), first check the browser console. All license-related problems are logged to web console so it is easy to determine what went wrong.
+If you are getting an "invalid license key" error or having other license-related problems (e.g. some feature is not enabled that should be), first check the browser console. All license-related problems are logged to the web console so that it's easier to determine what went wrong.
 
-When you have to determine what is the license-related problem or you simply do not understand the log, you should contact us [help.microblink.com](http://help.microblink.com). When contacting us, please make sure you provide following information:
+When you can't determine the license-related problem or you simply do not understand the log information, you should contact us at [help.microblink.com](http://help.microblink.com). When contacting us, please make sure you provide following information:
 
 * Exact fully qualified domain name of your app, i.e. where the app is hosted.
 * License that is causing problems.
-* Please stress out that you are reporting problem related to WebAssembly version of the _BlinkID_ SDK.
-* If unsure about the problem, you should also provide excerpt from web console containing the license error.
+* Please stress out that you are reporting a problem related to the WebAssembly version of the BlinkID SDK.
+* If unsure about the problem, you should also provide an excerpt from the web console containing the license error.
 
-### <a name="otherProblems"></a> Other problems
+#### <a name="otherProblems"></a> Other problems
 
-If you are having problems with scanning certain items, undesired behaviour on specific device(s), crashes inside _BlinkID_ or anything unmentioned, please do as follows:
+If you are having problems with scanning certain items, undesired behaviour on specific device(s), crashes inside BlinkID SDK or anything unmentioned, please contact our support with the same information as listed at the start of this section.
+## <a name="faq"></a> FAQ and known issues
 
-* Contact us at [help.microblink.com](http://help.microblink.com) describing your problem and provide following information:
-	* Log from the web console.
-	* High resolution scan/photo of the item that you are trying to scan.
-	* Information about device and browser that you are using - we need exact version of the browser and operating system it runs on. Also, if it runs on mobile device, we also need the model of the device in question (camera management is specific to both browser, OS and device).
-	* Please stress out that you are reporting problem related to WebAssembly version of the _BlinkID_ SDK.
-# <a name="faq"></a> FAQ and known issues
+* **After switching from trial to production license I get error `This entity is not allowed by currently active license!` when I create a specific `Recognizer` object.**
 
-#### <a name="featureNotSupportedByLicenseKey"></a> After switching from trial to production license I get error `This entity is not allowed by currently active license!` when I create a specific `Recognizer` object.
+Each license key contains information about which features are allowed to use and which are not. This error indicates that your production license does not allow the use of a specific `Recognizer` object. You should contact [support](http://help.microblink.com) to check if the provided license is OK and that it really contains the features you've requested.
 
-Each license key contains information about which features are allowed to use and which are not. This error indicates that your production license does not allow using of specific `Recognizer` object. You should contact [support](http://help.microblink.com) to check if provided license is OK and that it really contains all features that you have purchased.
+* **Document is scanned successfully when using camera feed, but fails when a still image is being recognized with `processImage` method.**
 
-# <a name="info"></a> Additional info
+The reason for this is the way the SDK operates. When scanning from an image file, all data must be extracted from a single frame. This  is not always possible due to limited computing power. On the other hand, when an image is scanned with the camera, multiple frames are processed, so the relevant data can be extracted in chunks.
 
-Complete source code of the TypeScript wrapper can be found in [here](src).
+**This problem is going to be fixed in future versions.** Keep an eye on this repository to get notified when new versions are released, and check [CHANGELOG.md](CHANGELOG.md) file to see a list of improvements.
+
+* **Why am I getting No internet connection error if I'm on a private network?**
+
+Versions BlinkID 5.8.0 and above require an internet connection to work under our new License Management Program.
+
+This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of identity documents still happens offline, in the browser itself. 
+
+Once the validation is complete, you can continue using the SDK in an offline mode (or over a private network) until the next check.
+
+We've added error callback to Microblink SDK to inform you about the status of your license key.## <a name="info"></a> Additional info
+
+Complete source code of the TypeScript wrapper can be found [here](src).
 
 For any other questions, feel free to contact us at [help.microblink.com](http://help.microblink.com).

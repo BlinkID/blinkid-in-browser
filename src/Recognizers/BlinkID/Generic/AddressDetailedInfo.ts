@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * Detailed information about the address.
  */
 export interface AddressDetailedInfo

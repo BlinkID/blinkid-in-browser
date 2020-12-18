@@ -19,5 +19,11 @@
   "include": [
     "./src/**/*",
     "./types/jsx.d.ts"
+  ],
+  "exclude": [
+    "./src/components/shared/**/test",
+    "./src/components/**/test",
+    "./src/**/test",
+    "./src/test"
   ]
 }

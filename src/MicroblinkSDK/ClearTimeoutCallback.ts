@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * @hidden
  * Private interface for letting RecognizerRunner inform VideoRecognizer when it
  * needs to clear timeout. This is usually required when combined recognizer has

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { AddressDetailedInfo } from "./AddressDetailedInfo";
 import { BarcodeData } from "../../BlinkBarcode/BarcodeData";
 import { DriverLicenseDetailedInfo } from "./DriverLicenseDetailedInfo";

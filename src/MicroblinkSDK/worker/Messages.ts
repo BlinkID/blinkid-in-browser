@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { CapturedFrame } from "../FrameCapture";
 import { WasmSDKLoadSettings } from "../WasmLoadSettings";
 import { LicenseErrorResponse } from "../License";

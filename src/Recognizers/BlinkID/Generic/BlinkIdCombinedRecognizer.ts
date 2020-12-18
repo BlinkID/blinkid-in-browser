@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { BlinkIdRecognizerSettings, BaseBlinkIdRecognizerResult } from "./BlinkIdRecognizer";
 import { CombinedRecognizerResult } from "../CombinedRecognizer";
 import { ImageAnalysisResult } from "./ImageAnalysisResult";

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 export const defaultTranslations: { [key: string]: string|Array<string> } = {
   'action-alt-camera': 'Device camera',
   'action-alt-gallery': 'From gallery',

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { DriverLicenseDetailedInfo } from "./DriverLicenseDetailedInfo";
 import { MBDate } from "../../../MicroblinkSDK/DataStructures";
 
@@ -57,6 +61,8 @@ export interface VIZResult
     readonly personalIdNumber: string;
     /** The additional number of the document. */
     readonly documentAdditionalNumber: string;
+    /** The one more additional number of the document. */
+    readonly documentOptionalAdditionalNumber: string;
     /** The additional personal identification number. */
     readonly additionalPersonalIdNumber: string;
     /** The issuing authority of the document. */

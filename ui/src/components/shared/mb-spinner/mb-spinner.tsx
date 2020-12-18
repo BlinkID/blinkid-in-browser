@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { Component, Host, h, Prop } from '@stencil/core';
 
 @Component({

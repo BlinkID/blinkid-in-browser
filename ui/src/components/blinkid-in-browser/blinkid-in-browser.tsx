@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import {
   Component,
   Element,
@@ -5,7 +9,8 @@ import {
   EventEmitter,
   Host,
   h,
-  Prop
+  Prop,
+  Method
 } from '@stencil/core';
 
 import {
@@ -222,6 +227,14 @@ export class BlinkidInBrowser implements MicroblinkUI {
   @Prop() iconSpinner: string;
 
   /**
+   * Camera device ID passed from root component.
+   *
+   * Client can choose which camera to turn on if array of cameras exists.
+   *
+   */
+  @Prop() cameraId: string | null = null;
+
+  /**
    * Event which is emitted during initialization of UI component.
    *
    * Each event contains `code` property which has deatils about fatal errror.
@@ -249,6 +262,26 @@ export class BlinkidInBrowser implements MicroblinkUI {
    */
   @Event() feedback: EventEmitter<FeedbackMessage>;
 
+  /**
+   * Control UI state of camera overlay.
+   *
+   * Possible values are 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS'.
+   */
+  @Method()
+  async setUiState(state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') {
+    this.mbComponentEl.setUiState(state);
+  }
+
+  /**
+   * Show message alongside UI component.
+   *
+   * Possible values for `state` are 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK'.
+   */
+  @Method()
+  async setUiMessage(state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK', message: string) {
+    this.feedbackEl.show({ state, message });
+  }
+
   @Element() hostEl: HTMLElement;
 
   async componentWillRender() {
@@ -268,6 +301,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
       <Host>
         <mb-container>
           <mb-component dir={ this.hostEl.getAttribute('dir') }
+                        ref={ el => this.mbComponentEl = el as HTMLMbComponentElement }
                         allowHelloMessage={ this.allowHelloMessage }
                         engineLocation={ this.engineLocation }
                         licenseKey={ this.licenseKey }
@@ -282,9 +316,10 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         iconCameraActive={ this.iconCameraActive }
                         iconGalleryDefault={ this.iconGalleryDefault }
                         iconGalleryActive={ this.iconGalleryActive }
-                        iconInvalid-format={ this.iconInvalidFormat }
+                        iconInvalidFormat={ this.iconInvalidFormat }
                         iconSpinner={ this.iconSpinner }
                         translationService={ this.translationService }
+                        cameraId={ this.cameraId }
                         onFeedback={ (ev: CustomEvent<FeedbackMessage>) => this.feedbackEl.show(ev.detail) }></mb-component>
           <mb-feedback dir={ this.hostEl.getAttribute('dir') }
                        visible={ !this.hideFeedback }
@@ -301,4 +336,5 @@ export class BlinkidInBrowser implements MicroblinkUI {
   private finalTranslations: { [key: string]: string };
 
   private feedbackEl!: HTMLMbFeedbackElement;
+  private mbComponentEl!: HTMLMbComponentElement;
 }

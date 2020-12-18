@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * Possible formats of barcodes that can be detected. This enum will be returned
  * as part of BarcodeRecognizerResult interface.
  */

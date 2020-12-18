@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import {
   Component,
   Event,
@@ -5,7 +9,8 @@ import {
   Host,
   h,
   Prop,
-  Element
+  Element,
+  Method
 } from '@stencil/core';
 
 import {
@@ -17,7 +22,6 @@ import {
   EventScanSuccess,
   FeedbackCode,
   FeedbackMessage,
-  FeedbackState,
   RecognitionEvent,
   RecognitionStatus,
   ImageRecognitionConfiguration,
@@ -100,12 +104,20 @@ export class MbComponent {
    * See description in public component.
    */
   @Prop() iconCameraDefault: string = 'data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.32151 2.98816C6.63407 2.6756 7.05799 2.5 7.50002 2.5H12.5C12.942 2.5 13.366 2.6756 13.6785 2.98816C13.9911 3.30072 14.1667 3.72464 14.1667 4.16667C14.1667 4.38768 14.2545 4.59964 14.4108 4.75592C14.567 4.9122 14.779 5 15 5H15.8334C16.4964 5 17.1323 5.26339 17.6011 5.73223C18.07 6.20107 18.3334 6.83696 18.3334 7.5V15C18.3334 15.663 18.07 16.2989 17.6011 16.7678C17.1323 17.2366 16.4964 17.5 15.8334 17.5H4.16669C3.50365 17.5 2.86776 17.2366 2.39892 16.7678C1.93008 16.2989 1.66669 15.663 1.66669 15V7.5C1.66669 6.83696 1.93008 6.20107 2.39892 5.73223C2.86776 5.26339 3.50365 5 4.16669 5H5.00002C5.22103 5 5.433 4.9122 5.58928 4.75592C5.74556 4.59964 5.83335 4.38768 5.83335 4.16667C5.83335 3.72464 6.00895 3.30072 6.32151 2.98816ZM4.16669 6.66667C3.94567 6.66667 3.73371 6.75446 3.57743 6.91074C3.42115 7.06702 3.33335 7.27899 3.33335 7.5V15C3.33335 15.221 3.42115 15.433 3.57743 15.5893C3.73371 15.7455 3.94567 15.8333 4.16669 15.8333H15.8334C16.0544 15.8333 16.2663 15.7455 16.4226 15.5893C16.5789 15.433 16.6667 15.221 16.6667 15V7.5C16.6667 7.27899 16.5789 7.06702 16.4226 6.91074C16.2663 6.75446 16.0544 6.66667 15.8334 6.66667H15C14.337 6.66667 13.7011 6.40327 13.2323 5.93443C12.7634 5.46559 12.5 4.82971 12.5 4.16667L7.50002 4.16667C7.50002 4.82971 7.23663 5.46559 6.76779 5.93443C6.29895 6.40327 5.66306 6.66667 5.00002 6.66667H4.16669Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10 9.16667C9.07955 9.16667 8.33335 9.91286 8.33335 10.8333C8.33335 11.7538 9.07955 12.5 10 12.5C10.9205 12.5 11.6667 11.7538 11.6667 10.8333C11.6667 9.91286 10.9205 9.16667 10 9.16667ZM6.66669 10.8333C6.66669 8.99238 8.15907 7.5 10 7.5C11.841 7.5 13.3334 8.99238 13.3334 10.8333C13.3334 12.6743 11.841 14.1667 10 14.1667C8.15907 14.1667 6.66669 12.6743 6.66669 10.8333Z" fill="black"/></svg>';
+
+  /**
+   * See description in public component.
+   */
   @Prop() iconCameraActive: string = 'data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.32151 2.98816C6.63407 2.6756 7.05799 2.5 7.50002 2.5H12.5C12.942 2.5 13.366 2.6756 13.6785 2.98816C13.9911 3.30072 14.1667 3.72464 14.1667 4.16667C14.1667 4.38768 14.2545 4.59964 14.4108 4.75592C14.567 4.9122 14.779 5 15 5H15.8334C16.4964 5 17.1323 5.26339 17.6011 5.73223C18.07 6.20107 18.3334 6.83696 18.3334 7.5V15C18.3334 15.663 18.07 16.2989 17.6011 16.7678C17.1323 17.2366 16.4964 17.5 15.8334 17.5H4.16669C3.50365 17.5 2.86776 17.2366 2.39892 16.7678C1.93008 16.2989 1.66669 15.663 1.66669 15V7.5C1.66669 6.83696 1.93008 6.20107 2.39892 5.73223C2.86776 5.26339 3.50365 5 4.16669 5H5.00002C5.22103 5 5.433 4.9122 5.58928 4.75592C5.74556 4.59964 5.83335 4.38768 5.83335 4.16667C5.83335 3.72464 6.00895 3.30072 6.32151 2.98816ZM4.16669 6.66667C3.94567 6.66667 3.73371 6.75446 3.57743 6.91074C3.42115 7.06702 3.33335 7.27899 3.33335 7.5V15C3.33335 15.221 3.42115 15.433 3.57743 15.5893C3.73371 15.7455 3.94567 15.8333 4.16669 15.8333H15.8334C16.0544 15.8333 16.2663 15.7455 16.4226 15.5893C16.5789 15.433 16.6667 15.221 16.6667 15V7.5C16.6667 7.27899 16.5789 7.06702 16.4226 6.91074C16.2663 6.75446 16.0544 6.66667 15.8334 6.66667H15C14.337 6.66667 13.7011 6.40327 13.2323 5.93443C12.7634 5.46559 12.5 4.82971 12.5 4.16667L7.50002 4.16667C7.50002 4.82971 7.23663 5.46559 6.76779 5.93443C6.29895 6.40327 5.66306 6.66667 5.00002 6.66667H4.16669Z" fill="%2348B2E8"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10 9.16667C9.07955 9.16667 8.33335 9.91286 8.33335 10.8333C8.33335 11.7538 9.07955 12.5 10 12.5C10.9205 12.5 11.6667 11.7538 11.6667 10.8333C11.6667 9.91286 10.9205 9.16667 10 9.16667ZM6.66669 10.8333C6.66669 8.99238 8.15907 7.5 10 7.5C11.841 7.5 13.3334 8.99238 13.3334 10.8333C13.3334 12.6743 11.841 14.1667 10 14.1667C8.15907 14.1667 6.66669 12.6743 6.66669 10.8333Z" fill="%2348B2E8"/></svg>';
 
   /**
    * See description in public component.
    */
   @Prop() iconGalleryDefault: string = 'data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.6667 6.66666C11.6667 6.20642 12.0398 5.83333 12.5 5.83333H12.5084C12.9686 5.83333 13.3417 6.20642 13.3417 6.66666C13.3417 7.1269 12.9686 7.5 12.5084 7.5H12.5C12.0398 7.5 11.6667 7.1269 11.6667 6.66666Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.83333 4.16667C4.91286 4.16667 4.16667 4.91286 4.16667 5.83333V14.1667C4.16667 15.0871 4.91286 15.8333 5.83333 15.8333H14.1667C15.0871 15.8333 15.8333 15.0871 15.8333 14.1667V5.83333C15.8333 4.91286 15.0871 4.16667 14.1667 4.16667H5.83333ZM2.5 5.83333C2.5 3.99238 3.99238 2.5 5.83333 2.5H14.1667C16.0076 2.5 17.5 3.99238 17.5 5.83333V14.1667C17.5 16.0076 16.0076 17.5 14.1667 17.5H5.83333C3.99238 17.5 2.5 16.0076 2.5 14.1667V5.83333Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.24972 9.76212L3.92259 13.0892C3.59715 13.4147 3.06951 13.4147 2.74408 13.0892C2.41864 12.7638 2.41864 12.2362 2.74408 11.9107L6.07741 8.57741L6.08885 8.56618C6.59083 8.08315 7.22016 7.7751 7.91667 7.7751C8.61317 7.7751 9.2425 8.08315 9.74448 8.56618L9.75592 8.57741L13.9226 12.7441C14.248 13.0695 14.248 13.5971 13.9226 13.9226C13.5972 14.248 13.0695 14.248 12.7441 13.9226L8.58361 9.76212C8.32758 9.51773 8.09662 9.44177 7.91667 9.44177C7.73672 9.44177 7.50575 9.51773 7.24972 9.76212Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.083 11.4288L12.2559 12.2559C11.9305 12.5814 11.4028 12.5814 11.0774 12.2559C10.752 11.9305 10.752 11.4028 11.0774 11.0774L11.9107 10.2441L11.9222 10.2329C12.4241 9.74982 13.0535 9.44177 13.75 9.44177C14.4465 9.44177 15.0758 9.74982 15.5778 10.2329L15.5892 10.2441L17.2559 11.9107C17.5813 12.2362 17.5813 12.7638 17.2559 13.0893C16.9305 13.4147 16.4028 13.4147 16.0774 13.0893L14.4169 11.4288C14.1609 11.1844 13.9299 11.1084 13.75 11.1084C13.57 11.1084 13.3391 11.1844 13.083 11.4288Z" fill="black"/></svg>';
+
+  /**
+   * See description in public component.
+   */
   @Prop() iconGalleryActive: string = 'data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.6667 6.66667C11.6667 6.20643 12.0398 5.83334 12.5 5.83334H12.5084C12.9686 5.83334 13.3417 6.20643 13.3417 6.66667C13.3417 7.12691 12.9686 7.5 12.5084 7.5H12.5C12.0398 7.5 11.6667 7.12691 11.6667 6.66667Z" fill="%2348B2E8"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.83333 4.16667C4.91286 4.16667 4.16667 4.91286 4.16667 5.83333V14.1667C4.16667 15.0871 4.91286 15.8333 5.83333 15.8333H14.1667C15.0871 15.8333 15.8333 15.0871 15.8333 14.1667V5.83333C15.8333 4.91286 15.0871 4.16667 14.1667 4.16667H5.83333ZM2.5 5.83333C2.5 3.99238 3.99238 2.5 5.83333 2.5H14.1667C16.0076 2.5 17.5 3.99238 17.5 5.83333V14.1667C17.5 16.0076 16.0076 17.5 14.1667 17.5H5.83333C3.99238 17.5 2.5 16.0076 2.5 14.1667V5.83333Z" fill="%2348B2E8"/><path fill-rule="evenodd" clip-rule="evenodd" d="M7.24972 9.76213L3.92259 13.0893C3.59715 13.4147 3.06951 13.4147 2.74408 13.0893C2.41864 12.7638 2.41864 12.2362 2.74408 11.9107L6.07741 8.57741L6.08885 8.56619C6.59083 8.08316 7.22016 7.77511 7.91667 7.77511C8.61317 7.77511 9.2425 8.08316 9.74448 8.56619L9.75592 8.57741L13.9226 12.7441C14.248 13.0695 14.248 13.5972 13.9226 13.9226C13.5972 14.248 13.0695 14.248 12.7441 13.9226L8.58361 9.76213C8.32758 9.51774 8.09662 9.44177 7.91667 9.44177C7.73672 9.44177 7.50575 9.51774 7.24972 9.76213Z" fill="%2348B2E8"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.083 11.4288L12.2559 12.2559C11.9305 12.5814 11.4028 12.5814 11.0774 12.2559C10.752 11.9305 10.752 11.4028 11.0774 11.0774L11.9107 10.2441L11.9222 10.2329C12.4241 9.74982 13.0535 9.44177 13.75 9.44177C14.4465 9.44177 15.0758 9.74982 15.5778 10.2329L15.5892 10.2441L17.2559 11.9107C17.5813 12.2362 17.5813 12.7638 17.2559 13.0893C16.9305 13.4147 16.4028 13.4147 16.0774 13.0893L14.4169 11.4288C14.1609 11.1844 13.9299 11.1084 13.75 11.1084C13.57 11.1084 13.3391 11.1844 13.083 11.4288Z" fill="%2348B2E8"/></svg>';
 
   /**
@@ -122,6 +134,11 @@ export class MbComponent {
    * Instance of TranslationService passed from root component.
    */
   @Prop() translationService: TranslationService;
+
+  /**
+   * Camera device ID passed from root component.
+   */
+  @Prop() cameraId: string | null = null;
 
   /**
    * See event 'fatalError' in public component.
@@ -152,6 +169,30 @@ export class MbComponent {
    * Host element as variable for manipulation (CSS in this case)
    */
   @Element() hostEl: HTMLElement;
+
+  /**
+   * Method is exposed outside which allow us to control UI state from parent component.
+   */
+  @Method()
+  async setUiState(state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') {
+    window.setTimeout(() => {
+      this.apiProcessStatusElement.state = state;
+      this.apiProcessStatusElement.visible = true;
+
+      if (state !== 'ERROR') {
+        this.cameraExperience.classList.add('is-muted');
+      }
+      else {
+        this.cameraExperience.classList.add('is-error');
+      }
+
+      this.cameraExperience.apiState = state;
+
+      if (state === 'SUCCESS') {
+        window.setTimeout(() => this.stopRecognition(), 400);
+      }
+    }, 400);
+  }
 
   /**
    * Lifecycle hooks
@@ -249,7 +290,6 @@ export class MbComponent {
         </mb-overlay>
         <mb-overlay
           id="overlay-gallery-experience"
-          visible={false}
           ref={el => this.overlays.processing = el as HTMLMbOverlayElement}
         >
           <mb-spinner icon={this.iconSpinner} size="large"></mb-spinner>
@@ -269,8 +309,14 @@ export class MbComponent {
               ref={el => this.cameraExperience = el as HTMLMbCameraExperienceElement}
               translationService={this.translationService}
               onClose={() => this.stopRecognition()}
+              onFlipCameraAction={() => this.flipCameraAction()}
               class="overlay-camera-element"
             ></mb-camera-experience>
+            <mb-api-process-status
+              ref={el => this.apiProcessStatusElement = el as HTMLMbApiProcessStatusElement}
+              onCloseTryAgain={() => this.closeApiProcessStatus(true)}
+              onCloseFromStart={() => this.stopRecognition()}
+            ></mb-api-process-status>
           </div>
         </mb-overlay>
         <mb-overlay
@@ -279,17 +325,35 @@ export class MbComponent {
           ref={el => this.overlays.modal = el as HTMLMbOverlayElement}
         >
           <mb-modal
-              ref={el => this.modalElement = el as HTMLMbModalElement}
-              onClose={() => this.closeModal()}
-              class="overlay-modal-element"
-            ></mb-modal>
+            ref={el => this.licenseExperienceModal = el as HTMLMbModalElement}
+            modalTitle="Error"
+          >
+            <div slot="actionButtons">
+              <button class="primary modal-action-button" onClick={() => this.showOverlay('')}>Close</button>
+            </div>
+          </mb-modal>
         </mb-overlay>
       </Host>
     );
   }
 
-  closeModal() {
-    this.showOverlay('');
+  async closeApiProcessStatus(restart: boolean = false): Promise<void> {
+    window.setTimeout(() => {
+      this.apiProcessStatusElement.visible = false;
+      this.apiProcessStatusElement.state = 'NONE';
+      this.cameraExperience.classList.remove('is-muted');
+      this.cameraExperience.classList.remove('is-error');
+    }, 600);
+
+    if (restart) {
+      await this.checkInputProperties()
+        .then(() => this.sdkService.resumeRecognition())
+        .then(() => {
+          window.setTimeout(() => this.cameraExperience.apiState = '', 400);
+          this.isBackSide = false;
+          this.cameraExperience.setState(CameraExperienceState.Default, this.isBackSide, true);
+        });
+    }
   }
 
   async componentDidRender() {
@@ -338,13 +402,13 @@ export class MbComponent {
       if (!hasVideoDevices) {
         this.feedback.emit({
           code: FeedbackCode.CameraDisabled,
-          state: FeedbackState.Info,
+          state: 'FEEDBACK_INFO',
           message: this.translationService.i('camera-disabled').toString()
         });
       }
     }
 
-    if (this.scanFromImage && this.sdkService.isScanFromImageAvailable(this.recognizers)) {
+    if (this.scanFromImage && this.sdkService.isScanFromImageAvailable(this.recognizers, this.recognizerOptions)) {
       this.scanFromImageButton.visible = true;
     }
 
@@ -383,12 +447,20 @@ export class MbComponent {
   private scanFromImageButton!: HTMLMbButtonElement;
   private scanFromImageInput!: HTMLInputElement;
   private videoElement!: HTMLVideoElement;
-  private modalElement!: HTMLMbModalElement;
+  private licenseExperienceModal!: HTMLMbModalElement;
+  private apiProcessStatusElement!: HTMLMbApiProcessStatusElement;
+  private scanReset: boolean = false;
 
   private detectionSuccessLock = false;
   private isBackSide = false;
 
   private initialBodyOverflowValue: string;
+
+  private async flipCameraAction(): Promise<void> {
+    await this.sdkService.flipCamera();
+    const cameraFlipped = await this.sdkService.isCameraFlipped();
+    this.cameraExperience.setCameraFlipState(cameraFlipped);
+  }
 
   /* Helper methods */
   private async checkInputProperties(): Promise<boolean> {
@@ -410,7 +482,7 @@ export class MbComponent {
       return false;
     }
 
-    this.cameraExperience.type = this.sdkService.getDesiredCameraExperience(this.recognizers);
+    this.cameraExperience.type = this.sdkService.getDesiredCameraExperience(this.recognizers, this.recognizerOptions);
 
     // Recognizer options
     if (this.recognizerOptions && this.recognizerOptions.length) {
@@ -441,7 +513,8 @@ export class MbComponent {
     const configuration: VideoRecognitionConfiguration = {
       recognizers: this.recognizers,
       successFrame: this.includeSuccessFrame,
-      cameraFeed: this.videoElement
+      cameraFeed: this.videoElement,
+      cameraId: this.cameraId
     };
 
     if (this.recognizerOptions && this.recognizerOptions.length) {
@@ -470,7 +543,7 @@ export class MbComponent {
             });
             this.feedback.emit({
               code: FeedbackCode.ScanUnsuccessful,
-              state: FeedbackState.Error,
+              state: 'FEEDBACK_ERROR',
               message: this.translationService.i('feedback-scan-unsuccessful').toString()
             });
           }
@@ -499,6 +572,7 @@ export class MbComponent {
           window.setTimeout(() => {
             if (this.detectionSuccessLock) {
               this.cameraExperience.setState(CameraExperienceState.Detection);
+              this.scanReset = false;
             }
           }, 100);
           break;
@@ -531,31 +605,62 @@ export class MbComponent {
           break;
 
         case RecognitionStatus.OnFirstSideResult:
-          this.cameraExperience.setState(CameraExperienceState.Flip)
+          this.cameraExperience.setState(CameraExperienceState.Flip, this.isBackSide, true)
             .then(() => {
-              this.isBackSide = true;
-              this.cameraExperience.setState(
-                CameraExperienceState.Default,
-                this.isBackSide
-              );
+              if (!this.scanReset) {
+                this.isBackSide = true;
+                this.cameraExperience.setState(
+                  CameraExperienceState.Default,
+                  this.isBackSide
+                );
+              }
             });
           break;
 
         case RecognitionStatus.ScanSuccessful:
-          this.cameraExperience.setState(CameraExperienceState.DoneAll, false, true)
-            .then(() => {
-              this.cameraExperience.classList.add('hide');
-              this.showOverlay('');
+          // Which recognizer is it? ImageCapture or some other?
+          // Image capture have the 'closeCamera' flag set to false, we do not want to close camera overlay after image acquisition process is finished
+          // Cause maybe backend service will failed and we can press retry to resume with the same video recognizer and try again
+          if (recognitionEvent.data.closeCamera) {
+            this.cameraExperience.setState(CameraExperienceState.DoneAll, false, true)
+              .then(() => {
+                this.cameraExperience.classList.add('hide');
+
+                this.showOverlay('');
+
               window.setTimeout(() => {
                 this.cameraExperience.setState(CameraExperienceState.Default);
               }, 1000);
+
+              this.scanSuccess.emit(recognitionEvent.data?.result);
+              this.feedback.emit({
+                code: FeedbackCode.ScanSuccessful,
+                state: 'FEEDBACK_OK',
+                message: ''
+              });
             });
-          this.scanSuccess.emit(recognitionEvent.data);
-          this.feedback.emit({
-            code: FeedbackCode.ScanSuccessful,
-            state: FeedbackState.Ok,
-            message: ''
-          });
+          }
+          else {
+            this.cameraExperience.classList.add('hide');
+
+            let resultIsValid = recognitionEvent.data.result.recognizer.processingStatus === 0 && recognitionEvent.data.result.recognizer.state === 2;
+
+            if (resultIsValid) {
+              this.scanSuccess.emit(recognitionEvent.data?.result);
+              this.feedback.emit({
+                code: FeedbackCode.ScanSuccessful,
+                state: 'FEEDBACK_OK',
+                message: ''
+              });
+            }
+            else if (!recognitionEvent.data.initiatedByUser) {
+              this.scanError.emit({
+                code: Code.EmptyResult,
+                fatal: true,
+                message: 'Could not extract information from video feed!'
+              });
+            }
+          }
           break;
 
         case RecognitionStatus.CameraNotAllowed:
@@ -566,7 +671,7 @@ export class MbComponent {
           });
           this.feedback.emit({
             code: FeedbackCode.CameraNotAllowed,
-            state: FeedbackState.Error,
+            state: 'FEEDBACK_ERROR',
             message: this.translationService.i('camera-not-allowed').toString()
           });
           this.showOverlay('');
@@ -580,7 +685,7 @@ export class MbComponent {
           });
           this.feedback.emit({
             code: FeedbackCode.CameraInUse,
-            state: FeedbackState.Error,
+            state: 'FEEDBACK_ERROR',
             message: this.translationService.i('camera-in-use').toString()
           });
           this.showOverlay('');
@@ -596,7 +701,7 @@ export class MbComponent {
           });
           this.feedback.emit({
             code: FeedbackCode.CameraGenericError,
-            state: FeedbackState.Error,
+            state: 'FEEDBACK_ERROR',
             message: this.translationService.i('camera-generic-error').toString()
           });
           this.showOverlay('');
@@ -610,13 +715,16 @@ export class MbComponent {
     try {
       this.cameraExperience.classList.remove('hide');
       await this.sdkService.scanFromCamera(configuration, eventHandler);
+
+      const cameraFlipped = await this.sdkService.isCameraFlipped();
+      this.cameraExperience.setCameraFlipState(cameraFlipped);
     } catch (error) {
       this.checkIfInternetIsAvailable()
         .then((isAvailable) => {
           if (isAvailable) {
             if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
               this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
-              this.showLicenseErrorModal(error);
+              this.showLicenseInfoModal(error);
             }
             else {
               this.scanError.emit({
@@ -626,7 +734,7 @@ export class MbComponent {
               });
               this.feedback.emit({
                 code: FeedbackCode.GenericScanError,
-                state: FeedbackState.Error,
+                state: 'FEEDBACK_ERROR',
                 message: this.translationService.i('feedback-error-generic').toString()
               });
 
@@ -635,7 +743,7 @@ export class MbComponent {
           }
           else {
             this.setFatalError(new EventFatalError(Code.InternetNotAvailable, this.translationService.i('check-internet-connection').toString()));
-            this.showLicenseErrorModal(this.translationService.i('check-internet-connection').toString());
+            this.showLicenseInfoModal(this.translationService.i('check-internet-connection').toString());
           }
         });
     }
@@ -669,7 +777,7 @@ export class MbComponent {
           });
           this.feedback.emit({
             code: FeedbackCode.ScanUnsuccessful,
-            state: FeedbackState.Error,
+            state: 'FEEDBACK_ERROR',
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
           this.showOverlay('');
@@ -687,7 +795,7 @@ export class MbComponent {
           });
           this.feedback.emit({
             code: FeedbackCode.ScanUnsuccessful,
-            state: FeedbackState.Error,
+            state: 'FEEDBACK_ERROR',
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
           this.showOverlay('');
@@ -701,7 +809,7 @@ export class MbComponent {
           this.scanSuccess.emit(recognitionEvent.data);
           this.feedback.emit({
             code: FeedbackCode.ScanSuccessful,
-            state: FeedbackState.Ok,
+            state: 'FEEDBACK_OK',
             message: ''
           });
           this.showOverlay('');
@@ -720,7 +828,7 @@ export class MbComponent {
           if (isAvailable) {
             if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
               this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
-              this.showLicenseErrorModal(error);
+              this.showLicenseInfoModal(error);
             }
             else {
               this.scanError.emit({
@@ -730,7 +838,7 @@ export class MbComponent {
               });
               this.feedback.emit({
                 code: FeedbackCode.GenericScanError,
-                state: FeedbackState.Error,
+                state: 'FEEDBACK_ERROR',
                 message: this.translationService.i('feedback-error-generic').toString()
               });
 
@@ -739,27 +847,22 @@ export class MbComponent {
           }
           else {
             this.setFatalError(new EventFatalError(Code.InternetNotAvailable, this.translationService.i('check-internet-connection').toString()));
-            this.showLicenseErrorModal(this.translationService.i('check-internet-connection').toString());
+            this.showLicenseInfoModal(this.translationService.i('check-internet-connection').toString());
           }
         });
     }
   }
 
-  private showLicenseErrorModal(error: any) {
-    this.modalElement.content = {
-      title: 'Error',
-      body: ''
-    }
-
+  private showLicenseInfoModal(error: any): void {
     if (typeof error === 'string') {
-      this.modalElement.content.body = error;
+      this.licenseExperienceModal.content = error;
     }
     else {
       if (error.type === 'NETWORK_ERROR') {
-        this.modalElement.content.body = this.translationService.i('network-error').toString();
+        this.licenseExperienceModal.content = this.translationService.i('network-error').toString();
       }
       else {
-        this.modalElement.content.body = this.translationService.i('scanning-not-available').toString();
+        this.licenseExperienceModal.content = this.translationService.i('scanning-not-available').toString();
       }
     }
 
@@ -906,8 +1009,17 @@ export class MbComponent {
   }
 
   private stopRecognition() {
-    this.sdkService.stopRecognition();
     this.cameraExperience.classList.add('hide');
+
+    this.sdkService.stopRecognition();
+    this.scanReset = true;
+
+    window.setTimeout(() => {
+      this.cameraExperience.setState(CameraExperienceState.Default, false, true);
+      this.cameraExperience.apiState = '';
+    }, 500);
+
     this.showOverlay('');
+    this.closeApiProcessStatus();
   }
 }

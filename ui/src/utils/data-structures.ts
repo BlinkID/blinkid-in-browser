@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { EventEmitter } from '@stencil/core';
 
 import * as BlinkIDSDK from "../../../es/blinkid-sdk";
@@ -11,7 +15,7 @@ export interface MicroblinkUI {
   recognizers:          Array<string>;
   rawRecognizerOptions: string;
   recognizerOptions:    Array<string>;
-  includeSuccessFrame:  boolean;
+  includeSuccessFrame?: boolean;
 
   // Functional properties
   enableDrag:            boolean;
@@ -35,6 +39,10 @@ export interface MicroblinkUI {
   ready:              EventEmitter<EventReady>;
   scanError:          EventEmitter<EventScanError>;
   scanSuccess:        EventEmitter<EventScanSuccess>;
+
+  // Methods
+  setUiState:         (state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') => Promise<any>;
+  setUiMessage:       (state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK', message: string) => Promise<any>;
 }
 
 export interface SdkSettings {
@@ -124,9 +132,9 @@ export enum Code {
  * Scan structures
  */
 export const AvailableRecognizers: { [key: string]: string } = {
-  IdBarcodeRecognizer:        'createIdBarcodeRecognizer',
-  BlinkIdRecognizer:          'createBlinkIdRecognizer',
-  BlinkIdCombinedRecognizer:  'createBlinkIdCombinedRecognizer'
+  IdBarcodeRecognizer:                  'createIdBarcodeRecognizer',
+  BlinkIdRecognizer:                    'createBlinkIdRecognizer',
+  BlinkIdCombinedRecognizer:            'createBlinkIdCombinedRecognizer',
 }
 
 export const AvailableRecognizerOptions: { [key: string]: Array<string> } = {
@@ -143,14 +151,15 @@ export const AvailableRecognizerOptions: { [key: string]: Array<string> } = {
     'returnSignatureImage',
     'classifierCallback',
     'allowSignature'
-  ]
+  ],
 }
 
 export interface VideoRecognitionConfiguration {
   recognizers: Array<string>,
   recognizerOptions?: Array<string>,
   successFrame: boolean,
-  cameraFeed: HTMLVideoElement
+  cameraFeed: HTMLVideoElement,
+  cameraId: string | null;
 }
 
 export interface ImageRecognitionConfiguration {
@@ -254,19 +263,8 @@ export enum FeedbackCode {
   ScanSuccessful      = 'SCAN_SUCCESSFUL'
 }
 
-export enum FeedbackState {
-  Error = 'ERROR_FEEDBACK',
-  Info  = 'INFO_FEEDBACK',
-  Ok    = 'OK'
-}
-
 export interface FeedbackMessage {
-  code: FeedbackCode;
-  state: FeedbackState;
-  message: string;
-}
-
-export interface ModalContent {
-  title: string;
-  body: string;
+  code?   : FeedbackCode;
+  state   : 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK';
+  message : string;
 }

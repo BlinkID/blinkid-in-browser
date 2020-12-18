@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * Returns safe path, i.e. URL for given path and filename (file path).
  *
  * @param path      String representing file path.

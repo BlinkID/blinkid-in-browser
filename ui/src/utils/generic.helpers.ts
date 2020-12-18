@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 export function stringToArray(inputString: string): Array<string> {
   if (!inputString || !inputString.length) {
     return [];

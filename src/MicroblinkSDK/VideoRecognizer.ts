@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import
 {
     RecognizerRunner,
@@ -85,7 +89,8 @@ export class VideoRecognizer
      * Creates a new VideoRecognizer by opening a camera stream and attaching it to given HTMLVideoElement. If camera
      * cannot be accessed, the returned promise will be rejected.
      * @param cameraFeed HTMLVideoELement to which camera stream should be attached
-     * @param recognizerRunner RecognizerRunner that should be used for video stream recognition.
+     * @param recognizerRunner RecognizerRunner that should be used for video stream recognition
+     * @param cameraId User can provide specific camera ID to be selected and used
      * @param preferredCameraType Whether back facing or front facing camera is preferred. Obeyed only if there is
      *        a choice (i.e. if device has only front-facing camera, the opened camera will be a front-facing camera,
      *        regardless of preference)
@@ -94,6 +99,7 @@ export class VideoRecognizer
     (
         cameraFeed:             HTMLVideoElement,
         recognizerRunner:       RecognizerRunner,
+        cameraId:               string | null = null,
         preferredCameraType:    PreferredCameraType = PreferredCameraType.BackFacingCamera
     ): Promise< VideoRecognizer >
     {
@@ -114,7 +120,8 @@ export class VideoRecognizer
                 {
                     try
                     {
-                        const selectedCamera = await selectCamera( preferredCameraType );
+                        const selectedCamera = await selectCamera( cameraId, preferredCameraType );
+
                         if ( selectedCamera === null )
                         {
                             reject( new VideoRecognizerError( NotSupportedReason.CameraNotFound ) );
@@ -159,15 +166,16 @@ export class VideoRecognizer
                         const stream = await navigator.mediaDevices.getUserMedia( constraints );
                         cameraFeed.controls = false;
                         cameraFeed.srcObject = stream;
+                        let cameraFlipped = false;
                         // mirror the camera view for front-facing camera
                         if ( selectedCamera.facing === PreferredCameraType.FrontFacingCamera )
                         {
                             cameraFeed.style.transform = "scaleX(-1)";
+                            cameraFlipped = true;
                         }
                         // TODO: await maybe not needed here
-                        const isFrontCamera = selectedCamera.facing === PreferredCameraType.FrontFacingCamera;
-                        await recognizerRunner.setCameraPreviewMirrored( isFrontCamera );
-                        resolve( new VideoRecognizer( cameraFeed, recognizerRunner ) );
+                        await recognizerRunner.setCameraPreviewMirrored( cameraFlipped );
+                        resolve( new VideoRecognizer( cameraFeed, recognizerRunner, cameraFlipped ) );
                     }
                     catch( error )
                     {
@@ -231,6 +239,25 @@ export class VideoRecognizer
         );
     }
 
+    async flipCamera(): Promise< void >
+    {
+        if ( this.videoFeed )
+        {
+            if ( !this.cameraFlipped )
+            {
+                this.videoFeed.style.transform = "scaleX(-1)";
+                this.cameraFlipped = true;
+            }
+            else
+            {
+                this.videoFeed.style.transform = "scaleX(1)";
+                this.cameraFlipped = false;
+            }
+
+            await this.recognizerRunner.setCameraPreviewMirrored( this.cameraFlipped );
+        }
+    }
+
     /**
      * Sets the video recognition mode to be used.
      * @param videoRecognitionMode the video recognition mode to be used.
@@ -258,7 +285,7 @@ export class VideoRecognizer
      * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether
      *.       recognition was successful or not.
      */
-    startRecognition( onScanningDone: OnScanningDone, recognitionTimeoutMs = 30000 ): void
+    startRecognition( onScanningDone: OnScanningDone, recognitionTimeoutMs = 15000 ): void
     {
         if ( this.videoFeed === null )
         {
@@ -311,7 +338,7 @@ export class VideoRecognizer
      * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether
      *        recognition was successful or not.
      */
-    async recognize( recognitionTimeoutMs = 30000 ): Promise< RecognizerResultState >
+    async recognize( recognitionTimeoutMs = 15000 ): Promise< RecognizerResultState >
     {
         return new Promise
         (
@@ -465,7 +492,7 @@ export class VideoRecognizer
 
     private recognitionPaused = false;
 
-    private recognitionTimeoutMs = 30000;
+    private recognitionTimeoutMs = 15000;
 
     private timeoutID = 0;
 
@@ -475,15 +502,19 @@ export class VideoRecognizer
 
     private allowManualVideoPlayout = false;
 
+    private cameraFlipped = false;
+
     private constructor
     (
         videoFeed: HTMLVideoElement,
         recognizerRunner: RecognizerRunner,
+        cameraFlipped = false,
         allowManualVideoPlayout = false
     )
     {
         this.videoFeed = videoFeed;
         this.recognizerRunner = recognizerRunner;
+        this.cameraFlipped = cameraFlipped;
 
         if ( allowManualVideoPlayout )
         {
@@ -531,7 +562,7 @@ export class VideoRecognizer
                 this.clearTimeout();
             }
         }
-        else if ( processResult !== RecognizerResultState.Empty )
+        else if ( processResult === RecognizerResultState.Uncertain )
         {
             if ( this.timeoutID === 0 )
             {
@@ -541,6 +572,11 @@ export class VideoRecognizer
                     this.recognitionTimeoutMs
                 );
             }
+        }
+        else if ( processResult === RecognizerResultState.StageValid )
+        {
+            // stage recognition is finished, clear timeout and resume recognition
+            this.clearTimeout();
         }
         if ( !this.recognitionPaused )
         {
@@ -627,7 +663,10 @@ class SelectedCamera
     }
 }
 
-async function selectCamera( preferredCameraType: PreferredCameraType ): Promise< SelectedCamera | null >
+async function selectCamera(
+    cameraId: string | null,
+    preferredCameraType: PreferredCameraType
+): Promise< SelectedCamera | null >
 {
     const frontCameras: SelectedCamera[] = [];
     const backCameras: SelectedCamera[] = [];
@@ -709,10 +748,21 @@ async function selectCamera( preferredCameraType: PreferredCameraType ): Promise
                     }
                 }
             );
-
             if ( !cameraResolutions.some( cameraResolution => isNaN( cameraResolution ) ) )
             {
                 selectedCameraIndex = cameraResolutions.lastIndexOf( Math.max( ...cameraResolutions ) );
+            }
+            if ( cameraId )
+            {
+                let cameraDevice = null;
+
+                cameraDevice = frontCameras.filter( device => device.deviceId === cameraId )[0];
+                if ( !cameraDevice )
+                {
+                    cameraDevice = backCameras.filter( device => device.deviceId === cameraId )[0];
+                }
+
+                return cameraDevice || null;
             }
 
             return cameraPool[ selectedCameraIndex ];

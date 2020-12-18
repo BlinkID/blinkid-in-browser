@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import * as Messages from "./Messages";
 import * as Utils from "../Utils";
 

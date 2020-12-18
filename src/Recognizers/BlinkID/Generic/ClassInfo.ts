@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
 export interface ClassInfo
 {
     readonly country: Country;
@@ -101,7 +104,21 @@ export enum Country
     SRI_LANKA = 89,
     PERU = 90,
     URUGUAY = 91,
-    COUNT = 92
+    BAHAMAS = 92,
+    BERMUDA = 93,
+    BOLIVIA = 94,
+    CHINA = 95,
+    EUROPEAN_UNION = 96,
+    HAITI = 97,
+    HONDURAS = 98,
+    ICELAND = 99,
+    JAPAN = 100,
+    LUXEMBOURG = 101,
+    MONTENEGRO = 102,
+    NICARAGUA = 103,
+    SOUTH_KOREA = 104,
+    VENEZUELA = 105,
+    COUNT = 106
 }
 
 export enum Region
@@ -179,7 +196,16 @@ export enum Region
     JALISCO = 70,
     NEWFOUNDLAND_AND_LABRADOR = 71,
     NUEVO_LEON = 72,
-    COUNT = 73
+    BAJA_CALIFORNIA = 73,
+    CHIHUAHUA = 74,
+    GUANAJUATO = 75,
+    GUERRERO = 76,
+    MEXICO = 77,
+    MICHOACAN = 78,
+    NEW_YORK_CITY = 79,
+    TAMAULIPAS = 80,
+    VERACRUZ = 81,
+    COUNT = 82
 }
 
 export enum DocumentType
@@ -211,5 +237,14 @@ export enum DocumentType
     HEALTH_INSURANCE_CARD = 24,
     PASSPORT = 25,
     S_PASS = 26,
-    COUNT = 27
+    ADDRESS_CARD = 27,
+    ALIEN_ID = 28,
+    ALIEN_PASSPORT = 29,
+    GREEN_CARD = 30,
+    MINORS_ID = 31,
+    POSTAL_ID = 32,
+    PROFESSIONAL_DL = 33,
+    TAX_ID = 34,
+    WEAPON_PERMIT = 35,
+    COUNT = 36
 }

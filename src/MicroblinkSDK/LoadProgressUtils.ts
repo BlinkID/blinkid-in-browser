@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 export function convertEmscriptenStatusToProgress( emStatus: string ): number
 {
     // roughly based on https://github.com/emscripten-core/emscripten/blob/1.39.11/src/shell.html#L1259

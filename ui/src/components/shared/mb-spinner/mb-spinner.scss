@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 @import "../styles/_globals-sass";
 
 :host {
@@ -10,7 +14,7 @@
     width: 24px;
     height: 24px;
 
-  animation: rotation 700ms linear infinite;
+    animation: rotation 700ms linear infinite;
   }
 }
 

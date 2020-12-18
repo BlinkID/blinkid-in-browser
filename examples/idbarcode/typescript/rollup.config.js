@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import copy from "rollup-plugin-copy";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "rollup-plugin-typescript2";

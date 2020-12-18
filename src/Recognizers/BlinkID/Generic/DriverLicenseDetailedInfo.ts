@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * Driver's license specific data.
  */
 export interface DriverLicenseDetailedInfo

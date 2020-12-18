@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import * as Messages from "./Messages";
 import { CapturedFrame } from "../FrameCapture";
 import { LicenseErrorResponse } from "../License";

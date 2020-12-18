@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * AnonymizationMode is used to define level of anonymization
  * performed on recognizer result.
  */

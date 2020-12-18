@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import {
   Component,
   Event,
@@ -74,7 +78,7 @@ export class MbButton {
   render() {
     return (
       <Host className={ this.getClassNames() } onClick={ (ev: UIEvent) => this.handleClick(ev) }>
-        <a href="#">
+        <a href="javascript:void(0)">
           {
             this.imageSrcDefault && this.imageAlt === 'action-alt-camera' &&
             <img src={ this.imageSrcDefault } alt={ this.translationService.i(this.imageAlt).toString() } ref={ el => this.iconElem = el as HTMLOrSVGImageElement } />

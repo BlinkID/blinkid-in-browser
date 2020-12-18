@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { defaultWasmModuleName } from "../defaultWasmModule";
 
 /**
@@ -32,10 +36,10 @@ export class WasmSDKLoadSettings
      * Absolute location of WASM and related JS/data files. Useful when resource files should be loaded over CDN, or
      * when web frameworks/libraries are used which store resources in specific locations, e.g. inside "assets" folder.
      *
-     * Important: if engine is hosted on another origin, CORS must be enabled between two hosts. That is, server where
+     * Important: if the engine is hosted on another origin, CORS must be enabled between two hosts. That is, server where
      * engine is hosted must have 'Access-Control-Allow-Origin' header for the location of the web app.
      *
-     * Important: SDK and WASM resources must be from the same version of package.
+     * Important: SDK and WASM resources must be from the same version of a package.
      *
      * Default value is empty string, i.e. "". In case of empty string, value of "window.location.origin" property is
      * going to be used.
@@ -45,7 +49,7 @@ export class WasmSDKLoadSettings
     /**
      * Optional callback function that will report the SDK loading progress.
      *
-     * This can be useful for displaying progress bar for users on slow connections.
+     * This can be useful for displaying progress bar to users with slow connections.
      *
      * Default value is null.
      */

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import * as BlinkIDSDK from "../../../es/blinkid-sdk";
 
 export function hasVideoDevices(): Promise<boolean> {

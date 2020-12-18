@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * BlinkID In-browser SDK demo app which demonstrates how to:
  *
  * - Change default SDK settings
@@ -29,11 +33,11 @@ function main()
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPg4/w35CpJlWKGUQxY30CG/uEP4nsz1dBuqw2c1uTELZTAKhCtox46r9hcAG3pPYAWMZ82Thv2O1YC4V1eKCDo6yihFAshqtNNLbJrr/IWlxR9ynBhMhNUYBHS2xRoGUbrf9F9UMqocreyA7SgUjJ+SAxavED1Yn/uYUYTv8OcVNX0bap0mlrN4QOMxj5pe5MEBA+oNDGf+hGnrcH+usPDq68vDE3g43R9zkwLOVCnxN6hULxH666IEjDCvPu6uiPUt8JuP/Xw51rFb+x5RVZbOFRch4UosKnVY9kZUbFjXfILXUroikfw==";
+    let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLIUTxZO6heZwZ0ieAgWPdJbjL234+8kyLov9AmMYZU27gBbCKJ44GF7LxEO0L7YeysCJvf8VXD93eduMRFMwASjo7bwKCdcLY10azKaUKGfFors3peLh8cJ3xdpMZJB4NKxahGsq+V/jGmmjGt6m0YM+HWHXuZ5H9WyTJELTZrc9DVgUzjZLam3MaIcObAaOcQaGZELchW4E78RTBiL1IeU5rBE9A5fqRzvfeVsIEbMwHoESFtfhMiTk72KXDc+qyQ494NOiiAMUJ31XpolzxPIlpm3b8eIUhQrgaeLbDeEHV4h5BIdoQKzv";
 
     if ( window.location.hostname === "blinkid.github.io" )
     {
-        licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hfYYlTvZbRmaHaKhDW4ymCXYcAuxXn4GSY+O/UFoVz4n1wRQjRrssc+1tuqmWr+1y5ah8gI9Wgt2r9WfCoe5C+GckT3GnLRR/j8RhRZ1HnquwzstQ6DVjGJaIQFlVzNr9FPSC3PB14J+FXn560oZu7sBts6XIZ9KKO1qnTO0xcI2dzQ7yRgsC9dhtyuFoiu5Skk2q+WEhPMFioaCBPA6T3YpF+A9sgIYkNDYKM7mzwKNZJRbVKryyMboG3TQFy/CTXyrnAYLc905haFouDDOhLGBBqfCWWjrk3QtLMoI6kvofXpy12fQI";
+        licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaDiKtDEmGY7GfcDEqPjMcSyrcOFQPE+TXIW0+VOc0L3HS0AlchNnnReDPbThWD1FppHITqpuoW+ABS9b5WT354By2tZGiLXM7FGVKAiCWmJ6D3R7/IZK2TWM0VIAvgB0Ze0Nfi0PRxQl0ZIi7U8fFG92SCKjQRRyx9tF2Jztuwe62MtBIbuTdFH1ntFE7RgzWkdIL6S3U2URBnHgqYfFb3q0XghW/T5v+5V79lKeE4qWbQCQDxNfkktNWh78MmTDx0ZvTeiaotuqNvxsOl5jGw85kFZZEJ9SYcgakF18KIIbE5YyqB9cCqnBs=";
     }
 
     // 2. Create instance of SDK load settings with your license key
@@ -48,7 +52,7 @@ function main()
     loadSettings.loadProgressCallback = ( progress ) => ( progressEl.value = progress );
 
     // Set absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.8.1/resources/";
+    loadSettings.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.0/resources/";
 
     // 3. Load SDK
     BlinkIDSDK.loadWasmModule( loadSettings ).then
