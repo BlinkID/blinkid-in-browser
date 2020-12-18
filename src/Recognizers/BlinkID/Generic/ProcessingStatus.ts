@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 /** Detailed information about the recognition process. */
 export enum ProcessingStatus
 {

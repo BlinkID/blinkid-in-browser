@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import * as BlinkIDSDK from "../../../es/blinkid-sdk";
 
 import {
@@ -27,6 +31,10 @@ export class SdkService {
   private eventEmitter$: HTMLAnchorElement;
 
   private cancelInitiatedFromOutside: boolean = false;
+
+  private recognizerName: string;
+
+  private videoRecognizer: BlinkIDSDK.VideoRecognizer;
 
   public showOverlay: boolean = false;
 
@@ -113,7 +121,7 @@ export class SdkService {
     }
   }
 
-  public getDesiredCameraExperience(recognizers: Array<string>): CameraExperience {
+  public getDesiredCameraExperience(recognizers: Array<string>, _recognizerOptions: Array<string> = []): CameraExperience {
     if (recognizers.indexOf('BlinkIdCombinedRecognizer') > -1) {
       return CameraExperience.CardCombined;
     }
@@ -131,6 +139,8 @@ export class SdkService {
   ): Promise<void> {
     eventCallback({ status: RecognitionStatus.Preparing });
 
+    this.cancelInitiatedFromOutside = false;
+
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
       configuration.recognizerOptions,
@@ -143,16 +153,17 @@ export class SdkService {
     );
 
     try {
-      const videoRecognizer = await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
+      this.videoRecognizer = await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
         configuration.cameraFeed,
-        recognizerRunner
+        recognizerRunner,
+        configuration.cameraId
       );
 
-      await videoRecognizer.setVideoRecognitionMode(BlinkIDSDK.VideoRecognitionMode.Recognition);
+      await this.videoRecognizer.setVideoRecognitionMode(BlinkIDSDK.VideoRecognitionMode.Recognition);
 
       this.eventEmitter$.addEventListener('terminate', async () => {
-        if (videoRecognizer && typeof videoRecognizer.cancelRecognition === 'function') {
-          videoRecognizer.cancelRecognition();
+        if (this.videoRecognizer && typeof this.videoRecognizer.cancelRecognition === 'function') {
+          this.videoRecognizer.cancelRecognition();
         }
 
         if (recognizerRunner) {
@@ -186,21 +197,22 @@ export class SdkService {
         }
 
         window.setTimeout(() => {
-          if (videoRecognizer) {
-            videoRecognizer.releaseVideoFeed();
+          if (this.videoRecognizer) {
+            this.videoRecognizer.releaseVideoFeed();
           }
         }, 1);
       });
 
-      videoRecognizer.startRecognition(
+      this.videoRecognizer.startRecognition(
         async (recognitionState: BlinkIDSDK.RecognizerResultState) => {
-          videoRecognizer.pauseRecognition();
+          this.videoRecognizer.pauseRecognition();
 
           eventCallback({ status: RecognitionStatus.Processing });
 
           if (recognitionState !== BlinkIDSDK.RecognizerResultState.Empty) {
             for (const recognizer of recognizers) {
               const results = await recognizer.recognizer.getResult();
+              this.recognizerName = recognizer.recognizer.recognizerName;
 
               if (!results || results.state === BlinkIDSDK.RecognizerResultState.Empty) {
                 eventCallback({
@@ -220,7 +232,11 @@ export class SdkService {
 
                 eventCallback({
                   status: RecognitionStatus.ScanSuccessful,
-                  data: recognitionResults
+                  data: {
+                    result: recognitionResults,
+                    initiatedByUser: this.cancelInitiatedFromOutside,
+                    closeCamera: this.recognizerName !== 'BlinkIdImageCaptureRecognizer'
+                  }
                 });
                 break;
               }
@@ -232,9 +248,10 @@ export class SdkService {
             });
           }
 
-          window.setTimeout(() => void this.cancelRecognition(), 400);
-        }
-      );
+          if (this.recognizerName !== 'BlinkIdImageCaptureRecognizer') {
+            window.setTimeout(() => void this.cancelRecognition(), 400);
+          }
+        });
     } catch (error) {
       if (error && error.name === 'VideoRecognizerError') {
         const reason = (error as BlinkIDSDK.VideoRecognizerError).reason;
@@ -268,7 +285,15 @@ export class SdkService {
     }
   }
 
-  public isScanFromImageAvailable(recognizers: Array<string>): boolean {
+  public async flipCamera(): Promise<void> {
+    await this.videoRecognizer.flipCamera();
+  }
+
+  public async isCameraFlipped(): Promise<boolean> {
+    return await this.videoRecognizer.cameraFlipped;
+  }
+
+  public isScanFromImageAvailable(recognizers: Array<string>, _recognizerOptions: Array<string> = []): boolean {
     return recognizers.indexOf('BlinkIdCombinedRecognizer') === -1;
   }
 
@@ -369,6 +394,10 @@ export class SdkService {
 
   public async stopRecognition() {
     void await this.cancelRecognition(true);
+  }
+
+  public async resumeRecognition(): Promise<void> {
+    this.videoRecognizer.resumeRecognition(true);
   }
 
   //////////////////////////////////////////////////////////////////////////////

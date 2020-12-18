@@ -1,8 +1,11 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { Component, Host, h, Method, Prop } from '@stencil/core';
 
 import {
-  FeedbackMessage,
-  FeedbackState
+  FeedbackMessage
 } from '../../../utils/data-structures';
 
 
@@ -37,12 +40,12 @@ export class MbFeedback {
 
   private paragraphEl!: HTMLParagraphElement;
 
-  private getFeedbackClassName(state: FeedbackState): string {
+  private getFeedbackClassName(state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK'): string {
     switch (state) {
-      case FeedbackState.Error:
+      case 'FEEDBACK_ERROR':
         return 'error';
 
-      case FeedbackState.Info:
+      case 'FEEDBACK_INFO':
         return 'info';
 
       default:

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 const path = require( "path" );
 const CopyPlugin = require( "copy-webpack-plugin" );
 

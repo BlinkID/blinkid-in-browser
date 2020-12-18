@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { newE2EPage } from '@stencil/core/testing';
 
 describe('mb-spinner', () => {

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 @import "../styles/globals-sass";
 
 :host {
@@ -210,6 +214,14 @@
     left: 0;
     right: 0;
   }
+
+  mb-camera-experience.is-muted {
+    background-color: rgba(0, 0, 0, .6);
+  }
+
+  mb-camera-experience.is-error {
+    background-color:rgba(0, 0, 0, 1);
+  }
 }
 
 :host #overlay-camera-experience.visible {
@@ -222,4 +234,14 @@
   height: 0;
   opacity: 0;
   clip: rect(1px, 1px, 1px, 1px);
+}
+
+:host button.modal-action-button {
+  width: 126px;
+  height: 32px;
+  border-radius: 0;
+  border: 0;
+  background: #48B2E8;
+  color: #ffffff;
+  cursor: pointer;
 }

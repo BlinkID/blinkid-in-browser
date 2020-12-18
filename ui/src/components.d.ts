@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CameraExperience, CameraExperienceState, EventFatalError, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ModalContent } from "./utils/data-structures";
+import { CameraExperience, CameraExperienceState, EventFatalError, EventReady, EventScanError, EventScanSuccess, FeedbackMessage } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
 export namespace Components {
     interface BlinkidInBrowser {
@@ -13,6 +13,10 @@ export namespace Components {
           * Write a hello message to the browser console when license check is successfully performed.  Hello message will contain the name and version of the SDK, which are required information for all support tickets.  Default value is true.
          */
         "allowHelloMessage": boolean;
+        /**
+          * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
+         */
+        "cameraId": string | null;
         /**
           * Set to 'false' if component should not enable drag and drop functionality.  Default value is 'true'.
          */
@@ -90,9 +94,27 @@ export namespace Components {
          */
         "scanFromImage": boolean;
         /**
+          * Show message alongside UI component.  Possible values for `state` are 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK'.
+         */
+        "setUiMessage": (state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK', message: string) => Promise<void>;
+        /**
+          * Control UI state of camera overlay.  Possible values are 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS'.
+         */
+        "setUiState": (state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') => Promise<void>;
+        /**
           * Set custom translations for UI component. List of available translation keys can be found in `src/utils/translation.service.ts` file.
          */
         "translations": { [key: string]: string };
+    }
+    interface MbApiProcessStatus {
+        /**
+          * State value of API processing received from parent element ('loading' or 'success').
+         */
+        "state": 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS';
+        /**
+          * Element visibility, default is 'false'.
+         */
+        "visible": boolean;
     }
     interface MbButton {
         /**
@@ -130,6 +152,18 @@ export namespace Components {
     }
     interface MbCameraExperience {
         /**
+          * Api state passed from root component.
+         */
+        "apiState": string;
+        /**
+          * Camera horizontal state passed from root component.  Horizontal camera image can be mirrored
+         */
+        "cameraFlipped": boolean;
+        /**
+          * Method is exposed outside which allow us to control Camera Flip state from parent component.
+         */
+        "setCameraFlipState": (isFlipped: boolean) => Promise<void>;
+        /**
           * Set camera scanning state.
          */
         "setState": (state: CameraExperienceState, isBackSide?: boolean, force?: boolean) => Promise<void>;
@@ -152,6 +186,10 @@ export namespace Components {
          */
         "allowHelloMessage": boolean;
         /**
+          * Camera device ID passed from root component.
+         */
+        "cameraId": string | null;
+        /**
           * See description in public component.
          */
         "enableDrag": boolean;
@@ -163,11 +201,17 @@ export namespace Components {
           * See description in public component.
          */
         "hideLoadingAndErrorUi": boolean;
+        /**
+          * See description in public component.
+         */
         "iconCameraActive": string;
         /**
           * See description in public component.
          */
         "iconCameraDefault": string;
+        /**
+          * See description in public component.
+         */
         "iconGalleryActive": string;
         /**
           * See description in public component.
@@ -210,6 +254,10 @@ export namespace Components {
          */
         "scanFromImage": boolean;
         /**
+          * Method is exposed outside which allow us to control UI state from parent component.
+         */
+        "setUiState": (state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') => Promise<void>;
+        /**
           * Instance of TranslationService passed from root component.
          */
         "translationService": TranslationService;
@@ -228,9 +276,21 @@ export namespace Components {
     }
     interface MbModal {
         /**
-          * Passed content from parent component
+          * Passed body content from parent component
          */
-        "content": ModalContent;
+        "content": string;
+        /**
+          * Center content inside modal
+         */
+        "contentCentered": boolean;
+        /**
+          * Passed title content from parent component
+         */
+        "modalTitle": string;
+        /**
+          * Show modal content
+         */
+        "visible": boolean;
     }
     interface MbOverlay {
         /**
@@ -265,6 +325,12 @@ declare global {
     var HTMLBlinkidInBrowserElement: {
         prototype: HTMLBlinkidInBrowserElement;
         new (): HTMLBlinkidInBrowserElement;
+    };
+    interface HTMLMbApiProcessStatusElement extends Components.MbApiProcessStatus, HTMLStencilElement {
+    }
+    var HTMLMbApiProcessStatusElement: {
+        prototype: HTMLMbApiProcessStatusElement;
+        new (): HTMLMbApiProcessStatusElement;
     };
     interface HTMLMbButtonElement extends Components.MbButton, HTMLStencilElement {
     }
@@ -322,6 +388,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "blinkid-in-browser": HTMLBlinkidInBrowserElement;
+        "mb-api-process-status": HTMLMbApiProcessStatusElement;
         "mb-button": HTMLMbButtonElement;
         "mb-camera-experience": HTMLMbCameraExperienceElement;
         "mb-component": HTMLMbComponentElement;
@@ -339,6 +406,10 @@ declare namespace LocalJSX {
           * Write a hello message to the browser console when license check is successfully performed.  Hello message will contain the name and version of the SDK, which are required information for all support tickets.  Default value is true.
          */
         "allowHelloMessage"?: boolean;
+        /**
+          * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
+         */
+        "cameraId"?: string | null;
         /**
           * Set to 'false' if component should not enable drag and drop functionality.  Default value is 'true'.
          */
@@ -440,6 +511,24 @@ declare namespace LocalJSX {
          */
         "translations"?: { [key: string]: string };
     }
+    interface MbApiProcessStatus {
+        /**
+          * Emitted when user clicks on 'x' button.
+         */
+        "onCloseFromStart"?: (event: CustomEvent<void>) => void;
+        /**
+          * Emitted when user clicks on 'Retry' button.
+         */
+        "onCloseTryAgain"?: (event: CustomEvent<void>) => void;
+        /**
+          * State value of API processing received from parent element ('loading' or 'success').
+         */
+        "state"?: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS';
+        /**
+          * Element visibility, default is 'false'.
+         */
+        "visible"?: boolean;
+    }
     interface MbButton {
         /**
           * Set to 'true' if button should be disabled, and if click events should not be triggered.
@@ -480,9 +569,21 @@ declare namespace LocalJSX {
     }
     interface MbCameraExperience {
         /**
+          * Api state passed from root component.
+         */
+        "apiState"?: string;
+        /**
+          * Camera horizontal state passed from root component.  Horizontal camera image can be mirrored
+         */
+        "cameraFlipped"?: boolean;
+        /**
           * Emitted when user clicks on 'X' button.
          */
         "onClose"?: (event: CustomEvent<void>) => void;
+        /**
+          * Emitted when user clicks on Flip button.
+         */
+        "onFlipCameraAction"?: (event: CustomEvent<void>) => void;
         /**
           * Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay.
          */
@@ -502,6 +603,10 @@ declare namespace LocalJSX {
          */
         "allowHelloMessage"?: boolean;
         /**
+          * Camera device ID passed from root component.
+         */
+        "cameraId"?: string | null;
+        /**
           * See description in public component.
          */
         "enableDrag"?: boolean;
@@ -513,11 +618,17 @@ declare namespace LocalJSX {
           * See description in public component.
          */
         "hideLoadingAndErrorUi"?: boolean;
+        /**
+          * See description in public component.
+         */
         "iconCameraActive"?: string;
         /**
           * See description in public component.
          */
         "iconCameraDefault"?: string;
+        /**
+          * See description in public component.
+         */
         "iconGalleryActive"?: string;
         /**
           * See description in public component.
@@ -594,13 +705,25 @@ declare namespace LocalJSX {
     }
     interface MbModal {
         /**
-          * Passed content from parent component
+          * Passed body content from parent component
          */
-        "content"?: ModalContent;
+        "content"?: string;
         /**
-          * Emitted when user clicks on 'Close' button.
+          * Center content inside modal
+         */
+        "contentCentered"?: boolean;
+        /**
+          * Passed title content from parent component
+         */
+        "modalTitle"?: string;
+        /**
+          * Emitted when user clicks on 'X' button.
          */
         "onClose"?: (event: CustomEvent<void>) => void;
+        /**
+          * Show modal content
+         */
+        "visible"?: boolean;
     }
     interface MbOverlay {
         /**
@@ -630,6 +753,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "blinkid-in-browser": BlinkidInBrowser;
+        "mb-api-process-status": MbApiProcessStatus;
         "mb-button": MbButton;
         "mb-camera-experience": MbCameraExperience;
         "mb-component": MbComponent;
@@ -646,6 +770,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "blinkid-in-browser": LocalJSX.BlinkidInBrowser & JSXBase.HTMLAttributes<HTMLBlinkidInBrowserElement>;
+            "mb-api-process-status": LocalJSX.MbApiProcessStatus & JSXBase.HTMLAttributes<HTMLMbApiProcessStatusElement>;
             "mb-button": LocalJSX.MbButton & JSXBase.HTMLAttributes<HTMLMbButtonElement>;
             "mb-camera-experience": LocalJSX.MbCameraExperience & JSXBase.HTMLAttributes<HTMLMbCameraExperienceElement>;
             "mb-component": LocalJSX.MbComponent & JSXBase.HTMLAttributes<HTMLMbComponentElement>;

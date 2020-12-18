@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * BlinkID In-browser SDK demo app which demonstrates how to:
  *
  * - Change default SDK settings
@@ -30,7 +34,7 @@ function main()
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPg4/w35CpJlWKGUQxY30CG/uEP4nsz1dBuqw2c1uTELZTAKhCtox46r9hcAG3pPYAWMZ82Thv2O1YC4V1eKCDo6yihFAshqtNNLbJrr/IWlxR9ynBhMhNUYBHS2xRoGUbrf9F9UMqocreyA7SgUjJ+SAxavED1Yn/uYUYTv8OcVNX0bap0mlrN4QOMxj5pe5MEBA+oNDGf+hGnrcH+usPDq68vDE3g43R9zkwLOVCnxN6hULxH666IEjDCvPu6uiPUt8JuP/Xw51rFb+x5RVZbOFRch4UosKnVY9kZUbFjXfILXUroikfw==";
+    let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLIUTxZO6heZwZ0ieAgWPdJbjL234+8kyLov9AmMYZU27gBbCKJ44GF7LxEO0L7YeysCJvf8VXD93eduMRFMwASjo7bwKCdcLY10azKaUKGfFors3peLh8cJ3xdpMZJB4NKxahGsq+V/jGmmjGt6m0YM+HWHXuZ5H9WyTJELTZrc9DVgUzjZLam3MaIcObAaOcQaGZELchW4E78RTBiL1IeU5rBE9A5fqRzvfeVsIEbMwHoESFtfhMiTk72KXDc+qyQ494NOiiAMUJ31XpolzxPIlpm3b8eIUhQrgaeLbDeEHV4h5BIdoQKzv";
 
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings( licenseKey );

@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { AnonymizationMode } from "./AnonymizationMode";
 import { BarcodeResult } from "./BarcodeResult";
 import { ClassInfo } from "./ClassInfo";
@@ -212,6 +216,11 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
      *  The additional number of the document.
      */
     readonly documentAdditionalNumber: string;
+
+    /**
+     * The one more additional number of the document.
+     */
+    readonly documentOptionalAdditionalNumber: string;
 
     /**
      *  The document number.

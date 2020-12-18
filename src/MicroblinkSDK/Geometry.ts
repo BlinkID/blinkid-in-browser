@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * Interface representing a point in image.
  */
 export interface Point

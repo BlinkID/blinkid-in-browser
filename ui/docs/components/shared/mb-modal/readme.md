@@ -7,27 +7,32 @@
 
 ## Properties
 
-| Property  | Attribute | Description                          | Type           | Default     |
-| --------- | --------- | ------------------------------------ | -------------- | ----------- |
-| `content` | --        | Passed content from parent component | `ModalContent` | `undefined` |
+| Property          | Attribute          | Description                                | Type      | Default |
+| ----------------- | ------------------ | ------------------------------------------ | --------- | ------- |
+| `content`         | `content`          | Passed body content from parent component  | `string`  | `""`    |
+| `contentCentered` | `content-centered` | Center content inside modal                | `boolean` | `true`  |
+| `modalTitle`      | `modal-title`      | Passed title content from parent component | `string`  | `""`    |
+| `visible`         | `visible`          | Show modal content                         | `boolean` | `false` |
 
 
 ## Events
 
-| Event   | Description                                 | Type                |
-| ------- | ------------------------------------------- | ------------------- |
-| `close` | Emitted when user clicks on 'Close' button. | `CustomEvent<void>` |
+| Event   | Description                             | Type                |
+| ------- | --------------------------------------- | ------------------- |
+| `close` | Emitted when user clicks on 'X' button. | `CustomEvent<void>` |
 
 
 ## Dependencies
 
 ### Used by
 
+ - [mb-api-process-status](../mb-api-process-status)
  - [mb-component](../mb-component)
 
 ### Graph
 ```mermaid
 graph TD;
+  mb-api-process-status --> mb-modal
   mb-component --> mb-modal
   style mb-modal fill:#f9f,stroke:#333,stroke-width:4px
 ```

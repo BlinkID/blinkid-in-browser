@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/**
  * Extension factors relative to corresponding dimension of the full image. For example,
  * {@code upFactor} and {@code downFactor} define extensions relative to image height, e.g.
  * when {@code upFactor} is 0.5, upper image boundary will be extended for half of image's full

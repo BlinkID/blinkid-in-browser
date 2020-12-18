@@ -1,3 +1,7 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
 import { RecognizerResult } from "../../MicroblinkSDK/DataStructures";
 
 /**

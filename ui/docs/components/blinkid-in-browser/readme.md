@@ -10,6 +10,7 @@
 | Property                | Attribute                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Type                         | Default     |
 | ----------------------- | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------- | ----------- |
 | `allowHelloMessage`     | `allow-hello-message`       | Write a hello message to the browser console when license check is successfully performed.  Hello message will contain the name and version of the SDK, which are required information for all support tickets.  Default value is true.                                                                                                                                                                                                                                                                                                                                                                                                                         | `boolean`                    | `true`      |
+| `cameraId`              | `camera-id`                 | Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `string`                     | `null`      |
 | `enableDrag`            | `enable-drag`               | Set to 'false' if component should not enable drag and drop functionality.  Default value is 'true'.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            | `boolean`                    | `true`      |
 | `engineLocation`        | `engine-location`           | Absolute location of WASM and related JS/data files. Useful when resource files should be loaded over CDN, or when web frameworks/libraries are used which store resources in specific locations, e.g. inside "assets" folder.  Important: if engine is hosted on another origin, CORS must be enabled between two hosts. That is, server where engine is hosted must have 'Access-Control-Allow-Origin' header for the location of the web app.  Important: SDK and WASM resources must be from the same version of package.  Default value is empty string, i.e. "". In case of empty string, value of "window.location.origin" property is going to be used. | `string`                     | `''`        |
 | `hideFeedback`          | `hide-feedback`             | If set to 'true', UI component will not display feedback, i.e. information and error messages.  Setting this attribute to 'false' won't disable 'scanError' and 'scanInfo' events.  Default value is 'false'.                                                                                                                                                                                                                                                                                                                                                                                                                                                   | `boolean`                    | `false`     |
@@ -43,6 +44,33 @@
 | `scanSuccess` | Event which is emitted after successful scan. This event contains recognition results.                                                                            | `CustomEvent<EventScanSuccess>` |
 
 
+## Methods
+
+### `setUiMessage(state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK', message: string) => Promise<void>`
+
+Show message alongside UI component.
+
+Possible values for `state` are 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK'.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `setUiState(state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') => Promise<void>`
+
+Control UI state of camera overlay.
+
+Possible values are 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS'.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ## Dependencies
 
 ### Depends on
@@ -62,7 +90,9 @@ graph TD;
   mb-component --> mb-button
   mb-component --> mb-overlay
   mb-component --> mb-camera-experience
+  mb-component --> mb-api-process-status
   mb-component --> mb-modal
+  mb-api-process-status --> mb-modal
   style blinkid-in-browser fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

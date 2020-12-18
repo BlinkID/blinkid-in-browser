@@ -7,10 +7,9 @@ Provided examples should help you with integration of this SDK with your app.
 3. Scan both sides of an identity document from camera - `combined`.
 4. Scan barcode on identity document from camera - `idbarcode`.
 5. Extract image frame from which data has been extracted - `success-frame-grabber`.
-6. Example usage for UI components - `ui`.
-7. Setup build system using Webpack - `webpack`.
+6. Setup build system using Webpack - `webpack`.
 
-Each example, except UI components, has JavaScript and TypeScript version.
+Each example has JavaScript and TypeScript version.
 
 Deployment:
 
