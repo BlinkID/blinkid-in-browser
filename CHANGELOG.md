@@ -1,5 +1,9 @@
 # Release notes
 
+## 5.9.1
+
+* We've fixed NPM package which had obsolete UI component
+
 ## 5.9.0
 
 ### New additions to our supported documents list

@@ -42,45 +42,50 @@
         ></blinkid-in-browser>
 
         <script type="text/javascript">
-            // Important: if attributes or properties are changed, whole component is rerendered
-            const blinkId = document.querySelector( "blinkid-in-browser" );
-
-            if ( window.location.hostname === "blinkid.github.io" )
+            function run()
             {
-                blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaDiKtDEmGY7GfcDEqPjMcSyrcOFQPE+TXIW0+VOc0L3HS0AlchNnnReDPbThWD1FppHITqpuoW+ABS9b5WT354By2tZGiLXM7FGVKAiCWmJ6D3R7/IZK2TWM0VIAvgB0Ze0Nfi0PRxQl0ZIi7U8fFG92SCKjQRRyx9tF2Jztuwe62MtBIbuTdFH1ntFE7RgzWkdIL6S3U2URBnHgqYfFb3q0XghW/T5v+5V79lKeE4qWbQCQDxNfkktNWh78MmTDx0ZvTeiaotuqNvxsOl5jGw85kFZZEJ9SYcgakF18KIIbE5YyqB9cCqnBs=";
+                // Important: if attributes or properties are changed, whole component is rerendered
+                const blinkId = document.querySelector( "blinkid-in-browser" );
+
+                if ( window.location.hostname === "blinkid.github.io" )
+                {
+                    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaDiKtDEmGY7GfcDEqPjMcSyrcOFQPE+TXIW0+VOc0L3HS0AlchNnnReDPbThWD1FppHITqpuoW+ABS9b5WT354By2tZGiLXM7FGVKAiCWmJ6D3R7/IZK2TWM0VIAvgB0Ze0Nfi0PRxQl0ZIi7U8fFG92SCKjQRRyx9tF2Jztuwe62MtBIbuTdFH1ntFE7RgzWkdIL6S3U2URBnHgqYfFb3q0XghW/T5v+5V79lKeE4qWbQCQDxNfkktNWh78MmTDx0ZvTeiaotuqNvxsOl5jGw85kFZZEJ9SYcgakF18KIIbE5YyqB9cCqnBs=";
+                }
+
+                blinkId.engineLocation = window.location.origin + "/resources/";
+
+                blinkId.addEventListener
+                (
+                    "fatalError",
+                    ev => console.log( "fatalError", ev.detail )
+                );
+
+                blinkId.addEventListener
+                (
+                    "ready",
+                    ev => console.log( "ready", ev.detail )
+                );
+
+                blinkId.addEventListener
+                (
+                    "scanError",
+                    ev => console.log( "scanError", ev.detail )
+                );
+
+                blinkId.addEventListener
+                (
+                    "scanSuccess",
+                    ev => console.log( "scanSuccess", ev.detail )
+                );
+
+                blinkId.addEventListener
+                (
+                    "feedback",
+                    ev => console.log( "feedback", ev.detail )
+                );
             }
 
-            blinkId.engineLocation = window.location.origin + "/resources/";
-
-            blinkId.addEventListener
-            (
-                "fatalError",
-                ev => console.log( "fatalError", ev.detail )
-            );
-
-            blinkId.addEventListener
-            (
-                "ready",
-                ev => console.log( "ready", ev.detail )
-            );
-
-            blinkId.addEventListener
-            (
-                "scanError",
-                ev => console.log( "scanError", ev.detail )
-            );
-
-            blinkId.addEventListener
-            (
-                "scanSuccess",
-                ev => console.log( "scanSuccess", ev.detail )
-            );
-
-            blinkId.addEventListener
-            (
-                "feedback",
-                ev => console.log( "feedback", ev.detail )
-            );
+            window.addEventListener( "DOMContentLoaded", ev => run() );
         </script>
     </body>
 </html>

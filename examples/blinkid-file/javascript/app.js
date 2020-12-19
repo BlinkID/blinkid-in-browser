@@ -48,7 +48,7 @@ function main()
     loadSettings.loadProgressCallback = ( progress ) => ( progressEl.value = progress );
 
     // Set absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.0/resources/";
+    loadSettings.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.1/resources/";
 
     // 3. Load SDK
     BlinkIDSDK.loadWasmModule( loadSettings ).then

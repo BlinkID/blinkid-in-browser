@@ -22,5 +22,5 @@ http-server dist/
 
 1. It's important to have `dist/resources` folder which contains all `BlinkIDWasmSDK*` files.
     * All files can be seen in `resources/` folder in the official GitHub repository and NPM package.
-    * In `src/app.ts`, properties `loadSettings.engineLocation` and `loadSettings.workerLocation` must have value `"/resources"`.
+    * In `src/app.ts`, property `loadSettings.engineLocation` must have value `"/resources"`.
 2. Node v12 has been used while developing this example.

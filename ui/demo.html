@@ -132,8 +132,9 @@
         margin-bottom: 1.5rem;
       }
     </style>
-    <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-    <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.0/ui/dist/blinkid-in-browser.js"></script>
+    <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.1/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+    <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.1/ui/dist/blinkid-in-browser.js"></script>
+
     <script type="text/javascript">
       window.getSafePathname = p => p[ p.length - 1 ] === '/' ? p : p.split( '/' ).slice( 0, -1 ).join( '/' ) + '/';
       /**
@@ -141,19 +142,13 @@
        *  "licenseID": "D6MGSSLDOD7OLT81"
        *  "upToVersion": "8.0.0"
        */
-      window.licenseKey = 'sRwAAAYJbG9jYWxob3N0r/lOPg4/w35CpJnWqljeBtfhmzhTZhKEF801n/2bqLzhGTSx+P5F5I9jIPXhcHgj4003yVz+wVcgSaWONnylfUJqC+K0cm4dTltU/Hq7FL1TWDMYEOXXpZANuATnur6mH+FyfhuVpNiRwZ+IomE3x/ho4rzHZ3IMqX1y9B25bEcgAKm5671nTnXAN1BekdjtlOFpeHOSljIl5E9VYJUTBwqG5VeDChdJ3iTLxf5NfyZSYFTnjY+yJn3d0ysqamAwZ/pdK8YvXJxnk6mcCt4M6zNkzoytrsIabcsuQO3/0SJjKEB/7/dWoiC+R5owb7FNUA==';
+      window.licenseKey = 'sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLIUTxZO6heZwZ0ieAgWPdJbjL234+8kyLov9AmMYZU27gBbCKJ44GF7LxEO0L7YeysCJvf8VXD93eduMRFMwASjo7bwKCdcLY10azKaUKGfFors3peLh8cJ3xdpMZJB4NKxahGsq+V/jGmmjGt6m0YM+HWHXuZ5H9WyTJELTZrc9DVgUzjZLam3MaIcObAaOcQaGZELchW4E78RTBiL1IeU5rBE9A5fqRzvfeVsIEbMwHoESFtfhMiTk72KXDc+qyQ494NOiiAMUJ31XpolzxPIlpm3b8eIUhQrgaeLbDeEHV4h5BIdoQKzv';
 
       if (window.location.hostname === 'blinkid.github.io') {
-        window.licenseKey = 'sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hW4YlTvZbRuaFbqJLokhSr8TQq3rdHCxMKbenVPSAqXgiLOPjCorvn3zHCetBFnpcM7K5x1pyRKcSGOQq3KQr+Tukqn7iaVB1n5JcDvv+uCcf3TomfzEvtFYnNoyhxfwmXGAScc66eNLGU2CowiCmiymgjz7FJPZcPwvDy9u+MIW9fDZKaAQGFHvFUvGk59VODGmaIYfX8Z3ZHer8lnVxVOJUShEv+izBNXAXJLm/Mxfa6Y3Uscf7ZRMiGP5/LNLxXjc3Ig==';
+        window.licenseKey = 'sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaDiKtDEmGY7GfcDEqPjMcSyrcOFQPE+TXIW0+VOc0L3HS0AlchNnnReDPbThWD1FppHITqpuoW+ABS9b5WT354By2tZGiLXM7FGVKAiCWmJ6D3R7/IZK2TWM0VIAvgB0Ze0Nfi0PRxQl0ZIi7U8fFG92SCKjQRRyx9tF2Jztuwe62MtBIbuTdFH1ntFE7RgzWkdIL6S3U2URBnHgqYfFb3q0XghW/T5v+5V79lKeE4qWbQCQDxNfkktNWh78MmTDx0ZvTeiaotuqNvxsOl5jGw85kFZZEJ9SYcgakF18KIIbE5YyqB9cCqnBs=';
       }
 
-       window.licenseKey = 'sRwAAAYJbG9jYWxob3N0r/lOPoY+w35CpGHWqtw4YC5t1oX/aQgfnUxj4w7md5KK7PsAJWgDeN7gNR95AcmU6E6YdpE7+FuMlvpQj/GnCMTAdPfSEjvnyVVW8fkTrJgpvPCENAnQkAK/thdArxfi7i36pQChaBsWezwJ2yeNhUdIVDOc2qbak9LnV0BuO3+gK6xvjetxmEuXVxbgliwqUOiLPkxwufZMdR9dPjwywHBs8x2aknPm5Akrm0pz9D6r/ZRgg6A7AIYfXpKGELaxf7K4GSRK94UFp8G0XeVECuPoHvKpk08HJk+pYVj+MC6HuAAzNg6gRNvF7QZ2y+di6tTWgLt7kn4Xin0MAZBIFx6tLLZQALyempSE9ay+3ZmB0eWzeFDxCSXbfqHxq4T7PXYUcJRPrmF+d/RCYLbNzkO2f/Azzd+Lm0MJx3dru0ooLBlnc718jo9zFCCV+K0FhNUwA6uUe6dS3UbsO724R17UKQD1OMD8VG4ZAKaoNzCCT4bRkFV/YxkoyhoVaHE=';
-
-      if (window.location.hostname === 'blinkid.github.io') {
-        window.licenseKey = 'sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hH4YlTvZbvuaF7qdDCre49ZhxvqIm5WQOTknq+AvYg/CLhjuSlXXDfNJSxYZg9htm199F1Hn2FufzLP90mL5lI542YMUk4oAdcen0VMiZmRKc3+6aXms8uMU3JInKzJ/YFtKym0wSP1wGXtAM+aXTyk/lkjJy5gRd1gFInaGIgTCuUhE2lgle1DWZdSwtVrmpffWnct6aH02f9EYsEeJsYLNa85U+9bjC1fOwt/0f8L7M9uEeyYCMSVFpq1ZHsdzAd3CWHrdX3wl3OzG2x+ioA4SS6YWmTY89GSCaN/mm6qOSo28XOXOb+PQHx/to06ypnNsgos9tptBT3Lev+X4tqS6OrOmDyw80YNSaoHILv6o=';
-      }
-
-      window.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.0/resources";
+      window.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.1/resources";
     </script>
   </head>
   <body>
@@ -166,7 +161,7 @@
     <section id="example-minimal">
       <h2>Minimal example</h2>
       <p>UI component with default behaviour where it's required to set valid license key, engine location and recognizer.</p>
-      <p>Keep in mind that this example uses additional code which sends an image to web API for processing. Complete code can be seen in <em>examples/ui</em> directory of this repository.</p>
+
       <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
       <p><em><strong>Note:</strong> since this page has multiple components, only this one has enabled drag and drop feature.</em></p>
       <blinkid-in-browser></blinkid-in-browser>
@@ -184,6 +179,7 @@
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
 
+
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
 
@@ -192,6 +188,7 @@
 
         el.addEventListener('scanSuccess', ev => {
           console.log('scanSuccess', ev.detail);
+
         });
       })();
     </script>
@@ -214,44 +211,6 @@
         el.licenseKey = window.licenseKey;
 
         el.recognizers = ['BlinkIdCombinedRecognizer'];
-      })();
-    </script>
-    <section id="example-combined">
-      <h2>Scan both sides</h2>
-      <p>UI component with default behaviour where it's required to set valid license key and recognizer.</p>
-      <p>Keep in mind that this example uses additional code which sends an image to web API for processing. Complete code can be seen in <em>examples/ui</em> directory of this repository.</p>
-      <p><em>Recognizer: <strong>BlinkIdImageCaptureRecognizer</strong></em></p>
-      <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
-<pre>&lt;blinkid-in-browser
-  engine-location="http://localhost/resources/"
-  license-key="LICENSE-KEY-GOES-HERE"
-  recognizers="BlinkIdImageCaptureRecognizer"
-  recognizer-options="captureBothDocumentSides"
-&gt;&lt;/blinkid-in-browser&gt;</pre>
-    </section>
-    <script type="text/javascript">
-      (function (){
-        const el = document.querySelector('#example-combined blinkid-in-browser');
-
-        el.engineLocation = window.engineLocation;
-        el.licenseKey = window.licenseKey;
-
-        el.recognizers = ['BlinkIdImageCaptureRecognizer'];
-
-        el.recognizerOptions = [
-          'captureBothDocumentSides'
-        ];
-
-        el.addEventListener('scanError', ev => {
-          console.log('scanError', ev.detail);
-
-          el.setUiState('ERROR');
-        });
-
-
-        el.addEventListener('scanSuccess', ev => {
-          console.log('scanSuccess', ev.detail);
-        });
       })();
     </script>
     <section id="example-barcode">
@@ -279,7 +238,7 @@
       <h2>Custom messages</h2>
       <p>It's possible to change default text messages which are displayed to the user.</p>
       <p>Use attribute/property <code>translations</code> to change default messages.</p>
-      <p>Keep in mind that this example uses additional code which sends an image to web API for processing. Complete code can be seen in <em>examples/ui</em> directory of this repository.</p>
+
       <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
       <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
 <pre>&lt;blinkid-in-browser
@@ -304,10 +263,11 @@
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
         window.setTimeout(() => {
-          el.translations = {
+          el.translations = { 
             'action-message': 'Alternative CTA'
           };
         }, 3000);
+
 
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
@@ -315,8 +275,10 @@
           el.setUiState('ERROR');
         });
 
+
         el.addEventListener('scanSuccess', ev => {
           console.log('scanSuccess', ev.detail);
+
         });
       })();
     </script>
@@ -324,7 +286,7 @@
     <section id="example-localization-rtl">
       <h2>RTL support</h2>
       <p>Set HTML attribute <code>dir="rtl"</code>.</p>
-      <p>Keep in mind that this example uses additional code which sends an image to web API for processing. Complete code can be seen in <em>examples/ui</em> directory of this repository.</p>
+
       <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
       <blinkid-in-browser fullscreen-drop="false" dir="rtl"></blinkid-in-browser>
 <pre>&lt;blinkid-in-browser
@@ -351,10 +313,11 @@
         el.recognizers = ['BlinkIdRecognizer'];
 
         window.setTimeout(() => {
-          el.translations = {
+          el.translations = { 
             'action-message': 'Alternative CTA'
           };
         }, 3000);
+
 
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
@@ -364,6 +327,7 @@
 
         el.addEventListener('scanSuccess', ev => {
           console.log('scanSuccess', ev.detail);
+
         });
       })();
     </script>
@@ -371,7 +335,7 @@
     <section id="example-customization">
       <h2>UI customization</h2>
       <p>It's possible to customize UI of BlinkID component by using preset CSS variables.</p>
-      <p>Keep in mind that this example uses additional code which sends an image to web API for processing. Complete code can be seen in <em>examples/ui</em> directory of this repository.</p>
+
       <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
       <div class="box">
         <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
@@ -444,6 +408,7 @@
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
 
+
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
 
@@ -452,6 +417,7 @@
 
         el.addEventListener('scanSuccess', ev => {
           console.log('scanSuccess', ev.detail);
+
         });
       })();
     </script>
@@ -518,7 +484,7 @@
 
         customizatorForm.addEventListener('submit', ev => {
           ev.preventDefault();
-
+          
           document.querySelector(
             '#example-customization .box'
           ).style.background = document.getElementById('customization-background').value;

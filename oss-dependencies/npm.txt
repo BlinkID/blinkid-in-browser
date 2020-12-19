@@ -511,10 +511,10 @@
 │  ├─ email: sebmck@gmail.com
 │  ├─ path: node_modules/@babel/types
 │  └─ licenseFile: node_modules/@babel/types/LICENSE
-├─ @microblink/blinkid-in-browser-sdk@5.9.0
+├─ @microblink/blinkid-in-browser-sdk@5.9.1
 │  ├─ licenses: Custom: https://travis-ci.org/BlinkID/blinkid-in-browser.svg
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
-│  ├─ path: /opt/jenkins/android-arm64-meizu-pro-6/root/E0/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
+│  ├─ path: /Users/mbp/Projects/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
 │  └─ licenseFile: README.md
 ├─ @nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents
 │  ├─ licenses: MIT
@@ -1292,6 +1292,11 @@
 │  ├─ url: http://blog.izs.me/
 │  ├─ path: node_modules/fs.realpath
 │  └─ licenseFile: node_modules/fs.realpath/LICENSE
+├─ fsevents@2.1.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/fsevents/fsevents
+│  ├─ path: node_modules/fsevents
+│  └─ licenseFile: node_modules/fsevents/LICENSE
 ├─ function-bind@1.1.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/Raynos/function-bind
