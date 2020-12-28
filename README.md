@@ -639,7 +639,9 @@ This means your web app has to be connected to the Internet in order for us to v
 
 Once the validation is complete, you can continue using the SDK in an offline mode (or over a private network) until the next check.
 
-We've added error callback to Microblink SDK to inform you about the status of your license key.## <a name="info"></a> Additional info
+We've added error callback to Microblink SDK to inform you about the status of your license key.
+
+## <a name="info"></a> Additional info
 
 Complete source code of the TypeScript wrapper can be found [here](src).
 
