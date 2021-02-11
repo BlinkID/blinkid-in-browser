@@ -137,12 +137,7 @@
 
     <script type="text/javascript">
       window.getSafePathname = p => p[ p.length - 1 ] === '/' ? p : p.split( '/' ).slice( 0, -1 ).join( '/' ) + '/';
-      /**
-       *  "licensee": "localhost"
-       *  "licenseID": "D6MGSSLDOD7OLT81"
-       *  "upToVersion": "8.0.0"
-       */
-      window.licenseKey = 'sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLIUTxZO6heZwZ0ieAgWPdJbjL234+8kyLov9AmMYZU27gBbCKJ44GF7LxEO0L7YeysCJvf8VXD93eduMRFMwASjo7bwKCdcLY10azKaUKGfFors3peLh8cJ3xdpMZJB4NKxahGsq+V/jGmmjGt6m0YM+HWHXuZ5H9WyTJELTZrc9DVgUzjZLam3MaIcObAaOcQaGZELchW4E78RTBiL1IeU5rBE9A5fqRzvfeVsIEbMwHoESFtfhMiTk72KXDc+qyQ494NOiiAMUJ31XpolzxPIlpm3b8eIUhQrgaeLbDeEHV4h5BIdoQKzv';
+      window.licenseKey = 'sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLC04YOZP6o4omehP4Kw61GsKVR5+hnhdmJM0Jl3uPIjDdf2G2jTObySnuUJybl5Gtls64/fJrq74wM7tQj9fdN+uaOcwKw6bTeO0MAXABpAgPju+JcPnlsbqm4mKIN/BQ4TX+FV5MPQB/NotnGYBzdk3jaf+D1YnJcEuTgAs7Oz8bY58MKSxAFSBntni8hznFa9neQypvnBrPE2IA7p0hDNewzyVD7QLU8t2/4Q535Alm80JR3xFT+9qLRraWUb85cKEDSE1PF/rT/0CJE3J5XiJWBBbgL43ioliTlfpP9hfAylphEwtazUU3Io=';
 
       if (window.location.hostname === 'blinkid.github.io') {
         window.licenseKey = 'sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaDiKtDEmGY7GfcDEqPjMcSyrcOFQPE+TXIW0+VOc0L3HS0AlchNnnReDPbThWD1FppHITqpuoW+ABS9b5WT354By2tZGiLXM7FGVKAiCWmJ6D3R7/IZK2TWM0VIAvgB0Ze0Nfi0PRxQl0ZIi7U8fFG92SCKjQRRyx9tF2Jztuwe62MtBIbuTdFH1ntFE7RgzWkdIL6S3U2URBnHgqYfFb3q0XghW/T5v+5V79lKeE4qWbQCQDxNfkktNWh78MmTDx0ZvTeiaotuqNvxsOl5jGw85kFZZEJ9SYcgakF18KIIbE5YyqB9cCqnBs=';
@@ -263,7 +258,7 @@
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
         window.setTimeout(() => {
-          el.translations = { 
+          el.translations = {
             'action-message': 'Alternative CTA'
           };
         }, 3000);
@@ -313,7 +308,7 @@
         el.recognizers = ['BlinkIdRecognizer'];
 
         window.setTimeout(() => {
-          el.translations = { 
+          el.translations = {
             'action-message': 'Alternative CTA'
           };
         }, 3000);
@@ -484,7 +479,7 @@
 
         customizatorForm.addEventListener('submit', ev => {
           ev.preventDefault();
-          
+
           document.querySelector(
             '#example-customization .box'
           ).style.background = document.getElementById('customization-background').value;
