@@ -72,7 +72,10 @@ export class RecognitionModeFilter
     /** Enable scanning of Photo ID. Setting is taken into account only if the photo_id right is purchased. */
     enablePhotoId = true
 
-    /** Enable full document recognition. Setting is taken into account only if the document right to scan that document is purchased. */
+    /**
+     * Enable full document recognition. Setting is taken into account only if the document right to
+     * scan that document is purchased.
+     */
     enableFullDocumentRecognition = true
 }
 

@@ -389,7 +389,8 @@ export enum BarcodeElementKey
 
      Other suffix by which the cardholder is known.
 
-     The Suffix Code Portion, if submitted, can contain only the Suffix Codes shown in the following table (e.g., Andrew Johnson, III = JOHNSON@ANDREW@@3RD):
+     The Suffix Code Portion, if submitted, can contain only the Suffix Codes shown in the following
+     table (e.g., Andrew Johnson, III = JOHNSON@ANDREW@@3RD):
 
      Suffix     Meaning or Synonym
      JR         Junior
