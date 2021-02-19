@@ -1,5 +1,55 @@
 # Release notes
 
+## 5.10.0
+
+**Newly supported identity documents**
+
+* Saudi Arabia - DL (front)
+* Saudi Arabia - Resident ID (front)
+
+### Changes to the BlinkId(Combined)Recognizer:
+
+* We're now able to extract the additional address on Hungary Address Cards
+* We've improved data extraction through the MRZ:
+    * We now return the document type through `ClassInfo`, regardless of the `RecognitionMode` you're using (`MrzId`, `MrzPassport` or `MrzVisa`).
+    * This means you can now use `ClassFilter` to filter these documents by their type.
+    * We now return the document number on Nigeria IDs complete with its check digit.
+    * We now support Italy Residence Permits with a *CR* document code.
+* We've extended the `ClassInfo` structure with helper methods so you can filter documents by country more easily:
+    * Use `countryName`, `isoNumericCountryCode`, `isoAlpha2CountryCode` and `isoAlpha3CountryCode` to get the full country names or their representative codes, as defined by [ISO](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
+* We've extended the `BarcodeResult` structure with `extendedElements`
+    * You can find all data from AAMVA-compliant barcodes under their respective `BarcodeElementKey` in the `BarcodeElements` structure.
+    * For a full list of keys please see [here](src/Recognizers/BlinkID/Generic/BarcodeResult.ts#L91).
+* We've added another `ProcessingStatus` called `AwaitingOtherSide`
+    * This status is triggered once BlinkID has finished with the first side of a document and expects the other side, too.
+* We're now able to extract the date of birth from the CURP field on Mexico Voter IDs
+* We've added a new recognition mode for recognizing still images of documents that have already been cropped:
+    * Set the `scanCroppedDocumentImage` to true when you're feeding BlinkID images of documents that have already been cropped and don't require detection.
+    * Keep in mind that this setting won't work on document images that haven't been properly cropped.
+
+### Changes to the IdBarcodeRecognizer:
+
+* We've extended the results with `extendedElements` 
+    * You can find all data from AAMVA-compliant barcodes under their respective `BarcodeElementKey` in the `BarcodeElements` structure.
+    * For a full list of keys please see [here](src/Recognizers/BlinkID/Generic/BarcodeResult.ts#L91).
+
+### Deprecated recognizers:
+
+* We've deprecated `UsdlRecognizer`. Please use `IdBarcodeRecognizer` instead
+
+### Changes to the UI component:
+
+* We’ve added new ways you can configure the UI component to better fit the way your app looks and behaves.
+    * For a full list of attributes, properties and events you can modify, please see the [API documentation](ui/docs/components/blinkid-in-browser/readme.md).
+    * For a full list of CSS variables please see [\_globals.scss file](ui/src/components/shared/styles/_globals.scss).
+
+### Changes to RecognizerRunner class:
+
+* Invoking `RecognizerRunner.processImage` on  multiple still images will no longer implicitly reset the recognizer chain.
+    * This means you can now use BlinkIdCombinedRecognizer to scan both sides of a document by giving it two still images.
+    * If you still need to reset the recognizers, you can do that  manually by invoking the `RecognizerRunner.resetRecognizers` function.
+    * A complete example of how to use BlinkIdCombinedRecognizer with still images has been added [here](examples/combined-file).
+
 ## 5.9.1
 
 * We've fixed NPM package which had obsolete UI component
@@ -144,7 +194,7 @@
     * Method `flipCamera` has been added to [`VideoRecognizer`](src/MicroblinkSDK/VideoRecognizer.ts).
     * You can now let your users mirror the camera image vertically.
     * By default, the UI component will display a flip icon in the top left corner once the camera is live.
-* We've improved camera management on devices with multiple cameras 
+* We've improved camera management on devices with multiple cameras
     * Method `createVideoRecognizerFromCameraStream` has been extended in [`VideoRecognizer` class](src/MicroblinkSDK/VideoRecognizer.ts).
     * Attribute `[camera-id]` has been added to the UI component so that your users can preselect their desired camera.
 
@@ -277,7 +327,7 @@ BlinkID extracts data from driver’s licenses that contain single line MRZ:
     * Document number on Singapore Resident ID
     * Document number on Singapore S Pass
     * Personal ID number on Singapore Work Permit
-    * MRZ (OPT1 containing the resident registration number) on South Korea Diplomatic Passport 
+    * MRZ (OPT1 containing the resident registration number) on South Korea Diplomatic Passport
     * MRZ (OPT1 containing the resident registration number) on South Korea Passport
     * MRZ (OPT1 containing the resident registration number) on South Korea Residence Passport
     * MRZ (OPT1 containing the resident registration number) on South Korea Service Passport

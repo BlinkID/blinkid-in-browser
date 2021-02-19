@@ -45,5 +45,11 @@ export enum ProcessingStatus
     UnsupportedClass,
 
     /** License for the detected document is missing. */
-    UnsupportedByLicense
+    UnsupportedByLicense,
+
+     /** Front side recognition has completed successfully, and recognizer is waiting for the other side to be scanned. */
+    AwaitingOtherSide,
+
+     /** Number of possible processing statuses. */
+    Count
 }

@@ -88,6 +88,7 @@ export class VideoRecognizer
     /**
      * Creates a new VideoRecognizer by opening a camera stream and attaching it to given HTMLVideoElement. If camera
      * cannot be accessed, the returned promise will be rejected.
+     *
      * @param cameraFeed HTMLVideoELement to which camera stream should be attached
      * @param recognizerRunner RecognizerRunner that should be used for video stream recognition
      * @param cameraId User can provide specific camera ID to be selected and used
@@ -212,6 +213,7 @@ export class VideoRecognizer
     /**
      * Creates a new VideoRecognizer by attaching the given URL to video to given HTMLVideoElement and using it to
      * display video frames while processing them.
+     *
      * @param videoPath URL of the video file that should be recognized.
      * @param videoFeed HTMLVideoElement to which video file will be attached
      * @param recognizerRunner RecognizerRunner that should be used for video stream recognition.
@@ -260,6 +262,7 @@ export class VideoRecognizer
 
     /**
      * Sets the video recognition mode to be used.
+     *
      * @param videoRecognitionMode the video recognition mode to be used.
      */
     async setVideoRecognitionMode( videoRecognitionMode: VideoRecognitionMode ): Promise< void >
@@ -283,7 +286,7 @@ export class VideoRecognizer
      *
      * @param onScanningDone Callback that will be invoked when recognition completes.
      * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether
-     *.       recognition was successful or not.
+     *        recognition was successful or not.
      */
     startRecognition( onScanningDone: OnScanningDone, recognitionTimeoutMs = 15000 ): void
     {

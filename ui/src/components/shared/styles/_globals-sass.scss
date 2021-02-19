@@ -12,9 +12,13 @@ $padding-unit-large: 16px;
 $button-size: 40px;
 $button-icon-size: 20px;
 
-$breakpoint-width-tablet: 768px;
-$breakpoint-width-desktop: 1280px;
 $breakpoint-width-mobile-landscape: 568px;
+$breakpoint-width-tablet: 768px;
+$breakpoint-width-tablet-landscape: 1024px;
+$breakpoint-width-laptop-1280: 1280px;
+$breakpoint-width-laptop-1440: 1440px;
+$breakpoint-width-desktop: 1920px;
+
 
 /**
  * Camera experiences

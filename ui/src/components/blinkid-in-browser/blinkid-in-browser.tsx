@@ -22,8 +22,8 @@ import {
   MicroblinkUI
 } from '../../utils/data-structures';
 
+import { SdkService } from '../../utils/sdk.service';
 import { TranslationService } from '../../utils/translation.service';
-
 import * as GenericHelpers from '../../utils/generic.helpers';
 
 @Component({
@@ -104,14 +104,29 @@ export class BlinkidInBrowser implements MicroblinkUI {
   /**
    * Specify additional recognizer options.
    *
-   * Example: @TODO
+   * For a full list of available recognizer options see source code of a recognizer. For example,
+   * list of available recognizer options for BlinkIdRecognizer can be seen in the
+   * `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
+   *
+   * Example:
+   *
+   * `<blinkid-in-browser recognizer-options="scanCroppedDocumentImage"></blinkid-in-browser>`
    */
   @Prop({ attribute: 'recognizer-options' }) rawRecognizerOptions: string;
 
   /**
    * Specify additional recognizer options.
    *
-   * Example: @TODO
+   * For a full list of available recognizer options see source code of a recognizer. For example,
+   * list of available recognizer options for BlinkIdRecognizer can be seen in the
+   * `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
+   *
+   * Example:
+   *
+   * ```
+   * const blinkId = document.querySelector('blinkid-in-browser');
+   * blinkid.recognizerOptions = ['scanCroppedDocumentImage'];
+   * ```
    */
   @Prop() recognizerOptions: Array<string>;
 
@@ -163,6 +178,28 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * Default value is 'true'.
    */
   @Prop() scanFromImage: boolean = true;
+
+  /**
+   * Set to 'true' if scan from image should execute twice in case that first result is empty.
+   *
+   * If enabled, this option will add/remove 'scanCroppedDocumentImage' recognizer option for the
+   * second scan action.
+   */
+  @Prop() thoroughScanFromImage: boolean = false;
+
+  /**
+   * Set to 'true' if text labels should be displayed below action buttons.
+   *
+   * Default value is 'false'.
+   */
+  @Prop() showActionLabels: boolean = false;
+
+  /**
+   * Set to 'true' if modal window should be displayed in case of an error.
+   *
+   * Default value is 'false'.
+   */
+  @Prop() showModalWindows: boolean = false;
 
   /**
    * Set custom translations for UI component. List of available translation keys can be found in
@@ -224,7 +261,17 @@ export class BlinkidInBrowser implements MicroblinkUI {
    *
    * Image is scaled to 24x24 pixels.
    */
-  @Prop() iconSpinner: string;
+  @Prop() iconSpinnerScreenLoading: string;
+
+  /**
+   * Provide alternative loading icon. CSS rotation is applied to this icon.
+   *
+   * Every value that is placed here is passed as a value of `src` attribute to <img> element. This attribute can be
+   * used to provide location, base64 or any URL of alternative gallery icon.
+   *
+   * Image is scaled to 24x24 pixels.
+   */
+  @Prop() iconSpinnerFromGalleryExperience: string;
 
   /**
    * Camera device ID passed from root component.
@@ -263,9 +310,24 @@ export class BlinkidInBrowser implements MicroblinkUI {
   @Event() feedback: EventEmitter<FeedbackMessage>;
 
   /**
+   * Event which is emitted when camera scan is started, i.e. when user clicks on
+   * _scan from camera_ button.
+   */
+  @Event() cameraScanStarted: EventEmitter<null>;
+
+  /**
+   * Event which is emitted when image scan is started, i.e. when user clicks on
+   * _scan from gallery button.
+   */
+  @Event() imageScanStarted: EventEmitter<null>;
+
+  /**
    * Control UI state of camera overlay.
    *
    * Possible values are 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS'.
+   *
+   * In case of state `ERROR` and if `showModalWindows` is set to `true`, modal window
+   * with error message will be displayed. Otherwise, UI will close.
    */
   @Method()
   async setUiState(state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') {
@@ -294,6 +356,8 @@ export class BlinkidInBrowser implements MicroblinkUI {
     const rawTranslations = GenericHelpers.stringToObject(this.rawTranslations);
     this.finalTranslations = this.translations ? this.translations : rawTranslations;
     this.translationService = new TranslationService(this.finalTranslations || {});
+
+    this.sdkService = new SdkService();
   }
 
   render() {
@@ -312,12 +376,17 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         hideLoadingAndErrorUi={ this.hideLoadingAndErrorUi }
                         scanFromCamera={ this.scanFromCamera }
                         scanFromImage={ this.scanFromImage }
+                        thoroughScanFromImage={ this.thoroughScanFromImage }
+                        showActionLabels={ this.showActionLabels }
+                        showModalWindows={ this.showModalWindows }
                         iconCameraDefault={ this.iconCameraDefault}
                         iconCameraActive={ this.iconCameraActive }
                         iconGalleryDefault={ this.iconGalleryDefault }
                         iconGalleryActive={ this.iconGalleryActive }
                         iconInvalidFormat={ this.iconInvalidFormat }
-                        iconSpinner={ this.iconSpinner }
+                        iconSpinnerScreenLoading={ this.iconSpinnerScreenLoading }
+                        iconSpinnerFromGalleryExperience={ this.iconSpinnerFromGalleryExperience }
+                        sdkService={ this.sdkService }
                         translationService={ this.translationService }
                         cameraId={ this.cameraId }
                         onFeedback={ (ev: CustomEvent<FeedbackMessage>) => this.feedbackEl.show(ev.detail) }></mb-component>
@@ -329,6 +398,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
     );
   }
 
+  private sdkService: SdkService;
   private translationService: TranslationService;
 
   private finalRecognizers: Array<string>;

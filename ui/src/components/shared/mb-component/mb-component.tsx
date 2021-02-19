@@ -103,6 +103,26 @@ export class MbComponent {
   /**
    * See description in public component.
    */
+  @Prop() thoroughScanFromImage: boolean = false;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() showActionLabels: boolean = false;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() showModalWindows: boolean = false;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() showScanningLine: boolean = false;
+
+  /**
+   * See description in public component.
+   */
   @Prop() iconCameraDefault: string = 'data:image/svg+xml;utf8,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.32151 2.98816C6.63407 2.6756 7.05799 2.5 7.50002 2.5H12.5C12.942 2.5 13.366 2.6756 13.6785 2.98816C13.9911 3.30072 14.1667 3.72464 14.1667 4.16667C14.1667 4.38768 14.2545 4.59964 14.4108 4.75592C14.567 4.9122 14.779 5 15 5H15.8334C16.4964 5 17.1323 5.26339 17.6011 5.73223C18.07 6.20107 18.3334 6.83696 18.3334 7.5V15C18.3334 15.663 18.07 16.2989 17.6011 16.7678C17.1323 17.2366 16.4964 17.5 15.8334 17.5H4.16669C3.50365 17.5 2.86776 17.2366 2.39892 16.7678C1.93008 16.2989 1.66669 15.663 1.66669 15V7.5C1.66669 6.83696 1.93008 6.20107 2.39892 5.73223C2.86776 5.26339 3.50365 5 4.16669 5H5.00002C5.22103 5 5.433 4.9122 5.58928 4.75592C5.74556 4.59964 5.83335 4.38768 5.83335 4.16667C5.83335 3.72464 6.00895 3.30072 6.32151 2.98816ZM4.16669 6.66667C3.94567 6.66667 3.73371 6.75446 3.57743 6.91074C3.42115 7.06702 3.33335 7.27899 3.33335 7.5V15C3.33335 15.221 3.42115 15.433 3.57743 15.5893C3.73371 15.7455 3.94567 15.8333 4.16669 15.8333H15.8334C16.0544 15.8333 16.2663 15.7455 16.4226 15.5893C16.5789 15.433 16.6667 15.221 16.6667 15V7.5C16.6667 7.27899 16.5789 7.06702 16.4226 6.91074C16.2663 6.75446 16.0544 6.66667 15.8334 6.66667H15C14.337 6.66667 13.7011 6.40327 13.2323 5.93443C12.7634 5.46559 12.5 4.82971 12.5 4.16667L7.50002 4.16667C7.50002 4.82971 7.23663 5.46559 6.76779 5.93443C6.29895 6.40327 5.66306 6.66667 5.00002 6.66667H4.16669Z" fill="black"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10 9.16667C9.07955 9.16667 8.33335 9.91286 8.33335 10.8333C8.33335 11.7538 9.07955 12.5 10 12.5C10.9205 12.5 11.6667 11.7538 11.6667 10.8333C11.6667 9.91286 10.9205 9.16667 10 9.16667ZM6.66669 10.8333C6.66669 8.99238 8.15907 7.5 10 7.5C11.841 7.5 13.3334 8.99238 13.3334 10.8333C13.3334 12.6743 11.841 14.1667 10 14.1667C8.15907 14.1667 6.66669 12.6743 6.66669 10.8333Z" fill="black"/></svg>';
 
   /**
@@ -128,7 +148,17 @@ export class MbComponent {
   /**
    * See description in public component.
    */
-  @Prop() iconSpinner: string;
+  @Prop() iconSpinnerScreenLoading: string;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() iconSpinnerFromGalleryExperience: string;
+
+  /**
+    * Instance of SdkService passed from root component.
+    */
+  @Prop() sdkService: SdkService;
 
   /**
    * Instance of TranslationService passed from root component.
@@ -166,27 +196,60 @@ export class MbComponent {
   @Event() feedback: EventEmitter<FeedbackMessage>;
 
   /**
+   * See event 'cameraScanStarted' in public component.
+   */
+  @Event() cameraScanStarted: EventEmitter<null>;
+
+  /**
+   * See event 'imageScanStarted' in public component.
+   */
+  @Event() imageScanStarted: EventEmitter<null>;
+
+  /**
    * Host element as variable for manipulation (CSS in this case)
    */
   @Element() hostEl: HTMLElement;
 
   /**
    * Method is exposed outside which allow us to control UI state from parent component.
+   *
+   * In case of state `ERROR` and if `showModalWindows` is set to `true`, modal window
+   * with error message will be displayed.
    */
   @Method()
   async setUiState(state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') {
     window.setTimeout(() => {
-      this.apiProcessStatusElement.state = state;
-      this.apiProcessStatusElement.visible = true;
+      if (this.overlays.camera.visible) {
+        if (state === 'ERROR' && !this.showModalWindows) {
+          this.apiProcessStatusElement.state = 'NONE';
+          this.apiProcessStatusElement.visible = false;
+          this.stopRecognition();
+          return;
+        }
 
-      if (state !== 'ERROR') {
-        this.cameraExperience.classList.add('is-muted');
-      }
-      else {
-        this.cameraExperience.classList.add('is-error');
-      }
+        this.apiProcessStatusElement.state = state;
+        this.apiProcessStatusElement.visible = true;
 
-      this.cameraExperience.apiState = state;
+        if (state !== 'ERROR') {
+          this.cameraExperience.classList.add('is-muted');
+        }
+        else {
+          this.cameraExperience.classList.add('is-error');
+        }
+
+        this.cameraExperience.apiState = state;
+      }
+      else if (this.overlays.processing.visible) {
+        if (state === 'ERROR') {
+          if (this.showModalWindows) {
+            this.galleryExperienceModalErrorWindow.visible = true;
+          }
+          else {
+            this.galleryExperienceModalErrorWindow.visible = false;
+            this.stopRecognition();
+          }
+        }
+      }
 
       if (state === 'SUCCESS') {
         window.setTimeout(() => this.stopRecognition(), 400);
@@ -198,7 +261,6 @@ export class MbComponent {
    * Lifecycle hooks
    */
   connectedCallback() {
-    this.sdkService = new SdkService();
     this.hostEl.addEventListener('keyup', (ev: any) => {
       if (ev.key === 'Escape' || ev.code === 'Escape') {
         this.stopRecognition();
@@ -221,7 +283,7 @@ export class MbComponent {
           visible={!this.hideLoadingAndErrorUi}
           ref={el => this.screens.loading = el as HTMLMbScreenElement}
         >
-          <mb-spinner icon={this.iconSpinner}></mb-spinner>
+          <mb-spinner icon={this.iconSpinnerScreenLoading}></mb-spinner>
         </mb-screen>
         <mb-screen
           id="screen-error"
@@ -248,7 +310,8 @@ export class MbComponent {
             <mb-button
               ref={el => this.scanFromCameraButton = el as HTMLMbButtonElement}
               preventDefault={true}
-              visible={false}
+              visible={true}
+              disabled={false}
               icon={true}
               onButtonClick={() => this.startScanFromCamera()}
               imageSrcDefault={this.iconCameraDefault}
@@ -267,7 +330,7 @@ export class MbComponent {
               ref={el => this.scanFromImageButton = el as HTMLMbButtonElement}
               disabled={false}
               preventDefault={false}
-              visible={false}
+              visible={true}
               icon={true}
               onButtonClick={() => this.scanFromImageInput.click()}
               imageSrcDefault={this.iconGalleryDefault}
@@ -292,8 +355,22 @@ export class MbComponent {
           id="overlay-gallery-experience"
           ref={el => this.overlays.processing = el as HTMLMbOverlayElement}
         >
-          <mb-spinner icon={this.iconSpinner} size="large"></mb-spinner>
+          <mb-spinner icon={this.iconSpinnerFromGalleryExperience} size="large"></mb-spinner>
           <p>{this.translationService.i('process-image-message').toString()}</p>
+          <mb-modal
+            ref={el => this.galleryExperienceModalErrorWindow = el as HTMLMbModalElement}
+            visible={false}
+            modalTitle={this.translationService.i('feedback-scan-unsuccessful-title').toString()}
+            content={this.translationService.i('feedback-scan-unsuccessful').toString()}
+            onClose={() => this.closeGalleryExperienceModal()}
+          >
+            <div slot="actionButtons">
+              <button
+                class="primary modal-action-button"
+                onClick={() => this.closeGalleryExperienceModal()}
+              >{this.translationService.i('modal-window-close').toString()}</button>
+            </div>
+          </mb-modal>
         </mb-overlay>
         <mb-overlay
           id="overlay-camera-experience"
@@ -308,12 +385,14 @@ export class MbComponent {
             <mb-camera-experience
               ref={el => this.cameraExperience = el as HTMLMbCameraExperienceElement}
               translationService={this.translationService}
+              showScanningLine={this.showScanningLine}
               onClose={() => this.stopRecognition()}
               onFlipCameraAction={() => this.flipCameraAction()}
               class="overlay-camera-element"
             ></mb-camera-experience>
             <mb-api-process-status
               ref={el => this.apiProcessStatusElement = el as HTMLMbApiProcessStatusElement}
+              translationService={this.translationService}
               onCloseTryAgain={() => this.closeApiProcessStatus(true)}
               onCloseFromStart={() => this.stopRecognition()}
             ></mb-api-process-status>
@@ -329,7 +408,10 @@ export class MbComponent {
             modalTitle="Error"
           >
             <div slot="actionButtons">
-              <button class="primary modal-action-button" onClick={() => this.showOverlay('')}>Close</button>
+              <button
+                class="primary modal-action-button"
+                onClick={() => this.showOverlay('')}
+              >this.translationService.i('modal-window-close').toString()</button>
             </div>
           </mb-modal>
         </mb-overlay>
@@ -393,10 +475,16 @@ export class MbComponent {
       return;
     }
 
+    if (this.showActionLabels) {
+      this.scanFromCameraButton.label = this.translationService.i('action-message-camera').toString();
+      this.scanFromImageButton.label = this.translationService.i('action-message-image').toString();
+    }
+
     if (this.scanFromCamera) {
       this.scanFromCameraButton.visible = true;
 
       const hasVideoDevices = await DeviceHelpers.hasVideoDevices();
+
       this.scanFromCameraButton.disabled = !hasVideoDevices;
 
       if (!hasVideoDevices) {
@@ -405,11 +493,24 @@ export class MbComponent {
           state: 'FEEDBACK_INFO',
           message: this.translationService.i('camera-disabled').toString()
         });
+
+        if (this.showActionLabels) {
+          this.scanFromCameraButton.label = this.translationService.i('action-message-camera-disabled').toString();
+        }
       }
     }
 
-    if (this.scanFromImage && this.sdkService.isScanFromImageAvailable(this.recognizers, this.recognizerOptions)) {
+    if (this.scanFromImage) {
       this.scanFromImageButton.visible = true;
+
+      const imageScanIsAvailable = this.sdkService.isScanFromImageAvailable(this.recognizers, this.recognizerOptions);
+      this.scanFromImageButton.disabled = !imageScanIsAvailable;
+
+      if (!imageScanIsAvailable) {
+        if (this.showActionLabels) {
+          this.scanFromImageButton.label = this.translationService.i('action-message-image-not-supported').toString();
+        }
+      }
     }
 
     this.ready.emit(initEvent);
@@ -424,7 +525,6 @@ export class MbComponent {
   /**
    * Private methods and properties
    */
-  private sdkService: SdkService;
 
   /* Element references */
   private screens: { [key: string]: HTMLMbScreenElement | null } = {
@@ -449,6 +549,7 @@ export class MbComponent {
   private videoElement!: HTMLVideoElement;
   private licenseExperienceModal!: HTMLMbModalElement;
   private apiProcessStatusElement!: HTMLMbApiProcessStatusElement;
+  private galleryExperienceModalErrorWindow: HTMLMbModalElement;
   private scanReset: boolean = false;
 
   private detectionSuccessLock = false;
@@ -539,7 +640,8 @@ export class MbComponent {
             this.scanError.emit({
               code: Code.EmptyResult,
               fatal: true,
-              message: 'Could not extract information from video feed!'
+              message: 'Could not extract information from video feed!',
+              recognizerName: recognitionEvent.data.recognizerName
             });
             this.feedback.emit({
               code: FeedbackCode.ScanUnsuccessful,
@@ -605,23 +707,26 @@ export class MbComponent {
           break;
 
         case RecognitionStatus.OnFirstSideResult:
-          this.cameraExperience.setState(CameraExperienceState.Flip, this.isBackSide, true)
+          this.cameraExperience.setState(CameraExperienceState.Done, false, true)
             .then(() => {
-              if (!this.scanReset) {
-                this.isBackSide = true;
-                this.cameraExperience.setState(
-                  CameraExperienceState.Default,
-                  this.isBackSide
-                );
-              }
-            });
+              this.cameraExperience.setState(CameraExperienceState.Flip, this.isBackSide, true)
+                .then(() => {
+                  if (!this.scanReset) {
+                    this.isBackSide = true;
+                    this.cameraExperience.setState(
+                      CameraExperienceState.Default,
+                      this.isBackSide
+                    );
+                  }
+                });
+            })
           break;
 
         case RecognitionStatus.ScanSuccessful:
           // Which recognizer is it? ImageCapture or some other?
-          // Image capture have the 'closeCamera' flag set to false, we do not want to close camera overlay after image acquisition process is finished
+          // Image capture has the 'imageCapture' flag set to true, we do not want to close camera overlay after image acquisition process is finished
           // Cause maybe backend service will failed and we can press retry to resume with the same video recognizer and try again
-          if (recognitionEvent.data.closeCamera) {
+          if (!recognitionEvent.data.imageCapture) {
             this.cameraExperience.setState(CameraExperienceState.DoneAll, false, true)
               .then(() => {
                 this.cameraExperience.classList.add('hide');
@@ -641,9 +746,7 @@ export class MbComponent {
             });
           }
           else {
-            this.cameraExperience.classList.add('hide');
-
-            let resultIsValid = recognitionEvent.data.result.recognizer.processingStatus === 0 && recognitionEvent.data.result.recognizer.state === 2;
+            const resultIsValid = recognitionEvent.data.result.recognizer.processingStatus === 0 && recognitionEvent.data.result.recognizer.state === 2;
 
             if (resultIsValid) {
               this.scanSuccess.emit(recognitionEvent.data?.result);
@@ -657,7 +760,8 @@ export class MbComponent {
               this.scanError.emit({
                 code: Code.EmptyResult,
                 fatal: true,
-                message: 'Could not extract information from video feed!'
+                message: 'Could not extract information from video feed!',
+                recognizerName: recognitionEvent.data.recognizerName
               });
             }
           }
@@ -667,13 +771,20 @@ export class MbComponent {
           this.scanError.emit({
             code: Code.CameraNotAllowed,
             fatal: true,
-            message: 'Cannot access camera!'
+            message: 'Cannot access camera!',
+            recognizerName: ''
           });
           this.feedback.emit({
             code: FeedbackCode.CameraNotAllowed,
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('camera-not-allowed').toString()
           });
+          window.setTimeout(() => {
+            this.scanFromCameraButton.disabled = true;
+            if (this.showActionLabels) {
+              this.scanFromCameraButton.label = this.translationService.i('action-message-camera-not-allowed').toString();
+            }
+          }, 10);
           this.showOverlay('');
           break;
 
@@ -681,13 +792,21 @@ export class MbComponent {
           this.scanError.emit({
             code: Code.CameraInUse,
             fatal: true,
-            message: 'Camera already in use!'
+            message: 'Camera already in use!',
+            recognizerName: ''
           });
           this.feedback.emit({
             code: FeedbackCode.CameraInUse,
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('camera-in-use').toString()
           });
+
+          window.setTimeout(() => {
+            this.scanFromCameraButton.disabled = true;
+            if (this.showActionLabels) {
+              this.scanFromCameraButton.label = this.translationService.i('action-message-camera-in-use').toString();
+            }
+          }, 10);
           this.showOverlay('');
           break;
 
@@ -697,13 +816,20 @@ export class MbComponent {
           this.scanError.emit({
             code: Code.CameraGenericError,
             fatal: true,
-            message: `There was a problem while accessing camera ${recognitionEvent.status}`
+            message: `There was a problem while accessing camera ${recognitionEvent.status}`,
+            recognizerName: ''
           });
           this.feedback.emit({
             code: FeedbackCode.CameraGenericError,
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('camera-generic-error').toString()
           });
+          window.setTimeout(() => {
+            this.scanFromCameraButton.disabled = true;
+            if (this.showActionLabels) {
+              this.scanFromCameraButton.label = this.translationService.i('action-message-camera-disabled').toString();
+            }
+          }, 10);
           this.showOverlay('');
           break;
 
@@ -714,9 +840,10 @@ export class MbComponent {
 
     try {
       this.cameraExperience.classList.remove('hide');
+      this.cameraScanStarted.emit();
       await this.sdkService.scanFromCamera(configuration, eventHandler);
 
-      const cameraFlipped = await this.sdkService.isCameraFlipped();
+      const cameraFlipped = this.sdkService.isCameraFlipped();
       this.cameraExperience.setCameraFlipState(cameraFlipped);
     } catch (error) {
       this.checkIfInternetIsAvailable()
@@ -727,10 +854,13 @@ export class MbComponent {
               this.showLicenseInfoModal(error);
             }
             else {
+              console.log("error", error);
+
               this.scanError.emit({
                 code: Code.GenericScanError,
                 fatal: true,
-                message: `There was a problem during scan action.`
+                message: `There was a problem during scan action.`,
+                recognizerName: ''
               });
               this.feedback.emit({
                 code: FeedbackCode.GenericScanError,
@@ -773,7 +903,8 @@ export class MbComponent {
           this.scanError.emit({
             code: Code.NoImageFileFound,
             fatal: true,
-            message: 'No image file was provided to SDK service!'
+            message: 'No image file was provided to SDK service!',
+            recognizerName: ''
           });
           this.feedback.emit({
             code: FeedbackCode.ScanUnsuccessful,
@@ -781,17 +912,20 @@ export class MbComponent {
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
           this.showOverlay('');
+          this.scanFromImageInput.value = '';
           break;
 
         case RecognitionStatus.DetectionFailed:
           // Do nothing, RecognitionStatus.EmptyResultState will handle negative outcome
+          this.scanFromImageInput.value = '';
           break;
 
         case RecognitionStatus.EmptyResultState:
           this.scanError.emit({
             code: Code.EmptyResult,
             fatal: true,
-            message: 'Could not extract information from image!'
+            message: 'Could not extract information from image!',
+            recognizerName: recognitionEvent.data.recognizerName
           });
           this.feedback.emit({
             code: FeedbackCode.ScanUnsuccessful,
@@ -799,10 +933,12 @@ export class MbComponent {
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
           this.showOverlay('');
+          this.scanFromImageInput.value = '';
           break;
 
         case RecognitionStatus.UnknownError:
           // Do nothing, RecognitionStatus.EmptyResultState will handle negative outcome
+          this.scanFromImageInput.value = '';
           break;
 
         case RecognitionStatus.ScanSuccessful:
@@ -812,7 +948,11 @@ export class MbComponent {
             state: 'FEEDBACK_OK',
             message: ''
           });
-          this.showOverlay('');
+          this.scanFromImageInput.value = '';
+
+          if (!recognitionEvent.data.imageCapture) {
+            this.showOverlay('');
+          }
           break;
 
         default:
@@ -821,6 +961,12 @@ export class MbComponent {
     };
 
     try {
+      this.imageScanStarted.emit();
+
+      if (this.thoroughScanFromImage) {
+        configuration.thoroughScan = true;
+      }
+
       await this.sdkService.scanFromImage(configuration, eventHandler);
     } catch (error) {
       this.checkIfInternetIsAvailable()
@@ -834,7 +980,8 @@ export class MbComponent {
               this.scanError.emit({
                 code: Code.GenericScanError,
                 fatal: true,
-                message: `There was a problem during scan action.`
+                message: `There was a problem during scan action.`,
+                recognizerName: ''
               });
               this.feedback.emit({
                 code: FeedbackCode.GenericScanError,
@@ -1021,5 +1168,10 @@ export class MbComponent {
 
     this.showOverlay('');
     this.closeApiProcessStatus();
+  }
+
+  private closeGalleryExperienceModal() {
+    this.galleryExperienceModalErrorWindow.visible = false;
+    this.stopRecognition();
   }
 }

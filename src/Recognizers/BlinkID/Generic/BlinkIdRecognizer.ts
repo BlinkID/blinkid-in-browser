@@ -55,6 +55,28 @@ export type BarcodeScanningStartedCallback = () => void;
 export type ClassifierCallback = ( supported: boolean ) => void;
 
 /**
+* RecognitionModeFilter is used to enable/disable recognition of specific document groups.
+* Setting is taken into account only if the right for that document is purchased.
+*/
+export class RecognitionModeFilter
+{
+    /** Enable scanning of MRZ IDs. Setting is taken into account only if the mrz_id right is purchased. */
+    enableMrzId = true
+
+    /** Enable scanning of Passport MRZ. Setting is taken into account only if the passport right is purchased. */
+    enableMrzPassport = true
+
+    /** Enable scanning of visa MRZ. Setting is taken into account only if the visa right is purchased. */
+    enableMrzVisa = true
+
+    /** Enable scanning of Photo ID. Setting is taken into account only if the photo_id right is purchased. */
+    enablePhotoId = true
+
+    /** Enable full document recognition. Setting is taken into account only if the document right to scan that document is purchased. */
+    enableFullDocumentRecognition = true
+}
+
+/**
  * A settings object that is used for configuring the BlinkIdRecognizer.
  */
 export class BlinkIdRecognizerSettings implements RecognizerSettings,
@@ -77,6 +99,18 @@ export class BlinkIdRecognizerSettings implements RecognizerSettings,
      * Unverified MRZ is parsed, but check digits are incorrect.
      */
     allowUnverifiedMrzResults = true;
+
+    /**
+     * Enable or disable recognition of specific document groups supported by the current license.
+     * By default all modes are enabled.
+     */
+    recognitionModeFilter = new RecognitionModeFilter();
+
+    /**
+     * Configure the recognizer to only work on already cropped and dewarped images.
+     * This only works for still images - video feeds will ignore this setting.
+     */
+    scanCroppedDocumentImage = false;
 
     /**
      * Whether result characters validatation is performed.
@@ -331,11 +365,6 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
      * The image of the signature
      */
     readonly signatureImage: ImageResult;
-
-    /**
-     * The data extracted from the visual inspection zone.
-     */
-    readonly viz: VIZResult;
 }
 
 /**
@@ -352,6 +381,11 @@ export interface BlinkIdRecognizerResult extends BaseBlinkIdRecognizerResult
      * Result of document image analysis.
      */
     readonly imageAnalysisResult: ImageAnalysisResult;
+
+    /**
+     * The data extracted from the visual inspection zone.
+     */
+    readonly viz: VIZResult;
 }
 
 /**

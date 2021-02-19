@@ -2,6 +2,8 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
+@import "./globals-sass";
+
 /**
  * CSS variables
  *
@@ -30,6 +32,8 @@
 
   --mb-component-box-shadow:                    none;
 
+  --mb-component-button-size:                   #{$button-size};
+  --mb-component-button-icon-size:              #{$button-icon-size};
   --mb-component-button-background:             #FFF;
   --mb-component-button-border-color:           rgba(120, 120, 128, 0.2);
   --mb-component-button-border-color-focus:     rgba(72, 178, 232, 0.5);
@@ -41,6 +45,12 @@
 
   --mb-component-button-box-shadow:             0px 1px 4px rgba(0, 0, 0, 0.1);
   --mb-component-button-box-shadow-disabled:    none;
+
+  --mb-component-action-buttons-justify-content: flex-end;
+  --mb-component-action-buttons-width:          2 * #{$button-size} + #{$padding-unit-medium};
+  --mb-component-action-buttons-last-margin:    0 0 0 8px;
+
+  --mb-component-action-label:                  block;
 
   /* User feedback (messages below buttons) */
   --mb-feedback-font-color-error:               #FF2D55;

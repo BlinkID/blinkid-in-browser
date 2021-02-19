@@ -11,6 +11,8 @@ import {
   EventEmitter,
 } from '@stencil/core';
 
+import { TranslationService } from '../../../utils/translation.service';
+
 @Component({
   tag: 'mb-api-process-status',
   styleUrl: 'mb-api-process-status.scss',
@@ -26,6 +28,11 @@ export class MbApiProcessStatus {
    * State value of API processing received from parent element ('loading' or 'success').
    */
   @Prop() state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS';
+
+  /**
+   * Instance of TranslationService passed from parent component.
+   */
+  @Prop() translationService: TranslationService;
 
   /**
    * Emitted when user clicks on 'Retry' button.
@@ -52,7 +59,7 @@ export class MbApiProcessStatus {
               </div>
             </div>
 
-            <p class="message">Just a moment</p>
+            <p class="message">{this.translationService.i('process-api-message').toString()}</p>
           </div>
         }
 
@@ -74,12 +81,15 @@ export class MbApiProcessStatus {
         { this.state === 'ERROR' &&
           <mb-modal
             visible={true}
-            modalTitle="Scan unsuccessful"
-            content="Unable to read the document. Please try again."
+            modalTitle={this.translationService.i('feedback-scan-unsuccessful-title').toString()}
+            content={this.translationService.i('feedback-scan-unsuccessful').toString()}
             onClose={() => this.closeFromStart.emit()}
           >
             <div slot="actionButtons">
-              <button class="primary modal-action-button" onClick={() => this.closeTryAgain.emit()}>Retry</button>
+              <button
+                class="primary modal-action-button"
+                onClick={() => this.closeTryAgain.emit()}
+              >{this.translationService.i('process-api-retry').toString()}</button>
             </div>
           </mb-modal>
         }
