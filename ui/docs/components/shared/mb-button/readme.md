@@ -14,6 +14,7 @@
 | `imageAlt`           | `image-alt`         | Passed description text for image element from parent component.                         | `string`             | `''`        |
 | `imageSrcActive`     | `image-src-active`  | Passed image from parent component.                                                      | `string`             | `''`        |
 | `imageSrcDefault`    | `image-src-default` | Passed image from parent component.                                                      | `string`             | `''`        |
+| `label`              | `label`             | Set to string which should be displayed below the icon.  If omitted, nothing will show.  | `string`             | `''`        |
 | `preventDefault`     | `prevent-default`   | Set to 'true' if default event should be prevented.                                      | `boolean`            | `false`     |
 | `translationService` | --                  | Instance of TranslationService passed from root component.                               | `TranslationService` | `undefined` |
 | `visible`            | `visible`           | Set to 'true' if button should be visible.                                               | `boolean`            | `false`     |

@@ -87,6 +87,16 @@ export interface IdBarcodeRecognizerResult extends RecognizerResult
     readonly endorsements: string;
 
     /**
+     * Document specific extended elements that contain all barcode fields in their original form.
+     * The indices of specific data within the array are given by the BarcodeElementKey enum.
+     *
+     * For example, to obtain the first name you can use extendedElements[BarcodeElementKey.CustomerFirstName].
+     *
+     * Currently this is only filled for AAMVACompliant documents.
+     */
+    readonly extendedElements: Array<string>;
+
+    /**
      *  The first name of the document owner.
      */
     readonly firstName: string;

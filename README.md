@@ -16,7 +16,9 @@ Check out the [official demo app](https://demo.microblink.com/in-browser-sdk/bli
     * See example at [Codepen](https://codepen.io/microblink/pen/ExPzzda)
 4. [Scan both sides of an identity document with a web camera](https://blinkid.github.io/blinkid-in-browser/examples/combined/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/BajeeMx)
-5. [Scan barcode from an identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/idbarcode/javascript/index.html)
+5. [Scan both sides of an identity document by uploading its image](https://blinkid.github.io/blinkid-in-browser/examples/combined-file/javascript/index.html)
+    * See example at [Codepen](https://codepen.io/microblink/pen/MWboMrr)
+6. [Scan barcode from an identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/idbarcode/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/NWxVVJO)
 
 To see the source code of the above examples, check out the [examples directory](examples). If you'd like to run examples of the UI component, either through the browser or locally, see the [ui/examples](ui/examples) directory.
@@ -43,12 +45,18 @@ Please keep in mind that BlinkID In-browser SDK is meant to be used natively in 
     * [ID barcode recognizer](#idBarcodeRecognizer)
     * [BlinkID recognizer](#blinkidRecognizer)
     * [BlinkID combined recognizer](#blinkidCombinedRecognizer)
+* [Recognizer settings](#recognizerSettings)
+* [Technical requirements](#technicalRequirements)
+* [Supported browsers](#webassembly-support)
+* [Camera devices](#camera-devices)
+* [Device support](#device-support)
 * [Troubleshooting](#troubleshoot)
     * [Integration problems](#integrationProblems)
     * [SDK problems](#sdkProblems)
         * [Licensing problems](#licensingProblems)
         * [Other problems](#otherProblems)
 * [FAQ and known issues](#faq)
+* [Additional info](#info)
 
 ## <a name="components-of-sdk"></a> Components of SDK
 
@@ -84,7 +92,7 @@ Make sure you enter a [fully qualified domain name](https://en.wikipedia.org/wik
 
 **Keep in mind:** Versions BlinkID 5.8.0 and above require an internet connection to work under our new License Management Program.
 
-This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of identity documents still happens offline, in the browser itself. 
+This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of documents still happens offline, in the browser itself. 
 
 Once the validation is complete, you can continue using the SDK in an offline mode (or over a private network) until the next check.
 
@@ -182,7 +190,7 @@ For example, in `package.json` you should have something like `"@microblink/blin
     }
     ```
 
-4. Create recognizer objects that will perform image recognition, configure them to your needs (to scan specific types of identity documents, for example) and use them to create a `RecognizerRunner` object:
+4. Create recognizer objects that will perform image recognition, configure them to your needs (to scan specific types of documents, for example) and use them to create a `RecognizerRunner` object:
 
     ```typescript
     import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
@@ -405,7 +413,7 @@ This section will first describe [what a `Recognizer`](#recognizerConcept) is an
 
 ### <a name="recognizerConcept"></a> The `Recognizer` concept
 
-The `Recognizer` is the basic unit tasked with reading identity documents within the BlinkID SDK. Its main purpose is to process the image and extract meaningful information from it. As you will see later, BlinkID SDK has lots of different `Recognizer` objects you can set up to recognize various documents.
+The `Recognizer` is the basic unit tasked with reading documents within the domain of BlinkID SDK. Its main purpose is to process the image and extract meaningful information from it. As you will see later, BlinkID SDK has lots of different `Recognizer` objects you can set up to recognize various documents.
 
 The `Recognizer` is the object on the WebAssembly heap, which means that it will not be automatically cleaned up by the garbage collector once it's not required anymore. Once you are done using it, you must call the `delete` method on it to release the memory on the WebAssembly heap. Failing to do so will result in memory leak on the WebAssembly heap which may result in a crash of the browser tab running your web app.
 
@@ -586,6 +594,113 @@ The [`BlinkIdCombinedRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdCombine
 You can find the list of the currently supported documents [here](docs/BlinkIDRecognizer.md). For detailed information about which fields can be extracted from each document, [check this link](docs/BlinkIDDocumentFields.md).
 
 We will continue expanding this recognizer by adding support for new document types in the future. Star this repo to stay updated.
+## <a name="recognizerSettings"></a> Recognizer settings
+
+It's possible to enable various recognizer settings before recognition process to modify default behaviour of the recognizer.
+
+List of all recognizer options is available in the source code of each recognizer, while list of all recognizers is available in the [List of available recognizers](#recognizerList) section.
+
+Recognizer settings should be enabled right after the recognizer has been created in the following manner:
+
+```typescript
+// Create instance of recognizer
+const BlinkIdRecognizer = await BlinkIDSDK.createBlinkIdRecognizer( sdk );
+
+// Retrieve current settings
+const settings = await BlinkIdRecognizer.currentSettings();
+
+// Update desired settings
+settings[ " <recognizer_available_setting> " ] = true;
+
+// Apply settings
+await BlinkIdRecognizer.updateSettings( settings );
+
+...
+```
+<!--
+# TODO
+1. Guidelines regarding webcams
+    * Webcams on apple devices
+    * External webcams
+        * Logitech C922 Pro Stream (isprobano, radi odlično, Jurica)
+        * Logitech C920 Pro HD
+        * Logitech C270 HD (budget option)
+    * Built-in webcams, e.g. Lenovo and similar
+2. Guidelines regarding device performance
+3. Specific guidelines for Mac laptops and PCs?
+-->
+## <a name="technicalRequirements"></a> Technical requirements
+
+This document provides information about technical requirements of end-user devices to run BlinkID.
+
+Requirements:
+
+1. The browser is [supported](#supported-browsers).
+2. The browser [has access to camera device](#camera-devices).
+3. The device has [enough computing power](#device-support) to extract data from an image.
+
+**Important**: BlinkID may not work correctly in *WebView*/*WKWebView*/*SFSafariViewController*. See [this section](#embedded).
+
+## <a name="webassembly-support"></a> Supported browsers
+
+Minimal browser versions with support for all features required by BlinkID.
+
+|Chrome|Safari|Edge|Firefox|Opera|iOS Safari|Android Browser|Opera Mobile|Chrome for Android|Firefox for Android|
+|------|------|----|-------|-----|----------|---------------|------------|------------------|-------------------|
+|    57|    11|  79|     52|   44|        14|             81|          59|                86|                 82|
+
+Internet Explorer is **not supported**.
+
+*Source: [caniuse](https://caniuse.com/wasm)*
+
+## <a name="camera-devices"></a> Camera devices
+
+*Keep in mind that camera device is optional, since BlinkID can extract data from still images.*
+
+SDK cannot access camera on **iOS** when the end-user is using a web browser **other than Safari**. Apple does not allow access to camera via WebRTC specification for other browsers.
+
+**Notes & Guidelines**
+
+* For optimal data extraction use high-quality camera device in well-lit space and don't move the camera too much.
+* It's recommended to use camera devices with autofocus functionality for fastest data extraction.
+* Camera devices on MacBook laptops don't work well with low ambient light, i.e. scanning will take longer than usual.
+
+## <a name="device-support"></a> Device support
+
+It's hard to pinpoint exact hardware specifications for successful data extraction, but based on our testing mid-end and high-end smartphone devices released in 2018 and later should be able to extract data from an image in a relatively short time frame.
+
+**Notes & Guidelines**
+
+* Browsers supported by BlinkID can run on older devices, where extraction can take much longer to execute, e.g. around 30 or even 40 seconds.
+
+## <a name="embedded"> SDK and *WebView*/*WKWebView*/*SFSafariViewController*
+
+### Android and *WebView*
+
+*WebView* is not supported for a couple of reasons:
+
+* There is no guarantee that developers of mobile apps are using *WebView* with all necessary features enabled.
+* It's up to developers of mobile apps to provide support for camera access from *WebView* (which is integral part of our experience), which requires additional work compared to classic camera permission in mobile apps.
+
+Also, it's possible for mobile app developers to use *WebView* alternatives like *GeckoView* and similar, which have their own constraints.
+
+### iOS, *WKWebView* and *SFSafariViewController*
+
+As for now, it's not possible to access the camera from *WKWebView* and *SFSafariViewController*.
+
+Camera access on iOS, i.e. WebRTC, is only supported in Safari browser. Other browsers like Chrome and Firefox won't work as expected.
+
+### Conclusion
+
+There is a general technical constraint when using BlinkID from in-app browser - it's not possible to know for sure if the SDK has or hasn't got camera access. That is, it's not possible to notify the user if the camera is not available during the initialization.
+
+However, majority of widely used apps with in-app browsers, e.g. Facebook and Snapchat, are using standard *WebView* or embedded Safari with all the features. For example, WASM and modern JS are supported.
+
+But the major problem still remains, how to get an image from the camera? Currently, we can advise two approaches:
+
+1. Detect via UA string if in-app browser is used and prompt the user to use the native browser.
+2. Detect via UA string if in-app browser is used and enable classic image upload via `<input type="file" accept="image/*" capture="environment" />` element.
+    * Based on the operating system and software version, users will be able to select an image from the gallery, or to capture an image from the camera.
 ## <a name="troubleshoot"></a> Troubleshooting
 
 ### <a name="integrationProblems"></a> Integration problems
@@ -625,22 +740,15 @@ If you are having problems with scanning certain items, undesired behaviour on s
 
 Each license key contains information about which features are allowed to use and which are not. This error indicates that your production license does not allow the use of a specific `Recognizer` object. You should contact [support](http://help.microblink.com) to check if the provided license is OK and that it really contains the features you've requested.
 
-* **Document is scanned successfully when using camera feed, but fails when a still image is being recognized with `processImage` method.**
-
-The reason for this is the way the SDK operates. When scanning from an image file, all data must be extracted from a single frame. This  is not always possible due to limited computing power. On the other hand, when an image is scanned with the camera, multiple frames are processed, so the relevant data can be extracted in chunks.
-
-**This problem is going to be fixed in future versions.** Keep an eye on this repository to get notified when new versions are released, and check [CHANGELOG.md](CHANGELOG.md) file to see a list of improvements.
-
 * **Why am I getting No internet connection error if I'm on a private network?**
 
 Versions BlinkID 5.8.0 and above require an internet connection to work under our new License Management Program.
 
-This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of identity documents still happens offline, in the browser itself. 
+This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of documents still happens offline, in the browser itself. 
 
 Once the validation is complete, you can continue using the SDK in an offline mode (or over a private network) until the next check.
 
 We've added error callback to Microblink SDK to inform you about the status of your license key.
-
 ## <a name="info"></a> Additional info
 
 Complete source code of the TypeScript wrapper can be found [here](src).

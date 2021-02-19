@@ -60,13 +60,18 @@ export class MbCameraExperience {
   @Prop() cameraFlipped: boolean = false;
 
   /**
+   * Show scanning line on camera
+   */
+  @Prop() showScanningLine: boolean = false;
+
+  /**
    * Emitted when user clicks on 'X' button.
    */
   @Event() close: EventEmitter<void>;
 
   @Watch('apiState')
   apiStateHandler(apiState: string, _oldValue: string) {
-    if (apiState === '')
+    if (apiState === '' && (this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined))
       this.cardIdentityElement.classList.add('visible');
     else
       this.cardIdentityElement.classList.remove('visible');
@@ -106,20 +111,22 @@ export class MbCameraExperience {
         this.flipCameraStateInProgress = true;
       }
 
-      this.cameraReticle.setAttribute('class', this.getStateClass(state, this.type));
-      this.cameraRectangle.setAttribute('class', this.getStateClass(state, this.type));
-
-      // Clear cameraMessage and set new message
-      while (this.cameraMessage.firstChild) {
-        this.cameraMessage.removeChild(this.cameraMessage.firstChild);
+      const stateClass = this.getStateClass(state);
+      switch(this.type) {
+        case CameraExperience.CardSingleSide:
+        case CameraExperience.CardCombined:
+          this.cameraCursorIdentityCard.setAttribute('class', `reticle ${stateClass}`);
+          break;
+        case CameraExperience.Barcode:
+          this.cameraCursorBarcode.setAttribute('class', `rectangle ${stateClass}`);
+          break;
+        case CameraExperience.BlinkCard:
+          stateClass === 'is-default' && this.showScanningLine ? this.scanningLine.classList.add('is-active') : this.scanningLine.classList.remove('is-active');
+          this.cameraCursorBlinkCard.setAttribute('class', `rectangle ${stateClass}`);
+          break;
       }
 
-      const message = this.getStateMessage(state, isBackSide);
-      if (message) {
-        this.cameraMessage.appendChild(message);
-      }
-
-      this.cameraMessage.setAttribute('class', message !== null ? 'message is-active' : 'message');
+      this.setMessage(state, isBackSide, this.type);
 
       window.setTimeout(() => {
         if (this.flipCameraStateInProgress && state === CameraExperienceState.Flip) {
@@ -131,23 +138,29 @@ export class MbCameraExperience {
     });
   }
 
+
+
   render() {
     return (
       <Host class={ this.showOverlay ? '' : 'no-overlay' }>
+        <div class="gradient-overlay top"></div>
+
+        {/* Barcode camera experience */}
         <div id="barcode" class={ this.type === CameraExperience.Barcode ? 'visible' : '' }>
-          <div class="rectangle" ref={ el => this.cameraRectangle = el as HTMLDivElement }>
-            { this.getEdge('top-right') }
-            { this.getEdge('bottom-right') }
-            { this.getEdge('top-left') }
-            { this.getEdge('bottom-left') }
+          <div class="rectangle-container">
+            <div class="rectangle" ref={ el => this.cameraCursorBarcode = el as HTMLDivElement }>
+                <div class="rectangle__el"></div>
+                <div class="rectangle__el"></div>
+                <div class="rectangle__el"></div>
+                <div class="rectangle__el"></div>
+            </div>
           </div>
         </div>
 
-        <div id="card-identity" ref={(el) => this.cardIdentityElement = el as HTMLDivElement} class={
-          this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined ? 'visible': ''
-        }>
+        {/* Identity card camera experience */}
+        <div id="card-identity" ref={(el) => this.cardIdentityElement = el as HTMLDivElement} class={ this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined ? 'visible': '' }>
           <div class="reticle-container">
-            <div class="reticle" ref={ el => this.cameraReticle = el as HTMLDivElement }>
+            <div class="reticle" ref={ el => this.cameraCursorIdentityCard = el as HTMLDivElement }>
               <div class="reticle__cursor">
                 <div class="reticle__el"></div>
                 <div class="reticle__el"></div>
@@ -156,9 +169,27 @@ export class MbCameraExperience {
               </div>
               <img class="reticle__done" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjk3MiAzMy40NkMyMC43MDk1IDMzLjQ2MDUgMjAuNDQ5NCAzMy40MDkyIDIwLjIwNjggMzMuMzA5QzE5Ljk2NDEgMzMuMjA4OCAxOS43NDM2IDMzLjA2MTYgMTkuNTU4IDMyLjg3NkwxMS4wNzQgMjQuMzlDMTAuODgyOSAyNC4yMDU2IDEwLjczMDMgMjMuOTg1MSAxMC42MjU0IDIzLjc0MTFDMTAuNTIwNCAyMy40OTcyIDEwLjQ2NSAyMy4yMzQ4IDEwLjQ2MjUgMjIuOTY5MkMxMC40NiAyMi43MDM3IDEwLjUxMDQgMjIuNDQwMyAxMC42MTA4IDIyLjE5NDRDMTAuNzExMiAyMS45NDg2IDEwLjg1OTYgMjEuNzI1MiAxMS4wNDcyIDIxLjUzNzNDMTEuMjM0OSAyMS4zNDkzIDExLjQ1ODEgMjEuMjAwNyAxMS43MDM4IDIxLjA5OTlDMTEuOTQ5NSAyMC45OTkyIDEyLjIxMjggMjAuOTQ4NCAxMi40Nzg0IDIwLjk1MDVDMTIuNzQzOSAyMC45NTI2IDEzLjAwNjQgMjEuMDA3NiAxMy4yNTA1IDIxLjExMjNDMTMuNDk0NiAyMS4yMTY5IDEzLjcxNTQgMjEuMzY5MSAxMy45IDIxLjU2TDIwLjk3IDI4LjYzTDMzLjcgMTUuOTA0QzM0LjA3NSAxNS41Mjg3IDM0LjU4MzggMTUuMzE3OCAzNS4xMTQzIDE1LjMxNzZDMzUuNjQ0OCAxNS4zMTc0IDM2LjE1MzcgMTUuNTI4IDM2LjUyOSAxNS45MDNDMzYuOTA0MyAxNi4yNzggMzcuMTE1MiAxNi43ODY4IDM3LjExNTQgMTcuMzE3M0MzNy4xMTU2IDE3Ljg0NzggMzYuOTA1IDE4LjM1NjcgMzYuNTMgMTguNzMyTDIyLjM4NiAzMi44NzZDMjIuMjAwNCAzMy4wNjE2IDIxLjk3OTkgMzMuMjA4OCAyMS43MzcyIDMzLjMwOUMyMS40OTQ2IDMzLjQwOTIgMjEuMjM0NSAzMy40NjA1IDIwLjk3MiAzMy40NloiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPgo=" />
             </div>
-            <p class="message" ref={ el => this.cameraMessage = el as HTMLParagraphElement }></p>
+            <p class="message" ref={ el => this.cameraMessageIdentityCard = el as HTMLParagraphElement }></p>
           </div>
         </div>
+
+        {/* BlinkCard camera experience */}
+        <div id="blinkcard" class={ this.type === CameraExperience.BlinkCard ? 'visible' : '' }>
+          <div class="rectangle-container">
+            <div class="rectangle" ref={ el => this.cameraCursorBlinkCard = el as HTMLDivElement }>
+              <div class="rectangle__cursor">
+                <div class="rectangle__el"></div>
+                <div class="rectangle__el"></div>
+                <div class="rectangle__el"></div>
+                <div class="rectangle__el"></div>
+              </div>
+              <div class="scanning-line" ref={ el => this.scanningLine = el as HTMLDivElement }></div>
+            </div>
+            <p class="message" ref={ el => this.cameraMessageBlinkCard = el as HTMLParagraphElement }></p>
+          </div>
+        </div>
+
+        <div class="gradient-overlay bottom"></div>
 
         <div class="controls">
           { this.apiState !== 'error' &&
@@ -183,13 +214,17 @@ export class MbCameraExperience {
     );
   }
 
-  private cameraReticle!: HTMLDivElement;
-  private cameraRectangle!: HTMLDivElement;
-  private cameraMessage!: HTMLParagraphElement;
+  private cameraCursorBarcode!: HTMLDivElement;
+  private cameraCursorIdentityCard!: HTMLDivElement;
+  private cameraCursorBlinkCard!: HTMLDivElement;
+  private cameraMessageIdentityCard!: HTMLParagraphElement;
+  private cameraMessageBlinkCard!: HTMLParagraphElement;
   private cameraStateInProgress: boolean = false;
   private cardIdentityElement: HTMLDivElement;
   private cameraFlipBtn: HTMLButtonElement;
   private flipCameraStateInProgress: boolean = false;
+  
+  private scanningLine!: HTMLDivElement;
 
   private flipCamera(): void {
     this.flipCameraAction.emit();
@@ -201,125 +236,102 @@ export class MbCameraExperience {
     this.close.emit();
   }
 
-  private getEdge(id: string): SVGElement {
-    return (
-      <svg id={ id } width="82" height="82" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g filter="url(#filter0_dd)">
-          { this.getPath(id) }
-        </g>
-        <defs>
-          <filter id="filter0_dd" x="0" y="0" width="82" height="82" filterUnits="userSpaceOnUse" color-interpolation-filters="s-rGB">
-            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
-            <feOffset dy="2"/>
-            <feGaussianBlur stdDeviation="12"/>
-            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
-            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
-            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
-            <feOffset/>
-            <feGaussianBlur stdDeviation="4"/>
-            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"/>
-            <feBlend mode="normal" in2="effect1_dropShadow" result="effect2_dropShadow"/>
-            <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow" result="shape"/>
-          </filter>
-        </defs>
-      </svg>
-    )
-  }
-
-  private getPath(direction: string): HTMLElement {
-    if (direction === 'top-left') {
-      return (<path d="M58 24H34C29.5817 24 26 27.5817 26 32V56" stroke="white" stroke-width="4"/>)
-    }
-
-    if (direction === 'top-right') {
-      return (<path d="M24 24H48C52.4183 24 56 27.5817 56 32V56" stroke="white" stroke-width="4"/>)
-    }
-
-    if (direction === 'bottom-left') {
-      return (<path d="M26 22V46C26 50.4183 29.5817 54 34 54H58" stroke="white" stroke-width="4"/>)
-    }
-
-    if (direction === 'bottom-right') {
-      return (<path d="M56 22V46C56 50.4183 52.4183 54 48 54H24" stroke="white" stroke-width="4"/>)
-    }
-  }
-
-  private getStateClass(state: CameraExperienceState, type: CameraExperience): string {
-    let classNames;
-
-    if (type === CameraExperience.Barcode) {
-      classNames = ['rectangle'];
-    }
-    else {
-      classNames = ['reticle'];
-    }
+  private getStateClass(state: CameraExperienceState): string {
+    let stateClass = 'is-default';
 
     switch (state) {
       case CameraExperienceState.Classification:
-        classNames.push('is-classification');
+        stateClass = 'is-classification';
         break;
 
       case CameraExperienceState.Default:
-        classNames.push('is-default');
+        stateClass = 'is-default';
         break;
 
       case CameraExperienceState.Detection:
-        classNames.push('is-detection');
+        stateClass = 'is-detection';
         break;
 
       case CameraExperienceState.MoveFarther:
-        classNames.push('is-error-move-farther');
+        stateClass = 'is-error-move-farther';
         break;
 
       case CameraExperienceState.MoveCloser:
-        classNames.push('is-error-move-closer');
+        stateClass = 'is-error-move-closer';
         break;
 
       case CameraExperienceState.AdjustAngle:
-        classNames.push('is-error-adjust-angle');
+        stateClass = 'is-error-adjust-angle';
         break;
 
       case CameraExperienceState.Flip:
-        classNames.push('is-flip');
+        stateClass = 'is-flip';
         break;
 
       case CameraExperienceState.Done:
-        classNames.push('is-done');
+        stateClass = 'is-done';
         break;
 
       case CameraExperienceState.DoneAll:
-        classNames.push('is-done-all');
+        stateClass = 'is-done-all';
         break;
 
       default:
         // Reset class
     }
 
-    return classNames.join(' ');
+    return stateClass;
+  }
+
+  private setMessage(state: CameraExperienceState, isBackSide: boolean, type: CameraExperience): void {
+    const message = this.getStateMessage(state, isBackSide);
+
+    switch(type) {
+      case CameraExperience.CardSingleSide:
+      case CameraExperience.CardCombined:
+        while (this.cameraMessageIdentityCard.firstChild) {
+          this.cameraMessageIdentityCard.removeChild(this.cameraMessageIdentityCard.firstChild);
+        }
+        if (message) this.cameraMessageIdentityCard.appendChild(message);
+
+        this.cameraMessageIdentityCard.setAttribute('class', message && message !== null ? 'message is-active' : 'message');
+        break;
+      case CameraExperience.BlinkCard:
+        while (this.cameraMessageBlinkCard.firstChild) {
+          this.cameraMessageBlinkCard.removeChild(this.cameraMessageBlinkCard.firstChild);
+        }
+        if (message) this.cameraMessageBlinkCard.appendChild(message);
+    
+        this.cameraMessageBlinkCard.setAttribute('class', message && message !== null ? 'message is-active' : 'message');
+        break;
+      default:
+        // Do nothing
+    }
   }
 
   private getStateMessage(state: CameraExperienceState, isBackSide: boolean = false): HTMLSpanElement|null {
     const getStateMessageAsHTML = (message: string|Array<string>): HTMLSpanElement => {
-      const messageArray = typeof message === 'string' ? [ message ] : message;
-      const children = [];
+      if (message) {
+        const messageArray = typeof message === 'string' ? [ message ] : message;
+        const children = [];
 
-      while (messageArray.length) {
-        const sentence = messageArray.shift();
-        children.push(document.createTextNode(sentence));
+        while (messageArray.length) {
+          const sentence = messageArray.shift();
+          children.push(document.createTextNode(sentence));
 
-        if (messageArray.length) {
-          children.push(document.createElement('br'));
+          if (messageArray.length) {
+            children.push(document.createElement('br'));
+          }
         }
+
+        const spanElement = document.createElement('span');
+
+        while (children.length) {
+          spanElement.appendChild(children.shift());
+        }
+
+        return spanElement;
       }
-
-      const spanElement = document.createElement('span');
-
-      while (children.length) {
-        spanElement.appendChild(children.shift());
-      }
-
-      return spanElement;
     }
 
     switch (state) {

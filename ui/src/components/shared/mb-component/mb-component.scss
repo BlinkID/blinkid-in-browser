@@ -46,7 +46,7 @@
   align-items: center;
 
   .action-label {
-    display: block;
+    display: var(--mb-component-action-label);
     margin: 0 $padding-unit-large 0 0;
 
     &:dir(rtl) {
@@ -56,12 +56,11 @@
 
   .action-buttons {
     display: flex;
-    justify-content: flex-end;
-
-    width: 2 * $button-size + $padding-unit-medium;
+    width: var(--mb-component-action-buttons-width);
+    justify-content: var(--mb-component-action-buttons-justify-content);
 
     mb-button:last-child {
-      margin: 0 0 0 $padding-unit-medium;
+      margin: var(--mb-component-action-buttons-last-margin);
     }
   }
 }

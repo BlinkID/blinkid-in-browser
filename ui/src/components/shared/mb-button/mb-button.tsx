@@ -8,8 +8,7 @@ import {
   EventEmitter,
   Host,
   h,
-  Prop,
-  Listen
+  Prop
 } from '@stencil/core';
 
 import { TranslationService } from '../../../utils/translation.service';
@@ -57,6 +56,13 @@ export class MbButton {
   @Prop() imageAlt: string = '';
 
   /**
+   * Set to string which should be displayed below the icon.
+   *
+   * If omitted, nothing will show.
+   */
+  @Prop() label: string = '';
+
+  /**
    * Instance of TranslationService passed from root component.
    */
   @Prop() translationService: TranslationService;
@@ -67,18 +73,10 @@ export class MbButton {
    */
   @Event() buttonClick: EventEmitter<UIEvent>;
 
-  @Listen('mouseover') handleMouseOver() {
-    this.iconElem.setAttribute('src', this.imageSrcActive);
-  }
-
-  @Listen('mouseout') handleMouseOut() {
-    this.iconElem.setAttribute('src', this.imageSrcDefault);
-  }
-
   render() {
     return (
-      <Host className={ this.getClassNames() } onClick={ (ev: UIEvent) => this.handleClick(ev) }>
-        <a href="javascript:void(0)">
+      <Host className={ this.getClassNames() } onClick={ (ev: UIEvent) => this.handleClick(ev) } ref={el => this.buttonElement = el as HTMLDivElement}>
+        <a ref={el => this.anchorElement = el as HTMLAnchorElement} href="javascript:void(0)">
           {
             this.imageSrcDefault && this.imageAlt === 'action-alt-camera' &&
             <img src={ this.imageSrcDefault } alt={ this.translationService.i(this.imageAlt).toString() } ref={ el => this.iconElem = el as HTMLOrSVGImageElement } />
@@ -91,8 +89,19 @@ export class MbButton {
             </label>
           }
         </a>
+        {
+          this.label !== '' &&
+          <span>{ this.label }</span>
+        }
       </Host>
     );
+  }
+
+  componentDidRender() {
+    this.iconElem.setAttribute('src', this.imageSrcDefault);
+    
+    this.anchorElement.addEventListener('mouseover', () => this.handleMouseOver());
+    this.anchorElement.addEventListener('mouseout', () => this.handleMouseOut());
   }
 
   private getClassNames(): string {
@@ -126,6 +135,15 @@ export class MbButton {
     this.buttonClick.emit(ev);
   }
 
-  private iconElem: HTMLOrSVGImageElement;
+  private handleMouseOver() {
+    if (!this.buttonElement.classList.contains('disabled')) this.iconElem.setAttribute('src', this.imageSrcActive);
+  }
 
+  private handleMouseOut() {
+    if (!this.buttonElement.classList.contains('disabled')) this.iconElem.setAttribute('src', this.imageSrcDefault);
+  }
+
+  private iconElem: HTMLOrSVGImageElement;
+  private buttonElement: HTMLDivElement;
+  private anchorElement: HTMLAnchorElement;
 }

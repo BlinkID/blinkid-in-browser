@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CameraExperience, CameraExperienceState, EventFatalError, EventReady, EventScanError, EventScanSuccess, FeedbackMessage } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
+import { SdkService } from "./utils/sdk.service";
 export namespace Components {
     interface BlinkidInBrowser {
         /**
@@ -56,7 +57,11 @@ export namespace Components {
         /**
           * Provide alternative loading icon. CSS rotation is applied to this icon.  Every value that is placed here is passed as a value of `src` attribute to <img> element. This attribute can be used to provide location, base64 or any URL of alternative gallery icon.  Image is scaled to 24x24 pixels.
          */
-        "iconSpinner": string;
+        "iconSpinnerFromGalleryExperience": string;
+        /**
+          * Provide alternative loading icon. CSS rotation is applied to this icon.  Every value that is placed here is passed as a value of `src` attribute to <img> element. This attribute can be used to provide location, base64 or any URL of alternative gallery icon.  Image is scaled to 24x24 pixels.
+         */
+        "iconSpinnerScreenLoading": string;
         /**
           * Set to 'true' if success frame should be included in final scanning results.  Default value is 'false'.
          */
@@ -66,7 +71,7 @@ export namespace Components {
          */
         "licenseKey": string;
         /**
-          * Specify additional recognizer options.  Example: @TODO
+          * Specify additional recognizer options.  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.  Example:  `<blinkid-in-browser recognizer-options="scanCroppedDocumentImage"></blinkid-in-browser>`
          */
         "rawRecognizerOptions": string;
         /**
@@ -78,7 +83,7 @@ export namespace Components {
          */
         "rawTranslations": string;
         /**
-          * Specify additional recognizer options.  Example: @TODO
+          * Specify additional recognizer options.  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.  Example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkid.recognizerOptions = ['scanCroppedDocumentImage']; ```
          */
         "recognizerOptions": Array<string>;
         /**
@@ -98,9 +103,21 @@ export namespace Components {
          */
         "setUiMessage": (state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK', message: string) => Promise<void>;
         /**
-          * Control UI state of camera overlay.  Possible values are 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS'.
+          * Control UI state of camera overlay.  Possible values are 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS'.  In case of state `ERROR` and if `showModalWindows` is set to `true`, modal window with error message will be displayed. Otherwise, UI will close.
          */
         "setUiState": (state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') => Promise<void>;
+        /**
+          * Set to 'true' if text labels should be displayed below action buttons.  Default value is 'false'.
+         */
+        "showActionLabels": boolean;
+        /**
+          * Set to 'true' if modal window should be displayed in case of an error.  Default value is 'false'.
+         */
+        "showModalWindows": boolean;
+        /**
+          * Set to 'true' if scan from image should execute twice in case that first result is empty.  If enabled, this option will add/remove 'scanCroppedDocumentImage' recognizer option for the second scan action.
+         */
+        "thoroughScanFromImage": boolean;
         /**
           * Set custom translations for UI component. List of available translation keys can be found in `src/utils/translation.service.ts` file.
          */
@@ -111,6 +128,10 @@ export namespace Components {
           * State value of API processing received from parent element ('loading' or 'success').
          */
         "state": 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS';
+        /**
+          * Instance of TranslationService passed from parent component.
+         */
+        "translationService": TranslationService;
         /**
           * Element visibility, default is 'false'.
          */
@@ -137,6 +158,10 @@ export namespace Components {
           * Passed image from parent component.
          */
         "imageSrcDefault": string;
+        /**
+          * Set to string which should be displayed below the icon.  If omitted, nothing will show.
+         */
+        "label": string;
         /**
           * Set to 'true' if default event should be prevented.
          */
@@ -171,6 +196,10 @@ export namespace Components {
           * Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay.
          */
         "showOverlay": boolean;
+        /**
+          * Show scanning line on camera
+         */
+        "showScanningLine": boolean;
         /**
           * Instance of TranslationService passed from root component.
          */
@@ -224,7 +253,11 @@ export namespace Components {
         /**
           * See description in public component.
          */
-        "iconSpinner": string;
+        "iconSpinnerFromGalleryExperience": string;
+        /**
+          * See description in public component.
+         */
+        "iconSpinnerScreenLoading": string;
         /**
           * See description in public component.
          */
@@ -254,9 +287,29 @@ export namespace Components {
          */
         "scanFromImage": boolean;
         /**
-          * Method is exposed outside which allow us to control UI state from parent component.
+          * Instance of SdkService passed from root component.
+         */
+        "sdkService": SdkService;
+        /**
+          * Method is exposed outside which allow us to control UI state from parent component.  In case of state `ERROR` and if `showModalWindows` is set to `true`, modal window with error message will be displayed.
          */
         "setUiState": (state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') => Promise<void>;
+        /**
+          * See description in public component.
+         */
+        "showActionLabels": boolean;
+        /**
+          * See description in public component.
+         */
+        "showModalWindows": boolean;
+        /**
+          * See description in public component.
+         */
+        "showScanningLine": boolean;
+        /**
+          * See description in public component.
+         */
+        "thoroughScanFromImage": boolean;
         /**
           * Instance of TranslationService passed from root component.
          */
@@ -449,7 +502,11 @@ declare namespace LocalJSX {
         /**
           * Provide alternative loading icon. CSS rotation is applied to this icon.  Every value that is placed here is passed as a value of `src` attribute to <img> element. This attribute can be used to provide location, base64 or any URL of alternative gallery icon.  Image is scaled to 24x24 pixels.
          */
-        "iconSpinner"?: string;
+        "iconSpinnerFromGalleryExperience"?: string;
+        /**
+          * Provide alternative loading icon. CSS rotation is applied to this icon.  Every value that is placed here is passed as a value of `src` attribute to <img> element. This attribute can be used to provide location, base64 or any URL of alternative gallery icon.  Image is scaled to 24x24 pixels.
+         */
+        "iconSpinnerScreenLoading"?: string;
         /**
           * Set to 'true' if success frame should be included in final scanning results.  Default value is 'false'.
          */
@@ -459,6 +516,10 @@ declare namespace LocalJSX {
          */
         "licenseKey"?: string;
         /**
+          * Event which is emitted when camera scan is started, i.e. when user clicks on _scan from camera_ button.
+         */
+        "onCameraScanStarted"?: (event: CustomEvent<null>) => void;
+        /**
           * Event which is emitted during initialization of UI component.  Each event contains `code` property which has deatils about fatal errror.
          */
         "onFatalError"?: (event: CustomEvent<EventFatalError>) => void;
@@ -466,6 +527,10 @@ declare namespace LocalJSX {
           * Event which is emitted during positive or negative user feedback. If attribute/property `hideFeedback` is set to `false`, UI component will display the feedback.
          */
         "onFeedback"?: (event: CustomEvent<FeedbackMessage>) => void;
+        /**
+          * Event which is emitted when image scan is started, i.e. when user clicks on _scan from gallery button.
+         */
+        "onImageScanStarted"?: (event: CustomEvent<null>) => void;
         /**
           * Event which is emitted when UI component is successfully initialized and ready for use.
          */
@@ -479,7 +544,7 @@ declare namespace LocalJSX {
          */
         "onScanSuccess"?: (event: CustomEvent<EventScanSuccess>) => void;
         /**
-          * Specify additional recognizer options.  Example: @TODO
+          * Specify additional recognizer options.  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.  Example:  `<blinkid-in-browser recognizer-options="scanCroppedDocumentImage"></blinkid-in-browser>`
          */
         "rawRecognizerOptions"?: string;
         /**
@@ -491,7 +556,7 @@ declare namespace LocalJSX {
          */
         "rawTranslations"?: string;
         /**
-          * Specify additional recognizer options.  Example: @TODO
+          * Specify additional recognizer options.  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.  Example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkid.recognizerOptions = ['scanCroppedDocumentImage']; ```
          */
         "recognizerOptions"?: Array<string>;
         /**
@@ -506,6 +571,18 @@ declare namespace LocalJSX {
           * Set to 'true' if scan from image should be enabled.  Default value is 'true'.
          */
         "scanFromImage"?: boolean;
+        /**
+          * Set to 'true' if text labels should be displayed below action buttons.  Default value is 'false'.
+         */
+        "showActionLabels"?: boolean;
+        /**
+          * Set to 'true' if modal window should be displayed in case of an error.  Default value is 'false'.
+         */
+        "showModalWindows"?: boolean;
+        /**
+          * Set to 'true' if scan from image should execute twice in case that first result is empty.  If enabled, this option will add/remove 'scanCroppedDocumentImage' recognizer option for the second scan action.
+         */
+        "thoroughScanFromImage"?: boolean;
         /**
           * Set custom translations for UI component. List of available translation keys can be found in `src/utils/translation.service.ts` file.
          */
@@ -524,6 +601,10 @@ declare namespace LocalJSX {
           * State value of API processing received from parent element ('loading' or 'success').
          */
         "state"?: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS';
+        /**
+          * Instance of TranslationService passed from parent component.
+         */
+        "translationService"?: TranslationService;
         /**
           * Element visibility, default is 'false'.
          */
@@ -550,6 +631,10 @@ declare namespace LocalJSX {
           * Passed image from parent component.
          */
         "imageSrcDefault"?: string;
+        /**
+          * Set to string which should be displayed below the icon.  If omitted, nothing will show.
+         */
+        "label"?: string;
         /**
           * Event which is triggered when user clicks on button element. This event is not triggered when the button is disabled.
          */
@@ -588,6 +673,10 @@ declare namespace LocalJSX {
           * Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay.
          */
         "showOverlay"?: boolean;
+        /**
+          * Show scanning line on camera
+         */
+        "showScanningLine"?: boolean;
         /**
           * Instance of TranslationService passed from root component.
          */
@@ -641,7 +730,11 @@ declare namespace LocalJSX {
         /**
           * See description in public component.
          */
-        "iconSpinner"?: string;
+        "iconSpinnerFromGalleryExperience"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconSpinnerScreenLoading"?: string;
         /**
           * See description in public component.
          */
@@ -651,6 +744,10 @@ declare namespace LocalJSX {
          */
         "licenseKey"?: string;
         /**
+          * See event 'cameraScanStarted' in public component.
+         */
+        "onCameraScanStarted"?: (event: CustomEvent<null>) => void;
+        /**
           * See event 'fatalError' in public component.
          */
         "onFatalError"?: (event: CustomEvent<EventFatalError>) => void;
@@ -658,6 +755,10 @@ declare namespace LocalJSX {
           * Event containing FeedbackMessage which can be passed to MbFeedback component.
          */
         "onFeedback"?: (event: CustomEvent<FeedbackMessage>) => void;
+        /**
+          * See event 'imageScanStarted' in public component.
+         */
+        "onImageScanStarted"?: (event: CustomEvent<null>) => void;
         /**
           * See event 'ready' in public component.
          */
@@ -690,6 +791,26 @@ declare namespace LocalJSX {
           * See description in public component.
          */
         "scanFromImage"?: boolean;
+        /**
+          * Instance of SdkService passed from root component.
+         */
+        "sdkService"?: SdkService;
+        /**
+          * See description in public component.
+         */
+        "showActionLabels"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "showModalWindows"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "showScanningLine"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "thoroughScanFromImage"?: boolean;
         /**
           * Instance of TranslationService passed from root component.
          */

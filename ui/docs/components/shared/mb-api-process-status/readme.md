@@ -7,10 +7,11 @@
 
 ## Properties
 
-| Property  | Attribute | Description                                                                          | Type                                          | Default     |
-| --------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------- | ----------- |
-| `state`   | `state`   | State value of API processing received from parent element ('loading' or 'success'). | `"ERROR" \| "LOADING" \| "NONE" \| "SUCCESS"` | `undefined` |
-| `visible` | `visible` | Element visibility, default is 'false'.                                              | `boolean`                                     | `false`     |
+| Property             | Attribute | Description                                                                          | Type                                          | Default     |
+| -------------------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------- | ----------- |
+| `state`              | `state`   | State value of API processing received from parent element ('loading' or 'success'). | `"ERROR" \| "LOADING" \| "NONE" \| "SUCCESS"` | `undefined` |
+| `translationService` | --        | Instance of TranslationService passed from parent component.                         | `TranslationService`                          | `undefined` |
+| `visible`            | `visible` | Element visibility, default is 'false'.                                              | `boolean`                                     | `false`     |
 
 
 ## Events

@@ -33,11 +33,11 @@ function main()
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLC04YOZP6o4omehP4Kw61GsKVR5+hnhdmJM0Jl3uPIjDdf2G2jTObySnuUJybl5Gtls64/fJrq74wM7tQj9fdN+uaOcwKw6bTeO0MAXABpAgPju+JcPnlsbqm4mKIN/BQ4TX+FV5MPQB/NotnGYBzdk3jaf+D1YnJcEuTgAs7Oz8bY58MKSxAFSBntni8hznFa9neQypvnBrPE2IA7p0hDNewzyVD7QLU8t2/4Q535Alm80JR3xFT+9qLRraWUb85cKEDSE1PF/rT/0CJE3J5XiJWBBbgL43ioliTlfpP9hfAylphEwtazUU3Io=";
+    let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLK04YLwpEFfLy74eEzBsqIdlzcmogHy1dxF2HwJyAVELy6cES3x4ULiDRUAuMtiA0RTV8XLfiIKmqjo3ufEZpgZ3yaCU4yryL5MmCvS2iMaPLwXo9emB6xXG/tAgij6vtDjgSAaI8Yp2oWyTrw+F5lBC56eFvXjyzT1RqpBhjYRFDeYyt2HO26ij2KgOXTEQA2GVT2+Jonq3xm6QpLmWosev6z9IaWUm/inh+LuQSU9Cindvxk+fHDk8wZ0035OPpqFSuaKNsHo2A8BtHAkVUPSh5WZcga+GNKWGPPlnnWDK7ku3O8xHF+9S";
 
     if ( window.location.hostname === "blinkid.github.io" )
     {
-        licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaDiKtDEmGY7GfcDEqPjMcSyrcOFQPE+TXIW0+VOc0L3HS0AlchNnnReDPbThWD1FppHITqpuoW+ABS9b5WT354By2tZGiLXM7FGVKAiCWmJ6D3R7/IZK2TWM0VIAvgB0Ze0Nfi0PRxQl0ZIi7U8fFG92SCKjQRRyx9tF2Jztuwe62MtBIbuTdFH1ntFE7RgzWkdIL6S3U2URBnHgqYfFb3q0XghW/T5v+5V79lKeE4qWbQCQDxNfkktNWh78MmTDx0ZvTeiaotuqNvxsOl5jGw85kFZZEJ9SYcgakF18KIIbE5YyqB9cCqnBs=";
+        licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaDoIDmJUs1GgGIUyzQHIo6pt3xi0GhVDEqv56PdtstuYXVmO23orCuUGu3wFvzdTny8cXpxdFAfIOAy2YdeWBeXf11P120Eu/d1/bB0BS65uX+9uMLM7MV1zmROEumaVL6kw/poIQdLju4Q2nGo244nIx0GjwGGg2GKN93AB7tKjUCftKL2h0kG53RYQkUL/JqQTMP0n6LB6T/iI5BgF1/7LfYzsEAmT0nPR7PK6BZiUvJEBROWWWvp0TrQrfgk1qgEMcpMmNNEaIQjUoVVz0x8qWPylNLmqV6UhnKsLLwPXmXcR+BtrbiAQo=";
     }
 
     // 2. Create instance of SDK load settings with your license key
@@ -52,7 +52,7 @@ function main()
     loadSettings.loadProgressCallback = ( progress ) => ( progressEl.value = progress );
 
     // Set absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.9.1/resources/";
+    loadSettings.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.10.0/resources/";
 
     // 3. Load SDK
     BlinkIDSDK.loadWasmModule( loadSettings ).then

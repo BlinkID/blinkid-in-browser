@@ -2,9 +2,10 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-@import "../styles/globals-sass";
+@import "../styles/_globals-sass";
 
-@import "../styles/reticle";
+@import "../styles/_reticle";
+@import "../styles/_rectangle";
 
 *::after,
 *::before {
@@ -14,8 +15,22 @@
 :host {
   display: block;
 
+  .gradient-overlay {
+    position: absolute;
+    width: 100%;
+    height: 291px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35625) 0%, rgba(0, 0, 0, 0.25) 20.83%, rgba(0, 0, 0, 0) 100%);
+
+    &.top { top: 0; }
+    &.bottom {
+      bottom: 0;
+      transform: matrix(1, 0, 0, -1, 0, 0);
+    }
+  }
+
   #barcode,
-  #card-identity {
+  #card-identity,
+  #blinkcard {
     display: none;
 
     &.visible {
@@ -105,287 +120,12 @@
 }
 
 /**
- * Barcode
- */
-@mixin positionEdges($horizontal-padding, $vertical-padding) {
-  svg#top-right {
-    top: $vertical-padding;
-    right: $horizontal-padding;
-  }
-
-  svg#bottom-right {
-    bottom: $vertical-padding;
-    right: $horizontal-padding;
-  }
-
-  svg#top-left {
-    top: $vertical-padding;
-    left: $horizontal-padding;
-  }
-
-  svg#bottom-left {
-    bottom: $vertical-padding;
-    left: $horizontal-padding;
-  }
-}
-
-@mixin animation ($delay, $duration, $animation) {
-  -webkit-animation-delay: $delay;
-  -webkit-animation-duration: $duration;
-  -webkit-animation-name: $animation;
-
-  -moz-animation-delay: $delay;
-  -moz-animation-duration: $duration;
-  -moz-animation-name: $animation;
-
-  animation-delay: $delay;
-  animation-duration: $duration;
-  animation-name: $animation;
-}
-
-$rectangle-animation-duration: 200ms;
-
-:host #barcode {
-  svg {
-    position: absolute;
-    width: 82px;
-    height: 82px;
-
-    transition: opacity 0.1s ease;
-  }
-
-  @include positionEdges(0px, 88px);
-
-  .rectangle.is-done-all {
-    svg#top-left { @include animation(0, $rectangle-animation-duration, topLeftAnimation_mobile_portrait); }
-    svg#top-right { @include animation(0, $rectangle-animation-duration, topRightAnimation_mobile_portrait); }
-    svg#bottom-left { @include animation(0, $rectangle-animation-duration, bottomLeftAnimation_mobile_portrait); }
-    svg#bottom-right { @include animation(0, $rectangle-animation-duration, bottomRightAnimation_mobile_portrait); }
-  }
-}
-
-:host(.hide) #barcode {
-  svg {
-    opacity: 0;
-  }
-}
-
-// Photopay cursor animation for tablet and desktop screens
-@keyframes topLeftAnimation {
-  0% {
-    top: 88px;
-    left: 88px;
-  }
-  50% {
-    top: 107px;
-    left: 99px;
-  }
-  100% {
-    top: 88px;
-    left: 88px;
-  }
-}
-
-@keyframes topRightAnimation {
-  0% {
-    top: 88px;
-    right: 88px;
-  }
-  50% {
-    top: 107px;
-    right: 99px;
-  }
-  100% {
-    top: 88px;
-    right: 88px;
-  }
-}
-
-@keyframes bottomLeftAnimation {
-  0% {
-    bottom: 88px;
-    left: 88px;
-  }
-  50% {
-    bottom: 107px;
-    left: 99px;
-  }
-  100% {
-    bottom: 88px;
-    left: 88px;
-  }
-}
-
-@keyframes bottomRightAnimation {
-  0% {
-    bottom: 88px;
-    right: 88px;
-  }
-  50% {
-    bottom: 107px;
-    right: 99px;
-  }
-  100% {
-    bottom: 88px;
-    right: 88px;
-  }
-}
-
-// Photopay cursor animation for mobiles in landscape
-@keyframes topLeftAnimation_mobile_landscape {
-  0% {
-    top: 68px;
-    left: 88px;
-  }
-  50% {
-    top: 87px;
-    left: 99px;
-  }
-  100% {
-    top: 68px;
-    left: 88px;
-  }
-}
-
-@keyframes topRightAnimation_mobile_landscape {
-  0% {
-    top: 68px;
-    right: 88px;
-  }
-  50% {
-    top: 87px;
-    right: 99px;
-  }
-  100% {
-    top: 68px;
-    right: 88px;
-  }
-}
-
-@keyframes bottomLeftAnimation_mobile_landscape {
-  0% {
-    bottom: 68px;
-    left: 88px;
-  }
-  50% {
-    bottom: 87px;
-    left: 99px;
-  }
-  100% {
-    bottom: 68px;
-    left: 88px;
-  }
-}
-
-@keyframes bottomRightAnimation_mobile_landscape {
-  0% {
-    bottom: 68px;
-    right: 88px;
-  }
-  50% {
-    bottom: 87px;
-    right: 99px;
-  }
-  100% {
-    bottom: 68px;
-    right: 88px;
-  }
-}
-
-// Photopay cursor animation for mobiles in portrait
-@keyframes topLeftAnimation_mobile_portrait {
-  0% {
-    top: 88px;
-    left: 0px;
-  }
-  50% {
-    top: 107px;
-    left: 11px;
-  }
-  100% {
-    top: 88px;
-    left: 0px;
-  }
-}
-
-@keyframes topRightAnimation_mobile_portrait {
-  0% {
-    top: 88px;
-    right: 0px;
-  }
-  50% {
-    top: 107px;
-    right: 11px;
-  }
-  100% {
-    top: 88px;
-    right: 0px;
-  }
-}
-
-@keyframes bottomLeftAnimation_mobile_portrait {
-  0% {
-    bottom: 88px;
-    left: 0px;
-  }
-  50% {
-    bottom: 107px;
-    left: 11px;
-  }
-  100% {
-    bottom: 88px;
-    left: 0px;
-  }
-}
-
-@keyframes bottomRightAnimation_mobile_portrait {
-  0% {
-    bottom: 88px;
-    right: 0px;
-  }
-  50% {
-    bottom: 107px;
-    right: 11px;
-  }
-  100% {
-    bottom: 88px;
-    right: 0px;
-  }
-}
-
-// Tablet screens and above (desktop)
-@media only screen and (min-width: $breakpoint-width-tablet) {
-  :host #barcode {
-    @include positionEdges(88px, 88px);
-
-    .rectangle.is-done-all {
-      svg#top-left { @include animation(0, $rectangle-animation-duration, topLeftAnimation); }
-      svg#top-right { @include animation(0, $rectangle-animation-duration, topRightAnimation); }
-      svg#bottom-left { @include animation(0, $rectangle-animation-duration, bottomLeftAnimation); }
-      svg#bottom-right { @include animation(0, $rectangle-animation-duration, bottomRightAnimation); }
-    }
-  }
-}
-
-// Mobile screens in landscape
-@media only screen and (min-width: $breakpoint-width-mobile-landscape) and (max-height: $breakpoint-width-mobile-landscape) {
-  :host #barcode {
-    @include positionEdges(88px, 63px);
-
-    .rectangle.is-done-all {
-      svg#top-left { @include animation(0, $rectangle-animation-duration, topLeftAnimation_mobile_landscape); }
-      svg#top-right { @include animation(0, $rectangle-animation-duration, topRightAnimation_mobile_landscape); }
-      svg#bottom-left { @include animation(0, $rectangle-animation-duration, bottomLeftAnimation_mobile_landscape); }
-      svg#bottom-right { @include animation(0, $rectangle-animation-duration, bottomRightAnimation_mobile_landscape); }
-    }
-  }
-}
-
-/**
- * Card
+ * Wrapper
  */
 :host {
-  #card-identity {
+  #card-identity,
+  #barcode,
+  #blinkcard {
     position: absolute;
 
     top: 0;
@@ -405,6 +145,11 @@ $rectangle-animation-duration: 200ms;
     transform: translate(-50%, -50%);
 
     perspective: 600px;
+
+    .message {
+      top: 100%;
+      left: 50%;
+    }
   }
 
   .message {
@@ -414,8 +159,6 @@ $rectangle-animation-duration: 200ms;
     visibility: hidden;
 
     position: absolute;
-    top: 100%;
-    left: 50%;
     transform-origin: center;
     transform: translate(-50%, 0);
 
@@ -441,6 +184,152 @@ $rectangle-animation-duration: 200ms;
       opacity: 1;
       visibility: visible;
       margin: 2 * $base-unit 0 0 0;
+    }
+  }
+
+  #blinkcard { 
+    background: rgba(118, 118, 128, 0.16);
+
+    .rectangle-container {
+      position: absolute;
+      top: calc(50% - 230px/2);
+      left: calc(50% - 327px/2 + 0.2px);
+      width: 327px;
+      height: 230px;
+      transform-origin: center;
+      perspective: 600px;
+  
+      .message {
+        top: -70px;
+        left: 50%;
+      }
+    }
+  }
+
+  #barcode { 
+    .rectangle-container {
+      position: absolute;
+      top: calc(50% - 230px/2);
+      left: calc(50% - 327px/2 + 0.2px);
+      width: 327px;
+      height: 230px;
+      transform-origin: center;
+      perspective: 600px;
+    }
+  }
+}
+
+// Mobile in landscape
+@media only screen and (min-width: $breakpoint-width-mobile-landscape) and (orientation: landscape) {
+  :host {
+    &::after {
+      bottom: 40px;
+      left: unset;
+      right: 5%;
+    }
+
+    .gradient-overlay { height: 88px; }
+
+    .rectangle-container {
+      top: calc(50% - 263px/2 + 32px) !important;
+      left: calc(50% - 374px/2 + 0.2px) !important;
+      width: 374px !important;
+      height: 263px !important;
+    }
+  }
+}
+
+// Tablet screens portrait
+@media only screen and (min-width: $breakpoint-width-tablet) and (orientation: portrait) {
+  :host {
+    &::after {
+      bottom: 40px - 15px;
+      left: calc(50% - #{46px + 15px});
+    }
+
+    .gradient-overlay { height: 276px; }
+
+    .rectangle-container {
+      top: calc(50% - 472px/2) !important;
+      left: calc(50% - 672px/2 + 0.2px) !important;
+      width: 672px !important;
+      height: 472px !important;
+    }
+  }
+}
+
+// Tablet screens landscape
+@media only screen and (min-width: $breakpoint-width-tablet-landscape) and (orientation: landscape) {
+  :host {
+    &::after {
+      bottom: 40px - 15px;
+      left: calc(50% - #{46px + 15px});
+    }
+
+    .gradient-overlay { height: 110px; }
+
+    .rectangle-container {
+      top: calc(50% - 548px/2) !important;
+      left: calc(50% - 780px/2 + 0.2px) !important;
+      width: 780px !important;
+      height: 548px !important;
+    }
+  }
+}
+
+// Laptop screens 1
+@media only screen and (min-width: $breakpoint-width-laptop-1280) {
+  :host {
+    &::after {
+      bottom: 40px - 15px;
+      left: calc(50% - #{46px + 15px});
+    }
+
+    .gradient-overlay { height: 110px; }
+
+    .rectangle-container {
+      top: calc(50% - 500px/2 !important);
+      left: calc(50% - 712px/2 + 0.2px) !important;
+      width: 712px !important;
+      height: 500px !important;
+    }
+  }
+}
+
+// Laptop screens 2
+@media only screen and (min-width: $breakpoint-width-laptop-1440) {
+  :host {
+    &::after {
+      bottom: 40px - 15px;
+      left: calc(50% - #{46px + 15px});
+    }
+
+    .gradient-overlay { height: 110px; }
+
+    .rectangle-container {
+      top: calc(50% - 680px/2) !important;
+      left: calc(50% - 968px/2 + 0.2px) !important;
+      width: 968px !important;
+      height: 680px !important;
+    }
+  }
+}
+
+// Desktop screens
+@media only screen and (min-width: $breakpoint-width-desktop) {
+  :host {
+    &::after {
+      bottom: 40px - 15px;
+      left: calc(50% - #{46px + 15px});
+    }
+
+    .gradient-overlay { height: 110px; }
+
+    .rectangle-container {
+      top: calc(50% - 860px/2) !important;
+      left: calc(50% - 1224px/2 + 0.2px) !important;
+      width: 1224px !important;
+      height: 860px !important;
     }
   }
 }
