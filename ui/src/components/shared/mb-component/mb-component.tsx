@@ -14,6 +14,7 @@ import {
 } from '@stencil/core';
 
 import {
+  AnonymizationMode,
   CameraExperienceState,
   Code,
   EventFatalError,
@@ -64,6 +65,11 @@ export class MbComponent {
    * See description in public component.
    */
   @Prop({ mutable: true }) recognizers: Array<string>;
+
+  /**
+   * See description in public component.
+   */
+  @Prop({ mutable: true }) anonymization: AnonymizationMode;
 
   /**
    * See description in public component.
@@ -614,6 +620,7 @@ export class MbComponent {
     const configuration: VideoRecognitionConfiguration = {
       recognizers: this.recognizers,
       successFrame: this.includeSuccessFrame,
+      anonymization: this.anonymization,
       cameraFeed: this.videoElement,
       cameraId: this.cameraId
     };
@@ -882,6 +889,7 @@ export class MbComponent {
   private async startScanFromImage(files?: FileList) {
     const configuration: ImageRecognitionConfiguration = {
       recognizers: this.recognizers,
+      anonymization: this.anonymization,
       fileList: files ? files : this.scanFromImageInput.files
     };
 

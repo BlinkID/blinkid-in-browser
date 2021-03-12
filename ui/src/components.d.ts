@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CameraExperience, CameraExperienceState, EventFatalError, EventReady, EventScanError, EventScanSuccess, FeedbackMessage } from "./utils/data-structures";
+import { AnonymizationMode, CameraExperience, CameraExperienceState, EventFatalError, EventReady, EventScanError, EventScanSuccess, FeedbackMessage } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
 import { SdkService } from "./utils/sdk.service";
 export namespace Components {
@@ -14,6 +14,10 @@ export namespace Components {
           * Write a hello message to the browser console when license check is successfully performed.  Hello message will contain the name and version of the SDK, which are required information for all support tickets.  Default value is true.
          */
         "allowHelloMessage": boolean;
+        /**
+          * Whether sensitive data should be removed from images, result fields or both.  The setting only applies to certain documents.  Default value is AnonymizationMode.FullResult which means that certain documents are anonymizied by default!  For more information see `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.
+         */
+        "anonymization": string;
         /**
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
@@ -214,6 +218,10 @@ export namespace Components {
           * See description in public component.
          */
         "allowHelloMessage": boolean;
+        /**
+          * See description in public component.
+         */
+        "anonymization": AnonymizationMode;
         /**
           * Camera device ID passed from root component.
          */
@@ -460,6 +468,10 @@ declare namespace LocalJSX {
          */
         "allowHelloMessage"?: boolean;
         /**
+          * Whether sensitive data should be removed from images, result fields or both.  The setting only applies to certain documents.  Default value is AnonymizationMode.FullResult which means that certain documents are anonymizied by default!  For more information see `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.
+         */
+        "anonymization"?: string;
+        /**
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
         "cameraId"?: string | null;
@@ -691,6 +703,10 @@ declare namespace LocalJSX {
           * See description in public component.
          */
         "allowHelloMessage"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "anonymization"?: AnonymizationMode;
         /**
           * Camera device ID passed from root component.
          */

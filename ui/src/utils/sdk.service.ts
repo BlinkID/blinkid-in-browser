@@ -5,6 +5,7 @@
 import * as BlinkIDSDK from "../../../es/blinkid-sdk";
 
 import {
+  AnonymizationMode,
   AvailableRecognizers,
   AvailableRecognizerOptions,
   CameraExperience,
@@ -144,6 +145,7 @@ export class SdkService {
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
       configuration.recognizerOptions,
+      configuration.anonymization,
       configuration.successFrame
     );
 
@@ -317,7 +319,8 @@ export class SdkService {
 
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
-      configuration.recognizerOptions
+      configuration.recognizerOptions,
+      configuration.anonymization
     );
 
     const recognizerRunner = await this.createRecognizerRunner(
@@ -469,6 +472,7 @@ export class SdkService {
   private async createRecognizers(
     recognizers: Array<string>,
     recognizerOptions?: Array<string>,
+    anonymization?: AnonymizationMode,
     successFrame: boolean = false
   ): Promise<Array<RecognizerInstance>> {
     const pureRecognizers = [];
@@ -493,6 +497,16 @@ export class SdkService {
         if (settingsUpdated) {
           await recognizer.updateSettings(settings);
         }
+      }
+    }
+
+    if (typeof anonymization !== 'undefined') {
+      for (const recognizer of pureRecognizers) {
+        const settings = await recognizer.currentSettings();
+
+        settings.anonymizationMode = anonymization;
+
+        await recognizer.updateSettings(settings);
       }
     }
 

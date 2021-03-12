@@ -1,5 +1,11 @@
 # Release notes
 
+## 5.10.1
+
+* It's now possible to define anonymization mode when using UI component
+    * The default value of anonymization mode is `AnonymizationMode.FullResults` which means certain documents are anonymized by default.
+    * To change default value set attribute/property `anonymization` to one of supported values `None`, `ImageOnly`, `ResultFieldsOnly` or `FullResult`.
+
 ## 5.10.0
 
 **Newly supported identity documents**
