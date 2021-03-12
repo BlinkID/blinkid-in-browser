@@ -14,6 +14,7 @@ import {
 } from '@stencil/core';
 
 import {
+  AnonymizationMode,
   EventFatalError,
   EventReady,
   EventScanError,
@@ -100,6 +101,18 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * ```
    */
   @Prop() recognizers: Array<string>;
+
+  /**
+   * Whether sensitive data should be removed from images, result fields or both.
+   *
+   * The setting only applies to certain documents.
+   *
+   * Default value is AnonymizationMode.FullResult which means that certain documents are
+   * anonymizied by default!
+   *
+   * For more information see `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.
+   */
+  @Prop() anonymization: string = "FullResult";
 
   /**
    * Specify additional recognizer options.
@@ -370,6 +383,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         engineLocation={ this.engineLocation }
                         licenseKey={ this.licenseKey }
                         recognizers={ this.finalRecognizers }
+                        anonymization={ this.getAnonymizationMode(this.anonymization) }
                         recognizerOptions={ this.finalRecognizerOptions }
                         includeSuccessFrame={ this.includeSuccessFrame }
                         enableDrag={ this.enableDrag }
@@ -407,4 +421,19 @@ export class BlinkidInBrowser implements MicroblinkUI {
 
   private feedbackEl!: HTMLMbFeedbackElement;
   private mbComponentEl!: HTMLMbComponentElement;
+
+  private getAnonymizationMode(mode: string): AnonymizationMode {
+    switch (mode) {
+      case "None":
+        return AnonymizationMode.None;
+      case "ImageOnly":
+        return AnonymizationMode.ImageOnly;
+      case "ResultFieldsOnly":
+        return AnonymizationMode.ResultFieldsOnly;
+      case "FullResult":
+        return AnonymizationMode.FullResult;
+      default:
+        return AnonymizationMode.FullResult;
+    }
+  }
 }

@@ -147,6 +147,13 @@ export const AvailableRecognizers: { [key: string]: string } = {
   BlinkIdCombinedRecognizer:            'createBlinkIdCombinedRecognizer',
 }
 
+export enum AnonymizationMode {
+  None = BlinkIDSDK.AnonymizationMode.None,
+  ImageOnly = BlinkIDSDK.AnonymizationMode.ImageOnly,
+  ResultFieldsOnly = BlinkIDSDK.AnonymizationMode.ResultFieldsOnly,
+  FullResult = BlinkIDSDK.AnonymizationMode.FullResult
+}
+
 export const AvailableRecognizerOptions: { [key: string]: Array<string> } = {
   IdBarcodeRecognizer:        [],
   BlinkIdRecognizer:          [
@@ -169,6 +176,7 @@ export interface VideoRecognitionConfiguration {
   recognizers: Array<string>,
   recognizerOptions?: Array<string>,
   successFrame: boolean,
+  anonymization?: AnonymizationMode,
   cameraFeed: HTMLVideoElement,
   cameraId: string | null;
 }
@@ -176,6 +184,7 @@ export interface VideoRecognitionConfiguration {
 export interface ImageRecognitionConfiguration {
   recognizers: Array<string>,
   recognizerOptions?: Array<string>,
+  anonymization?: AnonymizationMode,
   thoroughScan?: boolean,
   fileList: FileList
 }
