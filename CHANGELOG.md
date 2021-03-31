@@ -1,5 +1,9 @@
 # Release notes
 
+## 5.10.2
+
+* Constructor of `VideoRecognizer` class is now public
+
 ## 5.10.1
 
 * It's now possible to define anonymization mode when using UI component
