@@ -241,6 +241,35 @@ export class VideoRecognizer
         );
     }
 
+    /**
+     * **Use only if provided factory functions are not well-suited for your use case.**
+     *
+     * Creates a new VideoRecognizer with provided HTMLVideoElement.
+     *
+     * Keep in mind that HTMLVideoElement **must have** a video feed which is ready to use.
+     *
+     * - If you want to take advantage of provided camera management, use `createVideoRecognizerFromCameraStream`
+     * - In case that static video file should be processed, use `createVideoRecognizerFromVideoPath`
+     *
+     * @param videoFeed HTMLVideoElement with video feed which is going to be processed
+     * @param recognizerRunner RecognizerRunner that should be used for video stream recognition
+     * @param cameraFlipped Whether the camera is flipped, e.g. if front-facing camera is used
+     * @param allowManualVideoPlayout Whether to allow manual video playout. Default value is `false`
+     */
+    constructor
+    (
+        videoFeed: HTMLVideoElement,
+        recognizerRunner: RecognizerRunner,
+        cameraFlipped = false,
+        allowManualVideoPlayout = false
+    )
+    {
+        this.videoFeed = videoFeed;
+        this.recognizerRunner = recognizerRunner;
+        this.cameraFlipped = cameraFlipped;
+        this.allowManualVideoPlayout = allowManualVideoPlayout;
+    }
+
     async flipCamera(): Promise< void >
     {
         if ( this.videoFeed )
@@ -506,24 +535,6 @@ export class VideoRecognizer
     private allowManualVideoPlayout = false;
 
     private cameraFlipped = false;
-
-    private constructor
-    (
-        videoFeed: HTMLVideoElement,
-        recognizerRunner: RecognizerRunner,
-        cameraFlipped = false,
-        allowManualVideoPlayout = false
-    )
-    {
-        this.videoFeed = videoFeed;
-        this.recognizerRunner = recognizerRunner;
-        this.cameraFlipped = cameraFlipped;
-
-        if ( allowManualVideoPlayout )
-        {
-            this.allowManualVideoPlayout = allowManualVideoPlayout;
-        }
-    }
 
     private playPauseEvent()
     {
