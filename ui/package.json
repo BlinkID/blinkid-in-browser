@@ -7,15 +7,18 @@
         "build": "stencil build --docs --config=stencil.config.ts",
         "check-types": "tsc --p ./tsconfig.json --noEmit",
         "clean": "rimraf demo dist docs loader resources",
-        "generate": "stencil generate",
         "prepare-assets": "cp -r ../resources/ resources",
+        "generate": "stencil generate",
         "start": "stencil build --dev --watch --serve --config=stencil.config.ts",
         "test": "stencil test --spec --e2e",
         "test.watch": "stencil test --spec --e2e --watchAll"
     },
     "devDependencies": {
         "@stencil/core": "~2.3.0",
+        "@stencil/postcss": "^2.0.0",
         "@stencil/sass": "^1.3.2",
+        "@types/autoprefixer": "^10.2.0",
+        "autoprefixer": "^10.2.5",
         "rimraf": "^3.0.2",
         "typescript": "^4.0.5"
     },

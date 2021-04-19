@@ -5,6 +5,7 @@
 import { CapturedFrame } from "./FrameCapture";
 import { MetadataCallbacks } from "./MetadataCallbacks";
 import { ClearTimeoutCallback } from "./ClearTimeoutCallback";
+import { WasmType } from "./WasmType";
 
 // ============================================ /
 // DATA STRUCTURES                              /
@@ -226,6 +227,11 @@ export interface WasmSDK
     readonly mbWasmModule: WasmModuleProxy;
 
     showOverlay: boolean;
+
+    /**
+     * The type of the WASM that was actually loaded.
+     */
+    loadedWasmType: WasmType;
 }
 
 /**

@@ -282,7 +282,7 @@ export enum Country
     YUGOSLAVIA = 252,
     ZAMBIA = 253,
     ZIMBABWE = 254,
-    COUNT = 255
+    COUNT = 255,
 }
 
 export enum Region
@@ -369,7 +369,34 @@ export enum Region
     NEW_YORK_CITY = 79,
     TAMAULIPAS = 80,
     VERACRUZ = 81,
-    COUNT = 82
+    CHIAPAS = 82,
+    COAHUILA = 83,
+    DURANGO = 84,
+    GUERRERO_COCULA = 85,
+    GUERRERO_JUCHITAN = 86,
+    GUERRERO_TEPECOACUILCO = 87,
+    GUERRERO_TLACOAPA = 88,
+    GUJARAT = 89,
+    HIDALGO = 90,
+    KARNATAKA = 91,
+    KERALA = 92,
+    KHYBER_PAKHTUNKHWA = 93,
+    MADHYA_PRADESH = 94,
+    MAHARASHTRA = 95,
+    MORELOS = 96,
+    NAYARIT = 97,
+    OAXACA = 98,
+    PUEBLA = 99,
+    PUNJAB = 100,
+    QUERETARO = 101,
+    SAN_LUIS_POTOSI = 102,
+    SINALOA = 103,
+    SONORA = 104,
+    TABASCO = 105,
+    TAMIL_NADU = 106,
+    YUCATAN = 107,
+    ZACATECAS = 108,
+    COUNT = 109,
 }
 
 export enum DocumentType
@@ -411,5 +438,15 @@ export enum DocumentType
     TAX_ID = 34,
     WEAPON_PERMIT = 35,
     VISA = 36,
-    COUNT = 37
+    BORDER_CROSSING_CARD = 37,
+    DRIVER_CARD = 38,
+    GLOBAL_ENTRY_CARD = 39,
+    MyPolis = 40,
+    NEXUS_CARD = 41,
+    PASSPORT_CARD = 42,
+    PROOF_OF_AGE_CARD = 43,
+    REFUGEE_ID = 44,
+    TRIBAL_ID = 45,
+    VETERAN_ID = 46,
+    COUNT = 47,
 }

@@ -93,6 +93,7 @@ export function isBrowserSupported(): boolean
     return false;
 }
 
+
 /**
  * Asynchronously loads and compiles the WebAssembly module.
  * @param loadSettings Object defining the settings for loading the WebAssembly module.

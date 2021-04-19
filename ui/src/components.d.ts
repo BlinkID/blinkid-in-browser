@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AnonymizationMode, CameraExperience, CameraExperienceState, EventFatalError, EventReady, EventScanError, EventScanSuccess, FeedbackMessage } from "./utils/data-structures";
+import { CameraExperience, CameraExperienceState, EventFatalError, EventReady, EventScanError, EventScanSuccess, FeedbackMessage } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
 import { SdkService } from "./utils/sdk.service";
 export namespace Components {
@@ -14,10 +14,6 @@ export namespace Components {
           * Write a hello message to the browser console when license check is successfully performed.  Hello message will contain the name and version of the SDK, which are required information for all support tickets.  Default value is true.
          */
         "allowHelloMessage": boolean;
-        /**
-          * Whether sensitive data should be removed from images, result fields or both.  The setting only applies to certain documents.  Default value is AnonymizationMode.FullResult which means that certain documents are anonymizied by default!  For more information see `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.
-         */
-        "anonymization": string;
         /**
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
@@ -75,10 +71,6 @@ export namespace Components {
          */
         "licenseKey": string;
         /**
-          * Specify additional recognizer options.  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.  Example:  `<blinkid-in-browser recognizer-options="scanCroppedDocumentImage"></blinkid-in-browser>`
-         */
-        "rawRecognizerOptions": string;
-        /**
           * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer     - cannot be used in combination with other recognizers     - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdRecognizer"></blinkid-in-browser>`
          */
         "rawRecognizers": string;
@@ -87,9 +79,9 @@ export namespace Components {
          */
         "rawTranslations": string;
         /**
-          * Specify additional recognizer options.  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.  Example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkid.recognizerOptions = ['scanCroppedDocumentImage']; ```
+          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {    'BlinkIdRecognizer': {      'returnFullDocumentImage': true,       // When setting values for enums, check the source code to see possible values.      // For AnonymizationMode we can see the list of possible values in      // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.      'anonymizationMode': 0    } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
          */
-        "recognizerOptions": Array<string>;
+        "recognizerOptions": { [key: string]: any };
         /**
           * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer     - cannot be used in combination with other recognizers     - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdRecognizer']; ```
          */
@@ -126,6 +118,10 @@ export namespace Components {
           * Set custom translations for UI component. List of available translation keys can be found in `src/utils/translation.service.ts` file.
          */
         "translations": { [key: string]: string };
+        /**
+          * Defines the type of the WebAssembly build that will be loaded. If omitted, SDK will determine the best possible WebAssembly build which should be loaded based on the browser support.  Available WebAssembly builds:  - 'BASIC' - 'ADVANCED' - 'ADVANCED_WITH_THREADS'  For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
+         */
+        "wasmType": string;
     }
     interface MbApiProcessStatus {
         /**
@@ -197,6 +193,10 @@ export namespace Components {
          */
         "setState": (state: CameraExperienceState, isBackSide?: boolean, force?: boolean) => Promise<void>;
         /**
+          * Show camera feedback message on camera for Barcode scanning
+         */
+        "showCameraFeedbackBarcodeMessage": boolean;
+        /**
           * Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay.
          */
         "showOverlay": boolean;
@@ -218,10 +218,6 @@ export namespace Components {
           * See description in public component.
          */
         "allowHelloMessage": boolean;
-        /**
-          * See description in public component.
-         */
-        "anonymization": AnonymizationMode;
         /**
           * Camera device ID passed from root component.
          */
@@ -277,7 +273,7 @@ export namespace Components {
         /**
           * See description in public component.
          */
-        "recognizerOptions": Array<string>;
+        "recognizerOptions": { [key: string]: any };
         /**
           * See description in public component.
          */
@@ -309,6 +305,10 @@ export namespace Components {
         /**
           * See description in public component.
          */
+        "showCameraFeedbackBarcodeMessage": boolean;
+        /**
+          * See description in public component.
+         */
         "showModalWindows": boolean;
         /**
           * See description in public component.
@@ -322,6 +322,10 @@ export namespace Components {
           * Instance of TranslationService passed from root component.
          */
         "translationService": TranslationService;
+        /**
+          * See description in public component.
+         */
+        "wasmType": string | null;
     }
     interface MbContainer {
     }
@@ -468,10 +472,6 @@ declare namespace LocalJSX {
          */
         "allowHelloMessage"?: boolean;
         /**
-          * Whether sensitive data should be removed from images, result fields or both.  The setting only applies to certain documents.  Default value is AnonymizationMode.FullResult which means that certain documents are anonymizied by default!  For more information see `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.
-         */
-        "anonymization"?: string;
-        /**
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
         "cameraId"?: string | null;
@@ -556,10 +556,6 @@ declare namespace LocalJSX {
          */
         "onScanSuccess"?: (event: CustomEvent<EventScanSuccess>) => void;
         /**
-          * Specify additional recognizer options.  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.  Example:  `<blinkid-in-browser recognizer-options="scanCroppedDocumentImage"></blinkid-in-browser>`
-         */
-        "rawRecognizerOptions"?: string;
-        /**
           * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer     - cannot be used in combination with other recognizers     - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdRecognizer"></blinkid-in-browser>`
          */
         "rawRecognizers"?: string;
@@ -568,9 +564,9 @@ declare namespace LocalJSX {
          */
         "rawTranslations"?: string;
         /**
-          * Specify additional recognizer options.  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.  Example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkid.recognizerOptions = ['scanCroppedDocumentImage']; ```
+          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {    'BlinkIdRecognizer': {      'returnFullDocumentImage': true,       // When setting values for enums, check the source code to see possible values.      // For AnonymizationMode we can see the list of possible values in      // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.      'anonymizationMode': 0    } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
          */
-        "recognizerOptions"?: Array<string>;
+        "recognizerOptions"?: { [key: string]: any };
         /**
           * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer     - cannot be used in combination with other recognizers     - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdRecognizer']; ```
          */
@@ -599,6 +595,10 @@ declare namespace LocalJSX {
           * Set custom translations for UI component. List of available translation keys can be found in `src/utils/translation.service.ts` file.
          */
         "translations"?: { [key: string]: string };
+        /**
+          * Defines the type of the WebAssembly build that will be loaded. If omitted, SDK will determine the best possible WebAssembly build which should be loaded based on the browser support.  Available WebAssembly builds:  - 'BASIC' - 'ADVANCED' - 'ADVANCED_WITH_THREADS'  For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
+         */
+        "wasmType"?: string;
     }
     interface MbApiProcessStatus {
         /**
@@ -682,6 +682,10 @@ declare namespace LocalJSX {
          */
         "onFlipCameraAction"?: (event: CustomEvent<void>) => void;
         /**
+          * Show camera feedback message on camera for Barcode scanning
+         */
+        "showCameraFeedbackBarcodeMessage"?: boolean;
+        /**
           * Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay.
          */
         "showOverlay"?: boolean;
@@ -703,10 +707,6 @@ declare namespace LocalJSX {
           * See description in public component.
          */
         "allowHelloMessage"?: boolean;
-        /**
-          * See description in public component.
-         */
-        "anonymization"?: AnonymizationMode;
         /**
           * Camera device ID passed from root component.
          */
@@ -790,7 +790,7 @@ declare namespace LocalJSX {
         /**
           * See description in public component.
          */
-        "recognizerOptions"?: Array<string>;
+        "recognizerOptions"?: { [key: string]: any };
         /**
           * See description in public component.
          */
@@ -818,6 +818,10 @@ declare namespace LocalJSX {
         /**
           * See description in public component.
          */
+        "showCameraFeedbackBarcodeMessage"?: boolean;
+        /**
+          * See description in public component.
+         */
         "showModalWindows"?: boolean;
         /**
           * See description in public component.
@@ -831,6 +835,10 @@ declare namespace LocalJSX {
           * Instance of TranslationService passed from root component.
          */
         "translationService"?: TranslationService;
+        /**
+          * See description in public component.
+         */
+        "wasmType"?: string | null;
     }
     interface MbContainer {
     }

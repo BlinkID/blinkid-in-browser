@@ -5,9 +5,7 @@
 import * as BlinkIDSDK from "../../../es/blinkid-sdk";
 
 import {
-  AnonymizationMode,
   AvailableRecognizers,
-  AvailableRecognizerOptions,
   CameraExperience,
   Code,
   EventFatalError,
@@ -49,6 +47,10 @@ export class SdkService {
     loadSettings.allowHelloMessage = sdkSettings.allowHelloMessage;
     loadSettings.engineLocation = sdkSettings.engineLocation;
 
+    if (sdkSettings.wasmType) {
+      loadSettings.wasmType = sdkSettings.wasmType;
+    }
+
     return new Promise((resolve) => {
       BlinkIDSDK.loadWasmModule(loadSettings)
         .then((sdk: BlinkIDSDK.WasmSDK) => {
@@ -77,6 +79,7 @@ export class SdkService {
           message: `Recognizer "${ recognizer }" doesn't exist!`
         }
       }
+
       if (recognizer === 'BlinkIdCombinedRecognizer' && recognizers.length > 1) {
         return {
           status: false,
@@ -90,44 +93,12 @@ export class SdkService {
     }
   }
 
-  public checkRecognizerOptions(recognizers: Array<string>, recognizerOptions: Array<string>): CheckConclusion {
-    if (!recognizerOptions || !recognizerOptions.length) {
-      return {
-        status: true
-      }
-    }
-
-    for (const recognizerOption of recognizerOptions) {
-      let optionExistInProvidedRecognizers = false;
-
-      for (const recognizer of recognizers) {
-        const availableOptions = AvailableRecognizerOptions[recognizer];
-
-        if (availableOptions.indexOf(recognizerOption) > -1) {
-          optionExistInProvidedRecognizers = true;
-          break;
-        }
-      }
-
-      if (!optionExistInProvidedRecognizers) {
-        return {
-          status: false,
-          message: `Recognizer option "${ recognizerOption }" is not supported by available recognizers!`
-        }
-      }
-    }
-
-    return {
-      status: true
-    }
-  }
-
-  public getDesiredCameraExperience(recognizers: Array<string>, _recognizerOptions: Array<string> = []): CameraExperience {
-    if (recognizers.indexOf('BlinkIdCombinedRecognizer') > -1) {
+  public getDesiredCameraExperience(_recognizers: Array<string> = [], _recognizerOptions: any = {}): CameraExperience {
+    if (_recognizers.indexOf('BlinkIdCombinedRecognizer') > -1) {
       return CameraExperience.CardCombined;
     }
 
-    if (recognizers.indexOf('BlinkIdRecognizer') > -1) {
+    if (_recognizers.indexOf('BlinkIdRecognizer') > -1) {
       return CameraExperience.CardSingleSide;
     }
 
@@ -145,7 +116,6 @@ export class SdkService {
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
       configuration.recognizerOptions,
-      configuration.anonymization,
       configuration.successFrame
     );
 
@@ -307,8 +277,8 @@ export class SdkService {
     return this.videoRecognizer.cameraFlipped;
   }
 
-  public isScanFromImageAvailable(recognizers: Array<string>, _recognizerOptions: Array<string> = []): boolean {
-    return recognizers.indexOf('BlinkIdCombinedRecognizer') === -1;
+  public isScanFromImageAvailable(_recognizers: Array<string> = [], _recognizerOptions: any = {}): boolean {
+    return _recognizers.indexOf('BlinkIdCombinedRecognizer') === -1;
   }
 
   public async scanFromImage(
@@ -319,8 +289,7 @@ export class SdkService {
 
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
-      configuration.recognizerOptions,
-      configuration.anonymization
+      configuration.recognizerOptions
     );
 
     const recognizerRunner = await this.createRecognizerRunner(
@@ -441,6 +410,7 @@ export class SdkService {
         this.eventEmitter$.addEventListener('terminate:done', handleTerminateDone);
         return;
       }
+
       eventCallback({
         status: RecognitionStatus.EmptyResultState,
         data: {
@@ -471,8 +441,7 @@ export class SdkService {
 
   private async createRecognizers(
     recognizers: Array<string>,
-    recognizerOptions?: Array<string>,
-    anonymization?: AnonymizationMode,
+    recognizerOptions?: any,
     successFrame: boolean = false
   ): Promise<Array<RecognizerInstance>> {
     const pureRecognizers = [];
@@ -482,14 +451,14 @@ export class SdkService {
       pureRecognizers.push(instance);
     }
 
-    if (recognizerOptions && recognizerOptions.length) {
+    if (recognizerOptions && Object.keys(recognizerOptions).length > 0) {
       for (const recognizer of pureRecognizers) {
         let settingsUpdated = false;
         const settings = await recognizer.currentSettings();
 
-        for (const setting of recognizerOptions) {
-          if (setting in settings) {
-            settings[setting] = true;
+        for (const [key, value] of Object.entries(recognizerOptions[recognizer.recognizerName])) {
+          if (key in settings) {
+            settings[key] = value;
             settingsUpdated = true;
           }
         }
@@ -497,16 +466,6 @@ export class SdkService {
         if (settingsUpdated) {
           await recognizer.updateSettings(settings);
         }
-      }
-    }
-
-    if (typeof anonymization !== 'undefined') {
-      for (const recognizer of pureRecognizers) {
-        const settings = await recognizer.currentSettings();
-
-        settings.anonymizationMode = anonymization;
-
-        await recognizer.updateSettings(settings);
       }
     }
 
@@ -575,6 +534,7 @@ export class SdkService {
         }
       }
     }
+
     const blinkIdGeneric = recognizers.find(el => el.recognizer.recognizerName === 'BlinkIdRecognizer');
     const blinkIdCombined = recognizers.find(el => el.recognizer.recognizerName === 'BlinkIdCombinedRecognizer');
 
@@ -585,6 +545,7 @@ export class SdkService {
           el.recognizer.recognizerName === 'BlinkIdCombinedRecognizer'
         ) {
           const settings = await el.recognizer.currentSettings() as BlinkIDSDK.BlinkIdRecognizerSettings;
+          settings.barcodeScanningStartedCallback = () => eventCallback({ status: RecognitionStatus.BarcodeScanningStarted });
           settings.classifierCallback = (supported: boolean) => {
             eventCallback({ status: RecognitionStatus.DocumentClassified, data: supported });
           }
@@ -596,6 +557,7 @@ export class SdkService {
     if (blinkIdCombined) {
       metadataCallbacks.onFirstSideResult = () => eventCallback({ status: RecognitionStatus.OnFirstSideResult });
     }
+
     const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
       this.sdk,
       recognizers.map((el: RecognizerInstance) => el.successFrame || el.recognizer),

@@ -6,6 +6,7 @@ import { BlinkIdRecognizerSettings, BaseBlinkIdRecognizerResult } from "./BlinkI
 import { CombinedRecognizerResult } from "../CombinedRecognizer";
 import { ImageAnalysisResult } from "./ImageAnalysisResult";
 import { ImageResult } from "../ImageOptions";
+import { ProcessingStatus } from "./ProcessingStatus";
 import { VIZResult } from "./VIZResult";
 
 import
@@ -21,6 +22,12 @@ import
  */
 export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings implements DigitalSignatureOptions
 {
+    /**
+     * Proceed with scanning the back side even if the front side result is uncertain.
+     * This only works for still images - video feeds will ignore this setting.
+     */
+    allowUncertainFrontSideScan = false;
+
     // implementation od the DigitalSignatureOptions interface
     allowSignature = false;
 }
@@ -64,6 +71,16 @@ export interface BlinkIdCombinedRecognizerResult extends BaseBlinkIdRecognizerRe
      * The data extracted from the back side visual inspection zone.
      */
     readonly backViz: VIZResult;
+
+    /**
+     * Status of the last recognition process for the front side of the document.
+     */
+    readonly frontProcessingStatus: ProcessingStatus;
+
+    /**
+     * Status of the last recognition process for the back side of the document.
+     */
+    readonly backProcessingStatus: ProcessingStatus;
 }
 
 /**

@@ -65,6 +65,11 @@ export class MbCameraExperience {
   @Prop() showScanningLine: boolean = false;
 
   /**
+   * Show camera feedback message on camera for Barcode scanning
+   */
+   @Prop() showCameraFeedbackBarcodeMessage: boolean = false;
+
+  /**
    * Emitted when user clicks on 'X' button.
    */
   @Event() close: EventEmitter<void>;
@@ -105,23 +110,31 @@ export class MbCameraExperience {
         return;
       }
 
+      if (state === CameraExperienceState.BarcodeScanning) {
+        this.barcodeScanningInProgress = true;
+      }
+
       this.cameraStateInProgress = true;
+      let cameraStateChangeId = this.cameraStateChangeId + 1;
+      this.cameraStateChangeId = cameraStateChangeId;
 
       if (state === CameraExperienceState.Flip) {
         this.flipCameraStateInProgress = true;
       }
 
       const stateClass = this.getStateClass(state);
-      switch(this.type) {
+
+      switch (this.type) {
         case CameraExperience.CardSingleSide:
         case CameraExperience.CardCombined:
           this.cameraCursorIdentityCard.setAttribute('class', `reticle ${stateClass}`);
           break;
         case CameraExperience.Barcode:
+          stateClass === 'is-detection' && this.showScanningLine ? this.scanningLineBarcode.classList.add('is-active') : this.scanningLineBarcode.classList.remove('is-active');
           this.cameraCursorBarcode.setAttribute('class', `rectangle ${stateClass}`);
           break;
         case CameraExperience.BlinkCard:
-          stateClass === 'is-default' && this.showScanningLine ? this.scanningLine.classList.add('is-active') : this.scanningLine.classList.remove('is-active');
+          stateClass === 'is-default' && this.showScanningLine ? this.scanningLineBlinkCard.classList.add('is-active') : this.scanningLineBlinkCard.classList.remove('is-active');
           this.cameraCursorBlinkCard.setAttribute('class', `rectangle ${stateClass}`);
           break;
       }
@@ -132,7 +145,9 @@ export class MbCameraExperience {
         if (this.flipCameraStateInProgress && state === CameraExperienceState.Flip) {
           this.flipCameraStateInProgress = false;
         }
-        this.cameraStateInProgress = false;
+        if (this.cameraStateChangeId === cameraStateChangeId) {
+          this.cameraStateInProgress = false;
+        }
         resolve();
       }, CameraExperienceStateDuration.get(state));
     });
@@ -149,11 +164,16 @@ export class MbCameraExperience {
         <div id="barcode" class={ this.type === CameraExperience.Barcode ? 'visible' : '' }>
           <div class="rectangle-container">
             <div class="rectangle" ref={ el => this.cameraCursorBarcode = el as HTMLDivElement }>
+              <div class="rectangle__cursor">
                 <div class="rectangle__el"></div>
                 <div class="rectangle__el"></div>
                 <div class="rectangle__el"></div>
                 <div class="rectangle__el"></div>
+
+                <div class="scanning-line" ref={ el => this.scanningLineBarcode = el as HTMLDivElement }></div>
+              </div>
             </div>
+            <p class="message" ref={ el => this.cameraMessageBarcode = el as HTMLParagraphElement }></p>
           </div>
         </div>
 
@@ -176,16 +196,23 @@ export class MbCameraExperience {
         {/* BlinkCard camera experience */}
         <div id="blinkcard" class={ this.type === CameraExperience.BlinkCard ? 'visible' : '' }>
           <div class="rectangle-container">
-            <div class="rectangle" ref={ el => this.cameraCursorBlinkCard = el as HTMLDivElement }>
-              <div class="rectangle__cursor">
-                <div class="rectangle__el"></div>
-                <div class="rectangle__el"></div>
-                <div class="rectangle__el"></div>
-                <div class="rectangle__el"></div>
+            <div class="box wrapper"></div>
+            <div class="box body">
+              <div class="middle-left wrapper"></div>
+              <div class="rectangle" ref={ el => this.cameraCursorBlinkCard = el as HTMLDivElement }>
+                <div class="rectangle__cursor">
+                  <div class="rectangle__el"></div>
+                  <div class="rectangle__el"></div>
+                  <div class="rectangle__el"></div>
+                  <div class="rectangle__el"></div>
+
+                  <div class="scanning-line" ref={ el => this.scanningLineBlinkCard = el as HTMLDivElement }></div>
+                </div>
               </div>
-              <div class="scanning-line" ref={ el => this.scanningLine = el as HTMLDivElement }></div>
+              <p class="message" ref={ el => this.cameraMessageBlinkCard = el as HTMLParagraphElement }></p>
+              <div class="middle-right wrapper"></div>
             </div>
-            <p class="message" ref={ el => this.cameraMessageBlinkCard = el as HTMLParagraphElement }></p>
+            <div class="box wrapper"></div>
           </div>
         </div>
 
@@ -219,12 +246,16 @@ export class MbCameraExperience {
   private cameraCursorBlinkCard!: HTMLDivElement;
   private cameraMessageIdentityCard!: HTMLParagraphElement;
   private cameraMessageBlinkCard!: HTMLParagraphElement;
+  private cameraMessageBarcode!: HTMLParagraphElement;
   private cameraStateInProgress: boolean = false;
+  private cameraStateChangeId: number = 0;
   private cardIdentityElement: HTMLDivElement;
   private cameraFlipBtn: HTMLButtonElement;
   private flipCameraStateInProgress: boolean = false;
-  
-  private scanningLine!: HTMLDivElement;
+  private barcodeScanningInProgress: boolean = false;
+
+  private scanningLineBarcode!: HTMLDivElement;
+  private scanningLineBlinkCard!: HTMLDivElement;
 
   private flipCamera(): void {
     this.flipCameraAction.emit();
@@ -240,6 +271,7 @@ export class MbCameraExperience {
     let stateClass = 'is-default';
 
     switch (state) {
+      case CameraExperienceState.BarcodeScanning:
       case CameraExperienceState.Classification:
         stateClass = 'is-classification';
         break;
@@ -284,7 +316,7 @@ export class MbCameraExperience {
   }
 
   private setMessage(state: CameraExperienceState, isBackSide: boolean, type: CameraExperience): void {
-    const message = this.getStateMessage(state, isBackSide);
+    const message = this.getStateMessage(state, isBackSide, type);
 
     switch(type) {
       case CameraExperience.CardSingleSide:
@@ -301,15 +333,25 @@ export class MbCameraExperience {
           this.cameraMessageBlinkCard.removeChild(this.cameraMessageBlinkCard.firstChild);
         }
         if (message) this.cameraMessageBlinkCard.appendChild(message);
-    
+
         this.cameraMessageBlinkCard.setAttribute('class', message && message !== null ? 'message is-active' : 'message');
+        break;
+      case CameraExperience.Barcode:
+        while (this.cameraMessageBarcode.firstChild) {
+          this.cameraMessageBarcode.removeChild(this.cameraMessageBarcode.firstChild);
+        }
+
+        if (this.showCameraFeedbackBarcodeMessage) {
+          if (message) this.cameraMessageBarcode.appendChild(message);
+          this.cameraMessageBarcode.setAttribute('class', message && message !== null ? 'message is-active' : 'message');
+        }
         break;
       default:
         // Do nothing
     }
   }
 
-  private getStateMessage(state: CameraExperienceState, isBackSide: boolean = false): HTMLSpanElement|null {
+  private getStateMessage(state: CameraExperienceState, isBackSide: boolean = false, type: CameraExperience): HTMLSpanElement|null {
     const getStateMessageAsHTML = (message: string|Array<string>): HTMLSpanElement => {
       if (message) {
         const messageArray = typeof message === 'string' ? [ message ] : message;
@@ -336,7 +378,14 @@ export class MbCameraExperience {
 
     switch (state) {
       case CameraExperienceState.Default:
+        if (type === CameraExperience.Barcode) {
+          return getStateMessageAsHTML(this.translationService.i('camera-feedback-barcode-message'));
+        }
         const key = isBackSide ? 'camera-feedback-scan-back' : 'camera-feedback-scan-front';
+        if (this.barcodeScanningInProgress) {
+          return getStateMessageAsHTML(this.translationService.i('camera-feedback-barcode'));
+        }
+
         return getStateMessageAsHTML(this.translationService.i(key));
 
       case CameraExperienceState.MoveFarther:
@@ -351,8 +400,12 @@ export class MbCameraExperience {
       case CameraExperienceState.Flip:
         return getStateMessageAsHTML(this.translationService.i('camera-feedback-flip'));
 
+      case CameraExperienceState.BarcodeScanning:
+        return getStateMessageAsHTML(this.translationService.i('camera-feedback-barcode'));
+
       case CameraExperienceState.Classification:
       case CameraExperienceState.Detection:
+          return type === CameraExperience.Barcode ? getStateMessageAsHTML(this.translationService.i('camera-feedback-barcode-message')) : null;
       case CameraExperienceState.Done:
       case CameraExperienceState.DoneAll:
       default:

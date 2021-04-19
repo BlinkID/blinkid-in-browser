@@ -14,7 +14,6 @@ import {
 } from '@stencil/core';
 
 import {
-  AnonymizationMode,
   EventFatalError,
   EventReady,
   EventScanError,
@@ -66,6 +65,20 @@ export class BlinkidInBrowser implements MicroblinkUI {
   @Prop() licenseKey: string;
 
   /**
+   * Defines the type of the WebAssembly build that will be loaded. If omitted, SDK will determine
+   * the best possible WebAssembly build which should be loaded based on the browser support.
+   *
+   * Available WebAssembly builds:
+   *
+   * - 'BASIC'
+   * - 'ADVANCED'
+   * - 'ADVANCED_WITH_THREADS'
+   *
+   * For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
+   */
+   @Prop() wasmType: string = '';
+
+  /**
    * List of recognizers which should be used.
    *
    * Available recognizers for BlinkID:
@@ -103,45 +116,29 @@ export class BlinkidInBrowser implements MicroblinkUI {
   @Prop() recognizers: Array<string>;
 
   /**
-   * Whether sensitive data should be removed from images, result fields or both.
+   * Specify recognizer options. This option can only bet set as a JavaScript property.
    *
-   * The setting only applies to certain documents.
+   * Pass an object to `recognizerOptions` property where each key represents a recognizer, while
+   * the value represents desired recognizer options.
    *
-   * Default value is AnonymizationMode.FullResult which means that certain documents are
-   * anonymizied by default!
+   * ```
+   * blinkId.recognizerOptions = {
+   *   'BlinkIdRecognizer': {
+   *     'returnFullDocumentImage': true,
    *
-   * For more information see `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.
-   */
-  @Prop() anonymization: string = "FullResult";
-
-  /**
-   * Specify additional recognizer options.
+   *     // When setting values for enums, check the source code to see possible values.
+   *     // For AnonymizationMode we can see the list of possible values in
+   *     // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.
+   *     'anonymizationMode': 0
+   *   }
+   * }
+   * ```
    *
    * For a full list of available recognizer options see source code of a recognizer. For example,
    * list of available recognizer options for BlinkIdRecognizer can be seen in the
    * `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
-   *
-   * Example:
-   *
-   * `<blinkid-in-browser recognizer-options="scanCroppedDocumentImage"></blinkid-in-browser>`
    */
-  @Prop({ attribute: 'recognizer-options' }) rawRecognizerOptions: string;
-
-  /**
-   * Specify additional recognizer options.
-   *
-   * For a full list of available recognizer options see source code of a recognizer. For example,
-   * list of available recognizer options for BlinkIdRecognizer can be seen in the
-   * `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
-   *
-   * Example:
-   *
-   * ```
-   * const blinkId = document.querySelector('blinkid-in-browser');
-   * blinkid.recognizerOptions = ['scanCroppedDocumentImage'];
-   * ```
-   */
-  @Prop() recognizerOptions: Array<string>;
+  @Prop() recognizerOptions: { [key: string]: any };
 
   /**
    * Set to 'true' if success frame should be included in final scanning results.
@@ -363,9 +360,6 @@ export class BlinkidInBrowser implements MicroblinkUI {
     const rawRecognizers = GenericHelpers.stringToArray(this.rawRecognizers);
     this.finalRecognizers = this.recognizers ? this.recognizers : rawRecognizers;
 
-    const rawRecognizerOptions = GenericHelpers.stringToArray(this.rawRecognizerOptions);
-    this.finalRecognizerOptions = this.recognizerOptions ? this.recognizerOptions : rawRecognizerOptions;
-
     const rawTranslations = GenericHelpers.stringToObject(this.rawTranslations);
     this.finalTranslations = this.translations ? this.translations : rawTranslations;
     this.translationService = new TranslationService(this.finalTranslations || {});
@@ -382,9 +376,9 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         allowHelloMessage={ this.allowHelloMessage }
                         engineLocation={ this.engineLocation }
                         licenseKey={ this.licenseKey }
+                        wasmType={ this.wasmType }
                         recognizers={ this.finalRecognizers }
-                        anonymization={ this.getAnonymizationMode(this.anonymization) }
-                        recognizerOptions={ this.finalRecognizerOptions }
+                        recognizerOptions={ this.recognizerOptions }
                         includeSuccessFrame={ this.includeSuccessFrame }
                         enableDrag={ this.enableDrag }
                         hideLoadingAndErrorUi={ this.hideLoadingAndErrorUi }
@@ -416,24 +410,8 @@ export class BlinkidInBrowser implements MicroblinkUI {
   private translationService: TranslationService;
 
   private finalRecognizers: Array<string>;
-  private finalRecognizerOptions: Array<string>;
   private finalTranslations: { [key: string]: string };
 
   private feedbackEl!: HTMLMbFeedbackElement;
   private mbComponentEl!: HTMLMbComponentElement;
-
-  private getAnonymizationMode(mode: string): AnonymizationMode {
-    switch (mode) {
-      case "None":
-        return AnonymizationMode.None;
-      case "ImageOnly":
-        return AnonymizationMode.ImageOnly;
-      case "ResultFieldsOnly":
-        return AnonymizationMode.ResultFieldsOnly;
-      case "FullResult":
-        return AnonymizationMode.FullResult;
-      default:
-        return AnonymizationMode.FullResult;
-    }
-  }
 }

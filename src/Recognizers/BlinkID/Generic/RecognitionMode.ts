@@ -25,6 +25,9 @@ export enum RecognitionMode
     /** Detailed document recognition. */
     FullRecognition = 5,
 
+    /** Recognition of barcode document. */
+    BarcodeId       = 6,
+
     /** Number of possible values */
-    Count           = 6
+    Count           = 7
 }

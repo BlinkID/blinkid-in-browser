@@ -47,7 +47,7 @@ export class MbModal {
 
   render() {
     return (
-      <Host className={ this.getClassName() }>
+      <Host className={ this.getHostClassName() }>
 
         <div class="mb-modal">
 
@@ -62,7 +62,7 @@ export class MbModal {
 
           <div class="title">{ this.modalTitle }</div>
 
-          <div class={{ 'content': true, ' centered': this.contentCentered }}>
+          <div class={ this.getContentClassName() }>
 
             { this.content }
 
@@ -80,7 +80,7 @@ export class MbModal {
     );
   }
 
-  getClassName(): string {
+  getHostClassName(): string {
     const classNames = [];
 
     if (this.visible) {
@@ -90,4 +90,13 @@ export class MbModal {
     return classNames.join(' ');
   }
 
+  getContentClassName(): string {
+    const classNames = ['content'];
+
+    if (this.contentCentered) {
+      classNames.push('centered');
+    }
+
+    return classNames.join(' ');
+  }
 }

@@ -3,6 +3,7 @@
  */
 
 import { defaultWasmModuleName } from "../defaultWasmModule";
+import { WasmType } from "./WasmType";
 
 /**
  * Function that will be called during loading of the SDK.
@@ -11,6 +12,8 @@ import { defaultWasmModuleName } from "../defaultWasmModule";
 export type LoadProgressCallback = ( loadPercentage: number ) => void;
 
 export type OptionalLoadProgressCallback = LoadProgressCallback | null;
+
+export { WasmType };
 
 /**
  * Settings object for function loadWasmModule.
@@ -45,6 +48,21 @@ export class WasmSDKLoadSettings
      * going to be used.
      */
     engineLocation = "";
+
+    /**
+     * Type of the WASM that will be loaded. By default, if not set, the SDK will automatically determine the best WASM
+     * to load.
+     */
+    wasmType: WasmType | null = null;
+
+    /**
+     * Defines the number of workers that will be used for multi-threaded processing
+     * of the images. If not set, the number of worker used will match the number
+     * of detected CPU cores on a device.
+     * If the browser does not support multi-threaded processing or it was deliberately
+     * disabled using the `wasmType` property, then this property will be ignored
+     */
+    numberOfWorkers: number | null = null;
 
     /**
      * Optional callback function that will report the SDK loading progress.

@@ -15,6 +15,7 @@ import
 
 import { MetadataCallbacks } from "../MetadataCallbacks";
 import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
+import { WasmType } from "../WasmType";
 
 // ============================================ /
 // Local Proxy Implementation                   /
@@ -226,10 +227,13 @@ export class WasmSDKLocal implements WasmSDK
 
     readonly showOverlay: boolean;
 
-    constructor( wasmModule: any, showOverlay: boolean )
+    readonly loadedWasmType: WasmType;
+
+    constructor( wasmModule: any, showOverlay: boolean, loadedWasmType: WasmType )
     {
         this.mbWasmModule = new WasmModuleLocalProxy( wasmModule );
         this.showOverlay = showOverlay;
+        this.loadedWasmType = loadedWasmType;
     }
 }
 /* eslint-enable @typescript-eslint/explicit-module-boundary-types,

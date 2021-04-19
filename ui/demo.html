@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
     <title>BlinkID UI: examples</title>
-    <style>
+    <!-- Copyright (c) Microblink Ltd. All rights reserved. -->
+<style>
       * {
         box-sizing: border-box;
       }
@@ -132,18 +133,17 @@
         margin-bottom: 1.5rem;
       }
     </style>
-    <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.10.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-    <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.10.0/ui/dist/blinkid-in-browser.js"></script>
-
+    <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.11.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+    <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.11.0/ui/dist/blinkid-in-browser.js"></script>
     <script type="text/javascript">
       window.getSafePathname = p => p[ p.length - 1 ] === '/' ? p : p.split( '/' ).slice( 0, -1 ).join( '/' ) + '/';
-      window.licenseKey = 'sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLK04YLwpEFfLy74eEzBsqIdlzcmogHy1dxF2HwJyAVELy6cES3x4ULiDRUAuMtiA0RTV8XLfiIKmqjo3ufEZpgZ3yaCU4yryL5MmCvS2iMaPLwXo9emB6xXG/tAgij6vtDjgSAaI8Yp2oWyTrw+F5lBC56eFvXjyzT1RqpBhjYRFDeYyt2HO26ij2KgOXTEQA2GVT2+Jonq3xm6QpLmWosev6z9IaWUm/inh+LuQSU9Cindvxk+fHDk8wZ0035OPpqFSuaKNsHo2A8BtHAkVUPSh5WZcga+GNKWGPPlnnWDK7ku3O8xHF+9S';
+      window.licenseKey = 'sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWKzU9YHIiwa8JO/OCocwaxylMkWvKHrWXh18xYPoAweHAy4ThamUzV7aXC4qLPheqIE01+rGUOxh9UMVxnyVJ8VN9QI9MEuhdippTO/vs8kEeAAoqsc3iu4Hb8KNduzp6mdSbaC38eyp1bfl+tVQRXxRD775waHVYLvUEeUolgzrybVOEjgrKA6wtzWlJXwKOUmk4tUZJUwauaAyB9LtgsVW9OD4Q1aPPIjdag1n/a4LBzFq0qo7NaZlcpHMu1vCybBSuSmRBDyruzIOEdaV5BwV1b0FQNXsyE7vgg0K4eyG+Ar+OJLANGG9etiwJnX03ycJMZk28';
 
       if (window.location.hostname === 'blinkid.github.io') {
-        window.licenseKey = 'sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaDoIDmJUs1GgGIUyzQHIo6pt3xi0GhVDEqv56PdtstuYXVmO23orCuUGu3wFvzdTny8cXpxdFAfIOAy2YdeWBeXf11P120Eu/d1/bB0BS65uX+9uMLM7MV1zmROEumaVL6kw/poIQdLju4Q2nGo244nIx0GjwGGg2GKN93AB7tKjUCftKL2h0kG53RYQkUL/JqQTMP0n6LB6T/iI5BgF1/7LfYzsEAmT0nPR7PK6BZiUvJEBROWWWvp0TrQrfgk1qgEMcpMmNNEaIQjUoVVz0x8qWPylNLmqV6UhnKsLLwPXmXcR+BtrbiAQo=';
+        window.licenseKey = 'sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaEOIXm3ZY6JuUWueHrbZMr5CHB/8yqAUMlydNc2fUb3CQKa2SB9kYOZ2CLBHwofUG5I1UN/2vw4tLkKF60VWtmsfUQQbkJ6oS6ehDtHFqX8Ba4p4B966tOtu42Bid2OdiqaH+clImmjl5logKfgQd6K2YKWREyYFCrsU5kIUd70Yx6Ou0XSSyudIDugLlDnQ257+Ko2mg7af0215dXpDQYljKd5rLZchG0Y2EuGDhMxvOP8QeboLCq/4cqM5i0Ezm0F39kVl9uI7LMOzuoP1LmfLOhgc3W38ixUCOt3NSqDbZKooU7fgRZ3JfW8/C65eOHCOhqpSo=';
       }
 
-      window.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.10.0/resources";
+      window.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.11.0/resources";
     </script>
   </head>
   <body>
@@ -156,7 +156,6 @@
     <section id="example-minimal">
       <h2>Minimal example</h2>
       <p>UI component with default behaviour where it's required to set valid license key, engine location and recognizer.</p>
-
       <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
       <p><em><strong>Note:</strong> since this page has multiple components, only this one has enabled drag and drop feature.</em></p>
       <blinkid-in-browser></blinkid-in-browser>
@@ -184,57 +183,64 @@
 
         el.addEventListener('scanSuccess', ev => {
           console.log('scanSuccess', ev.detail);
-
         });
       })();
     </script>
+
     <section id="example-combined">
-      <h2>Scan both sides</h2>
-      <p>UI component with default behaviour where it's required to set valid license key and recognizer.</p>
-      <p><em>Recognizer: <strong>BlinkIdCombinedRecognizer</strong></em></p>
-      <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
+    <h2>Scan both sides</h2>
+    <p>UI component with default behaviour where it's required to set valid license key and recognizer.</p>
+    <p><em>Recognizer: <strong>BlinkIdCombinedRecognizer</strong></em></p>
+    <blinkid-in-browser fullscreen-drop="false"></>
 <pre>&lt;blinkid-in-browser
-  engine-location="http://localhost/resources/"
-  license-key="LICENSE-KEY-GOES-HERE"
-  recognizers="BlinkIdCombinedRecognizer"
+engine-location="http://localhost/resources/"
+license-key="LICENSE-KEY-GOES-HERE"
+recognizers="BlinkIdCombinedRecognizer"
 &gt;&lt;/blinkid-in-browser&gt;</pre>
-    </section>
-    <script type="text/javascript">
-      (function (){
-        const el = document.querySelector('#example-combined blinkid-in-browser');
+</section>
 
-        el.engineLocation = window.engineLocation;
-        el.licenseKey = window.licenseKey;
+<script type="text/javascript">
+  (function (){
+    const el = document.querySelector('#example-combined blinkid-in-browser');
 
-        el.recognizers = ['BlinkIdCombinedRecognizer'];
-      })();
-    </script>
+    el.engineLocation = window.engineLocation;
+    el.licenseKey = window.licenseKey;
+
+    el.recognizers = ['BlinkIdCombinedRecognizer'];
+  })();
+</script>
+
+
     <section id="example-barcode">
-      <h2>Scan identity document with barcode</h2>
-      <p>UI component with default behaviour where it's required to set valid license key and recognizer.</p>
-      <p><em>Recognizer: <strong>IdBarcodeRecognizer</strong></em></p>
-      <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
+    <h2>Scan identity document with barcode</h2>
+    <p>UI component with default behaviour where it's required to set valid license key and recognizer.</p>
+    <p><em>Recognizer: <strong>IdBarcodeRecognizer</strong></em></p>
+    <-in-browser fullscreen-drop="false"></-in-browser>
 <pre>&lt;blinkid-in-browser
-  engine-location="http://localhost/resources/"
-  license-key="LICENSE-KEY-GOES-HERE"
-  recognizers="IdBarcodeRecognizer"
+engine-location="http://localhost/resources/"
+license-key="LICENSE-KEY-GOES-HERE"
+recognizers="IdBarcodeRecognizer"
 &gt;&lt;/blinkid-in-browser&gt;</pre>
-    </section>
-    <script type="text/javascript">
-      (function (){
+</section>
+
+<script type="text/javascript">
+    (function (){
         const el = document.querySelector('#example-barcode blinkid-in-browser');
 
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
 
         el.recognizers = ['IdBarcodeRecognizer'];
-      })();
-    </script>
+    })();
+</script>
+
+
+
+
     <section id="example-localization">
       <h2>Custom messages</h2>
       <p>It's possible to change default text messages which are displayed to the user.</p>
       <p>Use attribute/property <code>translations</code> to change default messages.</p>
-
       <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
       <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
 <pre>&lt;blinkid-in-browser
@@ -265,6 +271,7 @@
         }, 3000);
 
 
+
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
 
@@ -274,7 +281,6 @@
 
         el.addEventListener('scanSuccess', ev => {
           console.log('scanSuccess', ev.detail);
-
         });
       })();
     </script>
@@ -282,7 +288,6 @@
     <section id="example-localization-rtl">
       <h2>RTL support</h2>
       <p>Set HTML attribute <code>dir="rtl"</code>.</p>
-
       <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
       <blinkid-in-browser fullscreen-drop="false" dir="rtl"></blinkid-in-browser>
 <pre>&lt;blinkid-in-browser
@@ -315,6 +320,7 @@
         }, 3000);
 
 
+
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
 
@@ -323,15 +329,13 @@
 
         el.addEventListener('scanSuccess', ev => {
           console.log('scanSuccess', ev.detail);
-
         });
       })();
     </script>
 
     <section id="example-customization">
       <h2>UI customization</h2>
-      <p>It's possible to customize UI of BlinkID component by using preset CSS variables.</p>
-
+      <p>It's possible to ize UI of BlinkIdRecognizer component by using preset CSS variables.</p>
       <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
       <div class="box">
         <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
@@ -405,6 +409,7 @@
         el.recognizers = ['BlinkIdRecognizer'];
 
 
+
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
 
@@ -413,7 +418,6 @@
 
         el.addEventListener('scanSuccess', ev => {
           console.log('scanSuccess', ev.detail);
-
         });
       })();
     </script>
