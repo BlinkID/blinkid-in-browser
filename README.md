@@ -28,6 +28,7 @@ Please keep in mind that BlinkID In-browser SDK is meant to be used natively in 
 ## Table of contents
 
 * [Components of SDK](#components-of-sdk)
+* [Integration instructions](#integration)
     * [Obtaining a license key](#obtainingalicensekey)
     * [Installation](#installation)
     * [Performing your first scan](#firstScan)
@@ -72,7 +73,9 @@ You can add it to your website or web app in two ways:
     * You can find the source code of example applications in the [ui/examples](ui/examples) directory.
 2. For an advanced form of integration where UI has to be built from scratch, use a WASM library instead.
     * See the integration instructions [here](#integration).
-    * Find the source code of example applications in the [examples](examples) directory.## <a name="integration"></a> Integration instructions
+    * Find the source code of example applications in the [examples](examples) directory.
+
+## <a name="integration"></a> Integration instructions
 
 This repository contains WebAssembly files and supporting JS files which contain the core implementation of BlinkID functionalities.
 
@@ -92,7 +95,7 @@ Make sure you enter a [fully qualified domain name](https://en.wikipedia.org/wik
 
 **Keep in mind:** Versions BlinkID 5.8.0 and above require an internet connection to work under our new License Management Program.
 
-This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of documents still happens offline, in the browser itself. 
+This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of documents still happens offline, in the browser itself.
 
 Once the validation is complete, you can continue using the SDK in an offline mode (or over a private network) until the next check.
 
@@ -306,6 +309,12 @@ loadSettings.allowHelloMessage = true;
 loadSettings.engineLocation = "";
 
 /**
+ * Type of the WASM that will be loaded. By default, if not set, the SDK will automatically determine the best WASM
+ * to load.
+ */
+wasmType: WasmType | null = null;
+
+/**
  * Optional callback function that will report the SDK loading progress.
  *
  * This can be useful for displaying progress bar to users with slow connections.
@@ -335,7 +344,23 @@ Otherwise, the browser will block access to a web camera and remote scripts due 
 
 #### Deployment of WASM files
 
-_Files: resources/BlinkIDWasmSDK.{data,js,wasm}_
+WASM wrapper contain three different builds:
+
+* `Basic`
+
+    * The WASM that will be loaded will be most compatible with all browsers that support the WASM, but will lack features that could be used to improve performance.
+    
+* `Advanced`
+
+    * The WASM that will be loaded will be built with advanced WASM features, such as bulk memory, non-trapping floating point and sign extension. Such WASM can only be executed in browsers that support those features. Attempting to run this WASM in a non-compatible browser will crash your app.
+
+* `AdvancedWithThreads`
+
+    * The WASM that will be loaded will be build with advanced WASM features, just like above. Additionally, it will be also built with support for multi-threaded processing. This feature requires a browser with support for both advanced WASM features and `SharedArrayBuffer`.
+
+    * For multi-threaded processing there are some things that needs to be set up additionally, like COOP and COEP headers, more info about web server setup can be found [here](#wasmsetup).
+
+_Files: resources/{basic,advanced,advanced-threads}/BlinkIDWasmSDK.{data,js,wasm}_
 
 ##### Server Configuration
 
@@ -349,7 +374,7 @@ If your server supports serving compressed files, you should utilize that to min
 
 For more information about configuring your web server to compress and optimally deliver BlinkID SDK in your web app, see the [official Emscripten documentation](https://emscripten.org/docs/compiling/Deploying-Pages.html#optimizing-download-sizes).
 
-##### Location of WASM and related support files
+#####  <a name="wasmsetup"></a> Location of WASM and related support files
 
 You can host WASM and related support files in a location different from the one where your web app is located.
 
@@ -357,13 +382,40 @@ For example, your WASM and related support files can be located in `https://cdn.
 
 In that case it's important to set [CORS headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin) in response from `https://cdn.example.com`. i.e. set header `Access-Control-Allow-Origin` with proper value so that the web page knows it’s okay to take on the request.
 
-If WASM engine is not placed in the same folder as web app, don't forget to configure instance of `WasmSDKLoadSettings` with proper location:
+If WASM engine folders are not placed in the same folder as web app, don't forget to configure instance of `WasmSDKLoadSettings` with proper location:
 
 ```typescript
 ...
 const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings( licenseKey );
 
 loadSettings.engineLocation = "https://cdn.example.com/wasm";
+...
+```
+
+The location should point to folder containing folders `basic`, `advanced` and `advanced-threads` that contain the WebAssembly and its support files.
+
+The difference between `basic`, `advanced` and `advanced-threads` folders are in the way the WebAssembly file was built:
+
+* WebAssembly files in `basic` folder were built to be most compatible, but less performant.
+* WebAssembly files in `advanced` folder can yield better scanning performance, but requires more modern browser
+* WebAssembly files in the `advanced-threads` folder uses advanced WASM features as the WASM in the `advanced` folder but will additionally use WebWorkers for multi-threaded processing which will yield best performance.
+
+Depending on what features the browser actually supports, the correct WASM file will be loaded automatically.
+
+Note that in order to be able to use WASM from the `advanced-threads` folder, you need to configure website to be "cross-origin isolated" using COOP and COEP headers, as described [in this article](https://web.dev/coop-coep/). This is required for browser to allow using the `SharedArrayBuffer` feature which is required for multi-threaded processing to work. Without doing so, the browser will load only the single-threaded WASM binary from the `advanced` folder.
+
+```
+# NGINX web server COEP and COOP header example
+
+...
+
+server {
+    location / {
+        add_header Cross-Origin-Embedder-Policy: require-corp;
+        add_header Cross-Origin-Opener-Policy: same-origin;
+    }
+}
+
 ...
 ```
 
@@ -566,6 +618,7 @@ Similarly, if you remove the `onQuadDetection` from `MetadataCallbacks` object a
 ## <a name="recognizerList"></a> List of available recognizers
 
 This section will give a list of all `Recognizer` objects that are available within BlinkID SDK, their purpose and recommendations on how they should be used to achieve  best performance and user experience.
+
 ### <a name="successFrameGrabber"></a> Success Frame Grabber Recognizer
 
 The [`SuccessFrameGrabberRecognizer`](src/Recognizers/SuccessFrameGrabberRecognizer.ts) is a special `Recognizer` that wraps some other `Recognizer` and impersonates it while processing the image. However, when the `Recognizer` being impersonated changes its `Result` into `Valid` state, the `SuccessFrameGrabberRecognizer` captures the image and saves it into its own `Result` object.
@@ -573,6 +626,7 @@ The [`SuccessFrameGrabberRecognizer`](src/Recognizers/SuccessFrameGrabberRecogni
 Since `SuccessFrameGrabberRecognizer` impersonates its slave `Recognizer` object, it is not possible to have both concrete `Recognizer` object and `SuccessFrameGrabberRecognizer` that wraps it in the same `RecognizerRunner` at the same time. Doing so will have the same effect as having multiple instances of the same `Recognizer` in the same `RecognizerRunner` - it will crash your application. For more information, see [paragraph about `RecognizerRunner`](#recognizerRunner).
 
 This recognizer is best for use cases when you need to capture the exact image that was being processed by some other `Recognizer` object at the time its `Result` became `Valid`. When that happens, `SuccessFrameGrabber's` `Result` will also become `Valid` and will contain described image. That image will be available in its `successFrame` property.
+
 ### <a name="idBarcodeRecognizer"></a> ID barcode recognizer
 
 The [`IdBarcodeRecognizer`](src/Recognizers/BlinkID/IDBarcode/IdBarcodeRecognizer.ts) is a recognizer specialized for scanning barcodes from various ID cards.
@@ -594,6 +648,7 @@ The [`BlinkIdCombinedRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdCombine
 You can find the list of the currently supported documents [here](docs/BlinkIDRecognizer.md). For detailed information about which fields can be extracted from each document, [check this link](docs/BlinkIDDocumentFields.md).
 
 We will continue expanding this recognizer by adding support for new document types in the future. Star this repo to stay updated.
+
 ## <a name="recognizerSettings"></a> Recognizer settings
 
 It's possible to enable various recognizer settings before recognition process to modify default behaviour of the recognizer.
@@ -617,6 +672,7 @@ await BlinkIdRecognizer.updateSettings( settings );
 
 ...
 ```
+
 <!--
 # TODO
 1. Guidelines regarding webcams
@@ -657,7 +713,7 @@ Internet Explorer is **not supported**.
 
 *Keep in mind that camera device is optional, since BlinkID can extract data from still images.*
 
-SDK cannot access camera on **iOS** when the end-user is using a web browser **other than Safari**. Apple does not allow access to camera via WebRTC specification for other browsers.
+SDK cannot access camera on **iOS 14.2** and older versions when the end-user is using a web browser **other than Safari**. Apple does not allow access to camera via WebRTC specification for other browsers.
 
 **Notes & Guidelines**
 
@@ -701,6 +757,7 @@ But the major problem still remains, how to get an image from the camera? Curren
 1. Detect via UA string if in-app browser is used and prompt the user to use the native browser.
 2. Detect via UA string if in-app browser is used and enable classic image upload via `<input type="file" accept="image/*" capture="environment" />` element.
     * Based on the operating system and software version, users will be able to select an image from the gallery, or to capture an image from the camera.
+
 ## <a name="troubleshoot"></a> Troubleshooting
 
 ### <a name="integrationProblems"></a> Integration problems
@@ -734,6 +791,7 @@ When you can't determine the license-related problem or you simply do not unders
 #### <a name="otherProblems"></a> Other problems
 
 If you are having problems with scanning certain items, undesired behaviour on specific device(s), crashes inside BlinkID SDK or anything unmentioned, please contact our support with the same information as listed at the start of this section.
+
 ## <a name="faq"></a> FAQ and known issues
 
 * **After switching from trial to production license I get error `This entity is not allowed by currently active license!` when I create a specific `Recognizer` object.**
@@ -749,6 +807,7 @@ This means your web app has to be connected to the Internet in order for us to v
 Once the validation is complete, you can continue using the SDK in an offline mode (or over a private network) until the next check.
 
 We've added error callback to Microblink SDK to inform you about the status of your license key.
+
 ## <a name="info"></a> Additional info
 
 Complete source code of the TypeScript wrapper can be found [here](src).

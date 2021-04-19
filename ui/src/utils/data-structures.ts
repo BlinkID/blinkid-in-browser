@@ -4,17 +4,17 @@
 
 import { EventEmitter } from '@stencil/core';
 
-import * as BlinkIDSDK from "../../../es/blinkid-sdk";
+import * as BlinkIDSDK from '../../../es/blinkid-sdk';
 
 export interface MicroblinkUI {
   // SDK settings
   allowHelloMessage:    boolean;
   engineLocation:       string;
   licenseKey:           string;
+  wasmType:             string;
   rawRecognizers:       string;
   recognizers:          Array<string>;
-  rawRecognizerOptions: string;
-  recognizerOptions:    Array<string>;
+  recognizerOptions:    { [key: string]: any };
   includeSuccessFrame?: boolean;
 
   // Functional properties
@@ -53,6 +53,7 @@ export interface MicroblinkUI {
 export interface SdkSettings {
   allowHelloMessage:  boolean;
   engineLocation:     string;
+  wasmType?:          BlinkIDSDK.WasmType;
 }
 
 /**
@@ -147,44 +148,17 @@ export const AvailableRecognizers: { [key: string]: string } = {
   BlinkIdCombinedRecognizer:            'createBlinkIdCombinedRecognizer',
 }
 
-export enum AnonymizationMode {
-  None = BlinkIDSDK.AnonymizationMode.None,
-  ImageOnly = BlinkIDSDK.AnonymizationMode.ImageOnly,
-  ResultFieldsOnly = BlinkIDSDK.AnonymizationMode.ResultFieldsOnly,
-  FullResult = BlinkIDSDK.AnonymizationMode.FullResult
-}
-
-export const AvailableRecognizerOptions: { [key: string]: Array<string> } = {
-  IdBarcodeRecognizer:        [],
-  BlinkIdRecognizer:          [
-    'returnFullDocumentImage',
-    'returnFaceImage',
-    'returnSignatureImage',
-    'classifierCallback',
-    'scanCroppedDocumentImage'
-  ],
-  BlinkIdCombinedRecognizer:  [
-    'returnFullDocumentImage',
-    'returnFaceImage',
-    'returnSignatureImage',
-    'classifierCallback',
-    'allowSignature'
-  ],
-}
-
 export interface VideoRecognitionConfiguration {
   recognizers: Array<string>,
-  recognizerOptions?: Array<string>,
+  recognizerOptions?: any,
   successFrame: boolean,
-  anonymization?: AnonymizationMode,
   cameraFeed: HTMLVideoElement,
   cameraId: string | null;
 }
 
 export interface ImageRecognitionConfiguration {
   recognizers: Array<string>,
-  recognizerOptions?: Array<string>,
-  anonymization?: AnonymizationMode,
+  recognizerOptions?: any,
   thoroughScan?: boolean,
   fileList: FileList
 }
@@ -217,6 +191,8 @@ export enum RecognitionStatus {
   // Errors
   UnknownError              = 'UnknownError',
 
+  BarcodeScanningStarted    = 'BarcodeScanningStarted',
+
   // BlinkIDSDK.DetectionStatus
   DetectionStatusFail                   = 'Fail',
   DetectionStatusSuccess                = 'Success',
@@ -248,6 +224,7 @@ export enum CameraExperience {
 }
 
 export enum CameraExperienceState {
+  BarcodeScanning = 'BarcodeScanning',
   AdjustAngle     = 'AdjustAngle',
   Classification  = 'Classification',
   Default         = 'Default',
@@ -260,6 +237,7 @@ export enum CameraExperienceState {
 }
 
 export const CameraExperienceStateDuration = new Map([
+  [ CameraExperienceState.BarcodeScanning, 3000 ],
   [ CameraExperienceState.AdjustAngle, 2500 ],
   [ CameraExperienceState.Default, 500 ],
   [ CameraExperienceState.Done, 300 ],

@@ -66,6 +66,7 @@ cp -r node_modules/@microblink/blinkid-in-browser-sdk/resources/* src/public/ass
 After adding the BlinkID UI component to your project, make sure to include all files from BlinkID In-browser SDK package and its `resources` folder in your distribution. Those files contain compiled WebAssembly module and support JS code.
 
 Do not add those files to the main app bundle, but rather place them on a publicly available location so SDK can load them at the appropriate time. For example, place the resources in `my-angular-app/src/assets/` folder if using `ng new`, or place the resources in `my-react-app/public/` folder if using `create-react-app`.
+
 ## <a name="usage"></a> Usage
 
 BlinkID UI component acts as any other HTML element. It has custom attributes, properties and events.
@@ -185,6 +186,7 @@ A demo app with multiple UI components alongside with source code can be found i
 Example apps are located in the [examples](examples) directory, where minimal JavaScript example is located in the [examples/javascript](examples/javascript) directory, while the minimal TypeScript example is located in the [examples/typescript](examples/typescript) directory.
 
 Auto-generated API documentation of UI component is located in the [docs](docs) directory.
+
 ## <a name="customization"></a> Customization
 
 All attributes, properties and events of UI component can be seen in [`<blinkid-in-browser>` API documentation](docs/components/blinkid-in-browser/readme.md).

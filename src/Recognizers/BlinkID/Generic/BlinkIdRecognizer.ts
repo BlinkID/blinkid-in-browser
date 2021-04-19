@@ -73,6 +73,12 @@ export class RecognitionModeFilter
     enablePhotoId = true
 
     /**
+     * Enable scanning of barcode IDs. Setting is taken into account only if the barcode right to
+     * scan that barcode is purchased.
+    */
+    enableBarcodeId = true;
+
+    /**
      * Enable full document recognition. Setting is taken into account only if the document right to
      * scan that document is purchased.
      */

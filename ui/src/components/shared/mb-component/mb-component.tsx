@@ -13,8 +13,9 @@ import {
   Method
 } from '@stencil/core';
 
+import * as BlinkIDSDK from '../../../../../es/blinkid-sdk';
+
 import {
-  AnonymizationMode,
   CameraExperienceState,
   Code,
   EventFatalError,
@@ -64,17 +65,17 @@ export class MbComponent {
   /**
    * See description in public component.
    */
+   @Prop({ mutable: true }) wasmType: string | null;
+
+  /**
+   * See description in public component.
+   */
   @Prop({ mutable: true }) recognizers: Array<string>;
 
   /**
    * See description in public component.
    */
-  @Prop({ mutable: true }) anonymization: AnonymizationMode;
-
-  /**
-   * See description in public component.
-   */
-  @Prop({ mutable: true }) recognizerOptions: Array<string>;
+  @Prop({ mutable: true }) recognizerOptions: { [key: string]: any };
 
   /**
    * See description in public component.
@@ -120,6 +121,11 @@ export class MbComponent {
    * See description in public component.
    */
   @Prop() showModalWindows: boolean = false;
+
+  /**
+   * See description in public component.
+   */
+   @Prop() showCameraFeedbackBarcodeMessage: boolean = false;
 
   /**
    * See description in public component.
@@ -336,7 +342,7 @@ export class MbComponent {
               ref={el => this.scanFromImageButton = el as HTMLMbButtonElement}
               disabled={false}
               preventDefault={false}
-              visible={true}
+              visible={false}
               icon={true}
               onButtonClick={() => this.scanFromImageInput.click()}
               imageSrcDefault={this.iconGalleryDefault}
@@ -392,6 +398,7 @@ export class MbComponent {
               ref={el => this.cameraExperience = el as HTMLMbCameraExperienceElement}
               translationService={this.translationService}
               showScanningLine={this.showScanningLine}
+              showCameraFeedbackBarcodeMessage={this.showCameraFeedbackBarcodeMessage}
               onClose={() => this.stopRecognition()}
               onFlipCameraAction={() => this.flipCameraAction()}
               class="overlay-camera-element"
@@ -471,7 +478,8 @@ export class MbComponent {
 
     const initEvent: EventReady | EventFatalError = await this.sdkService.initialize(this.licenseKey, {
       allowHelloMessage: this.allowHelloMessage,
-      engineLocation: this.engineLocation
+      engineLocation: this.engineLocation,
+      wasmType: this.getSDKWasmType(this.wasmType)
     });
 
     this.cameraExperience.showOverlay = this.sdkService.showOverlay;
@@ -590,25 +598,6 @@ export class MbComponent {
     }
 
     this.cameraExperience.type = this.sdkService.getDesiredCameraExperience(this.recognizers, this.recognizerOptions);
-
-    // Recognizer options
-    if (this.recognizerOptions && this.recognizerOptions.length) {
-      const conclusion: CheckConclusion = this.sdkService.checkRecognizerOptions(
-        this.recognizers,
-        this.recognizerOptions
-      );
-
-      if (!conclusion.status) {
-        const fatalError = new EventFatalError(
-          Code.InvalidRecognizerOptions,
-          conclusion.message
-        );
-
-        this.setFatalError(fatalError);
-        return false;
-      }
-    }
-
     return true;
   }
 
@@ -620,12 +609,11 @@ export class MbComponent {
     const configuration: VideoRecognitionConfiguration = {
       recognizers: this.recognizers,
       successFrame: this.includeSuccessFrame,
-      anonymization: this.anonymization,
       cameraFeed: this.videoElement,
       cameraId: this.cameraId
     };
 
-    if (this.recognizerOptions && this.recognizerOptions.length) {
+    if (this.recognizerOptions && Object.keys(this.recognizerOptions).length > 0) {
       configuration.recognizerOptions = this.recognizerOptions;
     }
 
@@ -709,6 +697,13 @@ export class MbComponent {
             });
           break;
 
+        case RecognitionStatus.BarcodeScanningStarted:
+          this.cameraExperience.setState(CameraExperienceState.BarcodeScanning, this.isBackSide, true)
+            .then(() => {
+              this.cameraExperience.setState(CameraExperienceState.Default, this.isBackSide);
+            });
+          break;
+
         case RecognitionStatus.DocumentClassified:
           this.cameraExperience.setState(CameraExperienceState.Classification);
           break;
@@ -730,9 +725,12 @@ export class MbComponent {
           break;
 
         case RecognitionStatus.ScanSuccessful:
-          // Which recognizer is it? ImageCapture or some other?
-          // Image capture has the 'imageCapture' flag set to true, we do not want to close camera overlay after image acquisition process is finished
-          // Cause maybe backend service will failed and we can press retry to resume with the same video recognizer and try again
+          /* Which recognizer is it? ImageCapture or some other?
+           *
+           * Image capture has the 'imageCapture' flag set to true, we do not want to close camera overlay after image
+           * acquisition process is finished. Cause maybe backend service will failed and we can press retry to resume
+           * with the same video recognizer and try again
+           */
           if (!recognitionEvent.data.imageCapture) {
             this.cameraExperience.setState(CameraExperienceState.DoneAll, false, true)
               .then(() => {
@@ -889,7 +887,6 @@ export class MbComponent {
   private async startScanFromImage(files?: FileList) {
     const configuration: ImageRecognitionConfiguration = {
       recognizers: this.recognizers,
-      anonymization: this.anonymization,
       fileList: files ? files : this.scanFromImageInput.files
     };
 
@@ -1181,5 +1178,18 @@ export class MbComponent {
   private closeGalleryExperienceModal() {
     this.galleryExperienceModalErrorWindow.visible = false;
     this.stopRecognition();
+  }
+
+  private getSDKWasmType(wasmType: string): BlinkIDSDK.WasmType | null {
+    switch (wasmType) {
+      case 'BASIC':
+        return BlinkIDSDK.WasmType.Basic;
+      case 'ADVANCED':
+        return BlinkIDSDK.WasmType.Advanced;
+      case 'ADVANCED_WITH_THREADS':
+        return BlinkIDSDK.WasmType.AdvancedWithThreads;
+      default:
+        return null;
+    }
   }
 }

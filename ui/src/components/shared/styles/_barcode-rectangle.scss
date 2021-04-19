@@ -1,0 +1,190 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+/* --- Rectangle --- */
+
+@import "./_globals-sass";
+
+@mixin animation ($delay, $duration, $animation) {
+  -webkit-animation-delay: $delay;
+  -webkit-animation-duration: $duration;
+  -webkit-animation-name: $animation;
+
+  -moz-animation-delay: $delay;
+  -moz-animation-duration: $duration;
+  -moz-animation-name: $animation;
+
+  animation-delay: $delay;
+  animation-duration: $duration;
+  animation-name: $animation;
+}
+
+$rectangle-shrink-animation-duration: 250ms;
+$rectangle-error-animation-duration: 1800ms;
+$rectangle-error-animation-duration-extended: 2400ms;
+$rectangle-scanning-line-animation-duration: 2400ms;
+
+// Animations
+// Process done animation
+@keyframes rectangle-shrink-animation {
+  0% { transform: scale(1); }
+  50% { transform: scale(.95); }
+  100% { transform: scale(1); }
+}
+
+// Scanning line animation
+@keyframes scanning-line-animation {
+  0% { top: -60%; }
+  45% { transform: matrix(1, 0, 0, 1, 0, 0); }
+  50% {
+    top: 120%;
+    transform: matrix(1, 0, 0, -1, 0, 0);
+  }
+  95% { transform: matrix(1, 0, 0, -1, 0, 0); }
+  100% {
+    top: -60%;
+    transform: matrix(1, 0, 0, 1, 0, 0);
+  }
+}
+
+// Shape & states
+:host #barcode .rectangle {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  transition: all .3s ease-in;
+
+  &__cursor {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  &__el {
+    box-sizing: border-box;
+    position: absolute;
+    display: block;
+    width: 50%;
+    height: 50%;
+    overflow: hidden;
+
+    &::after,
+    &::before {
+      content: "";
+      position: absolute;
+
+      display: block;
+      width: 32px;
+      height: 32px;
+    }
+
+    &:nth-child(1) {
+      top: 0;
+      left: 0;
+
+      &::after,
+      &::before {
+        top: 0;
+        left: 0;
+        border-top: 4px solid rgba(#fff, 0.5);
+        border-left: 4px solid rgba(#fff, 0.5);
+        border-top-left-radius: 8px;
+        box-shadow: inset 3px 3px 8px -6px rgb(0 0 0 / 20%), -3px -3px 8px -6px rgb(0 0 0 / 20%);
+        transition: border-color .15s linear;
+      }
+    }
+
+    &:nth-child(2) {
+      top: 0;
+      right: 0;
+
+      &::after,
+      &::before {
+        top: 0;
+        right: 0;
+        border-top: 4px solid rgba(#fff, 0.5);
+        border-right: 4px solid rgba(#fff, 0.5);
+        border-top-right-radius: 8px;
+        box-shadow: inset -3px 3px 8px -6px rgb(0 0 0 / 20%), 3px -3px 8px -6px rgb(0 0 0 / 20%);
+        transition: border-color .15s linear;
+      }
+    }
+
+    &:nth-child(3) {
+      bottom: 0;
+      right: 0;
+
+      &::after,
+      &::before {
+        bottom: 0;
+        right: 0;
+        border-bottom: 4px solid rgba(#fff, 0.5);
+        border-right: 4px solid rgba(#fff, 0.5);
+        border-bottom-right-radius: 8px;
+        box-shadow: inset -3px -3px 8px -6px rgb(0 0 0 / 20%), 3px 3px 8px -6px rgb(0 0 0 / 20%);
+        transition: border-color .15s linear;
+      }
+    }
+
+    &:nth-child(4) {
+      bottom: 0;
+      left: 0;
+
+      &::after,
+      &::before {
+        bottom: 0;
+        left: 0;
+        border-bottom: 4px solid rgba(#fff, 0.5);
+        border-left: 4px solid rgba(#fff, 0.5);
+        border-bottom-left-radius: 8px;
+        box-shadow: inset 3px -3px 8px -6px rgb(0 0 0 / 20%), -3px 3px 8px -6px rgb(0 0 0 / 20%);
+        transition: border-color .15s linear;
+      }
+    }
+  }
+
+  // States
+  // States labels
+  &.is-default ~ .label[data-message="is-default"],
+  &.is-detection ~ .label[data-message="is-detection"],
+  &.is-classification ~ .label[data-message="is-classification"],
+  &.is-done ~ .label[data-message="is-done"],
+  &.is-done-all ~ .label[data-message="is-done-all"],
+  &.is-flip ~ .label[data-message="is-flip"],
+  &.is-error-move-farther ~ .label[data-message="is-error-move-farther"],
+  &.is-error-move-closer ~ .label[data-message="is-error-move-closer"],
+  &.is-error-adjust-angle ~ .label[data-message="is-error-adjust-angle"] {
+    opacity: 1;
+    visibility: visible;
+    margin: 2 * $base-unit 0 0 0;
+  }
+
+  // Front side scanning is over
+  &.is-done,
+  &.is-done-all { @include animation(0, $rectangle-shrink-animation-duration, rectangle-shrink-animation); }
+}
+
+:host .scanning-line {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  width: 100%;
+  height: 115px;
+  left: 0px;
+  top: -125px;
+
+  background: radial-gradient(100% 100% at 49.85% 100%, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
+  filter: blur(4px);
+
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
+    animation: scanning-line-animation $rectangle-scanning-line-animation-duration cubic-bezier(.13,.71,1,.82) infinite;
+  }
+}

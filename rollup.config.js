@@ -49,7 +49,7 @@ const config = {
         },
         plugins: [
             nodeResolve(),
-            typescript({ tsconfigOverride: { compilerOptions: { declaration: false, types: [] } } }),
+            typescript({ tsconfigOverride: { compilerOptions: { declaration: false } } }),
             babel({ babelHelpers: 'bundled' }),
             terser(terserConfig)
         ]
@@ -106,7 +106,7 @@ const config = {
         output: {
             file: 'dist/blinkid-sdk.js',
             format: 'umd',
-            name: 'BlinkIDSDK',
+            name: '${libName}SDK',
             indent: false,
             sourcemap: true,
             banner: bannerMsg

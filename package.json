@@ -1,6 +1,6 @@
 {
     "name": "@microblink/blinkid-in-browser-sdk",
-    "version": "5.10.2",
+    "version": "5.11.0",
     "description": "A simple ID scanning library for WebAssembly-enabled browsers.",
     "homepage": "https://github.com/BlinkID/blinkid-in-browser",
     "repository": "github:BlinkID/blinkid-in-browser",
@@ -53,11 +53,14 @@
         "@typescript-eslint/eslint-plugin": "^3.4.0",
         "@typescript-eslint/parser": "^3.4.0",
         "eslint": "7.6.0",
+        "handlebars": "^4.7.7",
         "rimraf": "^3.0.2",
         "rollup": "^2.15.0",
         "rollup-plugin-terser": "^6.1.0",
         "rollup-plugin-typescript2": "^0.27.1",
         "tslib": "^2.0.0",
-        "typescript": "^3.8.3"
+        "typescript": "^3.8.3",
+        "wasm-feature-detect": "^1.2.9",
+        "yargs": "^16.2.0"
     }
 }
