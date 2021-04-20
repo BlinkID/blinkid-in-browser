@@ -39,6 +39,14 @@ function main()
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings( licenseKey );
 
+    /* [TEMPORARY FIX]
+     * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+     * for examples, doesn't support COOP and COEP headers.
+     *
+     * For more information see "Integration" section in the official documentation.
+     */
+    loadSettings.wasmType = "BASIC";
+
     // [OPTIONAL] Change default settings
 
     // Show or hide hello message in browser console when WASM is successfully loaded
@@ -48,7 +56,7 @@ function main()
     loadSettings.loadProgressCallback = ( progress ) => ( progressEl.value = progress );
 
     // Set absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.11.0/resources/";
+    loadSettings.engineLocation = "https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.11.1/resources/";
 
     // 3. Load SDK
     BlinkIDSDK.loadWasmModule( loadSettings ).then
