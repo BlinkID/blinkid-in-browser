@@ -35,6 +35,14 @@ function main()
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings( licenseKey );
 
+    /* [TEMPORARY FIX]
+     * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+     * for examples, doesn't support COOP and COEP headers.
+     *
+     * For more information see "Integration" section in the official documentation.
+     */
+    loadSettings.wasmType = "BASIC";
+
     // [OPTIONAL] Change default settings
 
     // Show or hide hello message in browser console when WASM is successfully loaded
