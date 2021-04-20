@@ -169,11 +169,17 @@
       (function (){
         const el = document.querySelector('#example-minimal blinkid-in-browser');
 
+        /* [TEMPORARY FIX]
+         * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+         * for examples, doesn't support COOP and COEP headers.
+         *
+         * For more information see "Integration" section in the official documentation.
+         */
+        el.wasmType = "BASIC";
+
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
-
-
 
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
@@ -203,6 +209,14 @@ recognizers="BlinkIdCombinedRecognizer"
   (function (){
     const el = document.querySelector('#example-combined blinkid-in-browser');
 
+    /* [TEMPORARY FIX]
+     * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+     * for examples, doesn't support COOP and COEP headers.
+     *
+     * For more information see "Integration" section in the official documentation.
+     */
+    el.wasmType = "BASIC";
+
     el.engineLocation = window.engineLocation;
     el.licenseKey = window.licenseKey;
 
@@ -215,7 +229,7 @@ recognizers="BlinkIdCombinedRecognizer"
     <h2>Scan identity document with barcode</h2>
     <p>UI component with default behaviour where it's required to set valid license key and recognizer.</p>
     <p><em>Recognizer: <strong>IdBarcodeRecognizer</strong></em></p>
-    <-in-browser fullscreen-drop="false"></-in-browser>
+    <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
 <pre>&lt;blinkid-in-browser
 engine-location="http://localhost/resources/"
 license-key="LICENSE-KEY-GOES-HERE"
@@ -226,6 +240,14 @@ recognizers="IdBarcodeRecognizer"
 <script type="text/javascript">
     (function (){
         const el = document.querySelector('#example-barcode blinkid-in-browser');
+
+        /* [TEMPORARY FIX]
+         * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+         * for examples, doesn't support COOP and COEP headers.
+         *
+         * For more information see "Integration" section in the official documentation.
+         */
+        el.wasmType = "BASIC";
 
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
@@ -261,23 +283,29 @@ recognizers="IdBarcodeRecognizer"
       (function (){
         const el = document.querySelector('#example-localization blinkid-in-browser');
 
+        /* [TEMPORARY FIX]
+         * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+         * for examples, doesn't support COOP and COEP headers.
+         *
+         * For more information see "Integration" section in the official documentation.
+         */
+        el.wasmType = "BASIC";
+
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
+
         window.setTimeout(() => {
-          el.translations = { 
+          el.translations = {
             'action-message': 'Alternative CTA'
           };
         }, 3000);
-
-
 
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
 
           el.setUiState('ERROR');
         });
-
 
         el.addEventListener('scanSuccess', ev => {
           console.log('scanSuccess', ev.detail);
@@ -309,17 +337,23 @@ recognizers="IdBarcodeRecognizer"
       (function (){
         const el = document.querySelector('#example-localization-rtl blinkid-in-browser');
 
+        /* [TEMPORARY FIX]
+         * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+         * for examples, doesn't support COOP and COEP headers.
+         *
+         * For more information see "Integration" section in the official documentation.
+         */
+        el.wasmType = "BASIC";
+
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
 
         window.setTimeout(() => {
-          el.translations = { 
+          el.translations = {
             'action-message': 'Alternative CTA'
           };
         }, 3000);
-
-
 
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
@@ -404,11 +438,17 @@ recognizers="IdBarcodeRecognizer"
       (function (){
         const el = document.querySelector('#example-customization blinkid-in-browser');
 
+        /* [TEMPORARY FIX]
+         * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+         * for examples, doesn't support COOP and COEP headers.
+         *
+         * For more information see "Integration" section in the official documentation.
+         */
+        el.wasmType = "BASIC";
+
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
-
-
 
         el.addEventListener('scanError', ev => {
           console.log('scanError', ev.detail);
@@ -484,7 +524,7 @@ recognizers="IdBarcodeRecognizer"
 
         customizatorForm.addEventListener('submit', ev => {
           ev.preventDefault();
-          
+
           document.querySelector(
             '#example-customization .box'
           ).style.background = document.getElementById('customization-background').value;
