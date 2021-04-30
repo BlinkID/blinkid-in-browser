@@ -13,6 +13,7 @@ export * from "./MetadataCallbacks";
 export * from "./FrameCapture";
 export * from "./VideoRecognizer";
 export * from "./WasmLoadSettings";
+export * from "./WasmLoadUtils";
 
 // taken from https://stackoverflow.com/a/2117523/213057
 /* eslint-disable */

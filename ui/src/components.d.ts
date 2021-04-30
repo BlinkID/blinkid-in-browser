@@ -107,6 +107,10 @@ export namespace Components {
          */
         "showActionLabels": boolean;
         /**
+          * Set to 'true' if for Barcode scanning camera feedback message should be displayed on camera screen.  Default value is 'false'.
+         */
+        "showCameraFeedbackBarcodeMessage": boolean;
+        /**
           * Set to 'true' if modal window should be displayed in case of an error.  Default value is 'false'.
          */
         "showModalWindows": boolean;
@@ -583,6 +587,10 @@ declare namespace LocalJSX {
           * Set to 'true' if text labels should be displayed below action buttons.  Default value is 'false'.
          */
         "showActionLabels"?: boolean;
+        /**
+          * Set to 'true' if for Barcode scanning camera feedback message should be displayed on camera screen.  Default value is 'false'.
+         */
+        "showCameraFeedbackBarcodeMessage"?: boolean;
         /**
           * Set to 'true' if modal window should be displayed in case of an error.  Default value is 'false'.
          */
