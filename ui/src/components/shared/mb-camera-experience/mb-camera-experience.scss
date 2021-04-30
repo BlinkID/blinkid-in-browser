@@ -283,11 +283,16 @@
 
     .gradient-overlay { height: 112px; }
 
+    .controls {
+      width: calc(100% - 100px);
+      left: 50px;
+    }
+
     #barcode .rectangle-container  {
       top: 112px;
-      left: 20px;
+      left: 50px;
 
-      width: calc(100% - 40px);
+      width: calc(100% - 100px);
       height: calc(100% - 224px);
 
       perspective: 600px;
@@ -317,11 +322,16 @@
 
     .gradient-overlay { height: 112px; }
 
+    .controls {
+      width: calc(100% - 100px);
+      left: 50px;
+    }
+
     #barcode .rectangle-container  {
       top: 112px;
-      left: 20px;
+      left: 50px;
 
-      width: calc(100% - 40px);
+      width: calc(100% - 100px);
       height: calc(100% - 224px);
 
       perspective: 600px;

@@ -189,8 +189,8 @@ $rectangle-scanning-line-animation-duration: 2400ms;
       &::before {
         top: 0;
         left: 0;
-        border-top: 4px solid rgba(#fff, 0.5);
-        border-left: 4px solid rgba(#fff, 0.5);
+        border-top: 4px solid rgb(255, 255, 255);
+        border-left: 4px solid rgb(255, 255, 255);
         border-top-left-radius: 8px;
         box-shadow: inset 3px 3px 8px -6px rgb(0 0 0 / 20%), -3px -3px 8px -6px rgb(0 0 0 / 20%);
         transition: border-color .15s linear;
@@ -205,8 +205,8 @@ $rectangle-scanning-line-animation-duration: 2400ms;
       &::before {
         top: 0;
         right: 0;
-        border-top: 4px solid rgba(#fff, 0.5);
-        border-right: 4px solid rgba(#fff, 0.5);
+        border-top: 4px solid rgb(255, 255, 255);
+        border-right: 4px solid rgb(255, 255, 255);
         border-top-right-radius: 8px;
         box-shadow: inset -3px 3px 8px -6px rgb(0 0 0 / 20%), 3px -3px 8px -6px rgb(0 0 0 / 20%);
         transition: border-color .15s linear;
@@ -221,8 +221,8 @@ $rectangle-scanning-line-animation-duration: 2400ms;
       &::before {
         bottom: 0;
         right: 0;
-        border-bottom: 4px solid rgba(#fff, 0.5);
-        border-right: 4px solid rgba(#fff, 0.5);
+        border-bottom: 4px solid rgb(255, 255, 255);
+        border-right: 4px solid rgb(255, 255, 255);
         border-bottom-right-radius: 8px;
         box-shadow: inset -3px -3px 8px -6px rgb(0 0 0 / 20%), 3px 3px 8px -6px rgb(0 0 0 / 20%);
         transition: border-color .15s linear;
@@ -237,8 +237,8 @@ $rectangle-scanning-line-animation-duration: 2400ms;
       &::before {
         bottom: 0;
         left: 0;
-        border-bottom: 4px solid rgba(#fff, 0.5);
-        border-left: 4px solid rgba(#fff, 0.5);
+        border-bottom: 4px solid rgb(255, 255, 255);
+        border-left: 4px solid rgb(255, 255, 255);
         border-bottom-left-radius: 8px;
         box-shadow: inset 3px -3px 8px -6px rgb(0 0 0 / 20%), -3px 3px 8px -6px rgb(0 0 0 / 20%);
         transition: border-color .15s linear;

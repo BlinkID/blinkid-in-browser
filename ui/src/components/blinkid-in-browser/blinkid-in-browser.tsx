@@ -212,6 +212,13 @@ export class BlinkidInBrowser implements MicroblinkUI {
   @Prop() showModalWindows: boolean = false;
 
   /**
+   * Set to 'true' if for Barcode scanning camera feedback message should be displayed on camera screen.
+   *
+   * Default value is 'false'.
+   */
+   @Prop() showCameraFeedbackBarcodeMessage: boolean = false;
+
+  /**
    * Set custom translations for UI component. List of available translation keys can be found in
    * `src/utils/translation.service.ts` file.
    */
@@ -387,6 +394,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         thoroughScanFromImage={ this.thoroughScanFromImage }
                         showActionLabels={ this.showActionLabels }
                         showModalWindows={ this.showModalWindows }
+                        showCameraFeedbackBarcodeMessage={this.showCameraFeedbackBarcodeMessage}
                         iconCameraDefault={ this.iconCameraDefault}
                         iconCameraActive={ this.iconCameraActive }
                         iconGalleryDefault={ this.iconGalleryDefault }

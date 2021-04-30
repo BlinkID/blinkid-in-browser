@@ -47,7 +47,7 @@
   --mb-component-button-box-shadow-disabled:    none;
 
   --mb-component-action-buttons-justify-content: flex-end;
-  --mb-component-action-buttons-width:          2 * #{$button-size} + #{$padding-unit-medium};
+  --mb-component-action-buttons-width:          calc(2 * #{$button-size} + #{$padding-unit-medium});
   --mb-component-action-buttons-last-margin:    0 0 0 8px;
 
   --mb-component-action-label:                  block;

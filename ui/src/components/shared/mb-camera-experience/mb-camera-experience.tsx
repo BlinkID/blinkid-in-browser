@@ -378,7 +378,7 @@ export class MbCameraExperience {
 
     switch (state) {
       case CameraExperienceState.Default:
-        if (type === CameraExperience.Barcode) {
+        if (type === CameraExperience.Barcode && this.showCameraFeedbackBarcodeMessage) {
           return getStateMessageAsHTML(this.translationService.i('camera-feedback-barcode-message'));
         }
         const key = isBackSide ? 'camera-feedback-scan-back' : 'camera-feedback-scan-front';

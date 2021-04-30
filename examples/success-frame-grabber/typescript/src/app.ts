@@ -46,7 +46,7 @@ function main()
      *
      * For more information see "Integration" section in the official documentation.
      */
-    loadSettings.wasmType = "BASIC";
+    loadSettings.wasmType = BlinkIDSDK.WasmType.Basic;
 
     // [OPTIONAL] Change default settings
 
