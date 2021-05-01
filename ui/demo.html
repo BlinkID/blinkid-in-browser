@@ -170,6 +170,14 @@
       (function (){
         const el = document.querySelector('#example-minimal blinkid-in-browser');
 
+        /* [TEMPORARY FIX]
+        * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+        * for examples, doesn't support COOP and COEP headers.
+        *
+        * For more information see "Integration" section in the official documentation.
+        */
+        el.wasmType = 'BASIC';
+
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
@@ -276,6 +284,14 @@ recognizers="IdBarcodeRecognizer"
       (function (){
         const el = document.querySelector('#example-localization blinkid-in-browser');
 
+        /* [TEMPORARY FIX]
+        * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+        * for examples, doesn't support COOP and COEP headers.
+        *
+        * For more information see "Integration" section in the official documentation.
+        */
+        el.wasmType = 'BASIC';
+
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
         el.recognizers = ['BlinkIdRecognizer'];
@@ -323,6 +339,14 @@ recognizers="IdBarcodeRecognizer"
     <script type="text/javascript">
       (function (){
         const el = document.querySelector('#example-localization-rtl blinkid-in-browser');
+
+        /* [TEMPORARY FIX]
+        * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+        * for examples, doesn't support COOP and COEP headers.
+        *
+        * For more information see "Integration" section in the official documentation.
+        */
+        el.wasmType = 'BASIC';
 
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
@@ -418,6 +442,14 @@ recognizers="IdBarcodeRecognizer"
     <script type="text/javascript">
       (function (){
         const el = document.querySelector('#example-customization blinkid-in-browser');
+
+        /* [TEMPORARY FIX]
+        * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+        * for examples, doesn't support COOP and COEP headers.
+        *
+        * For more information see "Integration" section in the official documentation.
+        */
+        el.wasmType = 'BASIC';
 
         el.engineLocation = window.engineLocation;
         el.licenseKey = window.licenseKey;
