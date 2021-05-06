@@ -1,5 +1,9 @@
 # Release notes
 
+## 5.11.4
+
+* Generated missing assets when UI component is used as NPM package
+
 ## 5.11.3
 
 * We’ve fixed a bug that would cause recognizerOptions to work incorrectly on still images
