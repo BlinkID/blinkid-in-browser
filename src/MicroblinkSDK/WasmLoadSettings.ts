@@ -31,7 +31,7 @@ export class WasmSDKLoadSettings
      * Hello message will contain the name and version of the SDK, which are required information for all support
      * tickets.
      *
-     * Default value is true.
+     * The default value is true.
      */
     allowHelloMessage = true;
 
@@ -56,11 +56,11 @@ export class WasmSDKLoadSettings
     wasmType: WasmType | null = null;
 
     /**
-     * Defines the number of workers that will be used for multi-threaded processing
-     * of the images. If not set, the number of worker used will match the number
-     * of detected CPU cores on a device.
-     * If the browser does not support multi-threaded processing or it was deliberately
-     * disabled using the `wasmType` property, then this property will be ignored
+     * Defines the number of workers that will be used for multi-threaded processing of the images. If not set, the
+     * number of worker used will match the number of detected CPU cores on a device.
+     *
+     * If the browser does not support multi-threaded processing or it was deliberately disabled using the `wasmType`
+     * property, then this property will be ignored.
      */
     numberOfWorkers: number | null = null;
 
@@ -69,7 +69,7 @@ export class WasmSDKLoadSettings
      *
      * This can be useful for displaying progress bar to users with slow connections.
      *
-     * Default value is null.
+     * The default value is null.
      */
     loadProgressCallback: OptionalLoadProgressCallback = null;
 

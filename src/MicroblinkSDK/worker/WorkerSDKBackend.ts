@@ -629,6 +629,16 @@ export class WasmSDKWorker implements WasmSDK
         this.recognizersWithCallbacks.delete( remoteRecognizerHandle );
     }
 
+    /**
+     * Clean up the active instance of the SDK.
+     *
+     * It's not possible to use the SDK after this method is called.
+     */
+    delete(): void
+    {
+        this.mbWasmWorker.terminate();
+    }
+
     private handleWorkerEvent( event: MessageEvent )
     {
         if ( "isCallbackMessage" in event.data )
@@ -741,7 +751,16 @@ export class WasmSDKWorker implements WasmSDK
                         wasmWorker.loadedWasmType = successMsg.wasmType;
                         resolve( wasmWorker );
                     },
-                    reject
+                    /* eslint-disable @typescript-eslint/no-explicit-any */
+                    ( error: any ) =>
+                    {
+                        if ( wasmWorker && typeof wasmWorker.delete === "function" )
+                        {
+                            wasmWorker.delete();
+                        }
+                        reject( error );
+                    }
+                    /* eslint-enable @typescript-eslint/no-explicit-any */
                 );
                 wasmWorker.postMessage( initMessage, initEventHandler );
             }

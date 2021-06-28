@@ -134,6 +134,16 @@ const config = {
             terser(terserConfig),
             replaceWorker('resources/BlinkIDSDK.worker.min.js')
         ]
+    },
+    workerTest: {
+        input: 'src/MicroblinkSDK/worker/Worker.test.js',
+        treeshake: false,
+        output: {
+            file: 'resources/Worker.test.js',
+            format: 'iife',
+            indent: false,
+            banner: bannerMsg
+        }
     }
 }
 
@@ -143,5 +153,6 @@ export default [
     config.es,
     config.esModule,
     config.umdDev,
-    config.umdProd
+    config.umdProd,
+    config.workerTest
 ]

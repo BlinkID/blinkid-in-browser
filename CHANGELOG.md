@@ -1,5 +1,134 @@
 # Release notes
 
+## 5.12.0
+
+### New additions to our supported documents list
+
+We've added 15 new documents:
+
+#### Europe
+
+* North Macedonia - Polycarbonate Passport
+
+#### Middle East and Africa
+
+* Botswana - ID Card
+* Sudan - Polycarbonate Passport
+
+#### Latin America & the Caribbean
+
+* Mexico - Baja California Sur - Driving Licence (beta)
+* Mexico - Campeche - Driving Licence (beta)
+* Mexico - Colima - Driving Licence (beta)
+
+#### Oceania
+
+* Australia - Health Insurance Card (front only, beta)
+
+#### Asia
+
+* Azerbaijan - Polycarbonate Passport (beta)
+* Tajikistan - Polycarbonate Passport (beta)
+
+#### Northern America
+
+* Canada - Citizenship Certificate (front only, beta)
+* Canada - Ontario - Health Insurance Card (front only)
+* Canada - Quebec - Health Insurance Card (front only, beta)
+* USA - Military ID Card
+* USA - Rhode Island - ID Card
+* USA - South Carolina - ID Card
+
+#### Back side support added:
+
+* Ireland - Passport Card
+* Mexico - Puebla - Driving Licence
+* Singapore - S PASS
+
+#### No longer BETA:
+
+* Finland - Polycarbonate Passport
+* Ireland - Passport Card
+* Ireland - Polycarbonate Passport
+* Kosovo - Driving Licence
+* Latvia - Polycarbonate Alien Passport
+* Latvia - Polycarbonate Passport
+* Poland - Polycarbonate Passport
+* Cameroon - ID Card
+* Ghana - ID Card
+* Iraq - ID Card
+* Tanzania - Driving Licence
+* Turkey - Polycarbonate Passport
+* Uganda - Driving Licence
+* Bolivia - Minors ID
+* Chile - Driving Licence
+* Ecuador - Driving Licence
+* Haiti - Driving Licence
+* India - Karnataka - Driving Licence
+* India - Maharashtra - Driving Licence
+* Pakistan - Punjab - Driving Licence
+* USA - Global Entry Card
+* USA - New Mexico - ID Card
+* USA - Wisconsin - ID Card
+
+### Changes to BlinkID(Combined) Recognizer
+
+* We've added the parameter `maxAllowedMismatchesPerField` to settings. When this is set to a non-zero value, DataMatch will pass as long as the number of mismatched characters doesn't exceed the specified value.
+* We've enabled the return of image and back-side data results, even when the `State` is `Uncertain`. Keep in mind that returned images, in this case, might be blurry or low quality.
+	* This applies to all images: face image, full document image, and signature image.
+
+
+### Improvements
+
+* We can now extract information from NRIC numbers on Malaysian documents that have the asterisk (\*) character in it.
+* While using `FullRecognitionMode` for scanning unsupported Passports, we are now taking `ClassInfo` from MRZ
+* We are now correctly handling fully cropped vertical images
+* Fix for correct parsing of Bermuda Driving Licence AAMVA-compliant barcode dates
+* Fix for correct calculation of check digit for Saudi Arabia ID Card MRZ
+
+#### Postprocess improvement
+
+* We are splitting names and descriptors into two different results (e.g., Nom d’ usage, Epouse, Geb. etc.), where descriptors are in their separate field `name_additional_info`,  for these documents:
+	* France
+		* ID Card
+		* Residence Permit
+	* Germany
+		* ID Card
+	* Luxembourg
+		* ID Card
+	* Netherlands
+		* Driving Licence
+		* Polycarbonate Passport
+
+#### Sanitization of names
+
+* We are removing title prefixes (e.g., Mrs., Mr., Ing., etc.) from `full_name`, `first_name` and `last_name` for these documents:
+	* Austria
+		* Driving Licence
+		* ID Card
+	* Czechia
+		* Driving Licence
+	* Germany
+		* ID Card
+	* Thailand
+		* ID Card
+	* UK
+		* Driving Licence
+
+#### Anonymization
+
+* We've added anonymization support for new documents:
+	* Document number on Germany Polycarbonate Passport
+	* Document number on Hong Kong Polycarbonate Passport
+	* Document number, personal ID number on Singapore Polycarbonate Passport
+
+### SDK changes
+
+* We've added a mechanism to automatically delete an instance of worker script in case of unsuccessful SDK initialization.
+    * New method `WasmSDK.delete()` was added for this purpose and is available on every instance of the SDK.
+* We've changed improper error handling in the `VideoRecognizer` class.
+    * From now on, it's possible to catch all errors that happen during the video recognition.
+
 ## 5.11.4
 
 * Generated missing assets when UI component is used as NPM package

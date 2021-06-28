@@ -396,7 +396,12 @@ export enum Region
     TAMIL_NADU = 106,
     YUCATAN = 107,
     ZACATECAS = 108,
-    COUNT = 109,
+    AGUASCALIENTES = 109,
+    BAJA_CALIFORNIA_SUR = 110,
+    CAMPECHE = 111,
+    COLIMA = 112,
+    QUINTANA_ROO_BENITO_JUAREZ = 113,
+    COUNT = 114,
 }
 
 export enum DocumentType
@@ -448,5 +453,6 @@ export enum DocumentType
     REFUGEE_ID = 44,
     TRIBAL_ID = 45,
     VETERAN_ID = 46,
-    COUNT = 47,
+    CITIZENSHIP_CERTIFICATE = 47,
+    COUNT = 48,
 }

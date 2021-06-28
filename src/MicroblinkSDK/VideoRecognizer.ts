@@ -317,46 +317,69 @@ export class VideoRecognizer
      * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether
      *        recognition was successful or not.
      */
-    startRecognition( onScanningDone: OnScanningDone, recognitionTimeoutMs = 15000 ): void
+    startRecognition( onScanningDone: OnScanningDone, recognitionTimeoutMs = 15000 ): Promise< void >
     {
-        if ( this.videoFeed === null )
+        return new Promise( ( resolve, reject ) =>
         {
-            throw new Error( "The associated video feed has been released!" );
-        }
-        if ( !this.videoFeed.paused )
-        {
-            throw new Error( "The associated video feed is not paused. Use resumeRecognition instead!" );
-        }
-
-        this.cancelled = false;
-        this.recognitionPaused = false;
-        this.clearTimeout();
-        this.recognitionTimeoutMs = recognitionTimeoutMs;
-        this.onScanningDone = onScanningDone;
-        void this.recognizerRunner.setClearTimeoutCallback( { onClearTimeout: () => this.clearTimeout() } );
-        this.videoFeed.play().then
-        (
-            () => this.playPauseEvent(),
-            /* eslint-disable @typescript-eslint/no-explicit-any */
-            ( nativeError: any ) =>
+            if ( this.videoFeed === null )
             {
-                if ( !this.allowManualVideoPlayout )
-                {
-                    console.warn( "Native error", nativeError );
-                    throw new Error( "The play() request was interrupted or prevented by browser security rules!" );
-                }
-
-                if ( !this.videoFeed )
-                {
-                    return;
-                }
-
-                this.videoFeed.controls = true;
-                this.videoFeed.addEventListener( "play" , () => this.playPauseEvent() );
-                this.videoFeed.addEventListener( "pause", () => this.playPauseEvent() );
+                reject( new Error( "The associated video feed has been released!" ) );
+                return;
             }
-            /* eslint-enable @typescript-eslint/no-explicit-any */
-        );
+            if ( !this.videoFeed.paused )
+            {
+                reject( new Error( "The associated video feed is not paused. Use resumeRecognition instead!" ) );
+                return;
+            }
+
+            this.cancelled = false;
+            this.recognitionPaused = false;
+            this.clearTimeout();
+            this.recognitionTimeoutMs = recognitionTimeoutMs;
+            this.onScanningDone = onScanningDone;
+            void this.recognizerRunner.setClearTimeoutCallback( { onClearTimeout: () => this.clearTimeout() } );
+            this.videoFeed.play().then
+            (
+                () => this.playPauseEvent().then
+                (
+                    () => resolve()
+                ).catch
+                (
+                    ( error ) => reject( error )
+                ),
+                /* eslint-disable @typescript-eslint/no-explicit-any */
+                ( nativeError: any ) =>
+                {
+                    if ( !this.allowManualVideoPlayout )
+                    {
+                        console.warn( "Native error", nativeError );
+                        reject
+                        (
+                            new Error( "The play() request was interrupted or prevented by browser security rules!" )
+                        );
+                        return;
+                    }
+
+                    if ( !this.videoFeed )
+                    {
+                        return;
+                    }
+
+                    this.videoFeed.controls = true;
+                    this.videoFeed.addEventListener
+                    (
+                        "play" ,
+                        () => void this.playPauseEvent().then().catch( ( error ) => reject( error ) )
+                    );
+                    this.videoFeed.addEventListener
+                    (
+                        "pause",
+                        () => void this.playPauseEvent().then().catch( ( error ) => reject( error ) )
+                    );
+                }
+                /* eslint-enable @typescript-eslint/no-explicit-any */
+            );
+        } );
     }
 
     /**
@@ -370,7 +393,7 @@ export class VideoRecognizer
      * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether
      *        recognition was successful or not.
      */
-    async recognize( recognitionTimeoutMs = 15000 ): Promise< RecognizerResultState >
+    recognize( recognitionTimeoutMs = 15000 ): Promise< RecognizerResultState >
     {
         return new Promise
         (
@@ -378,7 +401,7 @@ export class VideoRecognizer
             {
                 try
                 {
-                    this.startRecognition
+                    void this.startRecognition
                     (
                         ( recognitionState: RecognizerResultState ) =>
                         {
@@ -386,6 +409,12 @@ export class VideoRecognizer
                             resolve( recognitionState );
                         },
                         recognitionTimeoutMs
+                    ).then
+                    (
+                        // Do nothing, callback is used for resolving
+                    ).catch
+                    (
+                        ( error ) => reject( error )
                     );
                 }
                 catch ( error )
@@ -457,37 +486,59 @@ export class VideoRecognizer
      * If video feed is paused, you should use recognize or startRecognition methods.
      * @param resetRecognizers Indicates whether resetRecognizers should be invoked while resuming the recognition
      */
-    resumeRecognition( resetRecognizers: boolean ): void
+    resumeRecognition( resetRecognizers: boolean ): Promise< void >
     {
-        this.cancelled = false;
-        this.timedOut = false;
-        this.recognitionPaused = false;
-        if ( this.videoFeed && this.videoFeed.paused )
+        return new Promise( ( resolve, reject ) =>
         {
-            const msg = "Cannot resume recognition while video feed is paused! Use recognize or startRecognition";
-            throw new Error( msg );
-        }
-        setTimeout
-        (
-            () =>
+            this.cancelled = false;
+            this.timedOut = false;
+            this.recognitionPaused = false;
+            if ( this.videoFeed && this.videoFeed.paused )
             {
-                if ( resetRecognizers )
+                const msg = "Cannot resume recognition while video feed is paused! Use recognize or startRecognition";
+                reject( new Error( msg ) );
+                return;
+            }
+            setTimeout
+            (
+                () =>
                 {
-                    this.resetRecognizers( true ).then
-                    (
-                        () => void this.recognitionLoop()
-                    ).catch
-                    (
-                        () => { throw new Error( "Could not reset recognizers!" ); }
-                    );
-                }
-                else
-                {
-                    void this.recognitionLoop();
-                }
-            },
-            1
-        );
+                    if ( resetRecognizers )
+                    {
+                        this.resetRecognizers( true ).then
+                        (
+                            () =>
+                            {
+                                void this.recognitionLoop().then
+                                (
+                                    () => resolve()
+                                ).catch
+                                (
+                                    ( error ) => reject( error )
+                                );
+                            }
+                        ).catch
+                        (
+                            () =>
+                            {
+                                reject( new Error( "Could not reset recognizers!" ) );
+                            }
+                        );
+                    }
+                    else
+                    {
+                        void this.recognitionLoop().then
+                        (
+                            () => resolve()
+                        ).catch
+                        (
+                            ( error ) => reject( error )
+                        );
+                    }
+                },
+                1
+            );
+        } );
     }
 
     /**
@@ -536,67 +587,124 @@ export class VideoRecognizer
 
     private cameraFlipped = false;
 
-    private playPauseEvent()
+    private playPauseEvent(): Promise< void >
     {
-        if ( this.videoFeed && this.videoFeed.paused )
+        return new Promise( ( resolve, reject ) =>
         {
-            this.cancelRecognition();
-        }
-        else
-        {
-            this.resumeRecognition( true );
-        }
-    }
-
-    private async recognitionLoop()
-    {
-        if ( !this.videoFeed )
-        {
-            throw new Error( "Missing video feed!" );
-        }
-        const cameraFrame = captureFrame( this.videoFeed );
-        const processResult = await this.recognizerRunner.processImage( cameraFrame );
-        if ( processResult === RecognizerResultState.Valid || this.cancelled || this.timedOut )
-        {
-            if ( this.videoRecognitionMode === VideoRecognitionMode.Recognition || this.cancelled )
+            if ( this.videoFeed && this.videoFeed.paused )
             {
-                // valid results, clear the timeout and invoke the callback
-                this.clearTimeout();
-                if ( this.onScanningDone )
-                {
-                    void this.onScanningDone( processResult );
-                }
-                // after returning from callback, resume scanning if not paused
+                this.cancelRecognition();
+                resolve();
+                return;
             }
             else
             {
-                // in test mode - reset the recognizers and continue the loop indefinitely
-                await this.recognizerRunner.resetRecognizers( true );
-                // clear any time outs
-                this.clearTimeout();
-            }
-        }
-        else if ( processResult === RecognizerResultState.Uncertain )
-        {
-            if ( this.timeoutID === 0 )
-            {
-                // first non-empty result - start timeout
-                this.timeoutID = window.setTimeout(
-                    () => { this.timedOut = true; },
-                    this.recognitionTimeoutMs
+                this.resumeRecognition( true ).then
+                (
+                    () => resolve()
+                ).catch
+                (
+                    ( error ) => reject( error )
                 );
             }
-        }
-        else if ( processResult === RecognizerResultState.StageValid )
+
+        } );
+    }
+
+    private recognitionLoop(): Promise< void >
+    {
+        return new Promise( ( resolve, reject ) =>
         {
-            // stage recognition is finished, clear timeout and resume recognition
-            this.clearTimeout();
-        }
-        if ( !this.recognitionPaused )
-        {
-            // ensure browser events are processed and then recognize another frame
-            setTimeout( () => { void this.recognitionLoop(); }, 1 );
-        }
+            if ( !this.videoFeed )
+            {
+                reject( new Error( "Missing video feed!" ) );
+                return;
+            }
+            const cameraFrame = captureFrame( this.videoFeed );
+            this.recognizerRunner.processImage( cameraFrame ).then
+            (
+                ( processResult: RecognizerResultState ) =>
+                {
+                    const completeFn = () =>
+                    {
+                        if ( !this.recognitionPaused )
+                        {
+                            // ensure browser events are processed and then recognize another frame
+                            setTimeout( () =>
+                            {
+                                this.recognitionLoop().then
+                                (
+                                    () => resolve()
+                                ).catch
+                                (
+                                    ( error ) => reject( error )
+                                );
+                            }, 1 );
+                        }
+                        else
+                        {
+                            resolve();
+                        }
+                    };
+
+                    if ( processResult === RecognizerResultState.Valid || this.cancelled || this.timedOut )
+                    {
+                        if ( this.videoRecognitionMode === VideoRecognitionMode.Recognition || this.cancelled )
+                        {
+                            // valid results, clear the timeout and invoke the callback
+                            this.clearTimeout();
+                            if ( this.onScanningDone )
+                            {
+                                void this.onScanningDone( processResult );
+                            }
+                            // after returning from callback, resume scanning if not paused
+                        }
+                        else
+                        {
+                            // in test mode - reset the recognizers and continue the loop indefinitely
+                            this.recognizerRunner.resetRecognizers( true ).then
+                            (
+                                () =>
+                                {
+                                    // clear any time outs
+                                    this.clearTimeout();
+                                    completeFn();
+                                }
+                            ).catch
+                            (
+                                ( error ) => reject( error )
+                            );
+                            return;
+                        }
+                    }
+                    else if ( processResult === RecognizerResultState.Uncertain )
+                    {
+                        if ( this.timeoutID === 0 )
+                        {
+                            // first non-empty result - start timeout
+                            this.timeoutID = window.setTimeout(
+                                () => { this.timedOut = true; },
+                                this.recognitionTimeoutMs
+                            );
+                        }
+                        completeFn();
+                        return;
+                    }
+                    else if ( processResult === RecognizerResultState.StageValid )
+                    {
+                        // stage recognition is finished, clear timeout and resume recognition
+                        this.clearTimeout();
+                        completeFn();
+                        return;
+                    }
+
+                    completeFn();
+                }
+            ).catch
+            (
+                ( error ) => reject ( error )
+            );
+        } );
     }
 
     private clearTimeout()

@@ -5,7 +5,7 @@
 import * as WasmFeatureDetect from "wasm-feature-detect";
 import { WasmType } from "./WasmType";
 
-export async function detectWasmType(): Promise< WasmType >
+export async function detectWasmType( engineLocation: string ): Promise< WasmType >
 {
     // determine if all features required for advanced WASM are available
     // currently, advanced wasm requires bulk memory, non-trapping floating point
@@ -20,7 +20,27 @@ export async function detectWasmType(): Promise< WasmType >
     {
         if ( haveThreads )
         {
-            return WasmType.AdvancedWithThreads;
+            /* The external worker files are loaded by the Emscripten’s thread support code - each
+             * worker represents a thread. It’s not currently possible to put all those workers
+             * inline.
+             *
+             * Also, due to browser security rules, it's not possible to load external worker files
+             * from a different origin.
+             *
+             * Therefore, we need to ensure that remote workers are accessible. For that reason,
+             * there is a dummy `Worker.test.js` file. If that file is loaded successfully, we can
+             * say that `AdvancedWithThreads` bundle is available.
+             */
+            try
+            {
+                const worker = new Worker( `${ engineLocation }/Worker.test.js` );
+                worker.terminate();
+                return WasmType.AdvancedWithThreads;
+            }
+            catch
+            {
+                return WasmType.Advanced;
+            }
         }
         else
         {
