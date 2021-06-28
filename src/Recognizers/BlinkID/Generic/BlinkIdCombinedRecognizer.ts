@@ -28,6 +28,11 @@ export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings
      */
     allowUncertainFrontSideScan = false;
 
+    /**
+     * Configure the number of characters per field that are allowed to be inconsistent in data match.
+     */
+    maxAllowedMismatchesPerField = 0;
+
     // implementation od the DigitalSignatureOptions interface
     allowSignature = false;
 }

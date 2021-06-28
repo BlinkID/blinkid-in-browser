@@ -371,7 +371,12 @@ export default class MicroblinkWorker
 
     private async calculateWasmType( msg: Messages.InitMessage ): Promise< WasmType >
     {
-        return msg.wasmType !== null ? msg.wasmType : await WasmLoadUtils.detectWasmType();
+        if ( msg.wasmType !== null )
+        {
+            return msg.wasmType;
+        }
+
+        return await WasmLoadUtils.detectWasmType( msg.engineLocation );
     }
 
     private calculateEngineLocationPrefix( msg: Messages.InitMessage, wasmType: WasmType ): string
