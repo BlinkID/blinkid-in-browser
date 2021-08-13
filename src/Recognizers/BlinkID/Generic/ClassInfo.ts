@@ -259,7 +259,7 @@ export enum Country
     SUDAN = 229,
     SURINAME = 230,
     SVALBARD_AND_JAN_MAYEN = 231,
-    SWAZILAND = 232,
+    ESWATINI = 232,
     SYRIA = 233,
     TAJIKISTAN = 234,
     TANZANIA = 235,

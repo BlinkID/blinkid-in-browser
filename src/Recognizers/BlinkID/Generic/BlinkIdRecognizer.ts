@@ -9,6 +9,7 @@ import { DriverLicenseDetailedInfo } from "./DriverLicenseDetailedInfo";
 import { ImageAnalysisResult } from "./ImageAnalysisResult";
 import { ProcessingStatus } from "./ProcessingStatus";
 import { RecognitionMode } from "./RecognitionMode";
+import { RecognitionModeFilter } from "./RecognitionModeFilter";
 import { VIZResult } from "./VIZResult";
 
 import
@@ -41,6 +42,7 @@ export * from "./DriverLicenseDetailedInfo";
 export * from "./ImageAnalysisResult";
 export * from "./ProcessingStatus";
 export * from "./RecognitionMode";
+export * from "./RecognitionModeFilter";
 export * from "./VIZResult";
 
 /**
@@ -53,37 +55,6 @@ export type BarcodeScanningStartedCallback = () => void;
  * @param supported True if document is supported for recognition, false otherwise.
  */
 export type ClassifierCallback = ( supported: boolean ) => void;
-
-/**
-* RecognitionModeFilter is used to enable/disable recognition of specific document groups.
-* Setting is taken into account only if the right for that document is purchased.
-*/
-export class RecognitionModeFilter
-{
-    /** Enable scanning of MRZ IDs. Setting is taken into account only if the mrz_id right is purchased. */
-    enableMrzId = true
-
-    /** Enable scanning of Passport MRZ. Setting is taken into account only if the passport right is purchased. */
-    enableMrzPassport = true
-
-    /** Enable scanning of visa MRZ. Setting is taken into account only if the visa right is purchased. */
-    enableMrzVisa = true
-
-    /** Enable scanning of Photo ID. Setting is taken into account only if the photo_id right is purchased. */
-    enablePhotoId = true
-
-    /**
-     * Enable scanning of barcode IDs. Setting is taken into account only if the barcode right to
-     * scan that barcode is purchased.
-    */
-    enableBarcodeId = true;
-
-    /**
-     * Enable full document recognition. Setting is taken into account only if the document right to
-     * scan that document is purchased.
-     */
-    enableFullDocumentRecognition = true
-}
 
 /**
  * A settings object that is used for configuring the BlinkIdRecognizer.
