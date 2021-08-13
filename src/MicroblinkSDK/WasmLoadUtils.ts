@@ -14,9 +14,10 @@ export async function detectWasmType( engineLocation: string ): Promise< WasmTyp
     const haveBulkMemory = await WasmFeatureDetect.bulkMemory();
     const haveNonTrappingFloatingPoint = await WasmFeatureDetect.saturatedFloatToInt();
     const haveSignExtension = await WasmFeatureDetect.signExtensions();
+    const haveSIMD = await WasmFeatureDetect.simd();
     const haveThreads = await WasmFeatureDetect.threads();
 
-    if ( haveBulkMemory && haveNonTrappingFloatingPoint && haveSignExtension )
+    if ( haveBulkMemory && haveNonTrappingFloatingPoint && haveSignExtension && haveSIMD )
     {
         if ( haveThreads )
         {

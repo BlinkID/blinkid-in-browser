@@ -15,7 +15,7 @@ export enum WasmType
 
     /**
      * The WASM that will be loaded will be built with advanced WASM features, such as
-     * bulk memory, non-trapping floating point and sign extension. Such WASM can only
+     * bulk memory, SIMD, non-trapping floating point and sign extension. Such WASM can only
      * be executed in browsers that support those features. Attempting to run this
      * WASM in a non-compatible browser will crash your app.
      */

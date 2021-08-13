@@ -358,10 +358,10 @@ WASM wrapper contain three different builds:
 * `Basic`
 
     * The WASM that will be loaded will be most compatible with all browsers that support the WASM, but will lack features that could be used to improve performance.
-    
+
 * `Advanced`
 
-    * The WASM that will be loaded will be built with advanced WASM features, such as bulk memory, non-trapping floating point and sign extension. Such WASM can only be executed in browsers that support those features. Attempting to run this WASM in a non-compatible browser will crash your app.
+    * The WASM that will be loaded will be built with advanced WASM features, such as bulk memory, SIMD, non-trapping floating point and sign extension. Such WASM can only be executed in browsers that support those features. Attempting to run this WASM in a non-compatible browser will crash your app.
 
 * `AdvancedWithThreads`
 
