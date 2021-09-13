@@ -1,1 +1,626 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Log in to Jira, Confluence, and all other Atlassian Cloud products here. Not an Atlassian user? Sign up for free."><meta name="google-site-verification" content="HNNnCkeVQ-w56fqPpX2TTEMRmta5QJ-bDunwoaUep-o"><meta name="" content=""><meta name="" content=""><link rel="shortcut icon" href="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.250/favicon.ico"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://t.castle.io"><link rel="preconnect" href="https://api.segment.io" crossorigin><link rel="preconnect" href="https://accounts.google.com"><link rel="preconnect" href="https://sentry.io" crossorigin><title>Log in with Atlassian account</title><style>.grecaptcha-badge{visibility:hidden}.scriptLoadError{display:flex;align-content:center;background-color:#0747a6;position:absolute;top:0;left:0;width:100%;height:100%;font-size:14px;font-style:normal;font-weight:400;line-height:1.42857142857143;letter-spacing:-.005em;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif}.scriptLoadError .container{color:#fff;margin:0 auto;align-items:center;display:flex;flex-direction:column}.scriptLoadError .content{background:#fff;border-radius:3px;box-shadow:0 10px 10px rgba(0,0,0,.1);box-sizing:border-box;color:#172b4d;padding:48px;width:400px}.scriptLoadError .content{margin-top:48px}.scriptLoadError .content p:first-child{margin-top:0}.scriptLoadError .content a{text-decoration:none;color:#0052cc}.scriptLoadError .logo{margin-top:48px;margin-bottom:0;font-size:40px;line-height:48px}.scriptLoadError .heading{color:#deebff;font-size:24px;font-weight:500;line-height:28px;margin-top:48px}</style><script src="https://metal.prod.atl-paas.net/1.24.0/metal-head.min.js"></script><link href="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.250/static/css/39.9dfe180a.chunk.css" rel="stylesheet"></head><body data-app-state="{&quot;appConfig&quot;:{&quot;auth0Config&quot;:{&quot;callbackUrl&quot;:&quot;https://id.atlassian.com/login/callback&quot;,&quot;clientId&quot;:&quot;tDP5by46cc3gEck7d2vbHZsqsfrDK6t9&quot;,&quot;domain&quot;:&quot;auth.atlassian.com&quot;,&quot;tenant&quot;:&quot;atlassian-account-prod&quot;,&quot;tokenIssuer&quot;:&quot;https://atlassian-account-prod.pus2.auth0.com&quot;},&quot;bitbucketSignupUrl&quot;:&quot;https://bitbucket.org/account/signup&quot;,&quot;bitbucketSignupUrlOverrideEnabled&quot;:false,&quot;castleAppId&quot;:&quot;337683121243755&quot;,&quot;googleAuthClientId&quot;:&quot;596149463257-9oquqfivs9on8t8erq23c8qso6vk3cp1.apps.googleusercontent.com&quot;,&quot;marketingConsentApiUrl&quot;:&quot;https://preferences.atlassian.com/rest&quot;,&quot;recaptchaEnable&quot;:true,&quot;recaptchaEnterpriseCheckboxKeySite&quot;:&quot;6LfnteAZAAAAAH3vsGy_TA6P6wBH6jtbMqAeVI8k&quot;,&quot;recaptchaEnterpriseInvisibleKeySite&quot;:&quot;6LcTpeAZAAAAACEXJuZmTp5YVTOUVXnN3TYR_fLM&quot;,&quot;segmentIoKey&quot;:&quot;cb2egpwag7&quot;,&quot;sentryUrl&quot;:&quot;https://71e54c28be0d49f0bcd732ab30f35faa@sentry.io/275199&quot;,&quot;contextPath&quot;:&quot;&quot;},&quot;locale&quot;:&quot;en-US&quot;,&quot;csrfToken&quot;:&quot;748d63e1-46ea-4ee4-8ba3-da61cc63ad66&quot;,&quot;featureFlags&quot;:{&quot;aid_signup.microsoft.auth.enabled&quot;:true,&quot;aid_signup.apple.auth.enabled&quot;:true,&quot;aid_signup.apple.show.hidden.email.warning.enabled&quot;:true,&quot;aid_signup.recaptcha_enterprise.enabled&quot;:true,&quot;aid_signup.disallow.bitbucket.username.login&quot;:true,&quot;sign-in-with-slack.enabled&quot;:true,&quot;aid-frontend.use-cobranding-object&quot;:false},&quot;cobranding&quot;:{&quot;application&quot;:&quot;bitbucket&quot;,&quot;derivedApplication&quot;:&quot;bitbucket&quot;},&quot;microbranding&quot;:{&quot;application&quot;:&quot;bitbucket&quot;},&quot;login&quot;:{}}"><div id="root"><noscript><div class="scriptLoadError"><div class="container"><h1 class="logo">Atlassian</h1><div class="heading">JavaScript is disabled</div><div class="content"><p>You should enable JavaScript to work with this page.</p></div></div></div></noscript><div id="javaScriptLoadError" style="display:none"><div class="scriptLoadError"><div class="container"><h1 class="logo">Atlassian</h1><div class="heading">JavaScript load error</div><div class="content"><p>We tried to load scripts but something went wrong.</p><p>Please make sure that your network settings allow you to download scripts from the following domain:</p><p><b>https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.250</b></p></div></div></div></div></div><script>var mfaServerUrl="",ticket="",requestToken="",postActionURL="",userData={userId:"",email:"",friendlyUserId:"",tenant:"",tenantFriendlyName:""},globalTrackingId="";window.onload=function(){document.getElementById("javaScriptLoadError")&&(document.getElementById("javaScriptLoadError").style.display="block")}</script><script>!function(e){function t(t){for(var n,c,f=t[0],i=t[1],u=t[2],l=0,s=[];l<f.length;l++)c=f[l],Object.prototype.hasOwnProperty.call(a,c)&&a[c]&&s.push(a[c][0]),a[c]=0;for(n in i)Object.prototype.hasOwnProperty.call(i,n)&&(e[n]=i[n]);for(d&&d(t);s.length;)s.shift()();return o.push.apply(o,u||[]),r()}function r(){for(var e,t=0;t<o.length;t++){for(var r=o[t],n=!0,f=1;f<r.length;f++){var i=r[f];0!==a[i]&&(n=!1)}n&&(o.splice(t--,1),e=c(c.s=r[0]))}return e}var n={},a={38:0},o=[];function c(t){if(n[t])return n[t].exports;var r=n[t]={i:t,l:!1,exports:{}};return e[t].call(r.exports,r,r.exports,c),r.l=!0,r.exports}c.e=function(e){var t=[],r=a[e];if(0!==r)if(r)t.push(r[2]);else{var n=new Promise((function(t,n){r=a[e]=[t,n]}));t.push(r[2]=n);var o,f=document.createElement("script");f.charset="utf-8",f.timeout=120,c.nc&&f.setAttribute("nonce",c.nc),f.src=function(e){return c.p+"static/js/"+({27:"cancel.account.delete",28:"delete.request.confirmation",29:"expired.password",30:"inactive.account",31:"login",33:"mfa",34:"mfa.apps",35:"mfa.enrollment",36:"multi.factor",37:"pending.deletion"}[e]||e)+"."+{0:"d5ca44c5",1:"d388a2da",2:"11c2c1e6",3:"b9e83909",4:"4d5ea6a0",5:"08027ca7",6:"2888bff1",7:"09fd183a",8:"d39b8328",9:"ec18b746",10:"572a7df5",11:"f52a4e21",12:"84350c55",13:"46e34ed4",14:"47a31598",15:"b3f43e37",16:"35945b65",17:"6b822e58",18:"5a26a28e",19:"816f97e0",20:"12441bbf",21:"c1a92e62",22:"32421714",23:"873e3163",24:"9fc2cf40",25:"d87189c0",26:"006cca7a",27:"175e3245",28:"d0deb9ff",29:"84d11655",30:"7e2a3b0a",31:"1cda67af",33:"7aca2089",34:"01738d5f",35:"0df708a9",36:"b15b8f50",37:"75333356",40:"1b6e5f4b",41:"82990183",42:"ddc49414",43:"1f7576aa"}[e]+".chunk.js"}(e);var i=new Error;o=function(t){f.onerror=f.onload=null,clearTimeout(u);var r=a[e];if(0!==r){if(r){var n=t&&("load"===t.type?"missing":t.type),o=t&&t.target&&t.target.src;i.message="Loading chunk "+e+" failed.\n("+n+": "+o+")",i.name="ChunkLoadError",i.type=n,i.request=o,r[1](i)}a[e]=void 0}};var u=setTimeout((function(){o({type:"timeout",target:f})}),12e4);f.onerror=f.onload=o,document.head.appendChild(f)}return Promise.all(t)},c.m=e,c.c=n,c.d=function(e,t,r){c.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},c.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},c.t=function(e,t){if(1&t&&(e=c(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(c.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var n in e)c.d(r,n,function(t){return e[t]}.bind(null,n));return r},c.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return c.d(t,"a",t),t},c.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},c.p="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.250/",c.oe=function(e){throw console.error(e),e};var f=this["webpackJsonpaid-frontend"]=this["webpackJsonpaid-frontend"]||[],i=f.push.bind(f);f.push=t,f=f.slice();for(var u=0;u<f.length;u++)t(f[u]);var d=i;r()}([])</script><script src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.250/static/js/39.c2291268.chunk.js"></script><script src="https://aid-frontend.prod.atl-paas.net/atlassian-id/front-end/5.0.250/static/js/main.23d1bb21.chunk.js"></script></body></html>
+
+# BlinkID recognizer and BlinkID Combined recognizer
+
+Other than documents listed here, BlinkID(Combined)Recognizer also scans the <strong>Machine Readable Zone (MRZ)</strong> on standard (ISO/IEC 7501 compliant) <strong>Machine Readable Travel Documents (MRTD)</strong>. This includes <strong>passports, visas</strong> and other identification documents.
+
+
+## Supported medical documents
+
+| Country/Region        | Document Type | Localized Document Name |
+| :---------------|:------------------|:------------------|
+| Croatia | Health Insurance Card<sup>\*, BETA</sup> | Zdravstvena iskaznica |
+| Australia | Health Insurance Card<sup>\*, BETA</sup> | Medicare card |
+| Canada - Ontario | Health Insurance Card\* |  |
+| Canada - Quebec | Health Insurance Card<sup>\*, BETA</sup> |  |
+
+
+
+## Supported identity documents
+
+
+### Europe
+| Country/Region        | Document Type | Localized Document Name |
+| :---------------|:------------------|:------------------|
+| Albania | Driving Licence\* | Leje drejtimi |
+| Albania | Driver Card\* | Karta e drejtuesit të mjetit |
+| Albania | ID Card | Letёrnjoftim |
+| Albania | Professional DL\* | Certifikatë aftëstimi profesionale |
+| Albania | Polycarbonate Passport\* | Pasaportë |
+| Austria | Driving Licence\* | Führerschein |
+| Austria | ID Card | Personalausweis |
+| Austria | Paper Passport\* | Reisepass |
+| Belarus | Driving Licence\* | BАДЗІЦЕЛЬСКАЕ ПАСВЕДЧАННЕ / ВОДИТЕЛЬСКОЕ УДОСТОВЕРЕНИЕ |
+| Belarus | Paper Passport\* | Пашпарт / Паспорт |
+| Belgium | Driving Licence\* | Rijbewijs / Permis de conduire / Führerschein |
+| Belgium | ID Card | Identiteitskaart / Carte d'identité / Personalausweis |
+| Belgium | Minors ID<sup>BETA</sup> | Kids-ID |
+| Belgium | Paper Passport<sup>\*, BETA</sup> | Paspoort / Passeport / Reisepass |
+| Belgium | Residence Permit | Verblijfstitel / Titre de Sejour |
+| Belgium | Resident ID | E Kaart / Carte E / E Karte </br> E+ Kaart / Carte E+ / E+ Karte </br> F Kaart / Carte F / F Karte </br> F+ Kaart / Carte F+ / F+ Karte </br> |
+| Bosnia And Herzegovina | Driving Licence\* | Vozačka dozvola |
+| Bosnia And Herzegovina | ID Card | Lična karta / Osobna iskaznica |
+| Bosnia And Herzegovina | Polycarbonate Passport\* | Pasoš / Пасош / Putovnica |
+| Bulgaria | Driving Licence\* | Свидетелство за управление на МПС |
+| Bulgaria | ID Card | Лична карта |
+| Bulgaria | Paper Passport\* | Паспорт |
+| Croatia | Driving Licence\* | Vozačka dozvola |
+| Croatia | ID Card | Osobna iskaznica |
+| Croatia | Residence Permit<sup>BETA</sup> | Boravišna iskaznica / Dozvola boravka |
+| Croatia | Polycarbonate Passport\* | Putovnica |
+| Cyprus | Driving Licence\* | Sürüş ruhsati / Aάδεια οδήγησης |
+| Cyprus | ID Card | Kimlik kartı / Δελτίο Ταυτότητας |
+| Cyprus | Residence Permit | ΑΔΕΙΑ ΔΙΑΜΟΝΗΣ |
+| Czechia | Driving Licence\* | Řidičský průkaz |
+| Czechia | ID Card | Občanský průkaz |
+| Czechia | Residence Permit | Povolení k pobytu |
+| Czechia | Polycarbonate Passport\* | Cestovní pas |
+| Denmark | Driving Licence\* | Kørekort |
+| Denmark | Residence Permit<sup>BETA</sup> | Opholdstilladelse / Opholdskort |
+| Denmark | Polycarbonate Passport\* | Pas |
+| Estonia | Driving Licence\* | Juhiluba |
+| Estonia | ID Card | Isikutunnistus |
+| Estonia | Paper Passport\* | Pass |
+| Estonia | Residence Permit<sup>BETA</sup> | Elamisluba |
+| Finland | Alien ID | Ulkomaalaisen henkilökortti / Identitetskort för utlänning |
+| Finland | Driving Licence\* | Ajokortti / Körkort |
+| Finland | ID Card | Henkilökortti / Identitetskort |
+| Finland | Residence Permit<sup>BETA</sup> | Oleskelulupa / Uppehållstillstånd |
+| Finland | Polycarbonate Passport\* | Passi / Pass |
+| France | Driving Licence\* | Permis de conduire |
+| France | ID Card | Carte d'identité |
+| France | Paper Passport<sup>\*, BETA</sup> | Passeport |
+| France | Residence Permit<sup>BETA</sup> | Titre de séjour |
+| Georgia | Driving Licence\* | მართვის მოწმობა |
+| Georgia | ID Card | მოქალაქის პირადობის მოწმობა |
+| Georgia | Paper Passport<sup>\*, BETA</sup> | პასპორტი |
+| Germany | Driving Licence\* | Führerschein |
+| Germany | ID Card | Personalausweis |
+| Germany | Paper Passport\* | Reisepass |
+| Germany | Residence Permit | Aufenthaltstitel |
+| Germany | Polycarbonate Passport\* | Reisepass |
+| Greece | Driving Licence\* | Aάδεια οδήγησης |
+| Greece | ID Card | ΔΕΛΤΙΟ ΤΑΥΤΟΤΗΤΑΣ |
+| Greece | Paper Passport\* | Διαβατήριο |
+| Greece | Residence Permit | ΑΔΕΙΑ ΔΙΑΜΟΝΗΣ |
+| Hungary | Address Card<sup>BETA</sup> | Lakcímkártya / Lakcímigazolvány |
+| Hungary | Driving Licence\* | Vezetői engedély |
+| Hungary | ID Card | Személyazonosító igazolvány |
+| Hungary | Paper Passport\* | Útlevél |
+| Hungary | Residence Permit<sup>BETA</sup> | Tartózkodási engedély |
+| Iceland | Driving Licence<sup>\*, BETA</sup> | Ökuskírteini |
+| Ireland | Driving Licence\* | Ceadúnas tiomána |
+| Ireland | Passport Card | Cárta Pas |
+| Ireland | Public Services Card<sup>BETA</sup> | Cárta Seirbhísí Poiblí |
+| Ireland | Polycarbonate Passport\* | Pas |
+| Italy | Driving Licence\* | Patente di guida |
+| Italy | ID Card | Carta d'identità |
+| Italy | Paper Passport<sup>\*, BETA</sup> | Passaporto  |
+| Italy | Residence Permit | Permesso di soggiorno  |
+| Kosovo | Driving Licence\* | Patentë shoferi / возачка дозвола |
+| Kosovo | ID Card | Letёrnjoftim / Лична карта |
+| Kosovo | Paper Passport\* | Pasaportë / Пасош |
+| Latvia | Alien ID | Nepilsoņa personas apliecība |
+| Latvia | Driving Licence\* | Vadītāja apliecība |
+| Latvia | ID Card | Personas apliecība  |
+| Latvia | Residence Permit<sup>BETA</sup> | Uzturēšanās atļauja |
+| Latvia | Polycarbonate Alien Passport\* | Nepilsoņa pase |
+| Latvia | Polycarbonate Passport\* | Pase |
+| Lithuania | Driving Licence\* | Vairuotojo pažymėjimai |
+| Lithuania | ID Card | Asmens tapatybės kortelė |
+| Lithuania | Polycarbonate Passport\* | Pasas |
+| Luxembourg | Driving Licence\* | Permis de conduire |
+| Luxembourg | ID Card | Carte d'Identité / Personalausweis |
+| Luxembourg | Residence Permit | Titre de sejour |
+| Malta | Driving Licence\* | Liċenzja tas-Sewqan |
+| Malta | ID Card | Karta tal-Identità |
+| Malta | Residence Permit | Permess ta' residenza / Residence documentation |
+| Moldova | ID Card<sup>BETA</sup> | Buletin de Identitate |
+| Moldova | Paper Passport<sup>\*, BETA</sup> | Paşaport |
+| Montenegro | Driving Licence\* | Vozačka dozvola |
+| Montenegro | ID Card | Lična karta / Лична карта |
+| Montenegro | Polycarbonate Passport\* | Pasoš |
+| Netherlands | Driving Licence | Rijebewijs |
+| Netherlands | ID Card | Identiteitskaart |
+| Netherlands | Residence Permit | Verblijfstitel / Verblijfskaart |
+| Netherlands | Polycarbonate Passport\* | Paspoort |
+| North Macedonia | Driving Licence\* | возачка дозвола / Patentë shoferi |
+| North Macedonia | ID Card | лична карта / Letёrnjoftim |
+| North Macedonia | Polycarbonate Passport\* | Пасош / Pasaportë |
+| Norway | Driving Licence\* | Førerkort / Førarkort |
+| Norway | Residence Permit | Oppholdstillatelse / Opphaldsløyve |
+| Norway | Polycarbonate Passport\* | Pass |
+| Poland | Driving Licence\* | Prawo jazdy |
+| Poland | ID Card | Dowód osobisty |
+| Poland | Paper Passport\* | Paszport |
+| Poland | Residence Permit<sup>BETA</sup> | Karta pobytu |
+| Poland | Polycarbonate Passport\* | Paszport |
+| Portugal | Driving Licence\* | Carta de Condução |
+| Portugal | ID Card | Cartão de Cidadão |
+| Portugal | Paper Passport\* |  |
+| Portugal | Residence Permit<sup>BETA</sup> | Título de Residência / Cartão de Residência |
+| Romania | Driving Licence\* | Permis de conducere |
+| Romania | ID Card\* | Carte de identitate |
+| Romania | Polycarbonate Passport\* | Pasaport / Pașaport |
+| Russia | Driving Licence\* | Водительское удостоверение |
+| Russia | Polycarbonate Passport\* | Паспорт |
+| Serbia | Driving Licence\* | Возачка дозвола / Vozačka dozvola |
+| Serbia | ID Card | Лична карта / Lična karta |
+| Serbia | Polycarbonate Passport\* | Пасош |
+| Slovakia | Driving Licence\* | Vodičský preukaz |
+| Slovakia | ID Card | Občiansky preukaz |
+| Slovakia | Residence Permit<sup>BETA</sup> | Povolenie na pobyt / Pobytový preukaz občana EÚ / Pobytový preukaz rodinného príslušníka občana EÚ |
+| Slovakia | Polycarbonate Passport\* | Cestovný pas |
+| Slovenia | Driving Licence\* | Vozniško dovoljenje |
+| Slovenia | ID Card | Osebna izkaznica |
+| Slovenia | Residence Permit<sup>BETA</sup> | Dovoljenje za prebivanje |
+| Slovenia | Polycarbonate Passport\* | Potni list |
+| Spain | Alien ID | Tarjeta de Identidad de Extranjero (TIE) |
+| Spain | Driving Licence\* | Permiso de Conducción |
+| Spain | ID Card | Documento Nacional de Identidad (DNI) |
+| Spain | Paper Passport\* |  |
+| Spain | Residence Permit | Permiso de residencia |
+| Sweden | Driving Licence\* | Körkort |
+| Sweden | ID Card | Nationellt identitetskort |
+| Sweden | Residence Permit | Uppehållstillstånd / Uppehållskort |
+| Sweden | Polycarbonate Passport\* | Pass |
+| Sweden | Social Security Card\* | Identitetskort / Skatteverkets id-kort |
+| Switzerland | Driving Licence\* | Führerausweis / Permis de conduire / Licenza di condurre / Permiss da manischar |
+| Switzerland | ID Card | Identitätskarte / Carte d’identité  / Carta d’identità / Carta d’identitad |
+| Switzerland | Paper Passport\* | Pass / Passeport / Passaporto / Passaport  |
+| Switzerland | Residence Permit | Aufenthaltstitel / Titre de séjour |
+| UK | Driving Licence\* | Trwydded yrru |
+| UK | Paper Passport\* |  |
+| UK | Residence Permit |  |
+| UK | Polycarbonate Passport\* |  |
+| Ukraine | Driving Licence\* | Посвідчення водія / Водительское удостоверение |
+| Ukraine | ID Card | Паспорт громадянина України |
+| Ukraine | Polycarbonate Passport\* | Паспорт |
+
+
+### Middle East and Africa
+| Country/Region        | Document Type | Localized Document Name |
+| :---------------|:------------------|:------------------|
+| Algeria | Driving Licence | رخصة القيادة |
+| Algeria | ID Card | Carte nationale d’identité / بطاقة الهوية الوطني |
+| Algeria | Paper Passport<sup>\*, BETA</sup> | Passeport |
+| Bahrain | ID Card | بطاقة الهوية / CPR Card |
+| Botswana | ID Card | Omang |
+| Burkina Faso | ID Card | Carte Nationale d'Identité Burkinabè (CNIB) |
+| Cameroon | ID Card | Carte Nationale d'Identité (CNI) |
+| Democratic Republic Of The Congo | Driving Licence<sup>BETA</sup> | Permis de conduire (CONADEP) |
+| Egypt | Driving Licence<sup>BETA</sup> | رخصة القيادة |
+| Egypt | ID Card | بطاقة تحقيق الشخصية |
+| Egypt | Paper Passport<sup>\*, BETA</sup> | جواز سفر |
+| Eswatini | Paper Passport\* |  |
+| Ghana | Driving Licence\* |  |
+| Ghana | ID Card | Ghana Card |
+| Ghana | Paper Passport\* |  |
+| Iran | Paper Passport<sup>\*, BETA</sup> | گذرنامه |
+| Iraq | ID Card | البطاقة الوطنية / كارتى نيشتمانى |
+| Iraq | Paper Passport<sup>\*, BETA</sup> |  |
+| Israel | Driving Licence\* | רשיון נהיגה |
+| Israel | ID Card<sup>BETA</sup> | Tehudat Zehut / بطاقة هوية‎ / תעודת זהות |
+| Israel | Paper Passport<sup>\*, BETA</sup> |  |
+| Ivory Coast | Driving Licence<sup>\*, BETA</sup> | Permis de conduire |
+| Ivory Coast | ID Card | Carte Nationale d'Identité (CNI) |
+| Jordan | Driving Licence<sup>\*, BETA</sup> | رخصة القيادة |
+| Jordan | ID Card | بطاقة شخصية |
+| Jordan | Paper Passport<sup>\*, BETA</sup> | جواز سفر |
+| Kenya | ID Card | Kitambulisho |
+| Kenya | Polycarbonate Passport\* | Passport / Pasi  |
+| Kuwait | Driving Licence | رخصة القيادة |
+| Kuwait | ID Card | بطاقة المدنية |
+| Kuwait | Resident ID | بطاقة المدنية |
+| Lebanon | ID Card<sup>BETA</sup> | بطاقة الهوية |
+| Libya | Polycarbonate Passport<sup>\*, BETA</sup> | جواز سفر |
+| Mauritius | ID Card |  |
+| Morocco | Driving Licence | Permis de conduire / رخصة القيادة |
+| Morocco | ID Card | Carte nationale d'identité /  بطاقة التعريف الوطنية |
+| Morocco | Paper Passport<sup>\*, BETA</sup> | جواز سفر/ Passeport |
+| Mozambique | Driving Licence<sup>\*, BETA</sup> | Carta de Condução |
+| Nigeria | Driving Licence |  |
+| Nigeria | ID Card | National identity card / National e-ID card |
+| Nigeria | Paper Passport\* |  |
+| Nigeria | Polycarbonate Passport<sup>\*, BETA</sup> |  |
+| Nigeria | Voter ID | Permanent Voters Card (PVC) |
+| Oman | Driving Licence<sup>BETA</sup> | رخصة قيادة مركبة |
+| Oman | ID Card | بطاقة الهوية |
+| Oman | Resident ID | بطاقة مقيم |
+| Qatar | Driving Licence\* | رخصة القيادة |
+| Qatar | ID Card<sup>\*, BETA</sup> | بطاقة إثبات شخصية |
+| Qatar | Residence Permit | تصريح الإقامة |
+| Rwanda | ID Card\* | Indangamuntu |
+| Saudi Arabia | Driving Licence\* | رخصة قيادة |
+| Saudi Arabia | ID Card | بطاقة الأحوال المدنية  |
+| Saudi Arabia | Paper Passport\* | جواز سفر |
+| Saudi Arabia | Resident ID\* | Iqama / هوية المقيم |
+| Senegal | ID Card | Carte nationale d'identité / Carte d'identité biométrique CEDEAO |
+| South Africa | Driving Licence\* | Bestuurslisensie |
+| South Africa | ID Card | Smart ID card |
+| South Africa | Polycarbonate Passport\* | Passeport |
+| Sudan | Polycarbonate Passport\* | جواز سفر |
+| Syria | Paper Passport\* | جواز سفر |
+| Tanzania | Driving Licence\* |  |
+| Tanzania | ID Card<sup>BETA</sup> |  |
+| Tanzania | Voter ID<sup>\*, BETA</sup> | Kadi ya mpiga kura / Voter Card |
+| Tunisia | Driving Licence\* | رخصة قيادة |
+| Tunisia | ID Card\* | بطاقة التعريف الوطنية |
+| Tunisia | Paper Passport\* | جواز سفر |
+| Turkey | Driving Licence\* | Sürücü belgesi |
+| Turkey | ID Card | Kimlik Kartı |
+| Turkey | Paper Passport\* | Pasaport |
+| Turkey | Residence Permit<sup>\*, BETA</sup> | İkamet İzni |
+| Turkey | Polycarbonate Passport\* | Pasaport |
+| UAE | Driving Licence | رخصة القيادة |
+| UAE | ID Card | بطاقة الهوية |
+| UAE | Resident ID | بطاقة الهوية الوطنية  |
+| Uganda | Driving Licence\* |  |
+| Uganda | ID Card |  |
+| Zimbabwe | Paper Passport\* |  |
+
+
+### Latin America and the Caribbean
+| Country/Region        | Document Type | Localized Document Name |
+| :---------------|:------------------|:------------------|
+| Argentina | Alien ID | DNI para extranjeros |
+| Argentina | Driving Licence<sup>\*, BETA</sup> | Licencia de Conducir |
+| Argentina | ID Card | Documento Nacional de Identidad (DNI) |
+| Argentina | Paper Passport\* | Pasaporte |
+| Bahamas | Driving Licence\* |  |
+| Bahamas | ID Card<sup>\*, BETA</sup> | NIB Smart Card |
+| Bolivia | Driving Licence\* | Licencia para conducir |
+| Bolivia | ID Card | Cédula de identidad |
+| Bolivia | Minors ID | Cédula de identidad para menores |
+| Brazil | Driving Licence | Carteira Nacional de Habilitação (CNH) |
+| Brazil | Paper Passport<sup>\*, BETA</sup> | Passaporte |
+| Chile | Alien ID | Cédula de identidad para extranjeros |
+| Chile | Driving Licence\* | Licencia de conducir |
+| Chile | ID Card | Cédula de Identidad |
+| Chile | Polycarbonate Passport\* | Pasaporte |
+| Colombia | Alien ID | Cédula de Extranjería (CE) |
+| Colombia | Driving Licence | Licencia de Conducción |
+| Colombia | ID Card | Cédula de Ciudadanía (CC) |
+| Colombia | Minors ID | Tarjeta de identidad Biométrica (Azul) |
+| Colombia | Polycarbonate Passport\* | Pasaporte |
+| Costa Rica | Driving Licence<sup>\*, BETA</sup> | Licencia de conducir |
+| Costa Rica | ID Card | Cédula de identidad |
+| Dominican Republic | Driving Licence<sup>BETA</sup> | Licencia de conducir |
+| Dominican Republic | ID Card | Cédula de Identidad y Electoral (CIE) |
+| Ecuador | Driving Licence\* | Licencia de conducir |
+| Ecuador | ID Card | Cédula de Identidad  |
+| El Salvador | Driving Licence<sup>BETA</sup> | Licencia de conducir |
+| El Salvador | ID Card | Documento Único de Identidad (DUI) |
+| Guatemala | Consular ID | Tarjeta de Identificación Consular (TICG) |
+| Guatemala | Driving Licence<sup>BETA</sup> | Licencia de conducir |
+| Guatemala | ID Card | Documento Personal de Identificación (DPI) |
+| Guatemala | Paper Passport\* | Pasaporte |
+| Haiti | Driving Licence\* | Permis de conduire |
+| Haiti | ID Card | Carte d'identification nationale (CIN) / Kat Idantifikasyon Nasyonal |
+| Haiti | Paper Passport\* | Passeport / Paspò |
+| Honduras | Driving Licence<sup>BETA</sup> | Licencia de conducir |
+| Honduras | ID Card<sup>BETA</sup> | Tarjeta de identidad  |
+| Honduras | Paper Passport<sup>\*, BETA</sup> | Pasaporte |
+| Jamaica | Driving Licence | Motor vehicle license / MV license |
+| Mexico | Consular ID<sup>BETA</sup> | Matrícula consular |
+| Mexico | Paper Passport<sup>\*, BETA</sup> |  |
+| Mexico | Professional DL<sup>\*, BETA</sup> | Licencia Federal de Conductor |
+| Mexico | Residence Permit<sup>BETA</sup> | Tarjeta de Residencia Temporal y Residencia Permanente |
+| Mexico | Voter ID | Credencial para votar |
+| Mexico - Baja California | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Baja California Sur | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Campeche | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Chiapas | Driving Licence\* |  |
+| Mexico - Chihuahua | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Coahuila | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Colima | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Durango | Driving Licence\* |  |
+| Mexico - Guanajuato | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Guerrero Cocula | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Guerrero Juchitan | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Hidalgo | Driving Licence |  |
+| Mexico - Jalisco | Driving Licence\* |  |
+| Mexico - Mexico | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Michoacan | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Morelos | Driving Licence\* |  |
+| Mexico - Nayarit | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Nuevo Leon | Driving Licence |  |
+| Mexico - Oaxaca | Driving Licence |  |
+| Mexico - Puebla | Driving Licence<sup>BETA</sup> |  |
+| Mexico - San Luis Potosi | Driving Licence\* |  |
+| Mexico - Sinaloa | Driving Licence<sup>\*, BETA</sup> |  |
+| Mexico - Sonora | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Tabasco | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Tamaulipas | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Veracruz | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Yucatan | Driving Licence<sup>BETA</sup> |  |
+| Mexico - Zacatecas | Driving Licence<sup>BETA</sup> |  |
+| Nicaragua | ID Card | Cédula de Identidad Ciudadana |
+| Panama | Driving Licence\* | Licencia de Conducir |
+| Panama | ID Card\* | Cédula de Identidad |
+| Panama | Temporary Residence Permit<sup>BETA</sup> | Carnet de Residencia Provisional |
+| Paraguay | Driving Licence | Licencia de conducir |
+| Paraguay | ID Card | Cédula de identidad civil |
+| Peru | Driving Licence | Licencia de conducir |
+| Peru | ID Card | Documento Nacional de Identidad (DNI) |
+| Peru | Minors ID<sup>BETA</sup> | Documento Nacional de Identidad (DNI) para menores |
+| Puerto Rico | Driving Licence\* | Licencia de Conducir |
+| Puerto Rico | Voter ID<sup>\*, BETA</sup> | Tarjeta de Identificación Electoral (TIE) / Electoral Identification Card |
+| Trinidad And Tobago | Driving Licence<sup>\*, BETA</sup> |  |
+| Trinidad And Tobago | ID Card |  |
+| Uruguay | ID Card | Cédula de Identidad |
+| Venezuela | Driving Licence\* | Licencia para conducir |
+| Venezuela | ID Card\* | Cédula de Identidad |
+| Venezuela | Polycarbonate Passport\* | Pasaporte |
+
+
+### Asia
+| Country/Region        | Document Type | Localized Document Name |
+| :---------------|:------------------|:------------------|
+| Armenia | ID Card | նույնականացման քարտը |
+| Azerbaijan | ID Card | Şəxsiyyət vəsiqəsi |
+| Azerbaijan | Polycarbonate Passport<sup>\*, BETA</sup> | Pasport |
+| Bangladesh | Driving Licence<sup>BETA</sup> | মোটর ড্রাইভিং লাইসেন্স |
+| Bangladesh | ID Card | জাতীয় পরিচয় পত্র |
+| Bangladesh | Paper Passport\* | পাসপোর্ট |
+| Brunei | ID Card | Kad Pengenalan (Kuning) |
+| Brunei | Military ID<sup>BETA</sup> | Kad Pengenalan Tentera (ABDB) |
+| Brunei | Residence Permit<sup>BETA</sup> | ​Kad Pengenalan (Ungu) |
+| Brunei | Temporary Residence Permit<sup>BETA</sup> | Kad Pengenalan (Hijau)  |
+| Cambodia | Driving Licence<sup>\*, BETA</sup> | ប័ណ្ណបើកបរ |
+| Cambodia | ID Card\* | អត្តសញ្ញាណប័ណ្ណសញ្ជាតិខ្មែរ |
+| Cambodia | Polycarbonate Passport\* | លិខិតឆ្លងដែន |
+| China | ID Card | 中华人民共和国居民身份证 |
+| China | Paper Passport<sup>\*, BETA</sup> | 中华人民共和国护照  |
+| Hong Kong | ID Card\* | 香港身份證 |
+| Hong Kong | Polycarbonate Passport<sup>\*, BETA</sup> | 護照 |
+| India | ID Card<sup>BETA</sup> | Aadhaar card / आधार कार्ड |
+| India | PAN Card\* | स्थायी खाता संख्या कार्ड |
+| India | Paper Passport\* |  |
+| India | Voter ID\* |  |
+| India - Gujarat | Driving Licence<sup>\*, BETA</sup> |  |
+| India - Karnataka | Driving Licence\* |  |
+| India - Kerala | Driving Licence<sup>BETA</sup> |  |
+| India - Madhya Pradesh | Driving Licence<sup>\*, BETA</sup> |  |
+| India - Maharashtra | Driving Licence\* |  |
+| India - Punjab | Driving Licence<sup>\*, BETA</sup> |  |
+| India - Tamil Nadu | Driving Licence<sup>BETA</sup> |  |
+| Indonesia | Driving Licence\* | Surat Izin Mengemudi (SIM) |
+| Indonesia | ID Card\* | Kartu Tanda Penduduk (KTP) |
+| Indonesia | Paper Passport\* | Paspor |
+| Japan | Driving Licence<sup>\*, BETA</sup> | 運転免許 |
+| Japan | Paper Passport\* | 旅券 |
+| Kazakhstan | ID Card | Жеке қуәлік / Yдостоверение личности |
+| Kyrgyzstan | ID Card |  |
+| Malaysia | Driving Licence\* | Lesen Memandu |
+| Malaysia | MyKAS |  |
+| Malaysia | MyKad |  |
+| Malaysia | MyKid |  |
+| Malaysia | MyPR |  |
+| Malaysia | MyPolis<sup>BETA</sup> |  |
+| Malaysia | MyTentera |  |
+| Malaysia | Refugee ID\* | UNHCR Card |
+| Malaysia | Polycarbonate Passport\* | Pasport |
+| Malaysia | i-Kad\* |  |
+| Maldives | ID Card |  |
+| Myanmar | Driving Licence<sup>BETA</sup> | ယာဉ်မောင်းလိုင်စင် |
+| Nepal | Paper Passport\* | राहदानी |
+| Pakistan | Consular ID | National Identity Card for Overseas Pakistanis (NICOP) |
+| Pakistan | ID Card | National Identity Card (CNIC & SNIC) |
+| Pakistan | Paper Passport\* |  |
+| Pakistan - Punjab | Driving Licence\* |  |
+| Philippines | Driving Licence\* |  |
+| Philippines | Multipurpose ID\* | Unified Multi-Purpose ID |
+| Philippines | Paper Passport\* |  |
+| Philippines | Professional ID\* |  |
+| Philippines | Social Security Card\* | SSS ID |
+| Philippines | Tax ID<sup>\*, BETA</sup> | TIN ID card |
+| Philippines | Voter ID<sup>\*, BETA</sup> |  |
+| Singapore | Driving Licence |  |
+| Singapore | Employment Pass\* |  |
+| Singapore | Fin Card\* |  |
+| Singapore | ID Card | NRIC (Pink) |
+| Singapore | Resident ID | NRIC (Blue) |
+| Singapore | Polycarbonate Passport\* |  |
+| Singapore | S Pass |  |
+| Singapore | Work Permit |  |
+| South Korea | Driving Licence\* | 자동차운전면허증 |
+| South Korea | ID Card<sup>\*, BETA</sup> | 주민등록증 |
+| South Korea | Paper Passport<sup>\*, BETA</sup> | 여권 |
+| Sri Lanka | Driving Licence\* | රියදුරු බලපත්රය |
+| Sri Lanka | ID Card | ජාතික හැඳුනුම්පත / தேசிய அடையாள அட்டை  |
+| Sri Lanka | Paper Passport\* | ගමන් බලපත්‍රය / கடவுச்சீட்டு |
+| Taiwan | ID Card<sup>\*, BETA</sup> | 中華民國國民身分證 |
+| Taiwan | Temporary Residence Permit<sup>\*, BETA</sup> | 中華民國居留證 |
+| Tajikistan | Polycarbonate Passport<sup>\*, BETA</sup> | шиноснома |
+| Thailand | Alien ID\* | บัตรประจำตัวคนซึ่งไม่มีสัญชาติไทย (บัตรสีชมพู) |
+| Thailand | Driving Licence<sup>BETA</sup> | ใบอนุญาตขับรถ |
+| Thailand | ID Card\* | บัตรประจำตัวประชาชน |
+| Thailand | Polycarbonate Passport\* | หนังสือเดินทาง |
+| Uzbekistan | Driving Licence<sup>\*, BETA</sup> | Haydovchilik guvohnomasi |
+| Uzbekistan | Paper Passport\* | Pasport |
+| Vietnam | Driving Licence<sup>\*, BETA</sup> | Giấy phép lái xe |
+| Vietnam | ID Card<sup>BETA</sup> | Căn cước công dân |
+
+
+### Oceania
+| Country/Region        | Document Type | Localized Document Name |
+| :---------------|:------------------|:------------------|
+| Australia | Paper Passport\* |  |
+| Australia - Australian Capital Territory | Driving Licence\* |  |
+| Australia - New South Wales | Driving Licence\* |  |
+| Australia - New South Wales | ID Card<sup>\*, BETA</sup> |  |
+| Australia - Northern Territory | Driving Licence<sup>BETA</sup> |  |
+| Australia - Queensland | Driving Licence |  |
+| Australia - South Australia | Driving Licence\* |  |
+| Australia - South Australia | Proof Of Age Card<sup>\*, BETA</sup> |  |
+| Australia - Tasmania | Driving Licence\* |  |
+| Australia - Victoria | Driving Licence |  |
+| Australia - Western Australia | Driving Licence |  |
+| New Zealand | Driving Licence\* |  |
+| New Zealand | Polycarbonate Passport\* | Uruwhenua |
+
+
+### Northern America
+| Country/Region        | Document Type | Localized Document Name |
+| :---------------|:------------------|:------------------|
+| Bermuda | Driving Licence<sup>\*, BETA</sup> |  |
+| Canada | Citizenship Certificate<sup>BETA</sup> | Certificate of Canadian Citizenship / Certificat de citoyenneté canadienne |
+| Canada | Paper Passport\* | Passport / Passeport |
+| Canada | Residence Permit | Permanent residence (PR) card / Carte de résident permanent |
+| Canada | Tribal ID<sup>BETA</sup> | Certificate of Indian Status / Certificat de statut Indien |
+| Canada | Weapon Permit<sup>\*, BETA</sup> | Possesion and Aquisition License (PAL) / Permis de possession et d'acquisition   |
+| Canada - Alberta | Driving Licence |  |
+| Canada - Alberta | ID Card |  |
+| Canada - British Columbia | Driving Licence |  |
+| Canada - British Columbia | Driver License/Public Services Card (Combined) |  |
+| Canada - British Columbia | ID Card |  |
+| Canada - British Columbia | Public Services Card |  |
+| Canada - Manitoba | Driving Licence |  |
+| Canada - Manitoba | ID Card |  |
+| Canada - New Brunswick | Driving Licence |  |
+| Canada - Newfoundland And Labrador | Driving Licence |  |
+| Canada - Nova Scotia | Driving Licence |  |
+| Canada - Nova Scotia | ID Card<sup>BETA</sup> |  |
+| Canada - Ontario | Driving Licence |  |
+| Canada - Ontario | ID Card |  |
+| Canada - Quebec | Driving Licence\* |  |
+| Canada - Saskatchewan | Driving Licence |  |
+| Canada - Saskatchewan | ID Card<sup>BETA</sup> |  |
+| Canada - Yukon | Driving Licence |  |
+| USA | Border Crossing Card\* | BCC |
+| USA | Global Entry Card |  |
+| USA | Green Card | Permanent resident card |
+| USA | Military ID | Common Access Card (CAC) |
+| USA | Nexus Card<sup>BETA</sup> |  |
+| USA | Paper Passport<sup>\*, BETA</sup> |  |
+| USA | Social Security Card<sup>\*, BETA</sup> |  |
+| USA | Veteran ID\* | VIC |
+| USA | Work Permit | Employment authorization document / EAD Card  |
+| USA - Alabama | Driving Licence |  |
+| USA - Alabama | ID Card |  |
+| USA - Alaska | Driving Licence |  |
+| USA - Alaska | ID Card |  |
+| USA - Arizona | Driving Licence |  |
+| USA - Arizona | ID Card |  |
+| USA - Arkansas | Driving Licence |  |
+| USA - Arkansas | ID Card |  |
+| USA - California | Driving Licence |  |
+| USA - California | ID Card |  |
+| USA - Colorado | Driving Licence |  |
+| USA - Colorado | ID Card |  |
+| USA - Connecticut | Driving Licence |  |
+| USA - Connecticut | ID Card |  |
+| USA - Delaware | Driving Licence |  |
+| USA - District Of Columbia | Driving Licence |  |
+| USA - Florida | Driving Licence |  |
+| USA - Florida | ID Card |  |
+| USA - Georgia | Driving Licence |  |
+| USA - Georgia | ID Card |  |
+| USA - Hawaii | Driving Licence |  |
+| USA - Hawaii | ID Card |  |
+| USA - Idaho | Driving Licence |  |
+| USA - Idaho | ID Card |  |
+| USA - Illinois | Driving Licence |  |
+| USA - Illinois | ID Card |  |
+| USA - Indiana | Driving Licence |  |
+| USA - Indiana | ID Card |  |
+| USA - Iowa | Driving Licence |  |
+| USA - Kansas | Driving Licence |  |
+| USA - Kansas | ID Card |  |
+| USA - Kentucky | Driving Licence |  |
+| USA - Kentucky | ID Card |  |
+| USA - Louisiana | Driving Licence |  |
+| USA - Maine | Driving Licence |  |
+| USA - Maryland | Driving Licence |  |
+| USA - Maryland | ID Card |  |
+| USA - Massachusetts | Driving Licence |  |
+| USA - Massachusetts | ID Card |  |
+| USA - Michigan | Driving Licence |  |
+| USA - Michigan | ID Card |  |
+| USA - Minnesota | Driving Licence |  |
+| USA - Minnesota | ID Card |  |
+| USA - Mississippi | Driving Licence |  |
+| USA - Mississippi | ID Card<sup>BETA</sup> |  |
+| USA - Missouri | Driving Licence |  |
+| USA - Missouri | ID Card |  |
+| USA - Montana | Driving Licence |  |
+| USA - Montana | ID Card |  |
+| USA - Nebraska | Driving Licence |  |
+| USA - Nevada | Driving Licence |  |
+| USA - Nevada | ID Card |  |
+| USA - New Hampshire | Driving Licence |  |
+| USA - New Jersey | Driving Licence |  |
+| USA - New Jersey | ID Card |  |
+| USA - New Mexico | Driving Licence |  |
+| USA - New Mexico | ID Card |  |
+| USA - New York | Driving Licence |  |
+| USA - New York | ID Card |  |
+| USA - New York City | ID Card |  |
+| USA - North Carolina | Driving Licence |  |
+| USA - North Carolina | ID Card |  |
+| USA - North Dakota | Driving Licence |  |
+| USA - Ohio | Driving Licence |  |
+| USA - Ohio | ID Card |  |
+| USA - Oklahoma | Driving Licence |  |
+| USA - Oklahoma | ID Card |  |
+| USA - Oregon | Driving Licence |  |
+| USA - Oregon | ID Card |  |
+| USA - Pennsylvania | Driving Licence |  |
+| USA - Pennsylvania | ID Card |  |
+| USA - Rhode Island | Driving Licence |  |
+| USA - Rhode Island | ID Card |  |
+| USA - South Carolina | Driving Licence |  |
+| USA - South Carolina | ID Card |  |
+| USA - South Dakota | Driving Licence |  |
+| USA - Tennessee | Driving Licence |  |
+| USA - Texas | Driving Licence |  |
+| USA - Texas | ID Card |  |
+| USA - Texas | Weapon Permit\* |  |
+| USA - Utah | Driving Licence |  |
+| USA - Utah | ID Card |  |
+| USA - Vermont | Driving Licence |  |
+| USA - Virginia | Driving Licence |  |
+| USA - Virginia | ID Card |  |
+| USA - Washington | Driving Licence\* |  |
+| USA - Washington | ID Card |  |
+| USA - West Virginia | Driving Licence |  |
+| USA - Wisconsin | Driving Licence |  |
+| USA - Wisconsin | ID Card |  |
+| USA - Wyoming | Driving Licence |  |
+
+
+
+\* Front side only, or for passports - only the bio-data page.
+
+#### Supported vertical US documents:
+
+| State        | Document Type |
+| :-------------|:------------------|
+| Alabama | Driver License |
+| Arizona | Driver License |
+| California | Driver License |
+| California | ID |
+| Colorado | Driver License |
+| Connecticut | Driver License |
+| Georgia | Driver License |
+| Illinois | Driver License |
+| Illinois | ID |
+| Iowa | Driver License |
+| Kansas | Driver License |
+| Kentucky | Driver License |
+| Maryland | Driver License |
+| Massachusetts | Driver License |
+| Minnesota | Driver License |
+| Missouri | Driver License |
+| New Jersey | Driver License |
+| New York | ID |
+| North Carolina | ID |
+| Ohio | Driver License |
+| Pennsylvania | Driver License |
+| South Carolina | Driver License |
+| Tennessee | Driver License |
+| Texas | Driver License |
+| Texas | ID |
+| Utah | Driver License |
+| Washington | Driver License |
+| Wisconsin | Driver License |
