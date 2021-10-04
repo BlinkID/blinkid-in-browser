@@ -1,0 +1,180 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+@import "../styles/_globals-sass";
+
+:host {
+  box-sizing: border-box;
+
+  display: block;
+  position: relative;
+
+  padding: $padding-unit-small 0;
+
+  font-family: inherit;
+  font-size: var(--mb-font-size);
+
+  .active-camera {
+    box-sizing: border-box;
+
+    display: block;
+
+    // Width + border
+    width: var(--mb-toolbar-selection-width);
+
+    // Line height + padding + border
+    height: calc(var(--mb-line-height) + #{ $padding-unit-small * 2 } + 2px);
+
+    margin: 0 auto;
+
+    color: var(--mb-toolbar-color);
+    line-height: var(--mb-line-height);
+
+    text-align: center;
+    text-decoration: none;
+
+    border: 1px solid transparent;
+    border-radius: var(--mb-toolbar-border-radius);
+
+    .icon,
+    .name {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .icon {
+      width: 20px;
+      height: 20px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .name {
+      // width = 100% - padding width - 2 * width of an icon
+      max-width: calc(100% - #{ 2 * $padding-unit-medium } - 40px);
+
+      padding: 0 $padding-unit-medium 0 $padding-unit-small;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    // States
+    & {
+      padding: $padding-unit-small $padding-unit-large;
+      background-color: transparent;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: rgba(map-get(map-get(map-get($base-colors, text-secondary), onlight), foreground), 0.3);
+    }
+
+    &:hover {
+
+    }
+
+    &.active,
+    &:active,
+    &:focus {
+      padding: $padding-unit-small $padding-unit-large;
+      border-color: var(--mb-toolbar-border-color);
+    }
+  }
+
+  #list-background {
+    display: none;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    &.visible {
+      display: block;
+    }
+  }
+
+  .list {
+    display: none;
+
+    position: absolute;
+    top: calc(var(--mb-font-size) * 1.5 + #{ $padding-unit-small * 2 * 2 });
+    left: calc(50% - var(--mb-toolbar-selection-width) / 2);
+
+    width: var(--mb-toolbar-selection-width);
+
+    padding: 0;
+
+    background-color: var(--mb-toolbar-list-background);
+    border-radius: var(--mb-toolbar-border-radius);
+    box-shadow: var(--mb-toolbar-list-shadow);
+
+    &.visible {
+      display: block;
+    }
+
+    svg,
+    .name,
+    .spacer {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .spacer,
+    svg {
+      width: 24px;
+      height: 20px;
+    }
+
+    .name {
+      max-width: calc(100% - 24px);
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    ul {
+      margin: 0;
+      padding: $padding-unit-medium 0;
+
+      list-style: none;
+
+      a {
+        display: block;
+        text-align: left;
+
+        color: inherit;
+        text-decoration: none;
+      }
+
+      li {
+        display: block;
+
+        padding: $padding-unit-small $padding-unit-large;
+        line-height: var(--mb-line-height);
+
+        &.active {
+          color: map-get(map-get(map-get($base-colors, primary-blue), onlight), background);
+        }
+
+        &:last-child {
+          padding-bottom: 0;
+        }
+
+        &:hover,
+        &:focus {
+          background-color: rgba(map-get(map-get(map-get($base-colors, fill-quaternary), onlight), foreground), 0.08);
+        }
+      }
+    }
+  }
+}

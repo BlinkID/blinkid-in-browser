@@ -2,7 +2,13 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import { Component, Host, h, Prop } from '@stencil/core';
+import {
+  Component,
+  Element,
+  Host,
+  h,
+  Prop
+} from '@stencil/core';
 
 @Component({
   tag: 'mb-overlay',
@@ -21,6 +27,11 @@ export class MbOverlay {
    */
   @Prop() visible: boolean = false;
 
+  /**
+   * Host element as variable for manipulation (CSS in this case)
+   */
+  @Element() hostEl: HTMLElement;
+
   render() {
     return (
       <Host className={ this.getClassName() }>
@@ -32,6 +43,12 @@ export class MbOverlay {
   getClassName(): string {
     const classNames = [];
 
+    this.hostEl.classList.forEach((value) => {
+      if (value !== 'visible' && value !== 'non-fullscreen') {
+        classNames.push(value);
+      }
+    });
+
     if (this.visible) {
       classNames.push('visible');
     }
@@ -42,5 +59,4 @@ export class MbOverlay {
 
     return classNames.join(' ');
   }
-
 }

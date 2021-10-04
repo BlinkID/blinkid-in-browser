@@ -56,6 +56,13 @@
   display: block;
 }
 
+:host(.selected) {
+  a {
+    background-color: var(--mb-component-button-background-selected);
+    border-color: var(--mb-component-button-border-color-selected);
+  }
+}
+
 :host(.icon) {
   a {
     display: flex;
@@ -86,8 +93,8 @@
   padding-top: $padding-unit-medium;
 
   font-size: var(--mb-component-font-size);
-  font-weight: var(--mb-component-font-weight);
-  line-height: var(--mb-component-line-height);
+  font-weight: var(--mb-font-weight);
+  line-height: var(--mb-line-height);
 
   color: var(--mb-feedback-font-color-info);
 }

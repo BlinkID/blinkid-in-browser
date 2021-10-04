@@ -26,3 +26,19 @@ body
     padding: 3rem 1.5rem;
     background-color: #eee;
 }
+
+blinkid-in-browser
+{
+    max-width: 400px;
+
+    /* Customization of UI - see variables in src/components/shared/styles/_globals.scss */
+    /*
+    --mb-component-background: red;
+    --mb-component-action-label: none;
+    --mb-component-border-width: 0;
+    --mb-component-action-buttons-width: 100%;
+    --mb-component-action-buttons-justify-content: space-evenly;
+    --mb-component-button-size: 48px;
+    --mb-component-button-border-radius: 24px;
+    */
+}

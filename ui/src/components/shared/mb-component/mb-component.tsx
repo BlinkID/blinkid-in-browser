@@ -4,35 +4,39 @@
 
 import {
   Component,
+  Element,
   Event,
   EventEmitter,
   Host,
   h,
-  Prop,
-  Element,
-  Method
+  Method,
+  Prop
 } from '@stencil/core';
 
 import * as BlinkIDSDK from '../../../../../es/blinkid-sdk';
 
 import {
+  CameraEntry,
   CameraExperienceState,
   Code,
+  CombinedImageRecognitionConfiguration,
+  CombinedImageType,
   EventFatalError,
   EventReady,
   EventScanError,
   EventScanSuccess,
   FeedbackCode,
   FeedbackMessage,
+  ImageRecognitionConfiguration,
+  ImageRecognitionType,
   RecognitionEvent,
   RecognitionStatus,
-  ImageRecognitionConfiguration,
   VideoRecognitionConfiguration
 } from '../../../utils/data-structures';
 
 import {
-  SdkService,
-  CheckConclusion
+  CheckConclusion,
+  SdkService
 } from '../../../utils/sdk.service';
 
 import { TranslationService } from '../../../utils/translation.service';
@@ -80,6 +84,11 @@ export class MbComponent {
   /**
    * See description in public component.
    */
+  @Prop() recognitionTimeout: number;
+
+  /**
+   * See description in public component.
+   */
   @Prop() includeSuccessFrame: boolean = false;
 
   /**
@@ -107,10 +116,21 @@ export class MbComponent {
    */
   @Prop() scanFromImage: boolean = true;
 
+
   /**
    * See description in public component.
    */
   @Prop() thoroughScanFromImage: boolean = false;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() galleryOverlayType: 'FULLSCREEN' | 'INLINE' = 'INLINE';
+
+  /**
+   * See description in public component.
+   */
+  @Prop() galleryDropType: 'FULLSCREEN' | 'INLINE' = 'INLINE';
 
   /**
    * See description in public component.
@@ -166,6 +186,11 @@ export class MbComponent {
    * See description in public component.
    */
   @Prop() iconSpinnerFromGalleryExperience: string;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() iconGalleryScanningCompleted: string;
 
   /**
     * Instance of SdkService passed from root component.
@@ -343,8 +368,9 @@ export class MbComponent {
               disabled={false}
               preventDefault={false}
               visible={false}
+              selected={false}
               icon={true}
-              onButtonClick={() => this.scanFromImageInput.click()}
+              onButtonClick={() => this.onFromImageClicked()}
               imageSrcDefault={this.iconGalleryDefault}
               imageSrcActive={this.iconGalleryActive}
               imageAlt="action-alt-gallery"
@@ -352,15 +378,46 @@ export class MbComponent {
             >
             </mb-button>
           </div>
+          <div class="flex-break"></div>
+          <div class="combined-image-upload">
+            <mb-image-box
+              ref={el => this.imageBoxFirst = el as HTMLMbImageBoxElement}
+              box-title={this.translationService.i('process-image-box-first').toString()}
+              anchor-text={this.translationService.i('process-image-box-add').toString()}
+              onImageChange={(ev: CustomEvent<FileList>) => this.onCombinedImageChange(ev.detail, CombinedImageType.First)}></mb-image-box>
+            <mb-image-box
+              ref={el => this.imageBoxSecond = el as HTMLMbImageBoxElement}
+              box-title={this.translationService.i('process-image-box-second').toString()}
+              anchor-text={this.translationService.i('process-image-box-add').toString()}
+              onImageChange={(ev: CustomEvent<FileList>) => this.onCombinedImageChange(ev.detail, CombinedImageType.Second)}></mb-image-box>
+            <mb-button-classic
+              ref={el => this.combinedScanFromImageButton = el as HTMLMbButtonClassicElement}
+              disabled={true}
+              onButtonClick={() => this.startScanFromImageCombined()}
+            >{this.translationService.i('process-image-upload-cta').toString()}</mb-button-classic>
+          </div>
+        </mb-screen>
+        <mb-screen
+          id="screen-processing"
+          visible={false}
+          ref={el => this.screens.processing = el as HTMLMbScreenElement}
+        >
+          <p class="in-progress">
+            <mb-spinner icon={this.iconSpinnerScreenLoading}></mb-spinner>
+            <span>{this.translationService.i('process-image-message-inline').toString()}</span>
+          </p>
+          <p class="done">
+            <mb-completed icon={this.iconGalleryScanningCompleted}></mb-completed>
+            <span>{this.translationService.i('process-image-message-inline-done').toString()}</span>
+          </p>
         </mb-screen>
         <mb-overlay
           id="overlay-drag-and-drop"
           visible={false}
-          fullscreen={true}
           ref={el => this.overlays.draganddrop = el as HTMLMbOverlayElement}
         >
           <img class="drag-and-drop-icon" src={this.iconGalleryDefault} />
-          <p class="drag-and-drop-message"></p>
+          <p class="drag-and-drop-message">Whoops, we don't support that image format. Please upload a JPEG or PNG file.</p>
           <div id="drag-and-drop-zone" ref={el => this.dragAndDropZone = el as HTMLDivElement}></div>
         </mb-overlay>
         <mb-overlay
@@ -401,6 +458,7 @@ export class MbComponent {
               showCameraFeedbackBarcodeMessage={this.showCameraFeedbackBarcodeMessage}
               onClose={() => this.stopRecognition()}
               onFlipCameraAction={() => this.flipCameraAction()}
+              onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.changeCameraDevice(ev.detail)}
               class="overlay-camera-element"
             ></mb-camera-experience>
             <mb-api-process-status
@@ -453,6 +511,7 @@ export class MbComponent {
 
   async componentDidRender() {
     const internetIsAvailable = await this.checkIfInternetIsAvailable();
+
     if (!internetIsAvailable) {
       this.setFatalError(
         new EventFatalError(
@@ -520,7 +579,18 @@ export class MbComponent {
       const imageScanIsAvailable = this.sdkService.isScanFromImageAvailable(this.recognizers, this.recognizerOptions);
       this.scanFromImageButton.disabled = !imageScanIsAvailable;
 
-      if (!imageScanIsAvailable) {
+      if (imageScanIsAvailable) {
+        this.imageRecognitionType = this.sdkService.getScanFromImageType(this.recognizers, this.recognizerOptions);
+
+        if (this.imageRecognitionType === ImageRecognitionType.Single) {
+          this.screens.processing.setAttribute('data-type', 'single');
+        }
+
+        if (this.imageRecognitionType === ImageRecognitionType.Combined) {
+          this.screens.processing.setAttribute('data-type', 'combined');
+        }
+      }
+      else {
         if (this.showActionLabels) {
           this.scanFromImageButton.label = this.translationService.i('action-message-image-not-supported').toString();
         }
@@ -544,7 +614,8 @@ export class MbComponent {
   private screens: { [key: string]: HTMLMbScreenElement | null } = {
     action: null,
     error: null,
-    loading: null
+    loading: null,
+    processing: null
   }
 
   private overlays: { [key: string]: HTMLMbOverlayElement | null } = {
@@ -554,6 +625,7 @@ export class MbComponent {
     modal: null
   }
 
+  private apiProcessStatusElement!: HTMLMbApiProcessStatusElement;
   private cameraExperience!: HTMLMbCameraExperienceElement;
   private dragAndDropZone!: HTMLDivElement;
   private errorMessage!: HTMLParagraphElement;
@@ -562,14 +634,23 @@ export class MbComponent {
   private scanFromImageInput!: HTMLInputElement;
   private videoElement!: HTMLVideoElement;
   private licenseExperienceModal!: HTMLMbModalElement;
-  private apiProcessStatusElement!: HTMLMbApiProcessStatusElement;
-  private galleryExperienceModalErrorWindow: HTMLMbModalElement;
   private scanReset: boolean = false;
 
   private detectionSuccessLock = false;
   private isBackSide = false;
-
   private initialBodyOverflowValue: string;
+  private cameraChangeInProgress: boolean = false;
+
+  /* Gallery experience UI */
+  private combinedGalleryOpened = false;
+  private imageRecognitionType: ImageRecognitionType;
+  private imageBoxFirst: HTMLMbImageBoxElement;
+  private imageBoxSecond: HTMLMbImageBoxElement;
+  private galleryImageFirstFile: File | null = null;
+  private galleryImageSecondFile: File | null = null;
+
+  private galleryExperienceModalErrorWindow: HTMLMbModalElement;
+  private combinedScanFromImageButton: HTMLMbButtonClassicElement
 
   private async flipCameraAction(): Promise<void> {
     await this.sdkService.flipCamera();
@@ -577,7 +658,16 @@ export class MbComponent {
     this.cameraExperience.setCameraFlipState(cameraFlipped);
   }
 
-  /* Helper methods */
+  private async changeCameraDevice(camera: CameraEntry) {
+    if (this.cameraChangeInProgress) {
+      return;
+    }
+
+    this.cameraChangeInProgress = true;
+    await this.sdkService.changeCameraDevice(camera.details);
+    this.cameraChangeInProgress = false;
+  }
+
   private async checkInputProperties(): Promise<boolean> {
     if (!this.licenseKey) {
       this.setFatalError(new EventFatalError(Code.MissingLicenseKey, 'Missing license key!'));
@@ -617,13 +707,26 @@ export class MbComponent {
       configuration.recognizerOptions = this.recognizerOptions;
     }
 
+    if (this.recognitionTimeout && typeof this.recognitionTimeout === 'number') {
+      configuration.recognitionTimeout = this.recognitionTimeout;
+    }
+
     this.isBackSide = false;
 
     const eventHandler = (recognitionEvent: RecognitionEvent) => {
       switch (recognitionEvent.status) {
         case RecognitionStatus.Preparing:
+          this.feedback.emit({
+            code: FeedbackCode.ScanStarted,
+            state: 'FEEDBACK_OK',
+            message: ''
+          });
           this.showOverlay('camera');
           this.cameraExperience.setState(CameraExperienceState.Default);
+          break;
+
+        case RecognitionStatus.Ready:
+          this.cameraExperience.setActiveCamera(this.sdkService.videoRecognizer.deviceId);
           break;
 
         case RecognitionStatus.Processing:
@@ -727,28 +830,24 @@ export class MbComponent {
         case RecognitionStatus.ScanSuccessful:
           /* Which recognizer is it? ImageCapture or some other?
            *
-           * Image capture has the 'imageCapture' flag set to true, we do not want to close camera overlay after image
+           * ImageCapture has the 'imageCapture' flag set to true, we do not want to close camera overlay after image
            * acquisition process is finished. Cause maybe backend service will failed and we can press retry to resume
            * with the same video recognizer and try again
            */
           if (!recognitionEvent.data.imageCapture) {
             this.cameraExperience.setState(CameraExperienceState.DoneAll, false, true)
               .then(() => {
+                this.cameraExperience.resetState();
                 this.cameraExperience.classList.add('hide');
-
                 this.showOverlay('');
 
-              window.setTimeout(() => {
-                this.cameraExperience.setState(CameraExperienceState.Default);
-              }, 1000);
-
-              this.scanSuccess.emit(recognitionEvent.data?.result);
-              this.feedback.emit({
-                code: FeedbackCode.ScanSuccessful,
-                state: 'FEEDBACK_OK',
-                message: ''
+                this.scanSuccess.emit(recognitionEvent.data?.result);
+                this.feedback.emit({
+                  code: FeedbackCode.ScanSuccessful,
+                  state: 'FEEDBACK_OK',
+                  message: ''
+                });
               });
-            });
           }
           else {
             const resultIsValid = recognitionEvent.data.result.recognizer.processingStatus === 0 && recognitionEvent.data.result.recognizer.state === 2;
@@ -846,6 +945,8 @@ export class MbComponent {
     try {
       this.cameraExperience.classList.remove('hide');
       this.cameraScanStarted.emit();
+
+      void this.cameraExperience.populateCameraDevices();
       await this.sdkService.scanFromCamera(configuration, eventHandler);
 
       const cameraFlipped = this.sdkService.isCameraFlipped();
@@ -859,7 +960,7 @@ export class MbComponent {
               this.showLicenseInfoModal(error);
             }
             else {
-              console.log("error", error);
+              console.error('Error during camera scan', error);
 
               this.scanError.emit({
                 code: Code.GenericScanError,
@@ -884,10 +985,10 @@ export class MbComponent {
     }
   }
 
-  private async startScanFromImage(files?: FileList) {
+  private async startScanFromImage(file?: File) {
     const configuration: ImageRecognitionConfiguration = {
       recognizers: this.recognizers,
-      fileList: files ? files : this.scanFromImageInput.files
+      file: file ? file : this.scanFromImageInput.files[0]
     };
 
     if (this.recognizerOptions && Object.keys(this.recognizerOptions).length > 0) {
@@ -897,7 +998,12 @@ export class MbComponent {
     const eventHandler = (recognitionEvent: RecognitionEvent) => {
       switch (recognitionEvent.status) {
         case RecognitionStatus.Preparing:
-          this.showOverlay('processing');
+          this.feedback.emit({
+            code: FeedbackCode.ScanStarted,
+            state: 'FEEDBACK_OK',
+            message: ''
+          });
+          this.showScanFromImageUi();
           break;
 
         case RecognitionStatus.Processing:
@@ -916,13 +1022,13 @@ export class MbComponent {
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
-          this.showOverlay('');
-          this.scanFromImageInput.value = '';
+          this.hideScanFromImageUi();
+          this.clearInputImages();
           break;
 
         case RecognitionStatus.DetectionFailed:
           // Do nothing, RecognitionStatus.EmptyResultState will handle negative outcome
-          this.scanFromImageInput.value = '';
+          this.clearInputImages();
           break;
 
         case RecognitionStatus.EmptyResultState:
@@ -937,13 +1043,13 @@ export class MbComponent {
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
-          this.showOverlay('');
-          this.scanFromImageInput.value = '';
+          this.hideScanFromImageUi();
+          this.clearInputImages();
           break;
 
         case RecognitionStatus.UnknownError:
           // Do nothing, RecognitionStatus.EmptyResultState will handle negative outcome
-          this.scanFromImageInput.value = '';
+          this.clearInputImages();
           break;
 
         case RecognitionStatus.ScanSuccessful:
@@ -953,10 +1059,10 @@ export class MbComponent {
             state: 'FEEDBACK_OK',
             message: ''
           });
-          this.scanFromImageInput.value = '';
+          this.clearInputImages();
 
           if (!recognitionEvent.data.imageCapture) {
-            this.showOverlay('');
+            this.hideScanFromImageUi();
           }
           break;
 
@@ -994,7 +1100,161 @@ export class MbComponent {
                 message: this.translationService.i('feedback-error-generic').toString()
               });
 
-              this.showOverlay('');
+              this.hideScanFromImageUi();
+            }
+          }
+          else {
+            this.setFatalError(
+              new EventFatalError(
+                Code.InternetNotAvailable,
+                this.translationService.i('check-internet-connection').toString()
+                )
+              );
+            this.showLicenseInfoModal(
+              this.translationService.i('check-internet-connection').toString()
+            );
+          }
+        });
+    }
+  }
+
+  private async startScanFromImageCombined() {
+    const configuration: CombinedImageRecognitionConfiguration = {
+      recognizers: this.recognizers,
+      firstFile: this.galleryImageFirstFile,
+      secondFile: this.galleryImageSecondFile
+    };
+
+    if (this.recognizerOptions) {
+      configuration.recognizerOptions = this.recognizerOptions;
+    }
+
+    const eventHandler = (recognitionEvent: RecognitionEvent) => {
+      switch (recognitionEvent.status) {
+        case RecognitionStatus.Preparing:
+          this.showScanFromImageUi();
+          this.feedback.emit({
+            code: FeedbackCode.ScanStarted,
+            state: 'FEEDBACK_OK',
+            message: ''
+          });
+          break;
+
+        case RecognitionStatus.Ready:
+          this.cameraExperience.setActiveCamera(this.sdkService.videoRecognizer.deviceId);
+          break;
+
+        case RecognitionStatus.Processing:
+          // Just keep working
+          break;
+
+        case RecognitionStatus.NoFirstImageFileFound:
+          this.scanError.emit({
+            code: Code.NoFirstImageFileFound,
+            fatal: true,
+            message: 'First image file is missing!',
+            recognizerName: ''
+          });
+          this.feedback.emit({
+            code: FeedbackCode.ScanUnsuccessful,
+            state: 'FEEDBACK_ERROR',
+            message: this.translationService.i('feedback-scan-unsuccessful').toString()
+          });
+          this.hideScanFromImageUi();
+          this.clearInputImages();
+          break;
+
+        case RecognitionStatus.NoSecondImageFileFound:
+          this.scanError.emit({
+            code: Code.NoSecondImageFileFound,
+            fatal: true,
+            message: 'Second image file is missing!',
+            recognizerName: ''
+          });
+          this.feedback.emit({
+            code: FeedbackCode.ScanUnsuccessful,
+            state: 'FEEDBACK_ERROR',
+            message: this.translationService.i('feedback-scan-unsuccessful').toString()
+          });
+          this.hideScanFromImageUi();
+          this.clearInputImages();
+          break;
+
+        case RecognitionStatus.DetectionFailed:
+          // Do nothing, RecognitionStatus.EmptyResultState will handle negative outcome
+          this.clearInputImages();
+          break;
+
+        case RecognitionStatus.EmptyResultState:
+          this.scanError.emit({
+            code: Code.EmptyResult,
+            fatal: false,
+            message: 'Could not extract information from image!',
+            recognizerName: recognitionEvent.data.recognizerName
+          });
+          this.feedback.emit({
+            code: FeedbackCode.ScanUnsuccessful,
+            state: 'FEEDBACK_ERROR',
+            message: this.translationService.i('feedback-scan-unsuccessful').toString()
+          });
+          this.hideScanFromImageUi();
+          this.clearInputImages();
+          break;
+
+        case RecognitionStatus.UnknownError:
+          // Do nothing, RecognitionStatus.EmptyResultState will handle negative outcome
+          this.clearInputImages();
+          break;
+
+        case RecognitionStatus.ScanSuccessful:
+          this.scanSuccess.emit(recognitionEvent.data);
+          this.feedback.emit({
+            code: FeedbackCode.ScanSuccessful,
+            state: 'FEEDBACK_OK',
+            message: ''
+          });
+          this.clearInputImages();
+
+          if (!recognitionEvent.data.imageCapture) {
+            this.hideScanFromImageUi();
+          }
+          break;
+
+        default:
+        //console.warn('Unhandled image recognition status:', recognitionEvent.status);
+      }
+    };
+
+    try {
+      this.imageScanStarted.emit();
+
+      if (this.thoroughScanFromImage) {
+        configuration.thoroughScan = true;
+      }
+
+      await this.sdkService.scanFromImageCombined(configuration, eventHandler);
+    } catch (error) {
+      this.checkIfInternetIsAvailable()
+        .then((isAvailable) => {
+          if (isAvailable) {
+            if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
+              this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
+              this.showLicenseInfoModal(error);
+            }
+            else {
+              this.scanError.emit({
+                code: Code.GenericScanError,
+                fatal: true,
+                message: `There was a problem during scan action.`,
+                recognizerName: ''
+              });
+              this.feedback.emit({
+                code: FeedbackCode.GenericScanError,
+                state: 'FEEDBACK_ERROR',
+                message: this.translationService.i('feedback-error-generic').toString()
+              });
+
+              this.hideScanFromImageUi();
             }
           }
           else {
@@ -1045,10 +1305,13 @@ export class MbComponent {
   }
 
   private setDragAndDrop() {
-    this.overlays.draganddrop.classList.remove('non-fullscreen');
-
+    const dropTarget = this.galleryDropType === 'FULLSCREEN' ? window : this.hostEl;
     const lockTimeout = 3000;
     let lockDragAndDrop = false;
+
+    if (this.galleryDropType === 'INLINE') {
+      this.overlays.draganddrop.classList.add('inline');
+    }
 
     const closeOverlay = () => {
       if (lockDragAndDrop) {
@@ -1062,6 +1325,7 @@ export class MbComponent {
         }, lockTimeout);
       } else {
         this.showOverlay('');
+
         window.setTimeout(() => {
           this.showScreen('action');
           this.hostEl.style.borderStyle = 'solid';
@@ -1069,7 +1333,7 @@ export class MbComponent {
       }
     }
 
-    window.addEventListener('dragenter', (ev: any) => {
+    dropTarget.addEventListener('dragenter', (ev: any) => {
       ev.stopPropagation();
       ev.preventDefault();
 
@@ -1077,11 +1341,10 @@ export class MbComponent {
         return;
       }
 
-      this.showScreen('');
       this.hostEl.style.borderStyle = 'none';
     });
 
-    window.addEventListener('dragover', (ev: any) => {
+    dropTarget.addEventListener('dragover', (ev: any) => {
       ev.stopPropagation();
       ev.preventDefault();
 
@@ -1089,7 +1352,6 @@ export class MbComponent {
         return;
       }
 
-      this.showScreen('');
       this.hostEl.style.borderStyle = 'none';
 
       this.overlays.draganddrop.classList.remove('error');
@@ -1118,7 +1380,7 @@ export class MbComponent {
       }
 
       if (GenericHelpers.hasSupportedImageFiles(ev.dataTransfer.files)) {
-        this.startScanFromImage(ev.dataTransfer.files);
+        this.startScanFromImage(ev.dataTransfer.files[0]);
       } else {
         this.overlays.draganddrop.classList.add('error');
         this.overlays.draganddrop.querySelector('p').innerText = this.translationService.i('drop-error').toString();
@@ -1190,6 +1452,116 @@ export class MbComponent {
         return BlinkIDSDK.WasmType.AdvancedWithThreads;
       default:
         return null;
+    }
+  }
+
+  private onFromImageClicked(): void {
+    if (this.imageRecognitionType === ImageRecognitionType.Single) {
+      this.scanFromImageInput.click();
+    }
+
+    if (this.imageRecognitionType === ImageRecognitionType.Combined) {
+      if (this.combinedGalleryOpened) {
+        this.closeCombinedGalleryUpload();
+      }
+      else {
+        this.openCombinedGalleryUpload();
+      }
+    }
+  }
+
+  private clearInputImages(): void {
+    if (this.imageRecognitionType === ImageRecognitionType.Single) {
+      this.scanFromImageInput.value = '';
+    }
+
+    if (this.imageRecognitionType === ImageRecognitionType.Combined) {
+      this.imageBoxFirst.clear();
+      this.imageBoxSecond.clear();
+    }
+  }
+
+  private openCombinedGalleryUpload(): void {
+    const dialog = this.screens.action.querySelector('.combined-image-upload');
+    dialog.classList.add('visible');
+
+    this.scanFromImageButton.selected = true;
+    this.combinedGalleryOpened = true;
+  }
+
+  private closeCombinedGalleryUpload(): void {
+    const dialog = this.screens.action.querySelector('.combined-image-upload');
+    dialog.classList.remove('visible');
+
+    this.scanFromImageButton.selected = false;
+    this.combinedGalleryOpened = false;
+  }
+
+  private async onCombinedImageChange(ev: FileList, imageType: CombinedImageType) {
+    if (ev === null) {
+      if (imageType === CombinedImageType.First) {
+        this.galleryImageFirstFile = null;
+      }
+
+      if (imageType === CombinedImageType.Second) {
+        this.galleryImageSecondFile = null;
+      }
+    }
+    else {
+      const imageFile = GenericHelpers.getImageFile(ev);
+
+      if (imageFile === null) {
+        return;
+      }
+
+      if (imageType === CombinedImageType.First) {
+        this.galleryImageFirstFile = imageFile;
+      }
+
+      if (imageType === CombinedImageType.Second) {
+        this.galleryImageSecondFile = imageFile;
+      }
+    }
+
+    if (this.galleryImageFirstFile !== null && this.galleryImageSecondFile !== null) {
+      this.combinedScanFromImageButton.disabled = false;
+    }
+    else {
+      this.combinedScanFromImageButton.disabled = true;
+    }
+  }
+
+  private showScanFromImageUi(): void {
+    if (this.galleryOverlayType === 'INLINE') {
+      const inProgress = this.screens.processing.querySelector('p.in-progress');
+      const done = this.screens.processing.querySelector('p.done');
+
+      inProgress.classList.add('visible');
+      done.classList.remove('visible');
+
+      this.showScreen('processing');
+    }
+
+    if (this.galleryOverlayType === 'FULLSCREEN') {
+      this.showOverlay('processing');
+    }
+  }
+
+  private hideScanFromImageUi(): void {
+    if (this.galleryOverlayType === 'INLINE') {
+      const inProgress = this.screens.processing.querySelector('p.in-progress');
+      const done = this.screens.processing.querySelector('p.done');
+
+      inProgress.classList.remove('visible');
+      done.classList.add('visible');
+
+      window.setTimeout(() => {
+        this.showScreen('action');
+      }, 1000);
+    }
+
+    if (this.galleryOverlayType === 'FULLSCREEN') {
+      this.showOverlay('');
     }
   }
 }

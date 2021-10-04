@@ -14,6 +14,7 @@ import {
 } from '@stencil/core';
 
 import {
+  CameraEntry,
   CameraExperience,
   CameraExperienceState,
   CameraExperienceStateDuration
@@ -74,6 +75,27 @@ export class MbCameraExperience {
    */
   @Event() close: EventEmitter<void>;
 
+  /**
+   * Emitted when user selects a different camera device.
+   */
+  @Event() changeCameraDevice: EventEmitter<CameraEntry>;
+
+  /**
+   * Change active camera.
+   */
+  @Method()
+  async setActiveCamera(cameraId: string) {
+    this.cameraToolbar.setActiveCamera(cameraId);
+  }
+
+  /**
+   * Populate list of camera devices.
+   */
+  @Method()
+  async populateCameraDevices() {
+    await this.cameraToolbar.populateCameraDevices();
+  }
+
   @Watch('apiState')
   apiStateHandler(apiState: string, _oldValue: string) {
     if (apiState === '' && (this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined))
@@ -92,16 +114,9 @@ export class MbCameraExperience {
    */
   @Method()
   async setCameraFlipState(isFlipped: boolean) {
-    if (isFlipped)
-      this.cameraFlipBtn.classList.add('flipped');
-    else
-      this.cameraFlipBtn.classList.remove('flipped');
+    this.cameraFlipped = isFlipped;
   }
 
-
-  /**
-   * Set camera scanning state.
-   */
   @Method()
   setState(state: CameraExperienceState, isBackSide: boolean = false, force: boolean = false): Promise<void> {
     return new Promise((resolve) => {
@@ -133,9 +148,9 @@ export class MbCameraExperience {
           stateClass === 'is-detection' && this.showScanningLine ? this.scanningLineBarcode.classList.add('is-active') : this.scanningLineBarcode.classList.remove('is-active');
           this.cameraCursorBarcode.setAttribute('class', `rectangle ${stateClass}`);
           break;
-        case CameraExperience.BlinkCard:
-          stateClass === 'is-default' && this.showScanningLine ? this.scanningLineBlinkCard.classList.add('is-active') : this.scanningLineBlinkCard.classList.remove('is-active');
-          this.cameraCursorBlinkCard.setAttribute('class', `rectangle ${stateClass}`);
+        case CameraExperience.PaymentCard:
+          stateClass === 'is-default' && this.showScanningLine ? this.scanningLinePaymentCard.classList.add('is-active') : this.scanningLinePaymentCard.classList.remove('is-active');
+          this.cameraCursorPaymentCard.setAttribute('class', `rectangle ${stateClass}`);
           break;
       }
 
@@ -153,13 +168,36 @@ export class MbCameraExperience {
     });
   }
 
+  @Method()
+  resetState(): Promise<void> {
+    return new Promise((resolve) => {
+      // Reset flags
+      this.cameraStateChangeId = 0;
 
+      this.cameraStateInProgress = false;
+      this.flipCameraStateInProgress = false;
+      this.barcodeScanningInProgress = false;
+
+      // Reset DOM
+      while (this.cameraMessageIdentityCard.firstChild) {
+        this.cameraMessageIdentityCard.removeChild(this.cameraMessageIdentityCard.firstChild);
+      }
+
+      while (this.cameraMessagePaymentCard.firstChild) {
+        this.cameraMessagePaymentCard.removeChild(this.cameraMessagePaymentCard.firstChild);
+      }
+
+      while (this.cameraMessageBarcode.firstChild) {
+        this.cameraMessageBarcode.removeChild(this.cameraMessageBarcode.firstChild);
+      }
+
+      resolve();
+    });
+  }
 
   render() {
     return (
       <Host class={ this.showOverlay ? '' : 'no-overlay' }>
-        <div class="gradient-overlay top"></div>
-
         {/* Barcode camera experience */}
         <div id="barcode" class={ this.type === CameraExperience.Barcode ? 'visible' : '' }>
           <div class="rectangle-container">
@@ -193,23 +231,23 @@ export class MbCameraExperience {
           </div>
         </div>
 
-        {/* BlinkCard camera experience */}
-        <div id="blinkcard" class={ this.type === CameraExperience.BlinkCard ? 'visible' : '' }>
+        {/* PaymentCard camera experience */}
+        <div id="card-payment" class={ this.type === CameraExperience.PaymentCard ? 'visible' : '' }>
           <div class="rectangle-container">
             <div class="box wrapper"></div>
             <div class="box body">
               <div class="middle-left wrapper"></div>
-              <div class="rectangle" ref={ el => this.cameraCursorBlinkCard = el as HTMLDivElement }>
+              <div class="rectangle" ref={ el => this.cameraCursorPaymentCard = el as HTMLDivElement }>
                 <div class="rectangle__cursor">
                   <div class="rectangle__el"></div>
                   <div class="rectangle__el"></div>
                   <div class="rectangle__el"></div>
                   <div class="rectangle__el"></div>
 
-                  <div class="scanning-line" ref={ el => this.scanningLineBlinkCard = el as HTMLDivElement }></div>
+                  <div class="scanning-line" ref={ el => this.scanningLinePaymentCard = el as HTMLDivElement }></div>
                 </div>
               </div>
-              <p class="message" ref={ el => this.cameraMessageBlinkCard = el as HTMLParagraphElement }></p>
+              <p class="message" ref={ el => this.cameraMessagePaymentCard = el as HTMLParagraphElement }></p>
               <div class="middle-right wrapper"></div>
             </div>
             <div class="box wrapper"></div>
@@ -218,52 +256,41 @@ export class MbCameraExperience {
 
         <div class="gradient-overlay bottom"></div>
 
-        <div class="controls">
-          { this.apiState !== 'error' &&
-            <a href="javascript:void(0)" onClick={ (ev: UIEvent) => this.handleStop(ev) } class="close-button">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289Z" fill="white"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="white"/>
-              </svg>
-            </a>
-          }
-
-          <button type="button" id="flipBtn" class={ !this.cameraFlipped ? '' : 'flipped' } onClick={() => this.flipCamera()} ref={ el => this.cameraFlipBtn = el as HTMLButtonElement }>
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M16 5C16.5523 5 17 5.44772 17 6V24C17 24.5523 16.5523 25 16 25C15.4477 25 15 24.5523 15 24V6C15 5.44772 15.4477 5 16 5Z" fill="white"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M19.7702 9.02676C20.2216 8.9202 20.687 9.13798 20.8944 9.55279L25.8944 19.5528C26.0494 19.8628 26.0329 20.2309 25.8507 20.5257C25.6684 20.8206 25.3466 21 25 21H20C19.4477 21 19 20.5523 19 20V10C19 9.53623 19.3189 9.13331 19.7702 9.02676ZM21 14.2361V19H23.382L21 14.2361Z" fill="white"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12.2298 9.02676C12.6811 9.13331 13 9.53623 13 10V20C13 20.5523 12.5523 21 12 21H7C6.65342 21 6.33156 20.8206 6.14935 20.5257C5.96714 20.2309 5.95058 19.8628 6.10557 19.5528L11.1056 9.55279C11.313 9.13798 11.7784 8.9202 12.2298 9.02676ZM8.61803 19H11V14.2361L8.61803 19Z" fill="white"/>
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M19.7702 9.02676C20.2216 8.9202 20.687 9.13798 20.8944 9.55279L25.8944 19.5528C26.0494 19.8628 26.0329 20.2309 25.8507 20.5257C25.6684 20.8206 25.3466 21 25 21H20C19.4477 21 19 20.5523 19 20V10C19 9.53623 19.3189 9.13331 19.7702 9.02676Z" fill="white"/>
-            </svg>
-          </button>
-        </div>
+        <mb-camera-toolbar
+          show-close={ this.apiState !== "error" }
+          camera-flipped={ this.cameraFlipped }
+          onCloseEvent={() => this.handleStop()}
+          onFlipEvent={() => this.flipCamera()}
+          onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.handleChangeCameraDevice(ev.detail)}
+          ref={ el => this.cameraToolbar = el as HTMLMbCameraToolbarElement }
+        ></mb-camera-toolbar>
       </Host>
     );
   }
 
   private cameraCursorBarcode!: HTMLDivElement;
   private cameraCursorIdentityCard!: HTMLDivElement;
-  private cameraCursorBlinkCard!: HTMLDivElement;
+  private cameraCursorPaymentCard!: HTMLDivElement;
   private cameraMessageIdentityCard!: HTMLParagraphElement;
-  private cameraMessageBlinkCard!: HTMLParagraphElement;
+  private cameraMessagePaymentCard!: HTMLParagraphElement;
   private cameraMessageBarcode!: HTMLParagraphElement;
-  private cameraStateInProgress: boolean = false;
+  private cameraToolbar!: HTMLMbCameraToolbarElement;
+  private cardIdentityElement!: HTMLDivElement;
+
+  // Flags
   private cameraStateChangeId: number = 0;
-  private cardIdentityElement: HTMLDivElement;
-  private cameraFlipBtn: HTMLButtonElement;
+  private cameraStateInProgress: boolean = false;
   private flipCameraStateInProgress: boolean = false;
   private barcodeScanningInProgress: boolean = false;
 
   private scanningLineBarcode!: HTMLDivElement;
-  private scanningLineBlinkCard!: HTMLDivElement;
+  private scanningLinePaymentCard!: HTMLDivElement;
 
   private flipCamera(): void {
     this.flipCameraAction.emit();
   }
 
-  private handleStop(ev: UIEvent) {
-    ev.preventDefault();
-    ev.stopPropagation();
+  private handleStop() {
     this.close.emit();
   }
 
@@ -318,23 +345,29 @@ export class MbCameraExperience {
   private setMessage(state: CameraExperienceState, isBackSide: boolean, type: CameraExperience): void {
     const message = this.getStateMessage(state, isBackSide, type);
 
-    switch(type) {
+    switch (type) {
       case CameraExperience.CardSingleSide:
       case CameraExperience.CardCombined:
         while (this.cameraMessageIdentityCard.firstChild) {
           this.cameraMessageIdentityCard.removeChild(this.cameraMessageIdentityCard.firstChild);
         }
-        if (message) this.cameraMessageIdentityCard.appendChild(message);
+
+        if (message) {
+          this.cameraMessageIdentityCard.appendChild(message);
+        }
 
         this.cameraMessageIdentityCard.setAttribute('class', message && message !== null ? 'message is-active' : 'message');
         break;
-      case CameraExperience.BlinkCard:
-        while (this.cameraMessageBlinkCard.firstChild) {
-          this.cameraMessageBlinkCard.removeChild(this.cameraMessageBlinkCard.firstChild);
+      case CameraExperience.PaymentCard:
+        while (this.cameraMessagePaymentCard.firstChild) {
+          this.cameraMessagePaymentCard.removeChild(this.cameraMessagePaymentCard.firstChild);
         }
-        if (message) this.cameraMessageBlinkCard.appendChild(message);
 
-        this.cameraMessageBlinkCard.setAttribute('class', message && message !== null ? 'message is-active' : 'message');
+        if (message) {
+          this.cameraMessagePaymentCard.appendChild(message);
+        }
+
+        this.cameraMessagePaymentCard.setAttribute('class', message && message !== null ? 'message is-active' : 'message');
         break;
       case CameraExperience.Barcode:
         while (this.cameraMessageBarcode.firstChild) {
@@ -342,7 +375,10 @@ export class MbCameraExperience {
         }
 
         if (this.showCameraFeedbackBarcodeMessage) {
-          if (message) this.cameraMessageBarcode.appendChild(message);
+          if (message) {
+            this.cameraMessageBarcode.appendChild(message);
+          }
+
           this.cameraMessageBarcode.setAttribute('class', message && message !== null ? 'message is-active' : 'message');
         }
         break;
@@ -411,5 +447,9 @@ export class MbCameraExperience {
       default:
         return null;
     }
+  }
+
+  private handleChangeCameraDevice(camera: CameraEntry) {
+    this.changeCameraDevice.emit(camera);
   }
 }

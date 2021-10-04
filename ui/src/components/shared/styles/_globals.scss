@@ -11,18 +11,23 @@
  * be reloaded for the changes to take effect.
  */
 :host {
-  /* Global font family */
+  /* General properties */
   --mb-font-family:                             inherit;
+  --mb-font-size:                               max(16px, 1rem);
+  --mb-font-size-desktop:                       max(20px, 1rem);
+  --mb-font-style:                              normal;
+  --mb-font-weight:                             400;
+  --mb-letter-spacing:                          normal;
+  --mb-line-height:                             1.5em;
 
   /* Component (UI with buttons) */
   --mb-component-background:                    #FFF;
 
+  --mb-component-width:                         100%;
+
   --mb-component-font-color:                    #000;
-  --mb-component-font-size:                     14px;
-  --mb-component-font-style:                    normal;
-  --mb-component-font-weight:                   400;
-  --mb-component-letter-spacing:                normal;
-  --mb-component-line-height:                   20px;
+  --mb-component-font-color-secondary:          #3C3C43B2;
+  --mb-component-font-size:                     inherit;
   --mb-component-text-transform:                none;
 
   --mb-component-border-color:                  rgba(120, 120, 128, 0.2);
@@ -35,7 +40,9 @@
   --mb-component-button-size:                   #{$button-size};
   --mb-component-button-icon-size:              #{$button-icon-size};
   --mb-component-button-background:             #FFF;
+  --mb-component-button-background-selected:    rgba(72, 178, 232, 0.1);
   --mb-component-button-border-color:           rgba(120, 120, 128, 0.2);
+  --mb-component-button-border-color-selected:  rgba(120, 120, 128, 0.2);
   --mb-component-button-border-color-focus:     rgba(72, 178, 232, 0.5);
   --mb-component-button-border-color-hover:     rgba(60, 60, 67, 0.29);
   --mb-component-button-border-color-disabled:  rgba(116, 116, 128, 0.08);
@@ -46,31 +53,75 @@
   --mb-component-button-box-shadow:             0px 1px 4px rgba(0, 0, 0, 0.1);
   --mb-component-button-box-shadow-disabled:    none;
 
+  --mb-component-button-classic-background:     #48B2E8;
+  --mb-component-button-classic-font-size:      1em;
+  --mb-component-button-classic-font-weight:    500;
+  --mb-component-button-classic-text-color:     #FFF;
+
+  --mb-component-image-box-border-color:        rgba(120, 120, 128, 0.2);
+  --mb-component-image-box-border-radius:       2px;
+  --mb-component-image-box-border-width:        1px;
+
+  --mb-component-image-box-label-height:        #{$padding-unit-large};
+  --mb-component-image-box-label-color:         rgba(60, 60, 67, 0.5);
+  --mb-component-image-box-label-font-size:     0.875em;
+  --mb-component-image-box-label-font-weight:   400;
+
+  --mb-component-image-box-cta-height:          #{$padding-unit-large + $padding-unit-small};
+  --mb-component-image-box-cta-label-height:    #{$padding-unit-large + $padding-unit-small};
+  --mb-component-image-box-cta-color:           #48B2E8;
+  --mb-component-image-box-cta-font-size:       0.875em;
+  --mb-component-image-box-cta-font-weight:     600;
+
+  --mb-component-image-box-file-color:          #000;
+  --mb-component-image-box-file-font-weight:    400;
+
   --mb-component-action-buttons-justify-content: flex-end;
   --mb-component-action-buttons-width:          calc(2 * #{$button-size} + #{$padding-unit-medium});
   --mb-component-action-buttons-last-margin:    0 0 0 8px;
 
   --mb-component-action-label:                  block;
+  --mb-component-action-label-font-size:        inherit;
+
+  /* Camera scanning UI */
+  --mb-blur-filter:                             27px;
+  --mb-blur-scanning-line:                      4px;
+
+  --mb-toolbar-color:                           #FFF;
+  --mb-toolbar-border-color:                    #FFF;
+  --mb-toolbar-border-radius:                   4px;
+  --mb-toolbar-selection-width:                 298px;
+  --mb-toolbar-list-background:                 #FFF;
+  --mb-toolbar-list-shadow:                     0px 2px 8px rgba(0, 0, 0, 0.05), 0px 2px 24px rgba(0, 0, 0, 0.1);
+
+  --mb-reticle-size:                            6em;
 
   /* User feedback (messages below buttons) */
   --mb-feedback-font-color-error:               #FF2D55;
   --mb-feedback-font-color-info:                rgba(60, 60, 67, 0.7);
-  --mb-feedback-font-size:                      12px;
+  --mb-feedback-font-size:                      0.875em;
   --mb-feedback-font-style:                     normal;
   --mb-feedback-font-weight:                    400;
   --mb-feedback-letter-spacing:                 normal;
-  --mb-feedback-line-height:                    16px;
+  --mb-feedback-line-height:                    1em;
   --mb-feedback-text-transform:                 none;
 
   /* Overlays */
-  --mb-overlay-draganddrop-background:          rgba(72, 178, 232, 0.25);
-  --mb-overlay-draganddrop-background-error:    rgba(255, 45, 85, 0.25);
+  --mb-overlay-draganddrop-background:          #EDF7FD;
+  --mb-overlay-draganddrop-background-error:    #FFEAEE;
+  --mb-overlay-draganddrop-border-color:        #48B2E8;
   --mb-overlay-draganddrop-border-color-error:  #FF2D55;
-  --mb-overlay-draganddrop-border-style-error:  dashed;
+  --mb-overlay-draganddrop-border-style:        dashed;
 
   --mb-overlay-gallery-experience-background:   rgba(0, 0, 0, 0.6);
   --mb-overlay-gallery-experience-font-color:   #FFF;
-  --mb-overlay-gallery-experience-font-size:    16px;
+  --mb-overlay-gallery-experience-font-size:    1em;
   --mb-overlay-gallery-experience-font-weight:  500;
-  --mb-overlay-gallery-experience-line-height:  24px;
+  --mb-overlay-gallery-experience-line-height:  1.5em;
+
+  /* Modals */
+  --mb-modal-title-font-size:                   1em;
+  --mb-modal-title-line-height:                 1.5em;
+  --mb-modal-content-font-size:                 0.875em;
+  --mb-modal-content-line-height:               1.4em;
 }

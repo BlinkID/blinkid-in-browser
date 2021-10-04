@@ -8,6 +8,7 @@ import { MetadataCallbacks } from "./MetadataCallbacks";
 import { WasmSDKLoadSettings } from "./WasmLoadSettings";
 
 
+export * from "./CameraUtils";
 export * from "./DataStructures";
 export * from "./MetadataCallbacks";
 export * from "./FrameCapture";

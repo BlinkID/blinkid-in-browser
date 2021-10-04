@@ -1,0 +1,17 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+@import "../styles/_globals-sass";
+
+:host {
+  display: block;
+
+  padding: 0;
+
+  img {
+    display: block;
+    width: 24px;
+    height: 24px;
+  }
+}

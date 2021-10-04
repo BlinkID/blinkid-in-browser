@@ -4,22 +4,20 @@
 
 import
 {
+    bindCameraToVideoFeed,
+    PreferredCameraType,
+    clearVideoFeed,
+    selectCamera,
+    SelectedCamera
+} from "./CameraUtils";
+
+import
+{
     RecognizerRunner,
     RecognizerResultState
 } from "./DataStructures";
 
 import { captureFrame } from "./FrameCapture";
-
-/**
- * Preferred type of camera to be used when opening the camera feed.
- */
-export enum PreferredCameraType
-{
-    /** Prefer back facing camera */
-    BackFacingCamera,
-    /** Prefer front facing camera */
-    FrontFacingCamera
-}
 
 /**
  * Explanation why VideoRecognizer has failed to open the camera feed.
@@ -117,7 +115,7 @@ export class VideoRecognizer
                     reject( new VideoRecognizerError( NotSupportedReason.VideoElementNotProvided, errorMessage ) );
                     return;
                 }
-                if ( navigator.mediaDevices && navigator.mediaDevices.getUserMedia )
+                if ( navigator.mediaDevices && navigator.mediaDevices.getUserMedia !== undefined )
                 {
                     try
                     {
@@ -129,54 +127,17 @@ export class VideoRecognizer
                             return;
                         }
 
-                        const constraints: MediaStreamConstraints =
-                        {
-                            audio: false,
-                            video:
-                            {
-                                width:
-                                {
-                                    min: 640,
-                                    ideal: 1920,
-                                    max: 1920
-                                },
-                                height:
-                                {
-                                    min: 480,
-                                    ideal: 1080,
-                                    max: 1080
-                                }
-                            }
-                        };
-                        if ( selectedCamera.deviceId === "" )
-                        {
-                            const isPreferredBackFacing = preferredCameraType === PreferredCameraType.BackFacingCamera;
-                            ( constraints.video as MediaTrackConstraints ).facingMode =
-                            {
-                                ideal: isPreferredBackFacing ? "environment" : "user"
-                            };
-                        }
-                        else
-                        {
-                            ( constraints.video as MediaTrackConstraints ).deviceId =
-                            {
-                                exact: selectedCamera.deviceId
-                            };
-                        }
+                        const cameraFlipped = await bindCameraToVideoFeed( selectedCamera, cameraFeed, preferredCameraType );
 
-                        const stream = await navigator.mediaDevices.getUserMedia( constraints );
-                        cameraFeed.controls = false;
-                        cameraFeed.srcObject = stream;
-                        let cameraFlipped = false;
-                        // mirror the camera view for front-facing camera
-                        if ( selectedCamera.facing === PreferredCameraType.FrontFacingCamera )
-                        {
-                            cameraFeed.style.transform = "scaleX(-1)";
-                            cameraFlipped = true;
-                        }
                         // TODO: await maybe not needed here
                         await recognizerRunner.setCameraPreviewMirrored( cameraFlipped );
-                        resolve( new VideoRecognizer( cameraFeed, recognizerRunner, cameraFlipped ) );
+                        resolve( new VideoRecognizer(
+                            cameraFeed,
+                            recognizerRunner,
+                            cameraFlipped,
+                            false,
+                            selectedCamera.deviceId
+                        ) );
                     }
                     catch( error )
                     {
@@ -261,14 +222,18 @@ export class VideoRecognizer
         videoFeed: HTMLVideoElement,
         recognizerRunner: RecognizerRunner,
         cameraFlipped = false,
-        allowManualVideoPlayout = false
+        allowManualVideoPlayout = false,
+        deviceId: string | null = null
     )
     {
         this.videoFeed = videoFeed;
         this.recognizerRunner = recognizerRunner;
         this.cameraFlipped = cameraFlipped;
         this.allowManualVideoPlayout = allowManualVideoPlayout;
+        this.deviceId = deviceId;
     }
+
+    deviceId: string | null = null;
 
     async flipCamera(): Promise< void >
     {
@@ -317,7 +282,7 @@ export class VideoRecognizer
      * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether
      *        recognition was successful or not.
      */
-    startRecognition( onScanningDone: OnScanningDone, recognitionTimeoutMs = 15000 ): Promise< void >
+    startRecognition( onScanningDone: OnScanningDone, recognitionTimeoutMs = 20000 ): Promise< void >
     {
         return new Promise( ( resolve, reject ) =>
         {
@@ -387,13 +352,14 @@ export class VideoRecognizer
      * unpaused, recognition will be performed and promise will be resolved with recognition status. After
      * the resolution of returned promise, the video stream will be paused, but not released. To release the
      * stream, use function releaseVideoFeed.
+     *
      * This is a simple version of startRecognition that should be used for most cases, like when you only need
      * to perform one scan per video session.
      *
      * @param recognitionTimeoutMs Amount of time before returned promise will be resolved regardless of whether
      *        recognition was successful or not.
      */
-    recognize( recognitionTimeoutMs = 15000 ): Promise< RecognizerResultState >
+    recognize( recognitionTimeoutMs = 20000 ): Promise< RecognizerResultState >
     {
         return new Promise
         (
@@ -493,12 +459,14 @@ export class VideoRecognizer
             this.cancelled = false;
             this.timedOut = false;
             this.recognitionPaused = false;
+
             if ( this.videoFeed && this.videoFeed.paused )
             {
                 const msg = "Cannot resume recognition while video feed is paused! Use recognize or startRecognition";
                 reject( new Error( msg ) );
                 return;
             }
+
             setTimeout
             (
                 () =>
@@ -509,7 +477,7 @@ export class VideoRecognizer
                         (
                             () =>
                             {
-                                void this.recognitionLoop().then
+                                this.recognitionLoop().then
                                 (
                                     () => resolve()
                                 ).catch
@@ -549,16 +517,88 @@ export class VideoRecognizer
      */
     releaseVideoFeed(): void
     {
-        if ( this.videoFeed !== null )
+        if ( !this.videoFeed || this.videoFeed?.readyState < this.videoFeed?.HAVE_CURRENT_DATA )
         {
-            if ( this.videoFeed.srcObject !== null )
-            {
-                if ( !this.videoFeed.paused ) this.cancelRecognition();
-                ( this.videoFeed.srcObject as MediaStream ).getTracks().forEach( track => track.stop() );
-                this.videoFeed.srcObject = null;
-            }
-            this.videoFeed = null;
+            this.shouldReleaseVideoFeed = true;
+            return;
         }
+
+        if ( !this.videoFeed.paused )
+        {
+            this.cancelRecognition();
+        }
+
+        clearVideoFeed( this.videoFeed );
+        this.videoFeed = null;
+        this.shouldReleaseVideoFeed = false;
+    }
+
+    /**
+     * Change currently used camera device for recognition. To get list of available camera devices
+     * use "getCameraDevices" method.
+     *
+     * Keep in mind that this method will reset recognizers.
+     *
+     * @param camera Desired camera device which should be used for recognition.
+     */
+    changeCameraDevice( camera: SelectedCamera ): Promise< void >
+    {
+        return new Promise( ( resolve, reject ) =>
+        {
+            if ( this.videoFeed === null )
+            {
+                reject( new Error( "Cannot change camera device because video feed is missing!" ) );
+                return;
+            }
+
+            this.pauseRecognition();
+            clearVideoFeed( this.videoFeed );
+
+            bindCameraToVideoFeed( camera, this.videoFeed ).then
+            (
+                () =>
+                {
+                    if ( this.videoFeed === null )
+                    {
+                        reject( new Error( "Cannot change camera device because video feed is missing!" ) );
+                        return;
+                    }
+
+                    this.videoFeed.play().then
+                    (
+                        () =>
+                        {
+                            // Recognition errors should be handled by `startRecognition` or `recognize` method
+                            void this.resumeRecognition( true );
+                            resolve();
+                        },
+                        /* eslint-disable @typescript-eslint/no-explicit-any */
+                        ( nativeError: any ) =>
+                        {
+                            if ( !this.allowManualVideoPlayout )
+                            {
+                                console.warn( "Native error", nativeError );
+                                const m = "The play() request was interrupted or prevented by browser security rules!";
+                                reject( new Error( m ) );
+                                return;
+                            }
+
+                            if ( !this.videoFeed )
+                            {
+                                reject( new Error( "Cannot change camera device because video feed is missing!" ) );
+                                return;
+                            }
+
+                            this.videoFeed.controls = true;
+                        }
+                        /* eslint-enable @typescript-eslint/no-explicit-any */
+                    );
+                }
+            ).catch
+            (
+                ( error ) => reject( error )
+            );
+        } );
     }
 
     /** *********************************************************************************************
@@ -575,7 +615,7 @@ export class VideoRecognizer
 
     private recognitionPaused = false;
 
-    private recognitionTimeoutMs = 15000;
+    private recognitionTimeoutMs = 20000;
 
     private timeoutID = 0;
 
@@ -586,6 +626,8 @@ export class VideoRecognizer
     private allowManualVideoPlayout = false;
 
     private cameraFlipped = false;
+
+    private shouldReleaseVideoFeed = false;
 
     private playPauseEvent(): Promise< void >
     {
@@ -620,7 +662,16 @@ export class VideoRecognizer
                 reject( new Error( "Missing video feed!" ) );
                 return;
             }
+
+            if ( this.shouldReleaseVideoFeed && this.videoFeed.readyState > this.videoFeed.HAVE_CURRENT_DATA )
+            {
+                this.releaseVideoFeed();
+                resolve();
+                return;
+            }
+
             const cameraFrame = captureFrame( this.videoFeed );
+
             this.recognizerRunner.processImage( cameraFrame ).then
             (
                 ( processResult: RecognizerResultState ) =>
@@ -702,7 +753,7 @@ export class VideoRecognizer
                 }
             ).catch
             (
-                ( error ) => reject ( error )
+                ( error ) => reject( error )
             );
         } );
     }
@@ -714,185 +765,5 @@ export class VideoRecognizer
             window.clearTimeout( this.timeoutID );
             this.timeoutID = 0;
         }
-    }
-}
-
-// inspired by https://unpkg.com/browse/scandit-sdk@4.6.1/src/lib/cameraAccess.ts
-const backCameraKeywords: string[] = [
-    "rear",
-    "back",
-    "rück",
-    "arrière",
-    "trasera",
-    "trás",
-    "traseira",
-    "posteriore",
-    "后面",
-    "後面",
-    "背面",
-    "后置", // alternative
-    "後置", // alternative
-    "背置", // alternative
-    "задней",
-    "الخلفية",
-    "후",
-    "arka",
-    "achterzijde",
-    "หลัง",
-    "baksidan",
-    "bagside",
-    "sau",
-    "bak",
-    "tylny",
-    "takakamera",
-    "belakang",
-    "אחורית",
-    "πίσω",
-    "spate",
-    "hátsó",
-    "zadní",
-    "darrere",
-    "zadná",
-    "задня",
-    "stražnja",
-    "belakang",
-    "बैक"
-];
-
-function isBackCameraLabel( label: string ): boolean
-{
-    const lowercaseLabel = label.toLowerCase();
-
-    return backCameraKeywords.some( keyword => lowercaseLabel.includes( keyword ) );
-}
-
-class SelectedCamera
-{
-    readonly deviceId: string;
-
-    readonly groupId: string;
-
-    readonly facing: PreferredCameraType;
-
-    readonly label: string;
-
-    constructor( mdi: MediaDeviceInfo, facing: PreferredCameraType )
-    {
-        this.deviceId = mdi.deviceId;
-        this.facing = facing;
-        this.groupId = mdi.groupId;
-        this.label = mdi.label;
-    }
-}
-
-async function selectCamera(
-    cameraId: string | null,
-    preferredCameraType: PreferredCameraType
-): Promise< SelectedCamera | null >
-{
-    const frontCameras: SelectedCamera[] = [];
-    const backCameras: SelectedCamera[] = [];
-
-    {
-        let devices = await navigator.mediaDevices.enumerateDevices();
-        // if permission is not given, label of video devices will be empty string
-        if ( devices.filter( device => device.kind === "videoinput" ).every( device => device.label === "" ) )
-        {
-            const stream = await navigator.mediaDevices.getUserMedia
-            (
-                {
-                    video:
-                    {
-                        facingMode: { ideal: "environment" }
-                    },
-                    audio: false
-                }
-            );
-
-            // enumerate devices again - now the label field should be non-empty, as we have a stream active
-            // (even if we didn't get persistent permission for camera)
-            devices = await navigator.mediaDevices.enumerateDevices();
-
-            // close the stream, as we don't need it anymore
-            stream.getTracks().forEach( track => track.stop() );
-        }
-
-        const cameras = devices.filter( device => device.kind === "videoinput" );
-        for ( const camera of cameras )
-        {
-            if ( isBackCameraLabel( camera.label ) )
-            {
-                backCameras.push( new SelectedCamera( camera, PreferredCameraType.BackFacingCamera ) );
-            }
-            else
-            {
-                frontCameras.push( new SelectedCamera( camera, PreferredCameraType.FrontFacingCamera ) );
-            }
-        }
-    }
-    if ( frontCameras.length > 0 || backCameras.length > 0 )
-    {
-        // decide from which array the camera will be selected
-        let cameraPool: SelectedCamera[] = ( backCameras.length > 0 ? backCameras : frontCameras );
-        // if there is at least one back facing camera and user prefers back facing camera, use that as a selection pool
-        if ( preferredCameraType === PreferredCameraType.BackFacingCamera && backCameras.length > 0 )
-        {
-            cameraPool = backCameras;
-        }
-        // if there is at least one front facing camera and is preferred by user, use that as a selection pool
-        if ( preferredCameraType === PreferredCameraType.FrontFacingCamera && frontCameras.length > 0 )
-        {
-            cameraPool = frontCameras;
-        }
-        // otherwise use whichever pool is non-empty
-
-        // sort camera pool by label
-        cameraPool = cameraPool.sort( ( camera1, camera2 ) => camera1.label.localeCompare( camera2.label ) );
-
-        // Check if cameras are labeled with resolution information, take the higher-resolution one in that case
-        // Otherwise pick the first camera
-        {
-            let selectedCameraIndex = 0;
-
-            const cameraResolutions: number[] = cameraPool.map
-            (
-                camera =>
-                {
-                    const regExp = RegExp( /\b([0-9]+)MP?\b/, "i" );
-                    const match = regExp.exec( camera.label );
-                    if ( match !== null )
-                    {
-                        return parseInt( match[1], 10 );
-                    }
-                    else
-                    {
-                        return NaN;
-                    }
-                }
-            );
-            if ( !cameraResolutions.some( cameraResolution => isNaN( cameraResolution ) ) )
-            {
-                selectedCameraIndex = cameraResolutions.lastIndexOf( Math.max( ...cameraResolutions ) );
-            }
-            if ( cameraId )
-            {
-                let cameraDevice = null;
-
-                cameraDevice = frontCameras.filter( device => device.deviceId === cameraId )[0];
-                if ( !cameraDevice )
-                {
-                    cameraDevice = backCameras.filter( device => device.deviceId === cameraId )[0];
-                }
-
-                return cameraDevice || null;
-            }
-
-            return cameraPool[ selectedCameraIndex ];
-        }
-    }
-    else
-    {
-        // no cameras available on the device
-        return null;
     }
 }

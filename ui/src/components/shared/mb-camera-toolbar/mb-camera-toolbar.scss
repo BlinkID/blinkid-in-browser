@@ -1,0 +1,123 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+@import "../styles/_globals-sass";
+
+:host {
+  width: 100%;
+
+  padding-top: $padding-unit-large;
+
+  background-color: rgba(map-get(map-get(map-get($base-colors, text-secondary), onlight), foreground), 0.7);
+  -webkit-backdrop-filter: blur(var(--mb-blur-filter));
+  backdrop-filter: blur(var(--mb-blur-filter));
+
+  header {
+    display: flex;
+    flex-wrap: wrap;
+
+    padding: 0 $padding-unit-large;
+  }
+
+  header > * {
+    display: block;
+
+    flex-grow: 1;
+  }
+
+  .camera-selection-wrapper {
+    width: calc(100% - 3em);
+  }
+
+  mb-camera-selection {
+    display: none;
+
+    &.visible {
+      display: block;
+    }
+  }
+}
+
+@media only screen and (min-width: $breakpoint-width-tablet) {
+  :host {
+    padding-top: 0;
+
+    header {
+      padding-left: #{ $padding-unit-large * 2 };
+      padding-right: #{ $padding-unit-large * 2 };
+    }
+  }
+}
+
+@media only screen and (min-width: $breakpoint-width-laptop-1280) {
+  :host {
+    header {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
+
+/**
+ * Toolbar buttons
+ */
+$button-size: calc(var(--mb-font-size) * 1.5);
+
+:host {
+  .toolbar-button {
+    width: $button-size;
+    height: $button-size;
+    padding: $padding-unit-medium 0;
+
+    cursor: pointer;
+
+    svg {
+      width: $button-size;
+      height: $button-size;
+
+      border: 1px solid transparent;
+      border-radius: var(--mb-toolbar-border-radius);
+
+      filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.4));
+    }
+
+    &:hover {
+      svg {
+        background-color: rgba(map-get(map-get(map-get($base-colors, text-secondary), onlight), foreground), 0.3);
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+      }
+    }
+
+    &:focus,
+    &:active {
+      svg {
+        border-color: var(--mb-toolbar-border-color);
+      }
+    }
+  }
+
+  .close-button {
+  }
+
+  .flip-button {
+    transform-style: preserve-3d;
+    -webkit-perspective: 600px;
+    -ms-perspective: 600px;
+    -o-perspective: 600px;
+    perspective: 600px;
+
+    -webkit-transition: 800ms;
+    -o-transition: 800ms;
+    transition: 800ms;
+
+    &.flipped {
+      -webkit-transform: rotateY(180deg);
+      -ms-transform: rotateY(180deg);
+      -o-transform: rotateY(180deg);
+      transform: rotateY(180deg);
+    }
+  }
+}

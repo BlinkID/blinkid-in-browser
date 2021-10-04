@@ -1,8 +1,6 @@
 /**
  * Copyright (c) Microblink Ltd. All rights reserved.
- */
-
-/**
+ *
  * SASS variables, not customizable via CSS variables
  */
 $padding-unit-small: 4px;
@@ -70,7 +68,7 @@ $base-colors: (
   ),
 
   text-secondary: (
-    onlight:    ( name: "text-secondary", foreground: #75757A ),
+    onlight:    ( name: "text-secondary", foreground: #3C3C43 ),
     ondark:     ( name: "text-secondary", foreground: #AEAEB5 )
   ),
 
@@ -117,7 +115,7 @@ $base-colors: (
   ),
 
   fill-quaternary: (
-    onlight:    ( name: "fill-quaternary", foreground: #F0F0F1 ),
+    onlight:    ( name: "fill-quaternary", foreground: #747480 ),
     ondark:     ( name: "fill-quaternary", foreground: #303032 )
   ),
 
