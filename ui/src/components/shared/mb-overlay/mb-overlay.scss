@@ -18,19 +18,28 @@
   visibility: hidden;
   overflow: hidden;
 
+  background-color: transparent;
+  border-style: none;
+  border-color: transparent;
+
   transform: translate(0, 0);
   transform-origin: center;
 
-  transition: opacity 0.2s ease 0.4s, visibility 0.1s ease 0.5s, z-index 0.7s;
+  transition: background-color 0.2s ease 0.4s,
+              border-style 0.2s ease 0.4s,
+              border-color 0.2s ease 0.4s,
+              opacity 0.2s ease 0.4s,
+              visibility 0.1s ease 0.5s,
+              z-index 0.7s;
 }
 
 :host(.visible) {
   z-index: 200;
 
-  background-color: transparent;
-
   visibility: visible;
   opacity: 1;
+
+  background-color: transparent;
 
   transform: translate(0, 0);
 

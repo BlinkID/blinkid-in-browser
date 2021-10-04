@@ -143,7 +143,7 @@ $rectangle-scanning-line-animation-duration: 2400ms;
 }
 
 // Shape & states
-:host #blinkcard .rectangle {
+:host #card-payment .rectangle {
   box-sizing: border-box;
   position: relative;
   background-color: transparent;
@@ -346,7 +346,7 @@ $rectangle-scanning-line-animation-duration: 2400ms;
   top: -125px;
 
   background: radial-gradient(100% 100% at 49.85% 100%, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
-  filter: blur(4px);
+  filter: blur(var(--mb-blur-scanning-line));
 
   &.is-active {
     opacity: 1;

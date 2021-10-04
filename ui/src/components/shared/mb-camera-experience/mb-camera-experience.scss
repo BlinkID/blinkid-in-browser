@@ -5,7 +5,7 @@
 @import "../styles/_globals-sass";
 
 @import "../styles/_reticle";
-@import "../styles/_blinkcard-rectangle";
+@import "../styles/_payment-card-rectangle";
 @import "../styles/_barcode-rectangle";
 
 *::after,
@@ -20,73 +20,24 @@
     height: 112px;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.35625) 0%, rgba(0, 0, 0, 0.25) 20.83%, rgba(0, 0, 0, 0) 100%);
 
-    &.top { top: 0; }
     &.bottom {
       bottom: 0;
       transform: matrix(1, 0, 0, -1, 0, 0);
     }
   }
 
-  .controls {
+  mb-camera-toolbar {
     position: absolute;
-    width: 100%;
-    min-height: 100px;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 0;
-
-    svg {
-      width: 24px;
-      height: 24px;
-      filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.4));
-    }
-
-    .close-button {
-      display: block;
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      top: 54px;
-      right: 16px;
-      cursor: pointer;
-    }
-
-    #flipBtn {
-      background-color: transparent;
-      background-size: auto;
-      position: absolute;
-      top: 54px;
-      left: 16px;
-      width: 24px;
-      height: 24px;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      border: 1px solid transparent;
-      outline: 0;
-
-      transform-style: preserve-3d;
-      -webkit-perspective: 600px;
-      -ms-perspective: 600px;
-      -o-perspective: 600px;
-      perspective: 600px;
-
-      -webkit-transition: 800ms;
-      -o-transition: 800ms;
-      transition: 800ms;
-
-      cursor: pointer;
-    }
-
-    #flipBtn.flipped {
-      -webkit-transform: rotateY(180deg);
-      -ms-transform: rotateY(180deg);
-      -o-transform: rotateY(180deg);
-      transform: rotateY(180deg);
-    }
   }
 }
 
-:host(.is-error) .controls { display: none; }
+:host(.is-error) mb-camera-toolbar {
+  display: none;
+}
 
 :host::after {
   width: 92px + 30px;
@@ -109,7 +60,7 @@
 :host {
   #card-identity,
   #barcode,
-  #blinkcard {
+  #card-payment {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -131,15 +82,18 @@
     margin: 0;
     padding: 2 * $base-unit 3 * $base-unit;
 
-    font-weight: 500;
+    font-size: 1em;
+    font-weight: 600;
     text-align: center;
     text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
     white-space: nowrap;
 
     color: #fff;
-    background-color: map-get(map-get(map-get($base-colors, text-quaternary), onlight), foreground);
-    -webkit-backdrop-filter: blur(27px);
-    backdrop-filter: blur(27px);
+    background-color: rgba(map-get(map-get(map-get($base-colors, text-quaternary), onlight), foreground), 0.7);
+
+    -webkit-backdrop-filter: blur(var(--mb-blur-filter));
+    backdrop-filter: blur(var(--mb-blur-filter));
+
     border-radius: 2 * $base-unit;
     transition: all 200ms cubic-bezier(.42,.01,.35,1.74);
 
@@ -155,8 +109,8 @@
     top: 50%;
     left: 50%;
 
-    width: 96px;
-    height: 96px;
+    width: var(--mb-reticle-size);
+    height: var(--mb-reticle-size);
     transform-origin: center;
     transform: translate(-50%, -50%);
 
@@ -184,7 +138,7 @@
     }
   }
 
-  #blinkcard .rectangle-container {
+  #card-payment .rectangle-container {
     width: 100%;
     height: 100%;
     display: -ms-flexbox;
@@ -264,7 +218,7 @@
       }
     }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 263px !important;
       .rectangle {
         flex: 0 1 374px !important;
@@ -283,11 +237,6 @@
 
     .gradient-overlay { height: 112px; }
 
-    .controls {
-      width: calc(100% - 100px);
-      left: 50px;
-    }
-
     #barcode .rectangle-container  {
       top: 112px;
       left: 50px;
@@ -303,7 +252,7 @@
       }
     }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 472px !important;
       .rectangle {
         flex: 0 1 672px !important;
@@ -322,11 +271,6 @@
 
     .gradient-overlay { height: 112px; }
 
-    .controls {
-      width: calc(100% - 100px);
-      left: 50px;
-    }
-
     #barcode .rectangle-container  {
       top: 112px;
       left: 50px;
@@ -342,7 +286,7 @@
       }
     }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 548px !important;
       .rectangle {
         flex: 0 1 780px !important;
@@ -359,11 +303,6 @@
       left: calc(50% - #{46px + 15px});
     }
 
-    .controls {
-      width: calc(100% - 374px);
-      left: 188px;
-    }
-
     .gradient-overlay { height: 112px; }
 
     #barcode .rectangle-container  {
@@ -381,7 +320,7 @@
       }
     }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 500px !important;
       .rectangle {
         flex: 0 1 712px !important;
@@ -398,11 +337,6 @@
       left: calc(50% - #{46px + 15px});
     }
 
-    .controls {
-      width: calc(100% - 374px);
-      left: 188px;
-    }
-
     .gradient-overlay { height: 112px; }
 
     #barcode .rectangle-container  {
@@ -420,7 +354,7 @@
       }
     }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 680px !important;
       .rectangle {
         flex: 0 1 968px !important;
@@ -437,11 +371,6 @@
       left: calc(50% - #{46px + 15px});
     }
 
-    .controls {
-      width: calc(100% - 374px);
-      left: 188px;
-    }
-
     .gradient-overlay { height: 112px; }
 
     #barcode .rectangle-container  {
@@ -459,7 +388,7 @@
       }
     }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 860px !important;
       .rectangle {
         flex: 0 1 1224px !important;
@@ -479,7 +408,7 @@
 
     .gradient-overlay { height: 88px; }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 180px !important;
       .rectangle {
         flex: 0 1 260px !important;
@@ -499,7 +428,7 @@
 
     .gradient-overlay { height: 88px; }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 240px !important;
       .rectangle {
         flex: 0 1 340px !important;
@@ -518,7 +447,7 @@
 
     .gradient-overlay { height: 88px;; }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 300px !important;
       .rectangle {
         flex: 0 1 500px !important;
@@ -537,7 +466,7 @@
 
     .gradient-overlay { height: 88px;; }
 
-    #blinkcard .rectangle-container .box.body {
+    #card-payment .rectangle-container .box.body {
       flex: 0 1 300px !important;
       .rectangle {
         flex: 0 1 500px !important;

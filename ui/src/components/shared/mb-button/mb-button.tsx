@@ -41,6 +41,11 @@ export class MbButton {
   @Prop() visible: boolean = false;
 
   /**
+   * Set to 'true' if button should enter 'selected' state.
+   */
+  @Prop() selected: boolean = false;
+
+  /**
    * Passed image from parent component.
    */
   @Prop() imageSrcDefault: string = '';
@@ -75,7 +80,10 @@ export class MbButton {
 
   render() {
     return (
-      <Host className={ this.getClassNames() } onClick={ (ev: UIEvent) => this.handleClick(ev) } ref={el => this.buttonElement = el as HTMLDivElement}>
+      <Host
+        className={ this.getClassNames() }
+        onClick={ (ev: UIEvent) => this.handleClick(ev) }
+        ref={el => this.buttonElement = el as HTMLDivElement}>
         <a ref={el => this.anchorElement = el as HTMLAnchorElement} href="javascript:void(0)">
           {
             this.imageSrcDefault && this.imageAlt === 'action-alt-camera' &&
@@ -119,6 +127,10 @@ export class MbButton {
       classNames.push('visible');
     }
 
+    if (this.selected) {
+      classNames.push('selected');
+    }
+
     return classNames.join(' ');
   }
 
@@ -136,11 +148,15 @@ export class MbButton {
   }
 
   private handleMouseOver() {
-    if (!this.buttonElement.classList.contains('disabled')) this.iconElem.setAttribute('src', this.imageSrcActive);
+    if (!this.buttonElement.classList.contains('disabled')) {
+      this.iconElem.setAttribute('src', this.imageSrcActive);
+    }
   }
 
   private handleMouseOut() {
-    if (!this.buttonElement.classList.contains('disabled')) this.iconElem.setAttribute('src', this.imageSrcDefault);
+    if (!this.buttonElement.classList.contains('disabled')) {
+      this.iconElem.setAttribute('src', this.imageSrcDefault);
+    }
   }
 
   private iconElem: HTMLOrSVGImageElement;

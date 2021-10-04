@@ -65,7 +65,7 @@ export class BlinkIdRecognizerSettings implements RecognizerSettings,
                                                   SignatureImageOptions
 {
     /**
-     *  Defines whether blured frames filtering is allowed"
+     * Defines whether blured frames filtering is allowed.
      */
     allowBlurFilter = true;
 
@@ -192,7 +192,17 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
     readonly additionalNameInformation: string;
 
     /**
-     *  The address of the document owner.
+     *  The fathers name of the document owner.
+     */
+    readonly fathersName: string;
+
+    /**
+     *  The mothers name of the document owner.
+     */
+    readonly mothersName: string;
+
+    /**
+     * The address of the document owner.
      */
     readonly address: string;
 

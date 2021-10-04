@@ -1,5 +1,39 @@
 # Release notes
 
+## 5.14.0
+
+### Back side support added:
+
+* Thailand - ID Card
+
+### Improvements
+
+* Extraction of  father’s and mother’s names from Mexico Voter ID Card
+* The driver license unique card number is extracted as `document_additional_number` for Australian Driving Licenses, regions New South Wales, Northern Territory, Queensland, Victoria and Western Australia
+* We've improved the accuracy of barcode scanning on identity documents
+
+### Changes to BlinkID(Combined) Recognizer
+
+* We've added two new result fields - `fathersName` and `mothersName` both in BlinkID and BlinkIDCombined Recognizers, as well as in VIZ result
+
+### Changes to BarcodeRecognizer
+
+* We’ve removed support for `aztec` and `dataMatrix` barcode formats
+
+### Changes to MRTDRecognizer
+
+* We've added `MRTD_TYPE_BORDER_CROSSING_CARD` type to MRTD enum
+
+### Platform-related SDK changes
+
+* We've added a camera management UI module for the selection of connected cameras
+    * We've added `VideoRecognizer.changeCameraDevice` method that can be used to change the active camera device during the scanning session
+* We've improved accessibility of the UI component by changing background contrasts and increasing default font sizes
+
+### Bug fixes
+
+* We've optimised memory usage of the SDK by fixing a problem where every refresh of the UI component would result in a new instance of web worker
+
 ## 5.13.0
 
 ### New additions to our supported document list
@@ -207,7 +241,6 @@ We've added 15 new documents:
 * We've enabled the return of image and back-side data results, even when the `State` is `Uncertain`. Keep in mind that returned images, in this case, might be blurry or low quality.
 	* This applies to all images: face image, full document image, and signature image.
 
-
 ### Improvements
 
 * We can now extract information from NRIC numbers on Malaysian documents that have the asterisk (\*) character in it.
@@ -265,7 +298,7 @@ We've added 15 new documents:
 
 ## 5.11.3
 
-* We’ve fixed a bug that would cause recognizerOptions to work incorrectly on still images
+* We’ve fixed a bug that would cause `recognizerOptions` to work incorrectly on still images
 
 ## 5.11.2
 

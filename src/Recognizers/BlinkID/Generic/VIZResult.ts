@@ -20,6 +20,10 @@ export interface VIZResult
     readonly additionalNameInformation: string;
     /** The localized name of the document owner. */
     readonly localizedName: string;
+    /** The fathers name of the document owner. */
+    readonly fathersName: string;
+    /** The mothers name of the document owner. */
+    readonly mothersName: string;
 
     /** The address of the document owner. */
     readonly address: string;

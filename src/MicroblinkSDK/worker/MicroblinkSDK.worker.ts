@@ -698,6 +698,39 @@ export default class MicroblinkWorker
         }
     }
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    private wrapFunctions( values?: any, objectHandle?: number ): any
+    {
+        /* eslint-disable @typescript-eslint/no-explicit-any,
+                          @typescript-eslint/no-unsafe-assignment,
+                          @typescript-eslint/no-unsafe-member-access */
+        if ( typeof values !== "object" )
+        {
+            return values;
+        }
+
+        const result: any = { ...values };
+
+        const keys = Object.keys( result );
+        for ( const key of keys )
+        {
+            const data: any = result[ key ];
+            if ( typeof data === "function" )
+            {
+                const wrappedFunction: Messages.WrappedParameter = {
+                    parameter: {
+                        recognizerHandle: objectHandle,
+                        callbackName: key
+                    } as Messages.CallbackAddress,
+                    type: Messages.ParameterType.Callback
+                };
+                result[ key ] = wrappedFunction;
+            }
+        }
+
+        return result;
+    }
+
     private processInvokeObject( msg: Messages.InvokeObjectMethod )
     {
         try
@@ -716,7 +749,7 @@ export default class MicroblinkWorker
                 /* eslint-disable @typescript-eslint/no-unsafe-assignment,
                                   @typescript-eslint/no-unsafe-member-access,
                                   @typescript-eslint/no-unsafe-call */
-                const result = object[ methodName ]( ...params );
+                const result = this.wrapFunctions( object[ methodName ]( ...params ), objectHandle );
                 /* eslint-enable @typescript-eslint/no-unsafe-assignment,
                                 @typescript-eslint/no-unsafe-member-access,
                                 @typescript-eslint/no-unsafe-call */

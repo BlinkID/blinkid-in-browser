@@ -24,6 +24,8 @@ export enum MrtdDocumentType
     MRTD_TYPE_DL,
     /** Internal travel document */
     MRTD_TYPE_INTERNAL_TRAVEL_DOCUMENT,
+    /** Border crossing card */
+    MRTD_TYPE_BORDER_CROSSING_CARD,
     /** Number of elements in this enum */
     MRTD_TYPE_COUNT
 }

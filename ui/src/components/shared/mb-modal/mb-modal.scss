@@ -44,15 +44,15 @@
         .title {
             text-align: center;
             font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
+            font-size: var(--mb-modal-title-font-size);
+            line-height: var(--mb-modal-title-line-height);
         }
 
         .content {
             margin: 24px 0;
             font-weight: 400;
-            font-size: 14px;
-            line-height: 20px;
+            font-size: var(--mb-modal-content-font-size);
+            line-height: var(--mb-modal-content-line-height);
 
             &.centered {
                 text-align: center;

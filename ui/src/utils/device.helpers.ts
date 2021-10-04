@@ -43,3 +43,12 @@ export async function checkMandatoryCapabilites(): Promise<boolean> {
 
   return wasmSupport;
 }
+
+/**
+ * Determine whether this is a desktop device based on the screen resolution.
+ */
+export function isDesktop(): boolean {
+  const viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+
+  return viewportWidth >= 1024;
+}

@@ -7,8 +7,8 @@
 $angle: 67.5;
 
 $reticle-bg: (
-  default: map-get(map-get(map-get($base-colors, fill-primary), onlight), foreground),
-  error: rgba(map-get(map-get(map-get($base-colors, semantic-error), onlight), background), 0.5)
+  default: map-get(map-get(map-get($base-colors, text-quaternary), onlight), foreground),
+  error: rgba(map-get(map-get(map-get($base-colors, semantic-error), onlight), background), 0.75)
 );
 
 // Animations
@@ -116,8 +116,10 @@ $reticle-bg: (
   background-position: center;
   background-size: contain;
   background-repeat: no-repeat;
-  -webkit-backdrop-filter: blur(27px);
-  backdrop-filter: blur(27px);
+
+  -webkit-backdrop-filter: blur(var(--mb-blur-filter));
+  backdrop-filter: blur(var(--mb-blur-filter));
+
   transition: all 0.4s ease;
 
   &__cursor {
