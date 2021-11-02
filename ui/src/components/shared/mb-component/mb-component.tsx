@@ -10,10 +10,9 @@ import {
   Host,
   h,
   Method,
-  Prop
+  Prop,
+  State
 } from '@stencil/core';
-
-import * as BlinkIDSDK from '../../../../../es/blinkid-sdk';
 
 import {
   CameraEntry,
@@ -44,12 +43,60 @@ import { TranslationService } from '../../../utils/translation.service';
 import * as DeviceHelpers from '../../../utils/device.helpers';
 import * as GenericHelpers from '../../../utils/generic.helpers';
 
+import * as Utils from './mb-component.utils';
+
 @Component({
   tag: 'mb-component',
   styleUrl: 'mb-component.scss',
   shadow: true,
 })
 export class MbComponent {
+  private screens: { [key: string]: HTMLMbScreenElement | null } = {
+    action: null,
+    error: null,
+    loading: null,
+    processing: null
+  }
+
+  private overlays: { [key: string]: HTMLMbOverlayElement | null } = {
+    camera: null,
+    draganddrop: null,
+    processing: null,
+    modal: null
+  }
+
+  private cameraExperience!: HTMLMbCameraExperienceElement;
+  private dragAndDropZone!: HTMLDivElement;
+  private errorMessage!: HTMLParagraphElement;
+  private scanFromCameraButton!: HTMLMbButtonElement;
+  private scanFromImageButton!: HTMLMbButtonElement;
+  private scanFromImageInput!: HTMLInputElement;
+  private videoElement!: HTMLVideoElement;
+  private licenseExperienceModal!: HTMLMbModalElement;
+  private scanReset: boolean = false;
+  private detectionSuccessLock = false;
+  private isBackSide = false;
+  private initialBodyOverflowValue: string;
+  private cameraChangeInProgress: boolean = false;
+  private blocked: boolean = false;
+  private combinedGalleryOpened = false;
+  private imageRecognitionType: ImageRecognitionType;
+  private imageBoxFirst: HTMLMbImageBoxElement;
+  private imageBoxSecond: HTMLMbImageBoxElement;
+  private galleryImageFirstFile: File | null = null;
+  private galleryImageSecondFile: File | null = null;
+  private combinedScanFromImageButton: HTMLMbButtonClassicElement;
+
+  @State() galleryExperienceModalErrorWindowVisible: boolean = false;
+
+  @State() apiProcessStatusVisible: boolean = false;
+
+  @State() apiProcessStatusState: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS' = 'NONE';
+
+  /**
+   * Host element as variable for manipulation (CSS in this case)
+   */
+  @Element() hostEl: HTMLElement;
 
   /**
    * See description in public component.
@@ -145,7 +192,7 @@ export class MbComponent {
   /**
    * See description in public component.
    */
-   @Prop() showCameraFeedbackBarcodeMessage: boolean = false;
+  @Prop() showCameraFeedbackBarcodeMessage: boolean = false;
 
   /**
    * See description in public component.
@@ -208,6 +255,11 @@ export class MbComponent {
   @Prop() cameraId: string | null = null;
 
   /**
+   * Event containing boolean which used to check whether component is blocked.
+   */
+   @Event() block: EventEmitter<boolean>;
+
+  /**
    * See event 'fatalError' in public component.
    */
   @Event() fatalError: EventEmitter<EventFatalError>;
@@ -242,10 +294,21 @@ export class MbComponent {
    */
   @Event() imageScanStarted: EventEmitter<null>;
 
-  /**
-   * Host element as variable for manipulation (CSS in this case)
-   */
-  @Element() hostEl: HTMLElement;
+  connectedCallback() {
+    this.hostEl.addEventListener('keyup', (ev: any) => {
+      if (ev.key === 'Escape' || ev.code === 'Escape') {
+        this.stopRecognition();
+      }
+    });
+  }
+
+  componentDidRender() {
+    this.init();  
+  }
+
+  disconnectedCallback() {
+    this.sdkService?.stopRecognition();
+  }
 
   /**
    * Method is exposed outside which allow us to control UI state from parent component.
@@ -258,14 +321,14 @@ export class MbComponent {
     window.setTimeout(() => {
       if (this.overlays.camera.visible) {
         if (state === 'ERROR' && !this.showModalWindows) {
-          this.apiProcessStatusElement.state = 'NONE';
-          this.apiProcessStatusElement.visible = false;
+          this.apiProcessStatusState = 'NONE';
+          this.apiProcessStatusVisible = false;
           this.stopRecognition();
           return;
         }
 
-        this.apiProcessStatusElement.state = state;
-        this.apiProcessStatusElement.visible = true;
+        this.apiProcessStatusState = state;
+        this.apiProcessStatusVisible = true;
 
         if (state !== 'ERROR') {
           this.cameraExperience.classList.add('is-muted');
@@ -279,10 +342,10 @@ export class MbComponent {
       else if (this.overlays.processing.visible) {
         if (state === 'ERROR') {
           if (this.showModalWindows) {
-            this.galleryExperienceModalErrorWindow.visible = true;
+            this.galleryExperienceModalErrorWindowVisible = true;
           }
           else {
-            this.galleryExperienceModalErrorWindow.visible = false;
+            this.galleryExperienceModalErrorWindowVisible = false;
             this.stopRecognition();
           }
         }
@@ -294,206 +357,10 @@ export class MbComponent {
     }, 400);
   }
 
-  /**
-   * Lifecycle hooks
-   */
-  connectedCallback() {
-    this.hostEl.addEventListener('keyup', (ev: any) => {
-      if (ev.key === 'Escape' || ev.code === 'Escape') {
-        this.stopRecognition();
-      }
-    });
-  }
-
-  async componentWillRender() {
-    if (!this.hideLoadingAndErrorUi) {
-      this.showScreen('loading');
-      this.showOverlay('');
-    }
-  }
-
-  render() {
-    return (
-      <Host>
-        <mb-screen
-          id="screen-loading"
-          visible={!this.hideLoadingAndErrorUi}
-          ref={el => this.screens.loading = el as HTMLMbScreenElement}
-        >
-          <mb-spinner icon={this.iconSpinnerScreenLoading}></mb-spinner>
-        </mb-screen>
-        <mb-screen
-          id="screen-error"
-          visible={false}
-          ref={el => this.screens.error = el as HTMLMbScreenElement}
-        >
-          <div class="icon-alert">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12Z" fill="black" />
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C12.5523 7 13 7.44772 13 8V12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12V8C11 7.44772 11.4477 7 12 7Z" fill="black" />
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M11 16C11 15.4477 11.4477 15 12 15H12.01C12.5623 15 13.01 15.4477 13.01 16C13.01 16.5523 12.5623 17 12.01 17H12C11.4477 17 11 16.5523 11 16Z" fill="black" />
-            </svg>
-          </div>
-
-          <p ref={el => this.errorMessage = el as HTMLParagraphElement}></p>
-        </mb-screen>
-        <mb-screen
-          id="screen-action"
-          visible={false}
-          ref={el => this.screens.action = el as HTMLMbScreenElement}
-        >
-          <p class="action-label">{this.translationService.i('action-message').toString()}</p>
-          <div class="action-buttons">
-            <mb-button
-              ref={el => this.scanFromCameraButton = el as HTMLMbButtonElement}
-              preventDefault={true}
-              visible={true}
-              disabled={false}
-              icon={true}
-              onButtonClick={() => this.startScanFromCamera()}
-              imageSrcDefault={this.iconCameraDefault}
-              imageSrcActive={this.iconCameraActive}
-              imageAlt="action-alt-camera"
-              translationService={this.translationService}
-            >
-            </mb-button>
-            <input
-              id="scan-from-image-input"
-              ref={el => this.scanFromImageInput = el as HTMLInputElement}
-              type="file"
-              accept="image/*"
-              onChange={() => this.scanFromImageInput.value && this.startScanFromImage()} />
-            <mb-button
-              ref={el => this.scanFromImageButton = el as HTMLMbButtonElement}
-              disabled={false}
-              preventDefault={false}
-              visible={false}
-              selected={false}
-              icon={true}
-              onButtonClick={() => this.onFromImageClicked()}
-              imageSrcDefault={this.iconGalleryDefault}
-              imageSrcActive={this.iconGalleryActive}
-              imageAlt="action-alt-gallery"
-              translationService={this.translationService}
-            >
-            </mb-button>
-          </div>
-          <div class="flex-break"></div>
-          <div class="combined-image-upload">
-            <mb-image-box
-              ref={el => this.imageBoxFirst = el as HTMLMbImageBoxElement}
-              box-title={this.translationService.i('process-image-box-first').toString()}
-              anchor-text={this.translationService.i('process-image-box-add').toString()}
-              onImageChange={(ev: CustomEvent<FileList>) => this.onCombinedImageChange(ev.detail, CombinedImageType.First)}></mb-image-box>
-            <mb-image-box
-              ref={el => this.imageBoxSecond = el as HTMLMbImageBoxElement}
-              box-title={this.translationService.i('process-image-box-second').toString()}
-              anchor-text={this.translationService.i('process-image-box-add').toString()}
-              onImageChange={(ev: CustomEvent<FileList>) => this.onCombinedImageChange(ev.detail, CombinedImageType.Second)}></mb-image-box>
-            <mb-button-classic
-              ref={el => this.combinedScanFromImageButton = el as HTMLMbButtonClassicElement}
-              disabled={true}
-              onButtonClick={() => this.startScanFromImageCombined()}
-            >{this.translationService.i('process-image-upload-cta').toString()}</mb-button-classic>
-          </div>
-        </mb-screen>
-        <mb-screen
-          id="screen-processing"
-          visible={false}
-          ref={el => this.screens.processing = el as HTMLMbScreenElement}
-        >
-          <p class="in-progress">
-            <mb-spinner icon={this.iconSpinnerScreenLoading}></mb-spinner>
-            <span>{this.translationService.i('process-image-message-inline').toString()}</span>
-          </p>
-          <p class="done">
-            <mb-completed icon={this.iconGalleryScanningCompleted}></mb-completed>
-            <span>{this.translationService.i('process-image-message-inline-done').toString()}</span>
-          </p>
-        </mb-screen>
-        <mb-overlay
-          id="overlay-drag-and-drop"
-          visible={false}
-          ref={el => this.overlays.draganddrop = el as HTMLMbOverlayElement}
-        >
-          <img class="drag-and-drop-icon" src={this.iconGalleryDefault} />
-          <p class="drag-and-drop-message">Whoops, we don't support that image format. Please upload a JPEG or PNG file.</p>
-          <div id="drag-and-drop-zone" ref={el => this.dragAndDropZone = el as HTMLDivElement}></div>
-        </mb-overlay>
-        <mb-overlay
-          id="overlay-gallery-experience"
-          ref={el => this.overlays.processing = el as HTMLMbOverlayElement}
-        >
-          <mb-spinner icon={this.iconSpinnerFromGalleryExperience} size="large"></mb-spinner>
-          <p>{this.translationService.i('process-image-message').toString()}</p>
-          <mb-modal
-            ref={el => this.galleryExperienceModalErrorWindow = el as HTMLMbModalElement}
-            visible={false}
-            modalTitle={this.translationService.i('feedback-scan-unsuccessful-title').toString()}
-            content={this.translationService.i('feedback-scan-unsuccessful').toString()}
-            onClose={() => this.closeGalleryExperienceModal()}
-          >
-            <div slot="actionButtons">
-              <button
-                class="primary modal-action-button"
-                onClick={() => this.closeGalleryExperienceModal()}
-              >{this.translationService.i('modal-window-close').toString()}</button>
-            </div>
-          </mb-modal>
-        </mb-overlay>
-        <mb-overlay
-          id="overlay-camera-experience"
-          visible={false}
-          ref={el => this.overlays.camera = el as HTMLMbOverlayElement}
-        >
-          <div class="holder">
-            <video
-              ref={el => this.videoElement = el as HTMLVideoElement}
-              playsinline
-            ></video>
-            <mb-camera-experience
-              ref={el => this.cameraExperience = el as HTMLMbCameraExperienceElement}
-              translationService={this.translationService}
-              showScanningLine={this.showScanningLine}
-              showCameraFeedbackBarcodeMessage={this.showCameraFeedbackBarcodeMessage}
-              onClose={() => this.stopRecognition()}
-              onFlipCameraAction={() => this.flipCameraAction()}
-              onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.changeCameraDevice(ev.detail)}
-              class="overlay-camera-element"
-            ></mb-camera-experience>
-            <mb-api-process-status
-              ref={el => this.apiProcessStatusElement = el as HTMLMbApiProcessStatusElement}
-              translationService={this.translationService}
-              onCloseTryAgain={() => this.closeApiProcessStatus(true)}
-              onCloseFromStart={() => this.stopRecognition()}
-            ></mb-api-process-status>
-          </div>
-        </mb-overlay>
-        <mb-overlay
-          id="overlay-modal"
-          visible={false}
-          ref={el => this.overlays.modal = el as HTMLMbOverlayElement}
-        >
-          <mb-modal
-            ref={el => this.licenseExperienceModal = el as HTMLMbModalElement}
-            modalTitle="Error"
-          >
-            <div slot="actionButtons">
-              <button
-                class="primary modal-action-button"
-                onClick={() => this.showOverlay('')}
-              >this.translationService.i('modal-window-close').toString()</button>
-            </div>
-          </mb-modal>
-        </mb-overlay>
-      </Host>
-    );
-  }
-
   async closeApiProcessStatus(restart: boolean = false): Promise<void> {
     window.setTimeout(() => {
-      this.apiProcessStatusElement.visible = false;
-      this.apiProcessStatusElement.state = 'NONE';
+      this.apiProcessStatusVisible = false;
+      this.apiProcessStatusState = 'NONE';
       this.cameraExperience.classList.remove('is-muted');
       this.cameraExperience.classList.remove('is-error');
     }, 600);
@@ -509,8 +376,17 @@ export class MbComponent {
     }
   }
 
-  async componentDidRender() {
-    const internetIsAvailable = await this.checkIfInternetIsAvailable();
+  private async init() {
+    if (!this.hideLoadingAndErrorUi) {
+      this.showScreen('loading');
+      this.showOverlay('');
+    }
+
+    if (this.blocked) {
+      return;
+    }
+
+    const internetIsAvailable = navigator.onLine;
 
     if (!internetIsAvailable) {
       this.setFatalError(
@@ -535,10 +411,13 @@ export class MbComponent {
       return;
     }
 
+    this.blocked = true;
+    this.block.emit(true);
+
     const initEvent: EventReady | EventFatalError = await this.sdkService.initialize(this.licenseKey, {
       allowHelloMessage: this.allowHelloMessage,
       engineLocation: this.engineLocation,
-      wasmType: this.getSDKWasmType(this.wasmType)
+      wasmType: Utils.getSDKWasmType(this.wasmType)
     });
 
     this.cameraExperience.showOverlay = this.sdkService.showOverlay;
@@ -598,59 +477,15 @@ export class MbComponent {
     }
 
     this.ready.emit(initEvent);
+    this.blocked = false;
+    this.block.emit(false);
 
     this.showScreen('action');
 
     if (this.enableDrag) {
       this.setDragAndDrop();
     }
-  }
-
-  /**
-   * Private methods and properties
-   */
-
-  /* Element references */
-  private screens: { [key: string]: HTMLMbScreenElement | null } = {
-    action: null,
-    error: null,
-    loading: null,
-    processing: null
-  }
-
-  private overlays: { [key: string]: HTMLMbOverlayElement | null } = {
-    camera: null,
-    draganddrop: null,
-    processing: null,
-    modal: null
-  }
-
-  private apiProcessStatusElement!: HTMLMbApiProcessStatusElement;
-  private cameraExperience!: HTMLMbCameraExperienceElement;
-  private dragAndDropZone!: HTMLDivElement;
-  private errorMessage!: HTMLParagraphElement;
-  private scanFromCameraButton!: HTMLMbButtonElement;
-  private scanFromImageButton!: HTMLMbButtonElement;
-  private scanFromImageInput!: HTMLInputElement;
-  private videoElement!: HTMLVideoElement;
-  private licenseExperienceModal!: HTMLMbModalElement;
-  private scanReset: boolean = false;
-
-  private detectionSuccessLock = false;
-  private isBackSide = false;
-  private initialBodyOverflowValue: string;
-  private cameraChangeInProgress: boolean = false;
-
-  /* Gallery experience UI */
-  private combinedGalleryOpened = false;
-  private imageRecognitionType: ImageRecognitionType;
-  private imageBoxFirst: HTMLMbImageBoxElement;
-  private imageBoxSecond: HTMLMbImageBoxElement;
-  private galleryImageFirstFile: File | null = null;
-  private galleryImageSecondFile: File | null = null;
-
-  private galleryExperienceModalErrorWindow: HTMLMbModalElement;
-  private combinedScanFromImageButton: HTMLMbButtonClassicElement
+  } 
 
   private async flipCameraAction(): Promise<void> {
     await this.sdkService.flipCamera();
@@ -689,10 +524,6 @@ export class MbComponent {
 
     this.cameraExperience.type = this.sdkService.getDesiredCameraExperience(this.recognizers, this.recognizerOptions);
     return true;
-  }
-
-  private async checkIfInternetIsAvailable(): Promise<boolean> {
-    return navigator.onLine ? true : false;
   }
 
   private async startScanFromCamera() {
@@ -952,36 +783,35 @@ export class MbComponent {
       const cameraFlipped = this.sdkService.isCameraFlipped();
       this.cameraExperience.setCameraFlipState(cameraFlipped);
     } catch (error) {
-      this.checkIfInternetIsAvailable()
-        .then((isAvailable) => {
-          if (isAvailable) {
-            if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
-              this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
-              this.showLicenseInfoModal(error);
-            }
-            else {
-              console.error('Error during camera scan', error);
+      const isAvailable = navigator.onLine;
 
-              this.scanError.emit({
-                code: Code.GenericScanError,
-                fatal: true,
-                message: `There was a problem during scan action.`,
-                recognizerName: ''
-              });
-              this.feedback.emit({
-                code: FeedbackCode.GenericScanError,
-                state: 'FEEDBACK_ERROR',
-                message: this.translationService.i('feedback-error-generic').toString()
-              });
+      if (isAvailable) {
+        if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
+          this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
+          this.showLicenseInfoModal(error);
+        }
+        else {
+          console.error('Error during camera scan', error);
 
-              this.showOverlay('');
-            }
-          }
-          else {
-            this.setFatalError(new EventFatalError(Code.InternetNotAvailable, this.translationService.i('check-internet-connection').toString()));
-            this.showLicenseInfoModal(this.translationService.i('check-internet-connection').toString());
-          }
-        });
+          this.scanError.emit({
+            code: Code.GenericScanError,
+            fatal: true,
+            message: `There was a problem during scan action.`,
+            recognizerName: ''
+          });
+          this.feedback.emit({
+            code: FeedbackCode.GenericScanError,
+            state: 'FEEDBACK_ERROR',
+            message: this.translationService.i('feedback-error-generic').toString()
+          });
+
+          this.showOverlay('');
+        }
+      }
+      else {
+        this.setFatalError(new EventFatalError(Code.InternetNotAvailable, this.translationService.i('check-internet-connection').toString()));
+        this.showLicenseInfoModal(this.translationService.i('check-internet-connection').toString());
+      }
     }
   }
 
@@ -1080,41 +910,40 @@ export class MbComponent {
 
       await this.sdkService.scanFromImage(configuration, eventHandler);
     } catch (error) {
-      this.checkIfInternetIsAvailable()
-        .then((isAvailable) => {
-          if (isAvailable) {
-            if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
-              this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
-              this.showLicenseInfoModal(error);
-            }
-            else {
-              this.scanError.emit({
-                code: Code.GenericScanError,
-                fatal: true,
-                message: `There was a problem during scan action.`,
-                recognizerName: ''
-              });
-              this.feedback.emit({
-                code: FeedbackCode.GenericScanError,
-                state: 'FEEDBACK_ERROR',
-                message: this.translationService.i('feedback-error-generic').toString()
-              });
+      const isAvailable = navigator.onLine;
 
-              this.hideScanFromImageUi();
-            }
-          }
-          else {
-            this.setFatalError(
-              new EventFatalError(
-                Code.InternetNotAvailable,
-                this.translationService.i('check-internet-connection').toString()
-                )
-              );
-            this.showLicenseInfoModal(
-              this.translationService.i('check-internet-connection').toString()
-            );
-          }
-        });
+      if (isAvailable) {
+        if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
+          this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
+          this.showLicenseInfoModal(error);
+        }
+        else {
+          this.scanError.emit({
+            code: Code.GenericScanError,
+            fatal: true,
+            message: `There was a problem during scan action.`,
+            recognizerName: ''
+          });
+          this.feedback.emit({
+            code: FeedbackCode.GenericScanError,
+            state: 'FEEDBACK_ERROR',
+            message: this.translationService.i('feedback-error-generic').toString()
+          });
+
+          this.hideScanFromImageUi();
+        }
+      }
+      else {
+        this.setFatalError(
+          new EventFatalError(
+            Code.InternetNotAvailable,
+            this.translationService.i('check-internet-connection').toString()
+            )
+          );
+        this.showLicenseInfoModal(
+          this.translationService.i('check-internet-connection').toString()
+        );
+      }
     }
   }
 
@@ -1234,34 +1063,33 @@ export class MbComponent {
 
       await this.sdkService.scanFromImageCombined(configuration, eventHandler);
     } catch (error) {
-      this.checkIfInternetIsAvailable()
-        .then((isAvailable) => {
-          if (isAvailable) {
-            if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
-              this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
-              this.showLicenseInfoModal(error);
-            }
-            else {
-              this.scanError.emit({
-                code: Code.GenericScanError,
-                fatal: true,
-                message: `There was a problem during scan action.`,
-                recognizerName: ''
-              });
-              this.feedback.emit({
-                code: FeedbackCode.GenericScanError,
-                state: 'FEEDBACK_ERROR',
-                message: this.translationService.i('feedback-error-generic').toString()
-              });
+      const isAvailable = navigator.onLine;
 
-              this.hideScanFromImageUi();
-            }
-          }
-          else {
-            this.setFatalError(new EventFatalError(Code.InternetNotAvailable, this.translationService.i('check-internet-connection').toString()));
-            this.showLicenseInfoModal(this.translationService.i('check-internet-connection').toString());
-          }
-        });
+      if (isAvailable) {
+        if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
+          this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
+          this.showLicenseInfoModal(error);
+        }
+        else {
+          this.scanError.emit({
+            code: Code.GenericScanError,
+            fatal: true,
+            message: `There was a problem during scan action.`,
+            recognizerName: ''
+          });
+          this.feedback.emit({
+            code: FeedbackCode.GenericScanError,
+            state: 'FEEDBACK_ERROR',
+            message: this.translationService.i('feedback-error-generic').toString()
+          });
+
+          this.hideScanFromImageUi();
+        }
+      }
+      else {
+        this.setFatalError(new EventFatalError(Code.InternetNotAvailable, this.translationService.i('check-internet-connection').toString()));
+        this.showLicenseInfoModal(this.translationService.i('check-internet-connection').toString());
+      }
     }
   }
 
@@ -1408,7 +1236,7 @@ export class MbComponent {
             case 'NETWORK_ERROR':
               this.errorMessage.innerText = this.translationService.i('network-error').toString();
               break;
-            default:
+              default:
               this.errorMessage.innerText = this.translationService.i('scanning-not-available').toString();
           }
           break;
@@ -1438,21 +1266,8 @@ export class MbComponent {
   }
 
   private closeGalleryExperienceModal() {
-    this.galleryExperienceModalErrorWindow.visible = false;
+    this.galleryExperienceModalErrorWindowVisible = false;
     this.stopRecognition();
-  }
-
-  private getSDKWasmType(wasmType: string): BlinkIDSDK.WasmType | null {
-    switch (wasmType) {
-      case 'BASIC':
-        return BlinkIDSDK.WasmType.Basic;
-      case 'ADVANCED':
-        return BlinkIDSDK.WasmType.Advanced;
-      case 'ADVANCED_WITH_THREADS':
-        return BlinkIDSDK.WasmType.AdvancedWithThreads;
-      default:
-        return null;
-    }
   }
 
   private onFromImageClicked(): void {
@@ -1563,5 +1378,183 @@ export class MbComponent {
     if (this.galleryOverlayType === 'FULLSCREEN') {
       this.showOverlay('');
     }
+  }
+
+  render() {
+    return (
+      <Host part="mb-component">
+        <mb-screen
+          id="screen-loading"
+          visible={!this.hideLoadingAndErrorUi}
+          ref={el => this.screens.loading = el as HTMLMbScreenElement}
+        >
+          <mb-spinner icon={this.iconSpinnerScreenLoading}></mb-spinner>
+        </mb-screen>
+        <mb-screen
+          id="screen-error"
+          visible={false}
+          ref={el => this.screens.error = el as HTMLMbScreenElement}
+        >
+          <div class="icon-alert">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4ZM2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12Z" fill="black" />
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 7C12.5523 7 13 7.44772 13 8V12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12V8C11 7.44772 11.4477 7 12 7Z" fill="black" />
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M11 16C11 15.4477 11.4477 15 12 15H12.01C12.5623 15 13.01 15.4477 13.01 16C13.01 16.5523 12.5623 17 12.01 17H12C11.4477 17 11 16.5523 11 16Z" fill="black" />
+            </svg>
+          </div>
+
+          <p ref={el => this.errorMessage = el as HTMLParagraphElement}></p>
+        </mb-screen>
+        <mb-screen
+          id="screen-action"
+          visible={false}
+          ref={el => this.screens.action = el as HTMLMbScreenElement}
+        >
+          <p class="action-label">{this.translationService.i('action-message').toString()}</p>
+          <div class="action-buttons">
+            <mb-button
+              ref={el => this.scanFromCameraButton = el as HTMLMbButtonElement}
+              preventDefault={true}
+              visible={true}
+              disabled={false}
+              icon={true}
+              onButtonClick={() => this.startScanFromCamera()}
+              imageSrcDefault={this.iconCameraDefault}
+              imageSrcActive={this.iconCameraActive}
+              imageAlt="action-alt-camera"
+              translationService={this.translationService}
+            >
+            </mb-button>
+            <input
+              id="scan-from-image-input"
+              ref={el => this.scanFromImageInput = el as HTMLInputElement}
+              type="file"
+              accept="image/*"
+              onChange={() => this.scanFromImageInput.value && this.startScanFromImage()} />
+            <mb-button
+              ref={el => this.scanFromImageButton = el as HTMLMbButtonElement}
+              disabled={false}
+              preventDefault={false}
+              visible={false}
+              selected={false}
+              icon={true}
+              onButtonClick={() => this.onFromImageClicked()}
+              imageSrcDefault={this.iconGalleryDefault}
+              imageSrcActive={this.iconGalleryActive}
+              imageAlt="action-alt-gallery"
+              translationService={this.translationService}
+            >
+            </mb-button>
+          </div>
+          <div class="flex-break"></div>
+          <div class="combined-image-upload">
+            <mb-image-box
+              ref={el => this.imageBoxFirst = el as HTMLMbImageBoxElement}
+              box-title={this.translationService.i('process-image-box-first').toString()}
+              anchor-text={this.translationService.i('process-image-box-add').toString()}
+              onImageChange={(ev: CustomEvent<FileList>) => this.onCombinedImageChange(ev.detail, CombinedImageType.First)}></mb-image-box>
+            <mb-image-box
+              ref={el => this.imageBoxSecond = el as HTMLMbImageBoxElement}
+              box-title={this.translationService.i('process-image-box-second').toString()}
+              anchor-text={this.translationService.i('process-image-box-add').toString()}
+              onImageChange={(ev: CustomEvent<FileList>) => this.onCombinedImageChange(ev.detail, CombinedImageType.Second)}></mb-image-box>
+            <mb-button-classic
+              ref={el => this.combinedScanFromImageButton = el as HTMLMbButtonClassicElement}
+              disabled={true}
+              onButtonClick={() => this.startScanFromImageCombined()}
+            >{this.translationService.i('process-image-upload-cta').toString()}</mb-button-classic>
+          </div>
+        </mb-screen>
+        <mb-screen
+          id="screen-processing"
+          visible={false}
+          ref={el => this.screens.processing = el as HTMLMbScreenElement}
+        >
+          <p class="in-progress">
+            <mb-spinner icon={this.iconSpinnerScreenLoading}></mb-spinner>
+            <span>{this.translationService.i('process-image-message-inline').toString()}</span>
+          </p>
+          <p class="done">
+            <mb-completed icon={this.iconGalleryScanningCompleted}></mb-completed>
+            <span>{this.translationService.i('process-image-message-inline-done').toString()}</span>
+          </p>
+        </mb-screen>
+        <mb-overlay
+          id="overlay-drag-and-drop"
+          visible={false}
+          ref={el => this.overlays.draganddrop = el as HTMLMbOverlayElement}
+        >
+          <img class="drag-and-drop-icon" src={this.iconGalleryDefault} />
+          <p class="drag-and-drop-message">Whoops, we don't support that image format. Please upload a JPEG or PNG file.</p>
+          <div id="drag-and-drop-zone" ref={el => this.dragAndDropZone = el as HTMLDivElement}></div>
+        </mb-overlay>
+        <mb-overlay
+          id="overlay-gallery-experience"
+          ref={el => this.overlays.processing = el as HTMLMbOverlayElement}
+        >
+          <mb-spinner icon={this.iconSpinnerFromGalleryExperience} size="large"></mb-spinner>
+          <p>{this.translationService.i('process-image-message').toString()}</p>
+          <mb-modal
+            visible={this.galleryExperienceModalErrorWindowVisible}
+            modalTitle={this.translationService.i('feedback-scan-unsuccessful-title').toString()}
+            content={this.translationService.i('feedback-scan-unsuccessful').toString()}
+            onClose={() => this.closeGalleryExperienceModal()}
+          >
+            <div slot="actionButtons">
+              <button
+                class="primary modal-action-button"
+                onClick={() => this.closeGalleryExperienceModal()}
+              >{this.translationService.i('modal-window-close').toString()}</button>
+            </div>
+          </mb-modal>
+        </mb-overlay>
+        <mb-overlay
+          id="overlay-camera-experience"
+          visible={false}
+          ref={el => this.overlays.camera = el as HTMLMbOverlayElement}
+        >
+          <div class="holder">
+            <video
+              ref={el => this.videoElement = el as HTMLVideoElement}
+              playsinline
+            ></video>
+            <mb-camera-experience
+              ref={el => this.cameraExperience = el as HTMLMbCameraExperienceElement}
+              translationService={this.translationService}
+              showScanningLine={this.showScanningLine}
+              showCameraFeedbackBarcodeMessage={this.showCameraFeedbackBarcodeMessage}
+              onClose={() => this.stopRecognition()}
+              onFlipCameraAction={() => this.flipCameraAction()}
+              onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.changeCameraDevice(ev.detail)}
+              class="overlay-camera-element"
+            ></mb-camera-experience>
+            <mb-api-process-status
+              visible={this.apiProcessStatusVisible}
+              state={this.apiProcessStatusState}
+              translationService={this.translationService}
+              onCloseTryAgain={() => this.closeApiProcessStatus(true)}
+              onCloseFromStart={() => this.stopRecognition()}
+            ></mb-api-process-status>
+          </div>
+        </mb-overlay>
+        <mb-overlay
+          id="overlay-modal"
+          visible={false}
+          ref={el => this.overlays.modal = el as HTMLMbOverlayElement}
+        >
+          <mb-modal
+            ref={el => this.licenseExperienceModal = el as HTMLMbModalElement}
+            modalTitle="Error"
+          >
+            <div slot="actionButtons">
+              <button
+                class="primary modal-action-button"
+                onClick={() => this.showOverlay('')}
+              >{this.translationService.i('modal-window-close').toString()}</button>
+            </div>
+          </mb-modal>
+        </mb-overlay>
+      </Host>
+    );
   }
 }

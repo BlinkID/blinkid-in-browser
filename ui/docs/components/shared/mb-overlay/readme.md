@@ -13,6 +13,13 @@
 | `visible`    | `visible`    | Set to 'true' if overlay should be visible.              | `boolean` | `false` |
 
 
+## Shadow Parts
+
+| Part           | Description |
+| -------------- | ----------- |
+| `"mb-overlay"` |             |
+
+
 ## Dependencies
 
 ### Used by

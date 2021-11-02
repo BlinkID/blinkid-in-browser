@@ -12,6 +12,7 @@ import {
 } from '@stencil/core';
 
 import { TranslationService } from '../../../utils/translation.service';
+import { classNames } from '../../../utils/generic.helpers';
 
 @Component({
   tag: 'mb-api-process-status',
@@ -46,7 +47,7 @@ export class MbApiProcessStatus {
 
   render() {
     return (
-      <Host className={ this.getClassName() }>
+      <Host part="mb-api-process-status" className={ classNames({ visible: this.visible }) }>
 
         { this.state === 'LOADING' &&
           <div class="reticle-container">
@@ -96,15 +97,5 @@ export class MbApiProcessStatus {
 
       </Host>
     );
-  }
-
-  getClassName(): string {
-    const classNames = [];
-
-    if (this.visible) {
-      classNames.push('visible');
-    }
-
-    return classNames.join(' ');
   }
 }

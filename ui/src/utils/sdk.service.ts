@@ -22,6 +22,8 @@ import {
   SdkSettings
 } from './data-structures';
 
+const _IS_IMAGE_CAPTURE = false;
+
 export interface CheckConclusion {
   status: boolean;
   message?: string;
@@ -133,6 +135,35 @@ export class SdkService {
 
     this.cancelInitiatedFromOutside = false;
 
+    // Prepare terminate mechanism before recognizer and runner instances are created
+    this.eventEmitter$.addEventListener('terminate', async () => {
+      this.videoRecognizer?.cancelRecognition?.();
+      window.setTimeout(() => this.videoRecognizer?.releaseVideoFeed?.(), 1);
+
+      if (recognizerRunner) {
+        try {
+          await recognizerRunner.delete();
+        } catch (error) {
+          // Psst, this error should not happen.
+        }
+      }
+
+      for (const recognizer of recognizers) {
+        if (!recognizer) {
+          continue;
+        }
+
+        if (recognizer.recognizer?.objectHandle > -1) {
+          recognizer.recognizer.delete?.();
+        }
+
+        if (recognizer.successFrame?.objectHandle > -1) {
+          recognizer.successFrame.delete?.();
+        }
+      }
+    });
+
+    // Prepare recognizers and runner
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
       configuration.recognizerOptions,
@@ -154,48 +185,6 @@ export class SdkService {
       eventCallback({ status: RecognitionStatus.Ready });
 
       await this.videoRecognizer.setVideoRecognitionMode(BlinkIDSDK.VideoRecognitionMode.Recognition);
-
-      this.eventEmitter$.addEventListener('terminate', async () => {
-        if (this.videoRecognizer && typeof this.videoRecognizer.cancelRecognition === 'function') {
-          this.videoRecognizer.cancelRecognition();
-        }
-
-        if (recognizerRunner) {
-          try {
-            await recognizerRunner.delete();
-          } catch (error) {
-            // Psst, this error should not happen.
-          }
-        }
-
-        for (const recognizer of recognizers) {
-          if (!recognizer) {
-            continue;
-          }
-
-          if (
-            recognizer.recognizer &&
-            recognizer.recognizer.objectHandle > -1 &&
-            typeof recognizer.recognizer.delete === 'function'
-          ) {
-            recognizer.recognizer.delete()
-          }
-
-          if (
-            recognizer.successFrame &&
-            recognizer.successFrame.objectHandle > -1
-            && typeof recognizer.successFrame.delete === 'function'
-          ) {
-            recognizer.successFrame.delete();
-          }
-        }
-
-        window.setTimeout(() => {
-          if (this.videoRecognizer) {
-            this.videoRecognizer.releaseVideoFeed();
-          }
-        }, 1);
-      });
 
       this.videoRecognizer.startRecognition(
         async (recognitionState: BlinkIDSDK.RecognizerResultState) => {
@@ -230,13 +219,21 @@ export class SdkService {
                   }
                 }
 
+                recognitionResults.imageCapture = _IS_IMAGE_CAPTURE;
+
+                if (configuration.recognizerOptions?.[this.recognizerName].allowSignature) {
+                  recognitionResults.resultJSON = await recognizer.recognizer.toJSON();
+                }
+
+                const scanData: any = {
+                  result: recognitionResults,
+                  initiatedByUser: this.cancelInitiatedFromOutside,
+                  imageCapture: _IS_IMAGE_CAPTURE
+                }
+
                 eventCallback({
                   status: RecognitionStatus.ScanSuccessful,
-                  data: {
-                    result: recognitionResults,
-                    initiatedByUser: this.cancelInitiatedFromOutside,
-                    imageCapture: this.recognizerName === 'BlinkIdImageCaptureRecognizer'
-                  }
+                  data: scanData
                 });
                 break;
               }
@@ -251,9 +248,7 @@ export class SdkService {
             });
           }
 
-          if (this.recognizerName !== 'BlinkIdImageCaptureRecognizer') {
-            window.setTimeout(() => void this.cancelRecognition(), 400);
-          }
+          window.setTimeout(() => void this.cancelRecognition(), 400);
         }, configuration.recognitionTimeout);
     } catch (error) {
       if (error && error.name === 'VideoRecognizerError') {
@@ -281,10 +276,11 @@ export class SdkService {
         }
 
         console.warn('VideoRecognizerError', error.name, '[' + reason + ']:', error.message);
-        void this.cancelRecognition();
       } else {
         eventCallback({ status: RecognitionStatus.UnknownError });
       }
+
+      void this.cancelRecognition();
     }
   }
 
@@ -346,12 +342,8 @@ export class SdkService {
           continue;
         }
 
-        if (
-          recognizer.recognizer &&
-          recognizer.recognizer.objectHandle > -1 &&
-          typeof recognizer.recognizer.delete === 'function'
-        ) {
-          await recognizer.recognizer.delete();
+        if (recognizer.recognizer?.objectHandle > -1) {
+          recognizer.recognizer.delete?.();
         }
       }
 
@@ -395,9 +387,14 @@ export class SdkService {
         else {
           const recognitionResults: RecognitionResults = {
             recognizer: results,
-            imageCapture: recognizer.name === 'BlinkIdImageCaptureRecognizer',
+            imageCapture: _IS_IMAGE_CAPTURE,
             recognizerName: recognizer.name
           };
+
+          if (configuration.recognizerOptions?.[recognizer.name].allowSignature) {
+            recognitionResults.resultJSON = await recognizer.recognizer.toJSON();
+          }
+
           eventCallback({
             status: RecognitionStatus.ScanSuccessful,
             data: recognitionResults
@@ -477,12 +474,8 @@ export class SdkService {
           continue;
         }
 
-        if (
-          recognizer.recognizer &&
-          recognizer.recognizer.objectHandle > -1 &&
-          typeof recognizer.recognizer.delete === 'function'
-        ) {
-          await recognizer.recognizer.delete();
+        if (recognizer.recognizer?.objectHandle > -1) {
+          recognizer.recognizer.delete?.();
         }
       }
 
@@ -537,9 +530,14 @@ export class SdkService {
           else {
             const recognitionResults: RecognitionResults = {
               recognizer: results,
-              imageCapture: recognizer.name === 'BlinkIdImageCaptureRecognizer',
+              imageCapture: _IS_IMAGE_CAPTURE,
               recognizerName: recognizer.name
             };
+
+            if (configuration.recognizerOptions?.[recognizer.name].allowSignature) {
+              recognitionResults.resultJSON = await recognizer.recognizer.toJSON();
+            }
+
             eventCallback({
               status: RecognitionStatus.ScanSuccessful,
               data: recognitionResults

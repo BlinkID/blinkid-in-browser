@@ -49,3 +49,21 @@ export function getImageFile(fileList: FileList): File|null {
 
   return image;
 }
+
+/**
+ * Inspired by https://github.com/JedWatson/classnames.
+ * @param classes Class names and their conditions.
+ * @returns Joined string of class names.
+ */
+export function classNames(classes: Record<string, boolean>) {
+  const result = [];
+  const keys = Object.keys(classes);
+
+  keys.forEach((key) => {
+    if (classes[key]) {
+      result.push(key);
+    }
+  });
+
+  return result.join(' ');
+}

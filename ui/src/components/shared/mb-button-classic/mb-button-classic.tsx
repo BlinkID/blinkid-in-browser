@@ -11,6 +11,8 @@ import {
   Prop
 } from '@stencil/core';
 
+import { classNames } from '../../../utils/generic.helpers';
+
 @Component({
   tag: 'mb-button-classic',
   styleUrl: 'mb-button-classic.scss',
@@ -34,28 +36,6 @@ export class MbButtonClassic {
    */
   @Event() buttonClick: EventEmitter<UIEvent>;
 
-  render() {
-    return (
-      <Host
-        className={ this.getClassNames() }
-        onClick={ (ev: UIEvent) => this.handleClick(ev) }>
-        <a href="javascript:void(0)">
-          <slot></slot>
-        </a>
-      </Host>
-    );
-  }
-
-  private getClassNames(): string {
-    const classNames = [];
-
-    if (this.disabled) {
-      classNames.push('disabled');
-    }
-
-    return classNames.join(' ');
-  }
-
   private handleClick(ev: UIEvent) {
     if (this.preventDefault) {
       ev.preventDefault();
@@ -67,5 +47,18 @@ export class MbButtonClassic {
     }
 
     this.buttonClick.emit(ev);
+  }
+
+  render() {
+    return (
+      <Host
+        part="mb-button-classic"
+        className={ classNames({ disabled: this.disabled }) }
+        onClick={ (ev: UIEvent) => this.handleClick(ev) }>
+        <a href="javascript:void(0)">
+          <slot></slot>
+        </a>
+      </Host>
+    );
   }
 }

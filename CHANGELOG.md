@@ -1,5 +1,16 @@
 # Release notes
 
+## 5.14.1
+
+* We've added support for `part::` selector to provide more flexibility when customizing built-in UI. [#35](https://github.com/BlinkID/blinkid-in-browser/issues/35)
+
+### UI bug fixes
+
+* We've fixed a bug where a user couldn't upload an image after the camera scan failed to start.
+* We've fixed a bug where the video feed wasn't released in the scenario where the UI component was removed from the DOM.
+* We've reverted style changes regarding width and height for camera scanning UI to provide more flexibility to developers.
+* We've improved memory management during the initialization of the UI component to avoid the creation of unnecessary web workers.
+
 ## 5.14.0
 
 ### Back side support added:

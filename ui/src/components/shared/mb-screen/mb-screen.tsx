@@ -3,6 +3,7 @@
  */
 
 import { Component, Host, h, Prop } from '@stencil/core';
+import { classNames } from '../../../utils/generic.helpers';
 
 @Component({
   tag: 'mb-screen',
@@ -18,7 +19,7 @@ export class MbScreen {
 
   render() {
     return (
-      <Host className={ this.visible ? 'visible' : '' }>
+      <Host part="mb-screen" className={ classNames({ visible: this.visible }) }>
         <slot></slot>
       </Host>
     );

@@ -23,7 +23,7 @@ export class MbSpinner {
 
   render() {
     return (
-      <Host className={ this.size }>
+      <Host part="mb-spinner" className={ this.size }>
         <img src={ this.icon } />
       </Host>
     );

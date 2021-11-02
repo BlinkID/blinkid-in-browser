@@ -13,7 +13,7 @@ export class MbContainer {
 
   render() {
     return (
-      <Host>
+      <Host part="mb-container">
         <slot></slot>
       </Host>
     );

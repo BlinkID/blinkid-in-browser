@@ -1,6 +1,6 @@
 {
     "name": "@microblink/blinkid-in-browser-sdk",
-    "version": "5.14.0",
+    "version": "5.14.1",
     "description": "A simple ID scanning library for WebAssembly-enabled browsers.",
     "homepage": "https://github.com/BlinkID/blinkid-in-browser",
     "repository": "github:BlinkID/blinkid-in-browser",
@@ -35,10 +35,13 @@
         "types"
     ],
     "scripts": {
-        "build": "rollup -c",
+        "build": "npm run build:api && npm run build:ui",
+        "build:api": "rollup -c",
         "build:ui": "cd ui && npm install && npm run build",
         "check-types": "tsc --noEmit",
-        "clean": "rimraf dist es lib types",
+        "clean": "npm run clean:api && npm run clean:ui",
+        "clean:api": "rimraf dist es lib types",
+        "clean:ui": "cd ui && npm run clean",
         "lint": "eslint --ext ts -c .eslintrc.json src",
         "pretest": "npm run build",
         "prepublishOnly": "npm run clean && npm run check-types && npm run lint && npm test",

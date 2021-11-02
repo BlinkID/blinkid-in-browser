@@ -46,6 +46,7 @@
 
 | Event               | Description                                                                   | Type                            |
 | ------------------- | ----------------------------------------------------------------------------- | ------------------------------- |
+| `block`             | Event containing boolean which used to check whether component is blocked.    | `CustomEvent<boolean>`          |
 | `cameraScanStarted` | See event 'cameraScanStarted' in public component.                            | `CustomEvent<null>`             |
 | `fatalError`        | See event 'fatalError' in public component.                                   | `CustomEvent<EventFatalError>`  |
 | `feedback`          | Event containing FeedbackMessage which can be passed to MbFeedback component. | `CustomEvent<FeedbackMessage>`  |
@@ -69,6 +70,13 @@ with error message will be displayed.
 Type: `Promise<void>`
 
 
+
+
+## Shadow Parts
+
+| Part             | Description |
+| ---------------- | ----------- |
+| `"mb-component"` |             |
 
 
 ## Dependencies

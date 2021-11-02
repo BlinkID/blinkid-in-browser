@@ -25,6 +25,13 @@ Type: `Promise<void>`
 
 
 
+## Shadow Parts
+
+| Part            | Description |
+| --------------- | ----------- |
+| `"mb-feedback"` |             |
+
+
 ## Dependencies
 
 ### Used by

@@ -13,6 +13,7 @@ import {
 } from '@stencil/core';
 
 import { CameraEntry } from '../../../utils/data-structures';
+import { classNames } from '../../../utils/generic.helpers';
 import { getCameraDevices } from '../../../utils/sdk.service';
 
 @Component({
@@ -21,6 +22,14 @@ import { getCameraDevices } from '../../../utils/sdk.service';
   shadow: true,
 })
 export class MbCameraSelection {
+  @State() activeCamera: CameraEntry = {
+    prettyName: '-',
+    details: { deviceId: -1 }
+  };
+
+  @State() cameraList: Array<CameraEntry> = [];
+
+  @State() isListVisible: boolean = false;
 
   /**
    * Emitted when user selects a different camera device.
@@ -56,15 +65,31 @@ export class MbCameraSelection {
     }
   }
 
+  private handleListOpen(ev: UIEvent) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.setListVisibility(!this.isListVisible);
+  }
+
+  private handleCameraSelection(ev: UIEvent, camera: CameraEntry) {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.changeCameraDevice.emit(camera);
+    this.activeCamera = camera;
+    this.setListVisibility(false);
+  }
+
+  private setListVisibility(visible: boolean) {
+    this.isListVisible = visible;
+  }
+
   render() {
     const cameraListElements = this.cameraList.map((camera: CameraEntry) => {
       const isActive = this.activeCamera?.details?.deviceId === camera.details.deviceId;
 
-      let classValue = '';
       let content = ( <span class="spacer"></span> )
 
       if (isActive) {
-        classValue = 'active';
         content = (
           <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M17.256 5.24408C17.5814 5.56951 17.5814 6.09715 17.256 6.42259L8.92263 14.7559C8.59719 15.0814 8.06955 15.0814 7.74412 14.7559L3.57745 10.5893C3.25201 10.2638 3.25201 9.73618 3.57745 9.41074C3.90289 9.08531 4.43053 9.08531 4.75596 9.41074L8.33337 12.9882L16.0775 5.24408C16.4029 4.91864 16.9305 4.91864 17.256 5.24408Z" fill="#48B2E8"/>
@@ -73,7 +98,7 @@ export class MbCameraSelection {
       }
 
       return (
-        <li class={ classValue }>
+        <li part="mb-camera-selection" class={ classNames({ active: isActive }) }>
           <a
             href="javascript:void(0)"
             onClick={ (ev: UIEvent) => this.handleCameraSelection(ev, camera) }>
@@ -85,7 +110,7 @@ export class MbCameraSelection {
     });
 
     return (
-      <Host>
+      <Host part="mb-camera-selection">
         <a
           href="javascript:void(0)"
           class={ this.isListVisible ? 'active-camera active' : 'active-camera' }
@@ -105,7 +130,7 @@ export class MbCameraSelection {
         </a>
         <div
           id="list-background"
-          class={ this.isListVisible ? 'visible' : '' }
+          class={ classNames({ visible: this.isListVisible }) }
           onClick={ () => this.setListVisibility(false) }
         ></div>
         <div
@@ -116,31 +141,5 @@ export class MbCameraSelection {
         </div>
       </Host>
     );
-  }
-
-  @State() activeCamera: CameraEntry = {
-    prettyName: '-',
-    details: { deviceId: -1 }
-  };
-
-  @State() cameraList: Array<CameraEntry> = [];
-  @State() isListVisible: boolean = false;
-
-  private handleListOpen(ev: UIEvent) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.setListVisibility(!this.isListVisible);
-  }
-
-  private handleCameraSelection(ev: UIEvent, camera: CameraEntry) {
-    ev.preventDefault();
-    ev.stopPropagation();
-    this.changeCameraDevice.emit(camera);
-    this.activeCamera = camera;
-    this.setListVisibility(false);
-  }
-
-  private setListVisibility(visible: boolean) {
-    this.isListVisible = visible;
   }
 }

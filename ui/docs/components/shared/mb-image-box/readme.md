@@ -33,6 +33,13 @@ Type: `Promise<void>`
 
 
 
+## Shadow Parts
+
+| Part             | Description |
+| ---------------- | ----------- |
+| `"mb-image-box"` |             |
+
+
 ## Dependencies
 
 ### Used by
