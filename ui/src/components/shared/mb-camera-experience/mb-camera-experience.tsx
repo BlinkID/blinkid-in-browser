@@ -10,7 +10,8 @@ import {
   h,
   Method,
   Prop,
-  Watch
+  Watch,
+  State
 } from '@stencil/core';
 
 import {
@@ -20,7 +21,11 @@ import {
   CameraExperienceStateDuration
 } from '../../../utils/data-structures';
 
+import { classNames } from '../../../utils/generic.helpers';
+
 import { TranslationService } from '../../../utils/translation.service';
+
+import * as Utils from './mb-camera-experience.utils';
 
 @Component({
   tag: 'mb-camera-experience',
@@ -28,6 +33,30 @@ import { TranslationService } from '../../../utils/translation.service';
   shadow: true,
 })
 export class MbCameraExperience {
+  @State() cameraCursorBarcodeClassName: string = 'rectangle';
+
+  @State() cameraCursorIdentityCardClassName: string = 'reticle';
+
+  @State() cameraCursorPaymentCardClassName: string = 'rectangle';
+
+  @State() scanningLineBarcodeClassName: string;
+
+  @State() scanningLinePaymentCardClassName: string;
+
+  @State() cameraMessageIdentityCardContent: any;
+
+  @State() cameraMessageIdentityCardClassName: string = 'message'; 
+
+  private cameraMessageIdentityCard!: HTMLParagraphElement;
+  private cameraMessagePaymentCard!: HTMLParagraphElement;
+  private cameraMessageBarcode!: HTMLParagraphElement;
+  private cameraToolbar!: HTMLMbCameraToolbarElement;
+  private cardIdentityElement!: HTMLDivElement;
+
+  private cameraStateChangeId: number = 0;
+  private cameraStateInProgress: boolean = false;
+  private flipCameraStateInProgress: boolean = false;
+  private barcodeScanningInProgress: boolean = false;
 
   /**
    * Choose desired camera experience.
@@ -68,7 +97,15 @@ export class MbCameraExperience {
   /**
    * Show camera feedback message on camera for Barcode scanning
    */
-   @Prop() showCameraFeedbackBarcodeMessage: boolean = false;
+  @Prop() showCameraFeedbackBarcodeMessage: boolean = false;
+
+  @Watch('apiState')
+  apiStateHandler(apiState: string, _oldValue: string) {
+    if (apiState === '' && (this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined))
+      this.cardIdentityElement.classList.add('visible');
+    else
+      this.cardIdentityElement.classList.remove('visible');
+  }
 
   /**
    * Emitted when user clicks on 'X' button.
@@ -94,14 +131,6 @@ export class MbCameraExperience {
   @Method()
   async populateCameraDevices() {
     await this.cameraToolbar.populateCameraDevices();
-  }
-
-  @Watch('apiState')
-  apiStateHandler(apiState: string, _oldValue: string) {
-    if (apiState === '' && (this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined))
-      this.cardIdentityElement.classList.add('visible');
-    else
-      this.cardIdentityElement.classList.remove('visible');
   }
 
   /**
@@ -137,20 +166,20 @@ export class MbCameraExperience {
         this.flipCameraStateInProgress = true;
       }
 
-      const stateClass = this.getStateClass(state);
+      const stateClass = Utils.getStateClass(state);
 
       switch (this.type) {
         case CameraExperience.CardSingleSide:
         case CameraExperience.CardCombined:
-          this.cameraCursorIdentityCard.setAttribute('class', `reticle ${stateClass}`);
+          this.cameraCursorIdentityCardClassName = `reticle ${stateClass}`;
           break;
         case CameraExperience.Barcode:
-          stateClass === 'is-detection' && this.showScanningLine ? this.scanningLineBarcode.classList.add('is-active') : this.scanningLineBarcode.classList.remove('is-active');
-          this.cameraCursorBarcode.setAttribute('class', `rectangle ${stateClass}`);
+          stateClass === 'is-detection' && this.showScanningLine ? this.scanningLineBarcodeClassName = 'is-active' : this.scanningLineBarcodeClassName = '';
+          this.cameraCursorBarcodeClassName = `rectangle ${stateClass}`;
           break;
-        case CameraExperience.PaymentCard:
-          stateClass === 'is-default' && this.showScanningLine ? this.scanningLinePaymentCard.classList.add('is-active') : this.scanningLinePaymentCard.classList.remove('is-active');
-          this.cameraCursorPaymentCard.setAttribute('class', `rectangle ${stateClass}`);
+          case CameraExperience.PaymentCard:
+            stateClass === 'is-default' && this.showScanningLine ? this.scanningLinePaymentCardClassName = 'is-active' : this.scanningLinePaymentCardClassName = '';
+            this.cameraCursorPaymentCardClassName = `rectangle ${stateClass}`;
           break;
       }
 
@@ -195,151 +224,12 @@ export class MbCameraExperience {
     });
   }
 
-  render() {
-    return (
-      <Host class={ this.showOverlay ? '' : 'no-overlay' }>
-        {/* Barcode camera experience */}
-        <div id="barcode" class={ this.type === CameraExperience.Barcode ? 'visible' : '' }>
-          <div class="rectangle-container">
-            <div class="rectangle" ref={ el => this.cameraCursorBarcode = el as HTMLDivElement }>
-              <div class="rectangle__cursor">
-                <div class="rectangle__el"></div>
-                <div class="rectangle__el"></div>
-                <div class="rectangle__el"></div>
-                <div class="rectangle__el"></div>
-
-                <div class="scanning-line" ref={ el => this.scanningLineBarcode = el as HTMLDivElement }></div>
-              </div>
-            </div>
-            <p class="message" ref={ el => this.cameraMessageBarcode = el as HTMLParagraphElement }></p>
-          </div>
-        </div>
-
-        {/* Identity card camera experience */}
-        <div id="card-identity" ref={(el) => this.cardIdentityElement = el as HTMLDivElement} class={ this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined ? 'visible': '' }>
-          <div class="reticle-container">
-            <div class="reticle" ref={ el => this.cameraCursorIdentityCard = el as HTMLDivElement }>
-              <div class="reticle__cursor">
-                <div class="reticle__el"></div>
-                <div class="reticle__el"></div>
-                <div class="reticle__el"></div>
-                <div class="reticle__el"></div>
-              </div>
-              <img class="reticle__done" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjk3MiAzMy40NkMyMC43MDk1IDMzLjQ2MDUgMjAuNDQ5NCAzMy40MDkyIDIwLjIwNjggMzMuMzA5QzE5Ljk2NDEgMzMuMjA4OCAxOS43NDM2IDMzLjA2MTYgMTkuNTU4IDMyLjg3NkwxMS4wNzQgMjQuMzlDMTAuODgyOSAyNC4yMDU2IDEwLjczMDMgMjMuOTg1MSAxMC42MjU0IDIzLjc0MTFDMTAuNTIwNCAyMy40OTcyIDEwLjQ2NSAyMy4yMzQ4IDEwLjQ2MjUgMjIuOTY5MkMxMC40NiAyMi43MDM3IDEwLjUxMDQgMjIuNDQwMyAxMC42MTA4IDIyLjE5NDRDMTAuNzExMiAyMS45NDg2IDEwLjg1OTYgMjEuNzI1MiAxMS4wNDcyIDIxLjUzNzNDMTEuMjM0OSAyMS4zNDkzIDExLjQ1ODEgMjEuMjAwNyAxMS43MDM4IDIxLjA5OTlDMTEuOTQ5NSAyMC45OTkyIDEyLjIxMjggMjAuOTQ4NCAxMi40Nzg0IDIwLjk1MDVDMTIuNzQzOSAyMC45NTI2IDEzLjAwNjQgMjEuMDA3NiAxMy4yNTA1IDIxLjExMjNDMTMuNDk0NiAyMS4yMTY5IDEzLjcxNTQgMjEuMzY5MSAxMy45IDIxLjU2TDIwLjk3IDI4LjYzTDMzLjcgMTUuOTA0QzM0LjA3NSAxNS41Mjg3IDM0LjU4MzggMTUuMzE3OCAzNS4xMTQzIDE1LjMxNzZDMzUuNjQ0OCAxNS4zMTc0IDM2LjE1MzcgMTUuNTI4IDM2LjUyOSAxNS45MDNDMzYuOTA0MyAxNi4yNzggMzcuMTE1MiAxNi43ODY4IDM3LjExNTQgMTcuMzE3M0MzNy4xMTU2IDE3Ljg0NzggMzYuOTA1IDE4LjM1NjcgMzYuNTMgMTguNzMyTDIyLjM4NiAzMi44NzZDMjIuMjAwNCAzMy4wNjE2IDIxLjk3OTkgMzMuMjA4OCAyMS43MzcyIDMzLjMwOUMyMS40OTQ2IDMzLjQwOTIgMjEuMjM0NSAzMy40NjA1IDIwLjk3MiAzMy40NloiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPgo=" />
-            </div>
-            <p class="message" ref={ el => this.cameraMessageIdentityCard = el as HTMLParagraphElement }></p>
-          </div>
-        </div>
-
-        {/* PaymentCard camera experience */}
-        <div id="card-payment" class={ this.type === CameraExperience.PaymentCard ? 'visible' : '' }>
-          <div class="rectangle-container">
-            <div class="box wrapper"></div>
-            <div class="box body">
-              <div class="middle-left wrapper"></div>
-              <div class="rectangle" ref={ el => this.cameraCursorPaymentCard = el as HTMLDivElement }>
-                <div class="rectangle__cursor">
-                  <div class="rectangle__el"></div>
-                  <div class="rectangle__el"></div>
-                  <div class="rectangle__el"></div>
-                  <div class="rectangle__el"></div>
-
-                  <div class="scanning-line" ref={ el => this.scanningLinePaymentCard = el as HTMLDivElement }></div>
-                </div>
-              </div>
-              <p class="message" ref={ el => this.cameraMessagePaymentCard = el as HTMLParagraphElement }></p>
-              <div class="middle-right wrapper"></div>
-            </div>
-            <div class="box wrapper"></div>
-          </div>
-        </div>
-
-        <div class="gradient-overlay bottom"></div>
-
-        <mb-camera-toolbar
-          show-close={ this.apiState !== "error" }
-          camera-flipped={ this.cameraFlipped }
-          onCloseEvent={() => this.handleStop()}
-          onFlipEvent={() => this.flipCamera()}
-          onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.handleChangeCameraDevice(ev.detail)}
-          ref={ el => this.cameraToolbar = el as HTMLMbCameraToolbarElement }
-        ></mb-camera-toolbar>
-      </Host>
-    );
-  }
-
-  private cameraCursorBarcode!: HTMLDivElement;
-  private cameraCursorIdentityCard!: HTMLDivElement;
-  private cameraCursorPaymentCard!: HTMLDivElement;
-  private cameraMessageIdentityCard!: HTMLParagraphElement;
-  private cameraMessagePaymentCard!: HTMLParagraphElement;
-  private cameraMessageBarcode!: HTMLParagraphElement;
-  private cameraToolbar!: HTMLMbCameraToolbarElement;
-  private cardIdentityElement!: HTMLDivElement;
-
-  // Flags
-  private cameraStateChangeId: number = 0;
-  private cameraStateInProgress: boolean = false;
-  private flipCameraStateInProgress: boolean = false;
-  private barcodeScanningInProgress: boolean = false;
-
-  private scanningLineBarcode!: HTMLDivElement;
-  private scanningLinePaymentCard!: HTMLDivElement;
-
   private flipCamera(): void {
     this.flipCameraAction.emit();
   }
 
   private handleStop() {
     this.close.emit();
-  }
-
-  private getStateClass(state: CameraExperienceState): string {
-    let stateClass = 'is-default';
-
-    switch (state) {
-      case CameraExperienceState.BarcodeScanning:
-      case CameraExperienceState.Classification:
-        stateClass = 'is-classification';
-        break;
-
-      case CameraExperienceState.Default:
-        stateClass = 'is-default';
-        break;
-
-      case CameraExperienceState.Detection:
-        stateClass = 'is-detection';
-        break;
-
-      case CameraExperienceState.MoveFarther:
-        stateClass = 'is-error-move-farther';
-        break;
-
-      case CameraExperienceState.MoveCloser:
-        stateClass = 'is-error-move-closer';
-        break;
-
-      case CameraExperienceState.AdjustAngle:
-        stateClass = 'is-error-adjust-angle';
-        break;
-
-      case CameraExperienceState.Flip:
-        stateClass = 'is-flip';
-        break;
-
-      case CameraExperienceState.Done:
-        stateClass = 'is-done';
-        break;
-
-      case CameraExperienceState.DoneAll:
-        stateClass = 'is-done-all';
-        break;
-
-      default:
-        // Reset class
-    }
-
-    return stateClass;
   }
 
   private setMessage(state: CameraExperienceState, isBackSide: boolean, type: CameraExperience): void {
@@ -356,7 +246,7 @@ export class MbCameraExperience {
           this.cameraMessageIdentityCard.appendChild(message);
         }
 
-        this.cameraMessageIdentityCard.setAttribute('class', message && message !== null ? 'message is-active' : 'message');
+        this.cameraMessageIdentityCardClassName = message && message !== null ? 'message is-active' : 'message';
         break;
       case CameraExperience.PaymentCard:
         while (this.cameraMessagePaymentCard.firstChild) {
@@ -451,5 +341,78 @@ export class MbCameraExperience {
 
   private handleChangeCameraDevice(camera: CameraEntry) {
     this.changeCameraDevice.emit(camera);
+  }
+
+  render() {
+    return (
+      <Host part="mb-camera-experience" class={ classNames({ 'no-overlay': !this.showOverlay }) }>
+        {/* Barcode camera experience */}
+        <div id="barcode" class={ classNames({ visible: this.type === CameraExperience.Barcode }) }>
+          <div class="rectangle-container">
+            <div class={ this.cameraCursorBarcodeClassName }>
+              <div class="rectangle__cursor">
+                <div class="rectangle__el"></div>
+                <div class="rectangle__el"></div>
+                <div class="rectangle__el"></div>
+                <div class="rectangle__el"></div>
+
+                <div class={ `scanning-line ${this.scanningLineBarcodeClassName}` }></div>
+              </div>
+            </div>
+            <p class="message" ref={ el => this.cameraMessageBarcode = el as HTMLParagraphElement }></p>
+          </div>
+        </div>
+
+        {/* Identity card camera experience */}
+        <div id="card-identity" ref={(el) => this.cardIdentityElement = el as HTMLDivElement} class={ classNames({ visible: this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined }) }>
+          <div class="reticle-container">
+            <div class={ this.cameraCursorIdentityCardClassName }>
+              <div class="reticle__cursor">
+                <div class="reticle__el"></div>
+                <div class="reticle__el"></div>
+                <div class="reticle__el"></div>
+                <div class="reticle__el"></div>
+              </div>
+              <img class="reticle__done" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjk3MiAzMy40NkMyMC43MDk1IDMzLjQ2MDUgMjAuNDQ5NCAzMy40MDkyIDIwLjIwNjggMzMuMzA5QzE5Ljk2NDEgMzMuMjA4OCAxOS43NDM2IDMzLjA2MTYgMTkuNTU4IDMyLjg3NkwxMS4wNzQgMjQuMzlDMTAuODgyOSAyNC4yMDU2IDEwLjczMDMgMjMuOTg1MSAxMC42MjU0IDIzLjc0MTFDMTAuNTIwNCAyMy40OTcyIDEwLjQ2NSAyMy4yMzQ4IDEwLjQ2MjUgMjIuOTY5MkMxMC40NiAyMi43MDM3IDEwLjUxMDQgMjIuNDQwMyAxMC42MTA4IDIyLjE5NDRDMTAuNzExMiAyMS45NDg2IDEwLjg1OTYgMjEuNzI1MiAxMS4wNDcyIDIxLjUzNzNDMTEuMjM0OSAyMS4zNDkzIDExLjQ1ODEgMjEuMjAwNyAxMS43MDM4IDIxLjA5OTlDMTEuOTQ5NSAyMC45OTkyIDEyLjIxMjggMjAuOTQ4NCAxMi40Nzg0IDIwLjk1MDVDMTIuNzQzOSAyMC45NTI2IDEzLjAwNjQgMjEuMDA3NiAxMy4yNTA1IDIxLjExMjNDMTMuNDk0NiAyMS4yMTY5IDEzLjcxNTQgMjEuMzY5MSAxMy45IDIxLjU2TDIwLjk3IDI4LjYzTDMzLjcgMTUuOTA0QzM0LjA3NSAxNS41Mjg3IDM0LjU4MzggMTUuMzE3OCAzNS4xMTQzIDE1LjMxNzZDMzUuNjQ0OCAxNS4zMTc0IDM2LjE1MzcgMTUuNTI4IDM2LjUyOSAxNS45MDNDMzYuOTA0MyAxNi4yNzggMzcuMTE1MiAxNi43ODY4IDM3LjExNTQgMTcuMzE3M0MzNy4xMTU2IDE3Ljg0NzggMzYuOTA1IDE4LjM1NjcgMzYuNTMgMTguNzMyTDIyLjM4NiAzMi44NzZDMjIuMjAwNCAzMy4wNjE2IDIxLjk3OTkgMzMuMjA4OCAyMS43MzcyIDMzLjMwOUMyMS40OTQ2IDMzLjQwOTIgMjEuMjM0NSAzMy40NjA1IDIwLjk3MiAzMy40NloiIGZpbGw9ImJsYWNrIi8+Cjwvc3ZnPgo=" />
+            </div>
+            <p class={ this.cameraMessageIdentityCardClassName } ref={ el => this.cameraMessageIdentityCard = el as HTMLParagraphElement }></p>
+          </div>
+        </div>
+
+        {/* PaymentCard camera experience */}
+        <div id="card-payment" class={ classNames({ visible: this.type === CameraExperience.PaymentCard }) }>
+          <div class="rectangle-container">
+            <div class="box wrapper"></div>
+            <div class="box body">
+              <div class="middle-left wrapper"></div>
+              <div class={ this.cameraCursorPaymentCardClassName }>
+                <div class="rectangle__cursor">
+                  <div class="rectangle__el"></div>
+                  <div class="rectangle__el"></div>
+                  <div class="rectangle__el"></div>
+                  <div class="rectangle__el"></div>
+
+                  <div class={ `scanning-line ${this.scanningLinePaymentCardClassName}` }></div>
+                </div>
+              </div>
+              <p class="message" ref={ el => this.cameraMessagePaymentCard = el as HTMLParagraphElement }></p>
+              <div class="middle-right wrapper"></div>
+            </div>
+            <div class="box wrapper"></div>
+          </div>
+        </div>
+
+        <div class="gradient-overlay bottom"></div>
+
+        <mb-camera-toolbar
+          show-close={ this.apiState !== "error" }
+          camera-flipped={ this.cameraFlipped }
+          onCloseEvent={() => this.handleStop()}
+          onFlipEvent={() => this.flipCamera()}
+          onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.handleChangeCameraDevice(ev.detail)}
+          ref={ el => this.cameraToolbar = el as HTMLMbCameraToolbarElement }
+        ></mb-camera-toolbar>
+      </Host>
+    );
   }
 }

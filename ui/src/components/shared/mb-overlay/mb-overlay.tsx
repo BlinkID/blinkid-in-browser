@@ -10,6 +10,8 @@ import {
   Prop
 } from '@stencil/core';
 
+import { classNames } from '../../../utils/generic.helpers';
+
 @Component({
   tag: 'mb-overlay',
   styleUrl: 'mb-overlay.scss',
@@ -32,15 +34,7 @@ export class MbOverlay {
    */
   @Element() hostEl: HTMLElement;
 
-  render() {
-    return (
-      <Host className={ this.getClassName() }>
-        <slot></slot>
-      </Host>
-    );
-  }
-
-  getClassName(): string {
+  getHostClassNames(): string {
     const classNames = [];
 
     this.hostEl.classList.forEach((value) => {
@@ -49,14 +43,14 @@ export class MbOverlay {
       }
     });
 
-    if (this.visible) {
-      classNames.push('visible');
-    }
-
-    if (!this.fullscreen) {
-      classNames.push('non-fullscreen');
-    }
-
     return classNames.join(' ');
+  }
+
+  render() {
+    return (
+      <Host part="mb-overlay" className={ `${classNames({ visible: this.visible, 'non-fullscreen': !this.fullscreen })} ${this.getHostClassNames()}` }>
+        <slot></slot>
+      </Host>
+    );
   }
 }

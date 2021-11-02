@@ -3,3 +3,4 @@
  */
 
 export const defaultWasmModuleName = "BlinkIDWasmSDK";
+export const nativeJsonizationEnabled = true;

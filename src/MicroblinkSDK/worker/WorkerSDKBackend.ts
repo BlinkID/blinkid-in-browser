@@ -21,6 +21,7 @@ import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
 import { MetadataCallbacks, DisplayablePoints, DisplayableQuad } from "../MetadataCallbacks";
 import { WasmSDKLoadSettings, OptionalLoadProgressCallback } from "../WasmLoadSettings";
 import { WasmType } from "../WasmType";
+import { nativeJsonizationEnabled } from "../../defaultWasmModule";
 
 
 // ============================================ /
@@ -147,6 +148,45 @@ export class RemoteRecognizer implements Recognizer
                 this.wasmSDKWorker.postMessage( msg, handler );
             }
         );
+    }
+
+    toJSON(): Promise< string | null >
+    {
+        if ( nativeJsonizationEnabled )
+        {
+            return new Promise< string | null >
+            (
+                ( resolve, reject ) =>
+                {
+                    if ( this.objectHandle < 0 )
+                    {
+                        reject( "Invalid object handle: " + this.objectHandle.toString() );
+                        return;
+                    }
+
+                    const msg = new Messages.InvokeObjectMethod
+                    (
+                        this.objectHandle,
+                        "toJSON",
+                        []
+                    );
+                    const handler = defaultResultEventHandler
+                    (
+                        ( msg: Messages.ResponseMessage ) =>
+                        {
+                            resolve( ( msg as Messages.InvokeResultMessage ).result );
+                        },
+                        reject
+                    );
+                    this.wasmSDKWorker.postMessage( msg, handler );
+                }
+            );
+        }
+        else
+        {
+            // native module does not support toJSON method
+            return Promise.resolve( null );
+        }
     }
 
     private clearAllCallbacks()

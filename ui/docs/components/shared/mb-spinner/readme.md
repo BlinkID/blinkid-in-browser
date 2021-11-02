@@ -13,6 +13,13 @@
 | `size`   | `size`    | Spinner size, can be 'default' or 'large'.  | `string` | `'default'`                                                                                                                                                                                                                                                                                                                                       |
 
 
+## Shadow Parts
+
+| Part           | Description |
+| -------------- | ----------- |
+| `"mb-spinner"` |             |
+
+
 ## Dependencies
 
 ### Used by

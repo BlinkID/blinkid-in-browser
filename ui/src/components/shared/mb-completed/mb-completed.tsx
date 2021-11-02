@@ -18,7 +18,7 @@ export class MbCompleted {
 
   render() {
     return (
-      <Host>
+      <Host part="mb-completed">
         <img src={ this.icon } />
       </Host>
     );

@@ -22,6 +22,13 @@
 | `closeTryAgain`  | Emitted when user clicks on 'Retry' button. | `CustomEvent<void>` |
 
 
+## Shadow Parts
+
+| Part                      | Description |
+| ------------------------- | ----------- |
+| `"mb-api-process-status"` |             |
+
+
 ## Dependencies
 
 ### Used by

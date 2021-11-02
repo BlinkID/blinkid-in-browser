@@ -6,7 +6,7 @@
         <title>Example: BlinkID UI: scan both documents sides</title>
 
         <!-- Import UI component which includes WASM library -->
-        <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.14.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+        <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.14.1/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
 
         <style type="text/css">
             html,
@@ -51,64 +51,62 @@
     </head>
     <body>
         <!-- It's possible to obtain a free trial license key on microblink.com -->
-        <blinkid-in-browser
-            license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWKcUTzdcqWaRng1QSi5A9tEaYqYE/mrIgOWqqBpoxwfVLSrWbBwrL9V01hhfqjAfc4FEpsDVG9opmEMiZbyoL3xlWra/DsWDfRLZiw3B4uBT4Z1OJQbWMGVY8bUBT29UyKcM3fhhlw7zl6y84B6IGbiMuNasOBsaUXvo32zAJXYHabHkgwuNVoaLLiWmaQ52S5po16g1RVJP1gvBlHZiQfCruICGlKc+j3ld8jZNnkqiTykFP2mJHR6uPJfehwu/KJl866wZzsWUtGT+g15HXKoPtCQbtEItRPyCgEfPAsFkWO+1fgRnxTIa8zqDHpyzAzu91WmIi"
-            recognizers="BlinkIdCombinedRecognizer"
-        ></blinkid-in-browser>
+        <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWKa04Zk/OIyg1ymyxyfVCTO3JMJN1y9rOdrdLRWWFZd1OO9wmZqMcLlTv9eD+tpBFyQbY2aoV+gz5caCvYBxr9UJfdR3Xe2uQcQGVI73rBLPEGvbIdV+veSW0SDL1fMS0IVmwDAQMTH62B9FoIM1RJuSGefEbNtBX/xHt1tRDc7PBz0tvc3elDjdivGBGVaIoVzEWP4WZPtSb3icsZ+DH2pVR6YCT99bb3V3w3n4dDOC72NRVXsR/pMyJidREqNbgLU0g85QtaKmqL4Owiq3ZUBgod/op5/xXed5GkJoazXHX9bPFLjg8D+XpWgiR9annH0ltghPN" recognizers="BlinkIdCombinedRecognizer"></blinkid-in-browser>
 
         <script type="text/javascript">
-            function run()
-            {
-                // Important: if attributes or properties are changed, whole component is rerendered
-                const blinkId = document.querySelector( "blinkid-in-browser" );
 
-                if ( window.location.hostname === "blinkid.github.io" )
-                {
-                    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaGyKtLE1z9s26m2Tiph83zrJ8BmmOXovSgjP0SWiVwR2PnaZ8CncDvZE7+geZiiRfZAiRr2ax3LPsNGZFDEMmk07M5Y85MaIS4pZh/meDRrdmOm7a4egXPAdCJ+eMdeIQtPSrAsOG+H6nwMroDVJGRRxevaPbloWKGVUTuBzjpfZN4rmu3V1xCI5U4FGtEvQXXMLR3sumfqK4Mrl6AaoSZYY+nU/knOFP4pKy6hAwvsnIlKJiRjv/WkIn0D21ar1Eijc+Y3U0B93IUvAc1TSjlhnGTiig9F6OFp1y0XgpaovwTGNT+edsIf9NE2IMwqAS0lZCLz7Q=";
-                }
+function run()
+{
+  // Important: if attributes or properties are changed, whole component is rerendered
+  const blinkId = document.querySelector("blinkid-in-browser");
 
-                /* [TEMPORARY FIX]
-                 * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
-                 * for examples, doesn't support COOP and COEP headers.
-                 *
-                 * For more information see "Integration" section in the official documentation.
-                 */
-                blinkId.wasmType = "BASIC";
+  if (window.location.hostname === "blinkid.github.io")
+  {
+    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaGoIDgf/EwetAam5GszpPi21CH1cvFmxP2puQ2IoCVBtobTAVs+qEsccZJHVnGgOIyEruuWOWFVVK2OrSf2Y+PKopg28zDl+FcKHZmTLZWruX0kM18jAKS/JUAfDvMn4HFUTutztvIiYDWyNafElLkf6z7QgOF7w0hDxuXo61zzKwynmD3i4b+x/sbNr8IUq5u7fY2lFlk2rKU0//PyEdHvX7DbnnhVFoQL+g0RiCjYN5ihbNwqbf1SLibk3EmIV5v2DCSpzDvrc3jCrlzDN89pqGbxdOo3vOlVYQWhI2rWfVrpsxgzCjK24zgAwZHEevIdzGoaBw=";
+  }
 
-                blinkId.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
+  /* [TEMPORARY FIX]
+   * Use basic WebAssembly builds since most performant option requires server setup and unpkg.com, which is used
+   * for examples, doesn't support COOP and COEP headers.
+   *
+   * For more information see "Integration" section in the official documentation.
+   */
+  blinkId.wasmType = "BASIC";
 
-                blinkId.addEventListener
-                (
-                    "fatalError",
-                    ev => console.log( "fatalError", ev.detail )
-                );
+  blinkId.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
 
-                blinkId.addEventListener
-                (
-                    "ready",
-                    ev => console.log( "ready", ev.detail )
-                );
+  blinkId.addEventListener(
 
-                blinkId.addEventListener
-                (
-                    "scanError",
-                    ev => console.log( "scanError", ev.detail )
-                );
+  "fatalError",
+  (ev) => console.log("fatalError", ev.detail));
 
-                blinkId.addEventListener
-                (
-                    "scanSuccess",
-                    ev => console.log( "scanSuccess", ev.detail )
-                );
 
-                blinkId.addEventListener
-                (
-                    "feedback",
-                    ev => console.log( "feedback", ev.detail )
-                );
-            }
+  blinkId.addEventListener(
 
-            window.addEventListener( "DOMContentLoaded", ev => run() );
-        </script>
+  "ready",
+  (ev) => console.log("ready", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "scanError",
+  (ev) => console.log("scanError", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "scanSuccess",
+  (ev) => console.log("scanSuccess", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "feedback",
+  (ev) => console.log("feedback", ev.detail));
+
+}
+
+window.addEventListener("DOMContentLoaded", (ev) => run());
+</script>
     </body>
 </html>

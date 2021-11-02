@@ -125,6 +125,16 @@ export interface Recognizer extends WasmNativeObject
      * Returns the current result of the recognition.
      */
     getResult(): Promise< RecognizerResult >;
+
+    /**
+     * Returns the JSON representation of the recognizer's result.
+     * The JSON will be digitally signed and can be used to verify
+     * that the result was provided by the SDK and that it hasn't been
+     * manually altered.
+     * If the SDK does not have this feature compiled into the WASM, this
+     * method will return null.
+     */
+    toJSON(): Promise< string | null >;
 }
 
 /**

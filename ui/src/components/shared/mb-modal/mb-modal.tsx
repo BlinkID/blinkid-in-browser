@@ -11,6 +11,7 @@ import {
   Event
 } from '@stencil/core';
 
+import { classNames } from '../../../utils/generic.helpers';
 
 @Component({
   tag: 'mb-modal',
@@ -44,10 +45,9 @@ export class MbModal {
    */
   @Event() close: EventEmitter<void>;
 
-
   render() {
     return (
-      <Host className={ this.getHostClassName() }>
+      <Host part="mb-modal" className={ classNames({ visible: this.visible }) }>
 
         <div class="mb-modal">
 
@@ -62,7 +62,7 @@ export class MbModal {
 
           <div class="title">{ this.modalTitle }</div>
 
-          <div class={ this.getContentClassName() }>
+          <div class={ this.contentCentered ? 'centered' : '' }>
 
             { this.content }
 
@@ -78,25 +78,5 @@ export class MbModal {
 
       </Host>
     );
-  }
-
-  getHostClassName(): string {
-    const classNames = [];
-
-    if (this.visible) {
-      classNames.push('visible');
-    }
-
-    return classNames.join(' ');
-  }
-
-  getContentClassName(): string {
-    const classNames = ['content'];
-
-    if (this.contentCentered) {
-      classNames.push('centered');
-    }
-
-    return classNames.join(' ');
   }
 }

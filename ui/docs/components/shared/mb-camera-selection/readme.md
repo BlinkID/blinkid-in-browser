@@ -35,6 +35,13 @@ Type: `Promise<void>`
 
 
 
+## Shadow Parts
+
+| Part                    | Description |
+| ----------------------- | ----------- |
+| `"mb-camera-selection"` |             |
+
+
 ## Dependencies
 
 ### Used by
