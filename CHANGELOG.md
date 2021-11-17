@@ -1,5 +1,10 @@
 # Release notes
 
+## 5.14.2
+
+* We've expanded support for `part::` selector by exposing all nested web components.
+* We've fixed styles regarding width and height for camera scanning UI to provide more flexibility to developers.
+
 ## 5.14.1
 
 * We've added support for `part::` selector to provide more flexibility when customizing built-in UI. [#35](https://github.com/BlinkID/blinkid-in-browser/issues/35)

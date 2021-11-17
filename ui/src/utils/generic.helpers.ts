@@ -67,3 +67,14 @@ export function classNames(classes: Record<string, boolean>) {
 
   return result.join(' ');
 }
+
+export function getWebComponentParts(root: ShadowRoot): Array<Element> {
+  const partsChildren = root.querySelectorAll('[part]');
+  const parts = [];
+
+  partsChildren.forEach((el: Element) => {
+    parts.push(el.getAttribute('part'));
+  });
+
+  return parts;
+}

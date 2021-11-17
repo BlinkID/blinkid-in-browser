@@ -303,7 +303,10 @@ export class MbComponent {
   }
 
   componentDidRender() {
-    this.init();  
+    this.init();
+
+    const parts = GenericHelpers.getWebComponentParts(this.hostEl.shadowRoot);
+    this.hostEl.setAttribute('exportparts', parts.join(', '));
   }
 
   disconnectedCallback() {
