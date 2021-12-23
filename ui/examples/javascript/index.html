@@ -7,7 +7,7 @@
 
         <!-- Import UI component which includes WASM library -->
         <!-- Keep in mind that Unpkg CDN is used for demonstration, it's not intended to be used in production! -->
-        <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.14.2/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+        <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.15.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
 
         <style type="text/css">
             html,
@@ -52,7 +52,7 @@
     </head>
     <body>
         <!-- It's possible to obtain a free trial license key on microblink.com -->
-        <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWKa04Zk/OIyg1ymyxyfVCTO3JMJN1y9rOdrdLRWWFZd1OO9wmZqMcLlTv9eD+tpBFyQbY2aoV+gz5caCvYBxr9UJfdR3Xe2uQcQGVI73rBLPEGvbIdV+veSW0SDL1fMS0IVmwDAQMTH62B9FoIM1RJuSGefEbNtBX/xHt1tRDc7PBz0tvc3elDjdivGBGVaIoVzEWP4WZPtSb3icsZ+DH2pVR6YCT99bb3V3w3n4dDOC72NRVXsR/pMyJidREqNbgLU0g85QtaKmqL4Owiq3ZUBgod/op5/xXed5GkJoazXHX9bPFLjg8D+XpWgiR9annH0ltghPN" recognizers="BlinkIdRecognizer"></blinkid-in-browser>
+        <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLc09Zs/mjuGYKJq7GjtRvUpB50NLGDbNQfrme34VlyR9wNs/P4L6GtUVgiQ1Rahc34/rXvsi/ca+hsgPa6udsMam5GcIQBblkWcamv/qu2cYWmM8Tm9Uk2PwHy7Jw1jBRoK5tfvZgo7AiNWUmvJoR2JgkyCSH3ZZOZcGiOdOk5O86+LDIRCoLo//ARugB9Wh/3ym5JPQvYCyzyGpkJtlA4HTnRduma2oAT7Qw/XLjVX7t5Js7MeX59oY0pKA9EQUPIKFWYLcQKeKmTVdj1QVf17DBFJgHY3N587WALhyznh5CJTNMeSTgUikTAGvT48SSDonVqFc" recognizers="BlinkIdRecognizer"></blinkid-in-browser>
 
         <script type="text/javascript">
 
@@ -63,7 +63,7 @@ function run()
 
   if (window.location.hostname === "blinkid.github.io")
   {
-    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaGoIDgf/EwetAam5GszpPi21CH1cvFmxP2puQ2IoCVBtobTAVs+qEsccZJHVnGgOIyEruuWOWFVVK2OrSf2Y+PKopg28zDl+FcKHZmTLZWruX0kM18jAKS/JUAfDvMn4HFUTutztvIiYDWyNafElLkf6z7QgOF7w0hDxuXo61zzKwynmD3i4b+x/sbNr8IUq5u7fY2lFlk2rKU0//PyEdHvX7DbnnhVFoQL+g0RiCjYN5ihbNwqbf1SLibk3EmIV5v2DCSpzDvrc3jCrlzDN89pqGbxdOo3vOlVYQWhI2rWfVrpsxgzCjK24zgAwZHEevIdzGoaBw=";
+    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaCwIXgE/KS3mT49cn51lU6NSqBMahwBCx1lxXaKNVZTfffdrDJIpkj2cZz9Qe+oKweem8XKueX1Iyft5Mal17TNkqix6IUvLIMg8d+W8Ld77iTn5VxKSgbezpWLB5AcwD06UgvL5ldmBiXqjGp42OVTs5cmsoSmMPC/w7jUGWqWhhqkmGxvhQ4abk8tQOfc8qIeuJWeCzz5Fq7dUWacSqgBV4amWd9/v0icLvRjlLqKHkbJcsu49FNsiYtEc+9jOb+w7xy35+w1uqODpufXZlWUnkdRNDbYkwKMmt+A/TOc2T2WyFE6MTgDzDGKmuq5GUQotDCPsg=";
   }
 
   blinkId.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";

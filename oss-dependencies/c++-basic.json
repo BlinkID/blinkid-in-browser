@@ -78,7 +78,7 @@
         "description": "A fast JSON parser/generator for C++ with both SAX/DOM style API"
     },
     {
-        "package": "Sweater/10.1.0@microblink/stable",
+        "package": "Sweater/10.1.1@microblink/stable",
         "url": "https://github.com/microblink/sweater",
         "license": "MIT",
         "description": "Humble Outer Dispatch"

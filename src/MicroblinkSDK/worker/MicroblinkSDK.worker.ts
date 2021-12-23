@@ -5,6 +5,8 @@
 import * as Messages from "./Messages";
 import * as Utils from "../Utils";
 import * as WasmLoadUtils from "../WasmLoadUtils";
+import * as License from "../License";
+import * as ErrorTypes from "../ErrorTypes";
 
 import
 {
@@ -15,9 +17,9 @@ import
 
 import { convertEmscriptenStatusToProgress } from "../LoadProgressUtils";
 import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
-import * as License from "../License";
 import { setupModule, supportsThreads, waitForThreadWorkers } from "../PThreadHelper";
 import { WasmType } from "../WasmType";
+import { SDKError } from "../SDKError";
 
 interface MessageWithParameters extends Messages.RequestMessage
 {
@@ -97,7 +99,10 @@ export default class MicroblinkWorker
                     this.registerClearTimeoutCallback( msg as Messages.SetClearTimeoutCallback );
                     break;
                 default:
-                    throw new Error( "Unknown message action: " + JSON.stringify( msg.action ) );
+                    throw new SDKError( {
+                        code: ErrorTypes.ErrorCodes.WORKER_MESSAGE_ACTION_UNKNOWN,
+                        message: "Unknown message action: " + JSON.stringify( msg.action )
+                    } );
             }
         };
         /* eslint-enable @typescript-eslint/no-unsafe-assignment,
@@ -111,7 +116,7 @@ export default class MicroblinkWorker
         return handle;
     }
 
-    private notifyError( originalMessage: Messages.RequestMessage, error: License.LicenseErrorResponse | string )
+    private notifyError( originalMessage: Messages.RequestMessage, error: SDKError | string )
     {
         this.context.postMessage
         (
@@ -151,7 +156,9 @@ export default class MicroblinkWorker
                 unwrappedParam = this.objects[ unwrappedParam ];
                 if ( unwrappedParam === undefined )
                 {
-                    this.notifyError( msgWithParams, "Cannot find object with handle: undefined" );
+                    this.notifyError( msgWithParams, new SDKError(
+                        ErrorTypes.workerErrors.handleUndefined
+                    ) );
                 }
             }
             else if ( wrappedParam.type === Messages.ParameterType.RecognizerSettings )
@@ -479,14 +486,20 @@ export default class MicroblinkWorker
                 ( error: any ) =>
                 {
                     // Failed to load WASM in web worker due to error
-                    this.notifyError( msg, error );
+                    this.notifyError( msg, new SDKError(
+                        ErrorTypes.workerErrors.wasmLoadFailure,
+                        error
+                    ) );
                 }
             );
         }
         catch( error )
         {
             // Failed to load WASM in web worker due to error
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.wasmLoadFailure,
+                error
+            ) );
         }
     }
     /* eslint-enable @typescript-eslint/no-explicit-any,
@@ -501,7 +514,9 @@ export default class MicroblinkWorker
     {
         if ( this.wasmModule === null )
         {
-            this.notifyError( msg, "WASM module is not initialized!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.wasmInitMissing
+            ) );
             return;
         }
 
@@ -522,7 +537,10 @@ export default class MicroblinkWorker
         }
         catch ( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.functionInvokeFailure,
+                error
+            ) );
         }
     }
     /* eslint-enable @typescript-eslint/no-unsafe-assignment,
@@ -536,7 +554,9 @@ export default class MicroblinkWorker
     {
         if ( this.wasmModule === null )
         {
-            this.notifyError( msg, "WASM module is not initialized!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.wasmInitMissing
+            ) );
             return;
         }
 
@@ -556,7 +576,10 @@ export default class MicroblinkWorker
         }
         catch ( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.recognizerCreationFailure,
+                error
+            ) );
         }
     }
     /* eslint-disable @typescript-eslint/no-unsafe-assignment,
@@ -584,11 +607,15 @@ export default class MicroblinkWorker
     {
         if ( this.wasmModule === null )
         {
-            this.notifyError( msg, "WASM module is not initialized!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.wasmInitMissing
+            ) );
         }
         else if ( this.nativeRecognizerRunner !== null )
         {
-            this.notifyError( msg, "Recognizer runner is already created! Multiple instances are not allowed!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.runnerExists
+            ) );
         }
         else
         {
@@ -604,9 +631,19 @@ export default class MicroblinkWorker
                         this.notifyError
                         (
                             msg,
-                            new License.LicenseErrorResponse(
-                                License.LicenseErrorType[ resultStatus as keyof typeof License.LicenseErrorType ],
-                                `Cannot initialize recognizers because of invalid server permission: ${resultStatus}`
+                            new SDKError(
+                                {
+                                    code: ErrorTypes.ErrorCodes.WORKER_LICENSE_UNLOCK_ERROR,
+                                    message:
+                                    `Cannot initialize recognizers because of invalid server permission: 
+                                    ${resultStatus}`,
+                                },
+                                {
+                                    type:
+                                    License.LicenseErrorType[
+                                        resultStatus as keyof typeof License.LicenseErrorType
+                                    ],
+                                }
                             )
                         );
                         return;
@@ -632,7 +669,10 @@ export default class MicroblinkWorker
             }
             catch ( error )
             {
-                this.notifyError( msg, error );
+                this.notifyError( msg, new SDKError(
+                    ErrorTypes.workerErrors.runnerCreationFailure,
+                    error
+                ) );
             }
         }
     }
@@ -641,11 +681,15 @@ export default class MicroblinkWorker
     {
         if ( this.wasmModule === null )
         {
-            this.notifyError( msg, "WASM module is not initialized!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.wasmInitMissing
+            ) );
         }
         else if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, "Recognizer runner is not created! There is nothing to reconfigure!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.runnerMissing
+            ) );
         }
         else
         {
@@ -669,7 +713,10 @@ export default class MicroblinkWorker
             }
             catch( error )
             {
-                this.notifyError( msg, error );
+                this.notifyError( msg, new SDKError(
+                    ErrorTypes.workerErrors.runnerReconfigureFailure,
+                    error
+                ) );
             }
         }
     }
@@ -678,7 +725,9 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, "Recognizer runner is already deleted!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.runnerDeleted
+            ) );
             return;
         }
 
@@ -694,7 +743,10 @@ export default class MicroblinkWorker
         }
         catch( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.runnerDeleteFailure,
+                error
+            ) );
         }
     }
 
@@ -742,7 +794,10 @@ export default class MicroblinkWorker
             const object = this.objects[ objectHandle ]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
             if ( object === undefined )
             {
-                this.notifyError( msg, "Cannot find object with handle: " + objectHandle.toString() );
+                this.notifyError( msg, new SDKError( {
+                    message: "Cannot find object with handle: " + objectHandle.toString(),
+                    code: ErrorTypes.ErrorCodes.WORKER_HANDLE_UNDEFINED
+                } ) );
             }
             else
             {
@@ -768,7 +823,10 @@ export default class MicroblinkWorker
         }
         catch ( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.objectInvokeFailure,
+                error
+            ) );
         }
     }
 
@@ -776,7 +834,9 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure
+            ) );
             return;
         }
 
@@ -795,7 +855,10 @@ export default class MicroblinkWorker
         }
         catch( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure,
+                error
+            ) );
         }
     }
 
@@ -803,7 +866,9 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure
+            ) );
             return;
         }
 
@@ -818,7 +883,10 @@ export default class MicroblinkWorker
         }
         catch ( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure,
+                error
+            ) );
         }
     }
 
@@ -826,7 +894,9 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure
+            ) );
             return;
         }
 
@@ -841,7 +911,10 @@ export default class MicroblinkWorker
         }
         catch ( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure,
+                error
+            ) );
         }
     }
 
@@ -849,7 +922,9 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure
+            ) );
             return;
         }
 
@@ -864,7 +939,10 @@ export default class MicroblinkWorker
         }
         catch ( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure,
+                error
+            ) );
         }
     }
 
@@ -955,7 +1033,9 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure
+            ) );
             return;
         }
 
@@ -971,7 +1051,10 @@ export default class MicroblinkWorker
         }
         catch( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure,
+                error
+            ) );
         }
     }
 
@@ -979,7 +1062,9 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, "Recognizer runner is not initialized! Cannot process image!" );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure
+            ) );
             return;
         }
 
@@ -1010,7 +1095,10 @@ export default class MicroblinkWorker
         }
         catch( error )
         {
-            this.notifyError( msg, error );
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.imageProcessFailure,
+                error
+            ) );
         }
     }
 }

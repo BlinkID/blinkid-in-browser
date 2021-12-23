@@ -2,7 +2,14 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import { Component, Host, h } from '@stencil/core';
+import {
+  Component,
+  Element,
+  Host,
+  h
+} from '@stencil/core';
+
+import { setWebComponentParts } from '../../../utils/generic.helpers';
 
 @Component({
   tag: 'mb-container',
@@ -11,12 +18,20 @@ import { Component, Host, h } from '@stencil/core';
 })
 export class MbContainer {
 
+  /**
+   * Host element as variable for manipulation
+   */
+  @Element() hostEl: HTMLElement;
+
+  connectedCallback() {
+    setWebComponentParts(this.hostEl);
+  }
+
   render() {
     return (
-      <Host part="mb-container">
+      <Host>
         <slot></slot>
       </Host>
     );
   }
-
 }

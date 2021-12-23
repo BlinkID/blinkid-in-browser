@@ -4,6 +4,7 @@
 
 import {
   Component,
+  Element,
   Event,
   EventEmitter,
   Host,
@@ -15,7 +16,7 @@ import {
 
 import { CameraEntry } from '../../../utils/data-structures';
 import * as DeviceHelpers from '../../../utils/device.helpers';
-import { classNames } from '../../../utils/generic.helpers';
+import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
 
 @Component({
   tag: 'mb-camera-toolbar',
@@ -23,6 +24,7 @@ import { classNames } from '../../../utils/generic.helpers';
   shadow: true
 })
 export class MbCameraToolbar {
+
   private cameraSelection!: HTMLMbCameraSelectionElement;
 
   @State() isDesktop: boolean = DeviceHelpers.isDesktop();
@@ -57,8 +59,14 @@ export class MbCameraToolbar {
    */
   @Event() changeCameraDevice: EventEmitter<CameraEntry>;
 
+  /**
+   * Host element as variable for manipulation
+   */
+  @Element() hostEl: HTMLElement;
+
   connectedCallback() {
     window.addEventListener('resize', this.handleResize.bind(this), false);
+    setWebComponentParts(this.hostEl);
   }
 
   componentDidRender() {
@@ -141,7 +149,7 @@ export class MbCameraToolbar {
     }
 
     return (
-      <Host part="mb-camera-toolbar">
+      <Host>
         <header>
           { flipButton }
           <section class="camera-selection-wrapper">

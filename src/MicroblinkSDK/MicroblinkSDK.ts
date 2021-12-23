@@ -8,14 +8,20 @@ import { MetadataCallbacks } from "./MetadataCallbacks";
 import { WasmSDKLoadSettings } from "./WasmLoadSettings";
 
 
+import { SDKError } from "./SDKError";
+import * as ErrorTypes from "./ErrorTypes";
+
 export * from "./CameraUtils";
 export * from "./DataStructures";
-export * from "./MetadataCallbacks";
+export * from "./DeviceUtils";
+export * from "./ErrorTypes";
 export * from "./FrameCapture";
+export * from "./License";
+export * from "./MetadataCallbacks";
+export * from "./SDKError";
 export * from "./VideoRecognizer";
 export * from "./WasmLoadSettings";
 export * from "./WasmLoadUtils";
-export * from "./DeviceUtils";
 
 // taken from https://stackoverflow.com/a/2117523/213057
 /* eslint-disable */
@@ -64,22 +70,22 @@ export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promi
         {
             if ( !loadSettings || typeof loadSettings !== "object" )
             {
-                reject( "Missing WASM load settings!" );
+                reject( new SDKError( ErrorTypes.sdkErrors.wasmSettingsMissing ) );
                 return;
             }
             if ( typeof loadSettings.licenseKey !== "string" )
             {
-                reject( "Missing license key!" );
+                reject( new SDKError( ErrorTypes.sdkErrors.licenseKeyMissing ) );
                 return;
             }
             if ( !loadSettings.wasmModuleName )
             {
-                reject( "Missing WASM module name!" );
+                reject( new SDKError( ErrorTypes.sdkErrors.wasmModuleNameMissing ) );
                 return;
             }
             if ( typeof loadSettings.engineLocation !== "string" )
             {
-                reject( "Setting property 'engineLocation' must be a string!" );
+                reject( new SDKError( ErrorTypes.sdkErrors.engineLocationInvalid ) );
                 return;
             }
             // obtain user ID from local storage
@@ -133,11 +139,11 @@ export async function createRecognizerRunner
 {
     if ( typeof wasmSDK !== "object" )
     {
-        throw new Error( "SDK is not provided!" );
+        throw new SDKError( ErrorTypes.sdkErrors.missing );
     }
     if ( typeof recognizers !== "object" || recognizers.length < 1 )
     {
-        throw new Error( "To create RecognizerRunner at least 1 recognizer is required." );
+        throw new SDKError( ErrorTypes.sdkErrors.recognizersMissing );
     }
     return wasmSDK.mbWasmModule.createRecognizerRunner( recognizers, allowMultipleResults, metadataCallbacks );
 }

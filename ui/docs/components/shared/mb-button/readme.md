@@ -28,13 +28,6 @@
 | `buttonClick` | Event which is triggered when user clicks on button element. This event is not triggered when the button is disabled. | `CustomEvent<UIEvent>` |
 
 
-## Shadow Parts
-
-| Part          | Description |
-| ------------- | ----------- |
-| `"mb-button"` |             |
-
-
 ## Dependencies
 
 ### Used by

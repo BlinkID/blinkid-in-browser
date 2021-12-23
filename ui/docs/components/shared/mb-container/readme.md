@@ -5,13 +5,6 @@
 <!-- Auto Generated Below -->
 
 
-## Shadow Parts
-
-| Part             | Description |
-| ---------------- | ----------- |
-| `"mb-container"` |             |
-
-
 ## Dependencies
 
 ### Used by

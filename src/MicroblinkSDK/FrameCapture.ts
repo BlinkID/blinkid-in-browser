@@ -2,7 +2,9 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
+import { SDKError } from "./SDKError";
 import { ImageOrientation } from "./DataStructures";
+import * as ErrorTypes from "./ErrorTypes";
 
 // ============================================ /
 // Frame capture and camera management support. /
@@ -55,7 +57,7 @@ export function captureFrame( imageSource: CanvasImageSource ): CapturedFrame
     }
     else if ( imageSource instanceof SVGImageElement )
     {
-        throw new Error( "Recognition of SVG elements not supported!" );
+        throw new SDKError( ErrorTypes.frameCaptureErrors.svgUnsupported );
     }
     else
     {
@@ -70,7 +72,7 @@ export function captureFrame( imageSource: CanvasImageSource ): CapturedFrame
 
     if ( !ctx )
     {
-        throw new Error( "Could not get canvas 2d context!" );
+        throw new SDKError( ErrorTypes.frameCaptureErrors.canvasMissing );
     }
 
     ctx.drawImage( imageSource, 0, 0, canvas.width, canvas.height );

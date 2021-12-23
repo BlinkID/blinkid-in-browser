@@ -2,12 +2,19 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import { Component, Host, h, Method, Prop, State } from '@stencil/core';
-
 import {
-  FeedbackMessage
-} from '../../../utils/data-structures';
-import { classNames } from '../../../utils/generic.helpers';
+  Component,
+  Element,
+  Host,
+  h,
+  Method,
+  Prop,
+  State
+} from '@stencil/core';
+
+import { FeedbackMessage } from '../../../utils/data-structures';
+
+import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
 
 import * as Utils from './mb-feedback.utils';
 
@@ -17,6 +24,7 @@ import * as Utils from './mb-feedback.utils';
   shadow: true,
 })
 export class MbFeedback {
+
   @State() paragraphClassName: string;
 
   @State() paragraphValue: string;
@@ -35,9 +43,18 @@ export class MbFeedback {
     this.paragraphClassName = Utils.getFeedbackClassName(feedback.state);
   }
 
+  /**
+   * Host element as variable for manipulation
+   */
+  @Element() hostEl: HTMLElement;
+
+  connectedCallback() {
+    setWebComponentParts(this.hostEl);
+  }
+
   render() {
     return (
-      <Host part="mb-feedback" className={ classNames({ visible: this.visible }) }>
+      <Host className={ classNames({ visible: this.visible }) }>
         <p class={ this.paragraphClassName }>{ this.paragraphValue }</p>
       </Host>
     );

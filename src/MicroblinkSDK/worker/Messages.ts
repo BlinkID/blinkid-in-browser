@@ -5,7 +5,7 @@
 import { CapturedFrame } from "../FrameCapture";
 import { WasmSDKLoadSettings } from "../WasmLoadSettings";
 import { WasmType } from "../WasmType";
-import { LicenseErrorResponse } from "../License";
+import { SDKError } from "../SDKError";
 
 let nextMessageID = 0;
 
@@ -312,9 +312,9 @@ export class StatusMessage implements ResponseMessage
 
     readonly success: boolean = true;
 
-    readonly error: LicenseErrorResponse | string | null = null;
+    readonly error: SDKError | string | null = null;
 
-    constructor( msgID: number, success: boolean, error: LicenseErrorResponse | string | null )
+    constructor( msgID: number, success: boolean, error: SDKError | string | null )
     {
         this.messageID = msgID;
         this.success = success;
@@ -335,6 +335,7 @@ export class InitSuccessMessage implements ResponseMessage
     constructor( msgID: number, success: boolean, showOverlay: boolean, wasmType: WasmType )
     {
         this.messageID = msgID;
+        this.success = success;
         this.showOverlay = showOverlay;
         this.wasmType = wasmType;
     }

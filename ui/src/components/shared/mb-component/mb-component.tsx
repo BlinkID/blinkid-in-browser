@@ -20,7 +20,6 @@ import {
   Code,
   CombinedImageRecognitionConfiguration,
   CombinedImageType,
-  EventFatalError,
   EventReady,
   EventScanError,
   EventScanSuccess,
@@ -30,13 +29,17 @@ import {
   ImageRecognitionType,
   RecognitionEvent,
   RecognitionStatus,
-  VideoRecognitionConfiguration
+  VideoRecognitionConfiguration,
+  SDKError
 } from '../../../utils/data-structures';
+import * as ErrorTypes from '../../../utils/error-structures';
 
 import {
   CheckConclusion,
   SdkService
 } from '../../../utils/sdk.service';
+
+import * as BlinkIDSDK from '../../../../../es/blinkid-sdk';
 
 import { TranslationService } from '../../../utils/translation.service';
 
@@ -257,12 +260,12 @@ export class MbComponent {
   /**
    * Event containing boolean which used to check whether component is blocked.
    */
-   @Event() block: EventEmitter<boolean>;
+  @Event() block: EventEmitter<boolean>;
 
   /**
    * See event 'fatalError' in public component.
    */
-  @Event() fatalError: EventEmitter<EventFatalError>;
+  @Event() fatalError: EventEmitter<SDKError>;
 
   /**
    * See event 'ready' in public component.
@@ -294,10 +297,17 @@ export class MbComponent {
    */
   @Event() imageScanStarted: EventEmitter<null>;
 
+  /**
+   * See event 'scanAborted' in public component.
+   */
+  @Event() scanAborted: EventEmitter<null>;
+
   connectedCallback() {
+    GenericHelpers.setWebComponentParts(this.hostEl);
+
     this.hostEl.addEventListener('keyup', (ev: any) => {
       if (ev.key === 'Escape' || ev.code === 'Escape') {
-        this.stopRecognition();
+        this.abortScan();
       }
     });
   }
@@ -311,6 +321,35 @@ export class MbComponent {
 
   disconnectedCallback() {
     this.sdkService?.stopRecognition();
+  }
+
+  /**
+   * Starts camera scan using camera overlay with usage instructions.
+   */
+  @Method()
+  async startCameraScan() {
+    this.startScanFromCamera();
+  }
+
+  /**
+   * Starts image scan, emits results from provided file.
+   *
+   * @param file File to scan
+   */
+  @Method()
+  async startImageScan(file: File) {
+    this.startScanFromImage(file);
+  }
+
+  /**
+   * Starts combined image scan, emits results from provided files.
+   *
+   * @param firstFile File to scan as first image
+   * @param secondFile File to scan as second image
+   */
+  @Method()
+  async startCombinedImageScan(firstFile: File, secondFile: File) {
+    this.startScanFromImageCombined(firstFile, secondFile)
   }
 
   /**
@@ -393,10 +432,10 @@ export class MbComponent {
 
     if (!internetIsAvailable) {
       this.setFatalError(
-        new EventFatalError(
-          Code.InternetNotAvailable,
-          this.translationService.i('check-internet-connection').toString()
-        )
+        new SDKError({
+          code: ErrorTypes.ErrorCodes.InternetNotAvailable,
+          message: this.translationService.i('check-internet-connection').toString()
+        })
       );
       return;
     }
@@ -410,14 +449,14 @@ export class MbComponent {
     const hasMandatoryCapabilities = await DeviceHelpers.checkMandatoryCapabilites();
 
     if (!hasMandatoryCapabilities) {
-      this.setFatalError(new EventFatalError(Code.BrowserNotSupported, 'Browser is not supported!'));
+      this.setFatalError(new SDKError(ErrorTypes.componentErrors.browserNotSupported));
       return;
     }
 
     this.blocked = true;
     this.block.emit(true);
 
-    const initEvent: EventReady | EventFatalError = await this.sdkService.initialize(this.licenseKey, {
+    const initEvent: EventReady | SDKError = await this.sdkService.initialize(this.licenseKey, {
       allowHelloMessage: this.allowHelloMessage,
       engineLocation: this.engineLocation,
       wasmType: Utils.getSDKWasmType(this.wasmType)
@@ -425,7 +464,7 @@ export class MbComponent {
 
     this.cameraExperience.showOverlay = this.sdkService.showOverlay;
 
-    if (initEvent instanceof EventFatalError) {
+    if (initEvent instanceof SDKError) {
       this.setFatalError(initEvent);
       return;
     }
@@ -508,7 +547,7 @@ export class MbComponent {
 
   private async checkInputProperties(): Promise<boolean> {
     if (!this.licenseKey) {
-      this.setFatalError(new EventFatalError(Code.MissingLicenseKey, 'Missing license key!'));
+      this.setFatalError(new SDKError(BlinkIDSDK.sdkErrors.licenseKeyMissing));
       return false;
     }
 
@@ -516,10 +555,10 @@ export class MbComponent {
     const conclusion: CheckConclusion = this.sdkService.checkRecognizers(this.recognizers);
 
     if (!conclusion.status) {
-      const fatalError = new EventFatalError(
-        Code.InvalidRecognizers,
-        conclusion.message
-      );
+      const fatalError = new SDKError({
+        code: ErrorTypes.ErrorCodes.InvalidRecognizers,
+        message: conclusion.message
+      });
 
       this.setFatalError(fatalError);
       return false;
@@ -571,7 +610,7 @@ export class MbComponent {
           if (!recognitionEvent.data.initiatedByUser) {
             this.scanError.emit({
               code: Code.EmptyResult,
-              fatal: true,
+              fatal: false,
               message: 'Could not extract information from video feed!',
               recognizerName: recognitionEvent.data.recognizerName
             });
@@ -786,42 +825,15 @@ export class MbComponent {
       const cameraFlipped = this.sdkService.isCameraFlipped();
       this.cameraExperience.setCameraFlipState(cameraFlipped);
     } catch (error) {
-      const isAvailable = navigator.onLine;
-
-      if (isAvailable) {
-        if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
-          this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
-          this.showLicenseInfoModal(error);
-        }
-        else {
-          console.error('Error during camera scan', error);
-
-          this.scanError.emit({
-            code: Code.GenericScanError,
-            fatal: true,
-            message: `There was a problem during scan action.`,
-            recognizerName: ''
-          });
-          this.feedback.emit({
-            code: FeedbackCode.GenericScanError,
-            state: 'FEEDBACK_ERROR',
-            message: this.translationService.i('feedback-error-generic').toString()
-          });
-
-          this.showOverlay('');
-        }
-      }
-      else {
-        this.setFatalError(new EventFatalError(Code.InternetNotAvailable, this.translationService.i('check-internet-connection').toString()));
-        this.showLicenseInfoModal(this.translationService.i('check-internet-connection').toString());
-      }
+      this.handleScanError(error);
+      this.showOverlay('');
     }
   }
 
   private async startScanFromImage(file?: File) {
     const configuration: ImageRecognitionConfiguration = {
       recognizers: this.recognizers,
-      file: file ? file : this.scanFromImageInput.files[0]
+      file: file || this.scanFromImageInput.files[0]
     };
 
     if (this.recognizerOptions && Object.keys(this.recognizerOptions).length > 0) {
@@ -855,7 +867,7 @@ export class MbComponent {
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
-          this.hideScanFromImageUi();
+          this.hideScanFromImageUi(false);
           this.clearInputImages();
           break;
 
@@ -867,7 +879,7 @@ export class MbComponent {
         case RecognitionStatus.EmptyResultState:
           this.scanError.emit({
             code: Code.EmptyResult,
-            fatal: true,
+            fatal: false,
             message: 'Could not extract information from image!',
             recognizerName: recognitionEvent.data.recognizerName
           });
@@ -876,7 +888,7 @@ export class MbComponent {
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
-          this.hideScanFromImageUi();
+          this.hideScanFromImageUi(false);
           this.clearInputImages();
           break;
 
@@ -895,7 +907,7 @@ export class MbComponent {
           this.clearInputImages();
 
           if (!recognitionEvent.data.imageCapture) {
-            this.hideScanFromImageUi();
+            this.hideScanFromImageUi(true);
           }
           break;
 
@@ -913,48 +925,16 @@ export class MbComponent {
 
       await this.sdkService.scanFromImage(configuration, eventHandler);
     } catch (error) {
-      const isAvailable = navigator.onLine;
-
-      if (isAvailable) {
-        if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
-          this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
-          this.showLicenseInfoModal(error);
-        }
-        else {
-          this.scanError.emit({
-            code: Code.GenericScanError,
-            fatal: true,
-            message: `There was a problem during scan action.`,
-            recognizerName: ''
-          });
-          this.feedback.emit({
-            code: FeedbackCode.GenericScanError,
-            state: 'FEEDBACK_ERROR',
-            message: this.translationService.i('feedback-error-generic').toString()
-          });
-
-          this.hideScanFromImageUi();
-        }
-      }
-      else {
-        this.setFatalError(
-          new EventFatalError(
-            Code.InternetNotAvailable,
-            this.translationService.i('check-internet-connection').toString()
-            )
-          );
-        this.showLicenseInfoModal(
-          this.translationService.i('check-internet-connection').toString()
-        );
-      }
+      this.handleScanError(error);
+      this.hideScanFromImageUi(false);
     }
   }
 
-  private async startScanFromImageCombined() {
+  private async startScanFromImageCombined(firstFile?: File, secondFile?: File) {
     const configuration: CombinedImageRecognitionConfiguration = {
       recognizers: this.recognizers,
-      firstFile: this.galleryImageFirstFile,
-      secondFile: this.galleryImageSecondFile
+      firstFile: firstFile || this.galleryImageFirstFile,
+      secondFile: secondFile || this.galleryImageSecondFile
     };
 
     if (this.recognizerOptions) {
@@ -992,7 +972,7 @@ export class MbComponent {
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
-          this.hideScanFromImageUi();
+          this.hideScanFromImageUi(false);
           this.clearInputImages();
           break;
 
@@ -1008,7 +988,7 @@ export class MbComponent {
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
-          this.hideScanFromImageUi();
+          this.hideScanFromImageUi(false);
           this.clearInputImages();
           break;
 
@@ -1029,7 +1009,7 @@ export class MbComponent {
             state: 'FEEDBACK_ERROR',
             message: this.translationService.i('feedback-scan-unsuccessful').toString()
           });
-          this.hideScanFromImageUi();
+          this.hideScanFromImageUi(false);
           this.clearInputImages();
           break;
 
@@ -1048,7 +1028,7 @@ export class MbComponent {
           this.clearInputImages();
 
           if (!recognitionEvent.data.imageCapture) {
-            this.hideScanFromImageUi();
+            this.hideScanFromImageUi(true);
           }
           break;
 
@@ -1066,33 +1046,47 @@ export class MbComponent {
 
       await this.sdkService.scanFromImageCombined(configuration, eventHandler);
     } catch (error) {
-      const isAvailable = navigator.onLine;
+      this.handleScanError(error);
+      this.hideScanFromImageUi(false);
+    }
+  }
 
-      if (isAvailable) {
-        if (error?.code === 'UNLOCK_LICENSE_ERROR' ) {
-          this.setFatalError(new EventFatalError(Code.LicenseError, 'Something is wrong with the license.', error));
-          this.showLicenseInfoModal(error);
-        }
-        else {
-          this.scanError.emit({
-            code: Code.GenericScanError,
-            fatal: true,
-            message: `There was a problem during scan action.`,
-            recognizerName: ''
-          });
-          this.feedback.emit({
-            code: FeedbackCode.GenericScanError,
-            state: 'FEEDBACK_ERROR',
-            message: this.translationService.i('feedback-error-generic').toString()
-          });
+  private handleScanError(error: any) {
+    const isAvailable = navigator.onLine;
 
-          this.hideScanFromImageUi();
-        }
-      }
-      else {
-        this.setFatalError(new EventFatalError(Code.InternetNotAvailable, this.translationService.i('check-internet-connection').toString()));
-        this.showLicenseInfoModal(this.translationService.i('check-internet-connection').toString());
-      }
+    if (!isAvailable) {
+      const fatalError = new SDKError({
+        code: ErrorTypes.ErrorCodes.InternetNotAvailable,
+        message: this.translationService.i('check-internet-connection').toString()
+      });
+
+      this.setFatalError(fatalError);
+      this.showLicenseInfoModal(
+        this.translationService.i('check-internet-connection').toString()
+      );
+
+      return;
+    }
+
+    if (error?.code === BlinkIDSDK.ErrorCodes.LICENSE_UNLOCK_ERROR) {
+      this.setFatalError(new SDKError(ErrorTypes.componentErrors.licenseError, error));
+      this.showLicenseInfoModal(error);
+    }
+    else {
+      this.scanError.emit({
+        code: Code.GenericScanError,
+        fatal: true,
+        message: 'There was a problem during scan action.',
+        recognizerName: '',
+        details: error
+      });
+      this.feedback.emit({
+        code: FeedbackCode.GenericScanError,
+        state: 'FEEDBACK_ERROR',
+        message: this.translationService.i('feedback-error-generic').toString()
+      });
+
+      this.showOverlay('');
     }
   }
 
@@ -1224,7 +1218,7 @@ export class MbComponent {
     });
   }
 
-  private setFatalError(error: EventFatalError) {
+  private setFatalError(error: SDKError) {
     this.fatalError.emit(error);
 
     if (this.hideLoadingAndErrorUi) {
@@ -1233,16 +1227,21 @@ export class MbComponent {
 
     if (error.details) {
       switch (error.details?.code) {
-        case 'UNLOCK_LICENSE_ERROR':
+        case BlinkIDSDK.ErrorCodes.LICENSE_UNLOCK_ERROR:
           const licenseErrorType = error.details?.type;
+
           switch (licenseErrorType) {
-            case 'NETWORK_ERROR':
+            case BlinkIDSDK.LicenseErrorType.NetworkError:
               this.errorMessage.innerText = this.translationService.i('network-error').toString();
               break;
-              default:
+
+            default:
               this.errorMessage.innerText = this.translationService.i('scanning-not-available').toString();
           }
           break;
+
+        default:
+          // Do nothing
       }
     }
     else {
@@ -1251,6 +1250,11 @@ export class MbComponent {
 
     this.showScreen('error');
     this.showOverlay('');
+  }
+
+  private abortScan() {
+    this.scanAborted.emit();
+    this.stopRecognition();
   }
 
   private stopRecognition() {
@@ -1316,37 +1320,16 @@ export class MbComponent {
   }
 
   private async onCombinedImageChange(ev: FileList, imageType: CombinedImageType) {
-    if (ev === null) {
-      if (imageType === CombinedImageType.First) {
-        this.galleryImageFirstFile = null;
-      }
-
-      if (imageType === CombinedImageType.Second) {
-        this.galleryImageSecondFile = null;
-      }
-    }
-    else {
-      const imageFile = GenericHelpers.getImageFile(ev);
-
-      if (imageFile === null) {
-        return;
-      }
-
-      if (imageType === CombinedImageType.First) {
-        this.galleryImageFirstFile = imageFile;
-      }
-
-      if (imageType === CombinedImageType.Second) {
-        this.galleryImageSecondFile = imageFile;
-      }
+    if (imageType === CombinedImageType.First) {
+      this.galleryImageFirstFile = GenericHelpers.getImageFile(ev);
     }
 
-    if (this.galleryImageFirstFile !== null && this.galleryImageSecondFile !== null) {
-      this.combinedScanFromImageButton.disabled = false;
+    if (imageType === CombinedImageType.Second) {
+      this.galleryImageSecondFile = GenericHelpers.getImageFile(ev);
     }
-    else {
-      this.combinedScanFromImageButton.disabled = true;
-    }
+
+    // Enable scan button only if both images have values
+    this.combinedScanFromImageButton.disabled = this.galleryImageFirstFile === null || this.galleryImageSecondFile === null;
   }
 
   private showScanFromImageUi(): void {
@@ -1365,17 +1348,21 @@ export class MbComponent {
     }
   }
 
-  private hideScanFromImageUi(): void {
+  private hideScanFromImageUi(success: boolean): void {
     if (this.galleryOverlayType === 'INLINE') {
+      let timeout = 0;
+
       const inProgress = this.screens.processing.querySelector('p.in-progress');
       const done = this.screens.processing.querySelector('p.done');
 
       inProgress.classList.remove('visible');
-      done.classList.add('visible');
 
-      window.setTimeout(() => {
-        this.showScreen('action');
-      }, 1000);
+      if (success) {
+        done.classList.add('visible');
+        timeout = 1000;
+      }
+
+      window.setTimeout(() => this.showScreen('action'), timeout);
     }
 
     if (this.galleryOverlayType === 'FULLSCREEN') {
@@ -1385,16 +1372,16 @@ export class MbComponent {
 
   render() {
     return (
-      <Host part="mb-component">
+      <Host>
         <mb-screen
-          id="screen-loading"
+          id="mb-screen-loading"
           visible={!this.hideLoadingAndErrorUi}
           ref={el => this.screens.loading = el as HTMLMbScreenElement}
         >
           <mb-spinner icon={this.iconSpinnerScreenLoading}></mb-spinner>
         </mb-screen>
         <mb-screen
-          id="screen-error"
+          id="mb-screen-error"
           visible={false}
           ref={el => this.screens.error = el as HTMLMbScreenElement}
         >
@@ -1409,7 +1396,7 @@ export class MbComponent {
           <p ref={el => this.errorMessage = el as HTMLParagraphElement}></p>
         </mb-screen>
         <mb-screen
-          id="screen-action"
+          id="mb-screen-action"
           visible={false}
           ref={el => this.screens.action = el as HTMLMbScreenElement}
         >
@@ -1469,7 +1456,7 @@ export class MbComponent {
           </div>
         </mb-screen>
         <mb-screen
-          id="screen-processing"
+          id="mb-screen-processing"
           visible={false}
           ref={el => this.screens.processing = el as HTMLMbScreenElement}
         >
@@ -1483,7 +1470,7 @@ export class MbComponent {
           </p>
         </mb-screen>
         <mb-overlay
-          id="overlay-drag-and-drop"
+          id="mb-overlay-drag-and-drop"
           visible={false}
           ref={el => this.overlays.draganddrop = el as HTMLMbOverlayElement}
         >
@@ -1492,7 +1479,7 @@ export class MbComponent {
           <div id="drag-and-drop-zone" ref={el => this.dragAndDropZone = el as HTMLDivElement}></div>
         </mb-overlay>
         <mb-overlay
-          id="overlay-gallery-experience"
+          id="mb-overlay-gallery-experience"
           ref={el => this.overlays.processing = el as HTMLMbOverlayElement}
         >
           <mb-spinner icon={this.iconSpinnerFromGalleryExperience} size="large"></mb-spinner>
@@ -1512,7 +1499,7 @@ export class MbComponent {
           </mb-modal>
         </mb-overlay>
         <mb-overlay
-          id="overlay-camera-experience"
+          id="mb-overlay-camera-experience"
           visible={false}
           ref={el => this.overlays.camera = el as HTMLMbOverlayElement}
         >
@@ -1526,7 +1513,7 @@ export class MbComponent {
               translationService={this.translationService}
               showScanningLine={this.showScanningLine}
               showCameraFeedbackBarcodeMessage={this.showCameraFeedbackBarcodeMessage}
-              onClose={() => this.stopRecognition()}
+              onClose={() => this.abortScan()}
               onFlipCameraAction={() => this.flipCameraAction()}
               onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.changeCameraDevice(ev.detail)}
               class="overlay-camera-element"
@@ -1541,7 +1528,7 @@ export class MbComponent {
           </div>
         </mb-overlay>
         <mb-overlay
-          id="overlay-modal"
+          id="mb-overlay-modal"
           visible={false}
           ref={el => this.overlays.modal = el as HTMLMbOverlayElement}
         >

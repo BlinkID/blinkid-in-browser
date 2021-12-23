@@ -4,6 +4,7 @@
 
 import {
   Component,
+  Element,
   Event,
   EventEmitter,
   Host,
@@ -11,7 +12,7 @@ import {
   Prop
 } from '@stencil/core';
 
-import { classNames } from '../../../utils/generic.helpers';
+import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
 
 @Component({
   tag: 'mb-button-classic',
@@ -36,6 +37,11 @@ export class MbButtonClassic {
    */
   @Event() buttonClick: EventEmitter<UIEvent>;
 
+  /**
+   * Host element as variable for manipulation
+   */
+  @Element() hostEl: HTMLElement;
+
   private handleClick(ev: UIEvent) {
     if (this.preventDefault) {
       ev.preventDefault();
@@ -49,10 +55,13 @@ export class MbButtonClassic {
     this.buttonClick.emit(ev);
   }
 
+  connectedCallback() {
+    setWebComponentParts(this.hostEl);
+  }
+
   render() {
     return (
       <Host
-        part="mb-button-classic"
         className={ classNames({ disabled: this.disabled }) }
         onClick={ (ev: UIEvent) => this.handleClick(ev) }>
         <a href="javascript:void(0)">

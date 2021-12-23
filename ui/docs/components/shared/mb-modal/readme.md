@@ -22,13 +22,6 @@
 | `close` | Emitted when user clicks on 'X' button. | `CustomEvent<void>` |
 
 
-## Shadow Parts
-
-| Part         | Description |
-| ------------ | ----------- |
-| `"mb-modal"` |             |
-
-
 ## Dependencies
 
 ### Used by

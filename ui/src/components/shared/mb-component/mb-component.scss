@@ -46,7 +46,7 @@
 /**
  * Screens
  */
-:host #screen-loading.visible {
+:host #mb-screen-loading.visible {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,7 +54,7 @@
   padding: $padding-unit-large;
 }
 
-:host #screen-error.visible {
+:host #mb-screen-error.visible {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -66,10 +66,10 @@
   }
 }
 
-:host #screen-error:not(.visible),
-:host #screen-action:not(.visible),
-:host #screen-loading:not(.visible),
-:host #screen-processing:not(.visible) {
+:host #mb-screen-error:not(.visible),
+:host #mb-screen-action:not(.visible),
+:host #mb-screen-loading:not(.visible),
+:host #mb-screen-processing:not(.visible) {
   :host & {
     border: none;
   }
@@ -78,7 +78,7 @@
 /**
  * Action screen
  */
-:host #screen-action.visible {
+:host #mb-screen-action.visible {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -142,7 +142,7 @@
   }
 }
 
-:host([dir="rtl"]) #screen-action.visible {
+:host([dir="rtl"]) #mb-screen-action.visible {
   .action-label {
     margin: 0 0 0 $padding-unit-large;
   }
@@ -158,36 +158,36 @@
 /**
  * Processing screen
  */
-:host #screen-processing.visible {
+:host #mb-screen-processing.visible {
 }
 
-:host #screen-processing p {
+:host #mb-screen-processing p {
   display: none;
   margin: $padding-unit-medium 0;
 }
 
-:host #screen-processing p.visible {
+:host #mb-screen-processing p.visible {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
 }
 
-:host #screen-processing p.in-progress {
+:host #mb-screen-processing p.in-progress {
   color: var(--mb-component-font-color-secondary);
 }
 
-:host #screen-processing p.done {
+:host #mb-screen-processing p.done {
   color: var(--mb-component-font-color);
 }
 
-:host #screen-processing[data-type="single"] p {
+:host #mb-screen-processing[data-type="single"] p {
   span {
     margin-left: $padding-unit-medium;
   }
 }
 
-:host #screen-processing[data-type="combined"] p {
+:host #mb-screen-processing[data-type="combined"] p {
   span {
     margin-left: $padding-unit-medium;
   }
@@ -196,7 +196,7 @@
 /**
  * Overlays
  */
-:host #overlay-drag-and-drop {
+:host #mb-overlay-drag-and-drop {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -270,7 +270,7 @@
   background-color: transparent;
 }
 
-:host #overlay-gallery-experience.visible {
+:host #mb-overlay-gallery-experience.visible {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,14 +280,14 @@
   color: var(--mb-overlay-gallery-experience-font-color);
 }
 
-:host #overlay-gallery-experience.visible p {
+:host #mb-overlay-gallery-experience.visible p {
   margin: $padding-unit-medium 0 0 0;
   font-size: var(--mb-overlay-gallery-experience-font-size);
   font-weight: var(--mb-overlay-gallery-experience-font-weight);
   line-height: var(--mb-overlay-gallery-experience-line-height);
 }
 
-:host #overlay-camera-experience {
+:host #mb-overlay-camera-experience {
   width: 100%;
   height: 100%;
   min-height: 100%;
@@ -336,7 +336,7 @@
   }
 }
 
-:host #overlay-camera-experience.visible {
+:host #mb-overlay-camera-experience.visible {
   display: flex;
   z-index: 1000;
 }

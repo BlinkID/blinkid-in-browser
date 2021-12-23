@@ -700,18 +700,6 @@ await BlinkIdRecognizer.updateSettings( settings );
 ...
 ```
 
-<!--
-# TODO
-1. Guidelines regarding webcams
-    * Webcams on apple devices
-    * External webcams
-        * Logitech C922 Pro Stream (isprobano, radi odlično, Jurica)
-        * Logitech C920 Pro HD
-        * Logitech C270 HD (budget option)
-    * Built-in webcams, e.g. Lenovo and similar
-2. Guidelines regarding device performance
-3. Specific guidelines for Mac laptops and PCs?
--->
 ## <a name="technicalRequirements"></a> Technical requirements
 
 This document provides information about technical requirements of end-user devices to run BlinkID.

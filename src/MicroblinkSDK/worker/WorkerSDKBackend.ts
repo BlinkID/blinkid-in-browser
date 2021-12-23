@@ -4,7 +4,6 @@
 
 import * as Messages from "./Messages";
 import { CapturedFrame } from "../FrameCapture";
-import { LicenseErrorResponse } from "../License";
 
 import
 {
@@ -22,6 +21,7 @@ import { MetadataCallbacks, DisplayablePoints, DisplayableQuad } from "../Metada
 import { WasmSDKLoadSettings, OptionalLoadProgressCallback } from "../WasmLoadSettings";
 import { WasmType } from "../WasmType";
 import { nativeJsonizationEnabled } from "../../defaultWasmModule";
+import { SDKError } from "../SDKError";
 
 
 // ============================================ /
@@ -35,7 +35,7 @@ interface EventHandler
 
 function defaultEventHandler(
     resolve: () => void,
-    reject: ( reason: LicenseErrorResponse | string | null ) => void
+    reject: ( reason: SDKError | string | null ) => void
 ): EventHandler
 {
     return ( msg: Messages.ResponseMessage ) =>
@@ -54,7 +54,7 @@ function defaultEventHandler(
 
 function defaultResultEventHandler(
     successResolver: EventHandler,
-    reject: ( reason: LicenseErrorResponse | string | null ) => void
+    reject: ( reason: SDKError | string | null ) => void
 ): EventHandler
 {
     return ( msg: Messages.ResponseMessage ) =>
