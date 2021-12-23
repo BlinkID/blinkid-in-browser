@@ -4,14 +4,15 @@
 
 import {
   Component,
+  Element,
   Event,
   EventEmitter,
   Host,
   h,
   Method,
   Prop,
-  Watch,
-  State
+  State,
+  Watch
 } from '@stencil/core';
 
 import {
@@ -21,7 +22,7 @@ import {
   CameraExperienceStateDuration
 } from '../../../utils/data-structures';
 
-import { classNames } from '../../../utils/generic.helpers';
+import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
 
 import { TranslationService } from '../../../utils/translation.service';
 
@@ -45,7 +46,7 @@ export class MbCameraExperience {
 
   @State() cameraMessageIdentityCardContent: any;
 
-  @State() cameraMessageIdentityCardClassName: string = 'message'; 
+  @State() cameraMessageIdentityCardClassName: string = 'message';
 
   private cameraMessageIdentityCard!: HTMLParagraphElement;
   private cameraMessagePaymentCard!: HTMLParagraphElement;
@@ -116,6 +117,11 @@ export class MbCameraExperience {
    * Emitted when user selects a different camera device.
    */
   @Event() changeCameraDevice: EventEmitter<CameraEntry>;
+
+  /**
+   * Host element as variable for manipulation
+   */
+  @Element() hostEl: HTMLElement;
 
   /**
    * Change active camera.
@@ -343,9 +349,13 @@ export class MbCameraExperience {
     this.changeCameraDevice.emit(camera);
   }
 
+  connectedCallback() {
+    setWebComponentParts(this.hostEl);
+  }
+
   render() {
     return (
-      <Host part="mb-camera-experience" class={ classNames({ 'no-overlay': !this.showOverlay }) }>
+      <Host class={ classNames({ 'no-overlay': !this.showOverlay }) }>
         {/* Barcode camera experience */}
         <div id="barcode" class={ classNames({ visible: this.type === CameraExperience.Barcode }) }>
           <div class="rectangle-container">

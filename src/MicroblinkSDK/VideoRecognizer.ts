@@ -16,8 +16,11 @@ import
     RecognizerRunner,
     RecognizerResultState
 } from "./DataStructures";
+import { SDKError } from "./SDKError";
 
 import { captureFrame } from "./FrameCapture";
+
+import * as ErrorTypes from "./ErrorTypes";
 
 /**
  * Explanation why VideoRecognizer has failed to open the camera feed.
@@ -36,24 +39,6 @@ export enum NotSupportedReason
     CameraNotAvailable = "CameraNotAvailable",
     /** There is no provided video element to which the camera feed should be redirected. */
     VideoElementNotProvided = "VideoElementNotProvided"
-}
-
-/**
- * The error object thrown when VideoRecognizer fails to open the camera feed.
- */
-export class VideoRecognizerError extends Error
-{
-    /** The reason why opening the camera failed. */
-    readonly reason: NotSupportedReason;
-
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    constructor( reason: NotSupportedReason, ...params: any[] )
-    {
-        super( ...params );
-        this.reason = reason;
-        this.name = "VideoRecognizerError";
-    }
-    /* eslint-enable @typescript-eslint/no-explicit-any */
 }
 
 /**
@@ -111,8 +96,12 @@ export class VideoRecognizer
                 // Check for tag name intentionally left out, so it's possible to use VideoRecognizer with custom elements.
                 if ( !cameraFeed || !( cameraFeed instanceof Element ) )
                 {
-                    const errorMessage = "Video element, i.e. camera feed is not provided!";
-                    reject( new VideoRecognizerError( NotSupportedReason.VideoElementNotProvided, errorMessage ) );
+                    reject( new SDKError(
+                        ErrorTypes.videoRecognizerErrors.elementMissing,
+                        {
+                            reason: NotSupportedReason.VideoElementNotProvided,
+                        }
+                    ) );
                     return;
                 }
                 if ( navigator.mediaDevices && navigator.mediaDevices.getUserMedia !== undefined )
@@ -123,7 +112,12 @@ export class VideoRecognizer
 
                         if ( selectedCamera === null )
                         {
-                            reject( new VideoRecognizerError( NotSupportedReason.CameraNotFound ) );
+                            reject( new SDKError(
+                                ErrorTypes.videoRecognizerErrors.cameraMissing,
+                                {
+                                    reason: NotSupportedReason.CameraNotFound,
+                                }
+                            ) );
                             return;
                         }
 
@@ -142,29 +136,46 @@ export class VideoRecognizer
                     catch( error )
                     {
                         let errorReason = NotSupportedReason.CameraInUse;
+                        let errorCode = ErrorTypes.ErrorCodes.VIDEO_RECOGNIZER_CAMERA_IN_USE;
                         switch( error.name )
                         {
                             case "NotFoundError":
                             case "OverconstrainedError":
                                 errorReason = NotSupportedReason.CameraNotFound;
+                                errorCode = ErrorTypes.ErrorCodes.VIDEO_RECOGNIZER_CAMERA_MISSING;
                                 break;
                             case "NotAllowedError":
                             case "SecurityError":
                                 errorReason = NotSupportedReason.CameraNotAllowed;
+                                errorCode = ErrorTypes.ErrorCodes.VIDEO_RECOGNIZER_CAMERA_NOT_ALLOWED;
                                 break;
                             case "AbortError":
                             case "NotReadableError":
                                 errorReason = NotSupportedReason.CameraNotAvailable;
+                                errorCode = ErrorTypes.ErrorCodes.VIDEO_RECOGNIZER_CAMERA_UNAVAILABLE;
                                 break;
                             case "TypeError": // this should never happen. If it does, rethrow it
                                 throw error;
                         }
-                        reject( new VideoRecognizerError( errorReason, error.message ) );
+                        reject( new SDKError(
+                            {
+                                message: error.message,
+                                code: errorCode,
+                            },
+                            {
+                                reason: errorReason,
+                            }
+                        ) );
                     }
                 }
                 else
                 {
-                    reject( new VideoRecognizerError( NotSupportedReason.MediaDevicesNotSupported ) );
+                    reject( new SDKError(
+                        ErrorTypes.videoRecognizerErrors.mediaDevicesUnsupported,
+                        {
+                            reason: NotSupportedReason.MediaDevicesNotSupported
+                        }
+                    ) );
                 }
             }
         );
@@ -254,6 +265,11 @@ export class VideoRecognizer
         }
     }
 
+    isCameraFlipped(): boolean
+    {
+        return this.cameraFlipped;
+    }
+
     /**
      * Sets the video recognition mode to be used.
      *
@@ -288,12 +304,12 @@ export class VideoRecognizer
         {
             if ( this.videoFeed === null )
             {
-                reject( new Error( "The associated video feed has been released!" ) );
+                reject( new SDKError( ErrorTypes.videoRecognizerErrors.videoFeedReleased ) );
                 return;
             }
             if ( !this.videoFeed.paused )
             {
-                reject( new Error( "The associated video feed is not paused. Use resumeRecognition instead!" ) );
+                reject( new SDKError( ErrorTypes.videoRecognizerErrors.videoFeedNotPaused ) );
                 return;
             }
 
@@ -317,10 +333,9 @@ export class VideoRecognizer
                 {
                     if ( !this.allowManualVideoPlayout )
                     {
-                        console.warn( "Native error", nativeError );
                         reject
                         (
-                            new Error( "The play() request was interrupted or prevented by browser security rules!" )
+                            new SDKError( ErrorTypes.videoRecognizerErrors.playRequestInterrupted, nativeError )
                         );
                         return;
                     }
@@ -462,8 +477,7 @@ export class VideoRecognizer
 
             if ( this.videoFeed && this.videoFeed.paused )
             {
-                const msg = "Cannot resume recognition while video feed is paused! Use recognize or startRecognition";
-                reject( new Error( msg ) );
+                reject( new SDKError( ErrorTypes.videoRecognizerErrors.feedPaused ) );
                 return;
             }
 
@@ -489,7 +503,9 @@ export class VideoRecognizer
                         (
                             () =>
                             {
-                                reject( new Error( "Could not reset recognizers!" ) );
+                                reject( new SDKError(
+                                    ErrorTypes.videoRecognizerErrors.recognizersResetFailure
+                                ) );
                             }
                         );
                     }
@@ -547,7 +563,7 @@ export class VideoRecognizer
         {
             if ( this.videoFeed === null )
             {
-                reject( new Error( "Cannot change camera device because video feed is missing!" ) );
+                reject( new SDKError( ErrorTypes.videoRecognizerErrors.feedMissing ) );
                 return;
             }
 
@@ -560,7 +576,7 @@ export class VideoRecognizer
                 {
                     if ( this.videoFeed === null )
                     {
-                        reject( new Error( "Cannot change camera device because video feed is missing!" ) );
+                        reject( new SDKError( ErrorTypes.videoRecognizerErrors.feedMissing ) );
                         return;
                     }
 
@@ -577,15 +593,18 @@ export class VideoRecognizer
                         {
                             if ( !this.allowManualVideoPlayout )
                             {
-                                console.warn( "Native error", nativeError );
-                                const m = "The play() request was interrupted or prevented by browser security rules!";
-                                reject( new Error( m ) );
+                                reject(
+                                    new SDKError(
+                                        ErrorTypes.videoRecognizerErrors.playRequestInterrupted,
+                                        nativeError
+                                    )
+                                );
                                 return;
                             }
 
                             if ( !this.videoFeed )
                             {
-                                reject( new Error( "Cannot change camera device because video feed is missing!" ) );
+                                reject( new SDKError( ErrorTypes.videoRecognizerErrors.feedMissing ) );
                                 return;
                             }
 
@@ -659,7 +678,7 @@ export class VideoRecognizer
         {
             if ( !this.videoFeed )
             {
-                reject( new Error( "Missing video feed!" ) );
+                reject( new SDKError( ErrorTypes.videoRecognizerErrors.feedMissing ) );
                 return;
             }
 

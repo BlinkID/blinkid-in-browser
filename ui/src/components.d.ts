@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CameraEntry, CameraExperience, CameraExperienceState, EventFatalError, EventReady, EventScanError, EventScanSuccess, FeedbackMessage } from "./utils/data-structures";
+import { CameraEntry, CameraExperience, CameraExperienceState, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, SDKError } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
 import { SdkService } from "./utils/sdk.service";
 export namespace Components {
@@ -83,7 +83,7 @@ export namespace Components {
          */
         "licenseKey": string;
         /**
-          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer     - cannot be used in combination with other recognizers     - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdRecognizer"></blinkid-in-browser>`
+          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdRecognizer"></blinkid-in-browser>`
          */
         "rawRecognizers": string;
         /**
@@ -95,11 +95,11 @@ export namespace Components {
          */
         "recognitionTimeout": number;
         /**
-          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {    'BlinkIdRecognizer': {      'returnFullDocumentImage': true,       // When setting values for enums, check the source code to see possible values.      // For AnonymizationMode we can see the list of possible values in      // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.      'anonymizationMode': 0    } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
+          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {   'BlinkIdRecognizer': {     'returnFullDocumentImage': true,      // When setting values for enums, check the source code to see possible values.     // For AnonymizationMode we can see the list of possible values in     // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.     'anonymizationMode': 0   } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
          */
         "recognizerOptions": { [key: string]: any };
         /**
-          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer     - cannot be used in combination with other recognizers     - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdRecognizer']; ```
+          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdRecognizer']; ```
          */
         "recognizers": Array<string>;
         /**
@@ -130,6 +130,21 @@ export namespace Components {
           * Set to 'true' if modal window should be displayed in case of an error.  Default value is 'false'.
          */
         "showModalWindows": boolean;
+        /**
+          * Starts camera scan using camera overlay with usage instructions.
+         */
+        "startCameraScan": () => Promise<void>;
+        /**
+          * Starts combined image scan, emits results from provided files.
+          * @param firstFile File to scan as first image
+          * @param secondFile File to scan as second image
+         */
+        "startCombinedImageScan": (firstFile: File, secondFile: File) => Promise<void>;
+        /**
+          * Starts image scan, emits results from provided file.
+          * @param file File to scan
+         */
+        "startImageScan": (file: File) => Promise<void>;
         /**
           * Set to 'true' if scan from image should execute twice in case that first result is empty.  If enabled, this option will add/remove 'scanCroppedDocumentImage' recognizer option for the second scan action.
          */
@@ -408,6 +423,21 @@ export namespace Components {
           * See description in public component.
          */
         "showScanningLine": boolean;
+        /**
+          * Starts camera scan using camera overlay with usage instructions.
+         */
+        "startCameraScan": () => Promise<void>;
+        /**
+          * Starts combined image scan, emits results from provided files.
+          * @param firstFile File to scan as first image
+          * @param secondFile File to scan as second image
+         */
+        "startCombinedImageScan": (firstFile: File, secondFile: File) => Promise<void>;
+        /**
+          * Starts image scan, emits results from provided file.
+          * @param file File to scan
+         */
+        "startImageScan": (file: File) => Promise<void>;
         /**
           * See description in public component.
          */
@@ -689,7 +719,7 @@ declare namespace LocalJSX {
         /**
           * Event which is emitted during initialization of UI component.  Each event contains `code` property which has deatils about fatal errror.
          */
-        "onFatalError"?: (event: CustomEvent<EventFatalError>) => void;
+        "onFatalError"?: (event: CustomEvent<SDKError>) => void;
         /**
           * Event which is emitted during positive or negative user feedback. If attribute/property `hideFeedback` is set to `false`, UI component will display the feedback.
          */
@@ -703,6 +733,10 @@ declare namespace LocalJSX {
          */
         "onReady"?: (event: CustomEvent<EventReady>) => void;
         /**
+          * Event which is emitted when scan is aborted, i.e. when user clicks on close from the gallery toolbar, or presses escape key.
+         */
+        "onScanAborted"?: (event: CustomEvent<null>) => void;
+        /**
           * Event which is emitted during or immediately after scan error.
          */
         "onScanError"?: (event: CustomEvent<EventScanError>) => void;
@@ -711,7 +745,7 @@ declare namespace LocalJSX {
          */
         "onScanSuccess"?: (event: CustomEvent<EventScanSuccess>) => void;
         /**
-          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer     - cannot be used in combination with other recognizers     - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdRecognizer"></blinkid-in-browser>`
+          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdRecognizer"></blinkid-in-browser>`
          */
         "rawRecognizers"?: string;
         /**
@@ -723,11 +757,11 @@ declare namespace LocalJSX {
          */
         "recognitionTimeout"?: number;
         /**
-          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {    'BlinkIdRecognizer': {      'returnFullDocumentImage': true,       // When setting values for enums, check the source code to see possible values.      // For AnonymizationMode we can see the list of possible values in      // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.      'anonymizationMode': 0    } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
+          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {   'BlinkIdRecognizer': {     'returnFullDocumentImage': true,      // When setting values for enums, check the source code to see possible values.     // For AnonymizationMode we can see the list of possible values in     // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.     'anonymizationMode': 0   } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
          */
         "recognizerOptions"?: { [key: string]: any };
         /**
-          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer     - cannot be used in combination with other recognizers     - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdRecognizer']; ```
+          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdRecognizer']; ```
          */
         "recognizers"?: Array<string>;
         /**
@@ -1005,7 +1039,7 @@ declare namespace LocalJSX {
         /**
           * See event 'fatalError' in public component.
          */
-        "onFatalError"?: (event: CustomEvent<EventFatalError>) => void;
+        "onFatalError"?: (event: CustomEvent<SDKError>) => void;
         /**
           * Event containing FeedbackMessage which can be passed to MbFeedback component.
          */
@@ -1018,6 +1052,10 @@ declare namespace LocalJSX {
           * See event 'ready' in public component.
          */
         "onReady"?: (event: CustomEvent<EventReady>) => void;
+        /**
+          * See event 'scanAborted' in public component.
+         */
+        "onScanAborted"?: (event: CustomEvent<null>) => void;
         /**
           * See event 'scanError' in public component.
          */

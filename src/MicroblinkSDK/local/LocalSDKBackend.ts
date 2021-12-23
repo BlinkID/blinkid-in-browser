@@ -16,6 +16,8 @@ import
 import { MetadataCallbacks } from "../MetadataCallbacks";
 import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
 import { WasmType } from "../WasmType";
+import { SDKError } from "../SDKError";
+import * as ErrorTypes from "../ErrorTypes";
 
 // ============================================ /
 // Local Proxy Implementation                   /
@@ -33,7 +35,7 @@ class WasmLocalRecognizerRunner implements RecognizerRunner
     {
         if ( !nativeRecognizerRunner )
         {
-            throw new Error( "Native RecognizerRunner cannot be empty!" );
+            throw new SDKError( ErrorTypes.localSdkErrors.runnerEmpty );
         }
         this.nativeRecognizerRunner = nativeRecognizerRunner;
     }
@@ -46,7 +48,7 @@ class WasmLocalRecognizerRunner implements RecognizerRunner
             {
                 if ( !this.nativeRecognizerRunner )
                 {
-                    reject( "Property nativeRecognizerRunner is not available!" );
+                    reject( new SDKError( ErrorTypes.localSdkErrors.runnerMissing ) );
                     return;
                 }
                 const result: number = this.nativeRecognizerRunner.processImage( image );
@@ -63,7 +65,7 @@ class WasmLocalRecognizerRunner implements RecognizerRunner
             {
                 if ( !this.nativeRecognizerRunner )
                 {
-                    reject( "Property nativeRecognizerRunner is not available!" );
+                    reject( new SDKError( ErrorTypes.localSdkErrors.runnerMissing ) );
                     return;
                 }
                 try
@@ -87,7 +89,7 @@ class WasmLocalRecognizerRunner implements RecognizerRunner
             {
                 if ( !this.nativeRecognizerRunner )
                 {
-                    reject( "Property nativeRecognizerRunner is not available!" );
+                    reject( new SDKError( ErrorTypes.localSdkErrors.runnerMissing ) );
                     return;
                 }
                 this.nativeRecognizerRunner.setJSDelegate( metadataCallbacks );
@@ -104,7 +106,7 @@ class WasmLocalRecognizerRunner implements RecognizerRunner
             {
                 if ( !this.nativeRecognizerRunner )
                 {
-                    reject( "Property nativeRecognizerRunner is not available!" );
+                    reject( new SDKError( ErrorTypes.localSdkErrors.runnerMissing ) );
                     return;
                 }
                 this.nativeRecognizerRunner.resetRecognizers( hardReset );
@@ -121,7 +123,7 @@ class WasmLocalRecognizerRunner implements RecognizerRunner
             {
                 if ( !this.nativeRecognizerRunner )
                 {
-                    reject( "Property nativeRecognizerRunner is not available!" );
+                    reject( new SDKError( ErrorTypes.localSdkErrors.runnerMissing ) );
                     return;
                 }
                 this.nativeRecognizerRunner.setDetectionOnlyMode( detectionOnly );
@@ -138,7 +140,7 @@ class WasmLocalRecognizerRunner implements RecognizerRunner
             {
                 if ( !this.nativeRecognizerRunner )
                 {
-                    reject( "Property nativeRecognizerRunner is not available!" );
+                    reject( new SDKError( ErrorTypes.localSdkErrors.runnerMissing ) );
                     return;
                 }
                 this.nativeRecognizerRunner.setClearTimeoutCallback( clearTimeoutCallback );
@@ -155,7 +157,7 @@ class WasmLocalRecognizerRunner implements RecognizerRunner
             {
                 if ( !this.nativeRecognizerRunner )
                 {
-                    reject( "Property nativeRecognizerRunner is not available!" );
+                    reject( new SDKError( ErrorTypes.localSdkErrors.runnerMissing ) );
                     return;
                 }
                 this.nativeRecognizerRunner.setCameraPreviewMirrored( mirrored );
@@ -234,6 +236,11 @@ export class WasmSDKLocal implements WasmSDK
         this.mbWasmModule = new WasmModuleLocalProxy( wasmModule );
         this.showOverlay = showOverlay;
         this.loadedWasmType = loadedWasmType;
+    }
+
+    delete()
+    {
+        console.info( "Cannot delete local SDK backend." );
     }
 }
 /* eslint-enable @typescript-eslint/explicit-module-boundary-types,

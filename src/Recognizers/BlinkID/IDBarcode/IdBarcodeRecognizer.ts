@@ -237,6 +237,11 @@ export enum IdBarcodeDocumentType
     ArgentinaID,
 
     /**
+     * ArgentinaAlienID document was scanned
+     */
+    ArgentinaAlienID,
+
+    /**
      * ArgentinaDL document was scanned
      */
     ArgentinaDL,

@@ -73,8 +73,20 @@ export function getWebComponentParts(root: ShadowRoot): Array<Element> {
   const parts = [];
 
   partsChildren.forEach((el: Element) => {
-    parts.push(el.getAttribute('part'));
+    const elementParts = el.getAttribute('part').split(' ');
+
+    while (elementParts && elementParts.length) {
+      parts.push(elementParts.pop());
+    }
   });
 
   return parts;
+}
+
+export function setWebComponentParts(hostEl: Element): void {
+  const partParts = [
+    hostEl.tagName.toLowerCase(),
+    hostEl.getAttribute('id')
+  ];
+  hostEl.setAttribute('part', partParts.join(' ').trim() );
 }

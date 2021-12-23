@@ -46,13 +46,6 @@ Type: `Promise<void>`
 
 
 
-## Shadow Parts
-
-| Part                  | Description |
-| --------------------- | ----------- |
-| `"mb-camera-toolbar"` |             |
-
-
 ## Dependencies
 
 ### Used by

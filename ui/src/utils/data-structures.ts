@@ -4,7 +4,9 @@
 
 import { EventEmitter } from '@stencil/core';
 
-import * as BlinkIDSDK from '../../../es/blinkid-sdk';
+import * as BlinkIDSDK from '@microblink/blinkid-in-browser-sdk';
+
+export { SDKError } from '@microblink/blinkid-in-browser-sdk';
 
 export interface MicroblinkUI {
   // SDK settings
@@ -49,7 +51,7 @@ export interface MicroblinkUI {
   iconGalleryScanningCompleted:     string;
 
   // Events
-  fatalError:         EventEmitter<EventFatalError>;
+  fatalError:         EventEmitter<BlinkIDSDK.SDKError>;
   ready:              EventEmitter<EventReady>;
   scanError:          EventEmitter<EventScanError>;
   scanSuccess:        EventEmitter<EventScanSuccess>;
@@ -70,21 +72,6 @@ export interface SdkSettings {
 /**
  * Events
  */
-export class EventFatalError {
-  code:     Code;
-  message:  string;
-  details?: any;
-
-  constructor(code: Code, message: string, details?: any) {
-    this.code = code;
-    this.message = message;
-
-    if (details) {
-      this.details = details;
-    }
-  }
-}
-
 export class EventReady {
   sdk: BlinkIDSDK.WasmSDK;
 
@@ -98,12 +85,17 @@ export class EventScanError {
   fatal:          boolean;
   message:        string;
   recognizerName: string;
+  details?:       any;
 
-  constructor(code: Code, fatal: boolean, message: string, recognizerName: string) {
+  constructor(code: Code, fatal: boolean, message: string, recognizerName: string, details?: any) {
     this.code = code;
     this.fatal = fatal;
     this.message = message;
     this.recognizerName = recognizerName;
+
+    if (details) {
+      this.details = details;
+    }
   }
 }
 
@@ -135,21 +127,15 @@ export interface RecognitionResults {
  * Error codes
  */
 export enum Code {
-  BrowserNotSupported       = 'BROWSER_NOT_SUPPORTED',
   EmptyResult               = 'EMPTY_RESULT',
-  InvalidRecognizers        = 'INVALID_RECOGNIZERS',
   InvalidRecognizerOptions  = 'INVALID_RECOGNIZER_OPTIONS',
-  MissingLicenseKey         = 'MISSING_LICENSE_KEY',
   NoImageFileFound          = 'NO_IMAGE_FILE_FOUND',
   NoFirstImageFileFound     = 'NO_FIRST_IMAGE_FILE_FOUND',
   NoSecondImageFileFound    = 'NO_SECOND_IMAGE_FILE_FOUND',
-  SdkLoadFailed             = 'SDK_LOAD_FAILED',
   GenericScanError          = 'GENERIC_SCAN_ERROR',
   CameraNotAllowed          = 'CAMERA_NOT_ALLOWED',
   CameraInUse               = 'CAMERA_IN_USE',
   CameraGenericError        = 'CAMERA_GENERIC_ERROR',
-  InternetNotAvailable      = 'INTERNET_NOT_AVAILABLE',
-  LicenseError              = 'LICENSE_ERROR'
 }
 
 /**
@@ -314,5 +300,5 @@ export interface FeedbackMessage {
  */
 export interface CameraEntry {
   prettyName: string;
-  details: BlinkIDSDK.SelectedCamera;
+  details: BlinkIDSDK.SelectedCamera | null;
 }

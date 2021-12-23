@@ -16,6 +16,7 @@ One of the main goals of UI component is to simplify integration of BlinkID in w
     * [Examples and API documentation](#usage-examples-and-api-documentation)
 * [Customization](#customization)
     * [UI customization](#customization-ui)
+    * [UI customization with `::part()` pseudo-element](#customization-ui-css-part)
     * [Custom icons](#customization-icons)
     * [Localization](#customization-localization)
         * [RTL support](#customization-rtl-support)
@@ -77,12 +78,170 @@ To load WebAssembly module, use `engine-location` attribute or `engineLocation` 
 
 If you're not using NPM, it's possible to download WASM resources from public CDN services.
 
-For example, all versions of ${libName} In-browser SDK are available on Unpkg CDN:
+For example, all versions of BlinkID In-browser SDK are available on Unpkg CDN:
 
 * Visit `https://unpkg.com/browse/@microblink/blinkid-in-browser-sdk@X.Y.Z/resources/` (change "X.Y.Z" to the version number you wish to use).
 * Download the whole folder.
 * Save everything in the local `resources` folder which is available through HTTP/S.
 * Point the engine to that location with `engine-location` attribute or `engineLocation` property on the UI component.
+
+### <a name="installation-angular"> Integration with Angular
+
+1. Install BlinkID In-browser SDK as NPM dependency with `npm install --save @microblink/blinkid-in-browser-sdk`.
+
+2. Setup Angular to automatically copy BlinkID In-browser SDK assets to public location. Add the following code to `angular.json` inside `projects.<projectName>.architect.build.options.assets` array:
+
+```JSON
+{
+  "glob": "**/*",
+  "input": "node_modules/@microblink/blinkid-in-browser-sdk/resources",
+  "output": "/blinkid-resources/"
+}
+```
+
+3. Add `CUSTOM_ELEMENTS_SCHEMA` to `app.module.ts` (or main application module) to allow usage of custom HTML elements.
+
+4. Call `defineCustomElements()` in `main.ts`:
+
+```typescript
+import { defineCustomElements } from '@microblink/blinkid-in-browser-sdk/ui/loader';
+
+...
+
+defineCustomElements();
+```
+
+5. Here's one possible way to use `<blinkid-in-browser>` custom web component inside Angular:
+
+```typescript
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
+
+// Import typings for the UI component
+import '@microblink/blinkid-in-browser-sdk/ui';
+
+// Import typings for custom events
+import {
+  EventReady,
+  EventScanError,
+  EventScanSuccess,
+  SDKError
+} from '@microblink/blinkid-in-browser-sdk/ui/dist/types/utils/data-structures';
+
+@Component({
+  selector: 'my-component',
+  template: '<blinkid-in-browser #el></blinkid-in-browser>',
+  styleUrls: ['./my-component.component.scss']
+})
+export class MyComponent implements AfterViewInit {
+  // Reference to the `blinkid-in-browser` custom web component
+  @ViewChild('el') el!: ElementRef<HTMLBlinkidInBrowserElement>;
+
+  constructor() {}
+
+  ngAfterViewInit(): void {
+    this.el.nativeElement.licenseKey = '<PLACE-YOUR-LICENSE-KEY-HERE>';
+    this.el.nativeElement.recognizers = [ 'BlinkIdRecognizer' ];
+
+    // Engine location depends on the actual location of WebAssembly resources
+    this.el.nativeElement.engineLocation = window.location.origin + '/blinkid-resources/';
+
+    this.el.nativeElement.addEventListener('ready', (ev: CustomEventInit<EventReady>) => {
+      console.log('ready', ev.details);
+    });
+
+    this.el.nativeElement.addEventListener('scanSuccess', (ev: CustomEventInit<EventScanSuccess>) => {
+      console.log('scanSuccess', ev.details);
+    });
+
+    this.el.nativeElement.addEventListener('scanError', (ev: CustomEventInit<EventScanError>) => {
+      console.log('scanError', ev.details);
+    });
+
+    this.el.nativeElement.addEventListener('fatalError', (ev: CustomEventInit<SDKError>) => {
+      console.log('fatalError', ev.details);
+    });
+  }
+}
+```
+
+### <a name="installation-react"> Integration with React
+
+1. Install BlinkID In-browser SDK as NPM dependency with `npm install --save @microblink/blinkid-in-browser-sdk`.
+
+2. Copy WebAssembly resources to to public location. This is one possible approach:
+
+```
+# Auxiliary tool for cross-platform support
+$ npm install --save-dev shx
+```
+
+```json
+# Add `postinstall` hook to `package.json` that will copy resources
+{
+    ...
+    "scripts": {
+        ...
+        "postinstall": "shx cp -r node_modules/@microblink/blinkid-in-browser-sdk/resources public"
+        ...
+    },
+    ...
+}
+```
+
+3. Here's one possible way to use `<blinkid-in-browser>` custom web component inside React:
+
+```jsx
+import React from 'react';
+
+import {
+  applyPolyfills,
+  defineCustomElements
+} from '@microblink/blinkid-in-browser-sdk/ui/loader';
+
+function App() {
+  // Reference to the `<blinkid-in-browser>` custom web component
+  const el = React.useRef(null);
+
+  React.useEffect(() => {
+    applyPolyfills().then(() => {
+      defineCustomElements().then(() => {
+        el.current.licenseKey = '<PLACE-YOUR-LICENSE-KEY-HERE>';
+        el.current.recognizers = [ 'BlinkIdRecognizer' ];
+
+        // Engine location depends on the actual location of WebAssembly resources
+        el.current.engineLocation = window.location.origin + '/resources';
+        
+        el.current.addEventListener('ready', (ev) => {
+          console.log('ready', ev.details);
+        });
+
+        el.current.addEventListener('scanSuccess', (ev) => {
+          console.log('scanSuccess', ev.details);
+        });
+
+        el.current.addEventListener('scanError', (ev) => {
+          console.log('scanError', ev.details);
+        });
+
+        el.current.addEventListener('fatalError', (ev) => {
+          console.log('fatalError', ev.details);
+        });
+      });
+    });
+  }, []);
+
+  return (
+    <blinkid-in-browser ref={el}></blinkid-in-browser>
+  );
+}
+
+export default App;
+```
 
 ## <a name="usage"></a> Usage
 
@@ -224,6 +383,24 @@ blinkid-in-browser {
     --mb-component-background:  #FFF;
     --mb-component-font-color:  #000;
     --mb-component-font-size:   14px;
+}
+```
+
+### <a name="customization-ui-css-part"></a> UI customization with `::part()` pseudo-element
+
+All internal components are exposed, and can be modified with CSS [`::part()`](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) pseudo-element.
+
+Right now, the only way to see available parts is to explore the DOM and look for the `part` attribute.
+
+```css
+/* Change the background color of every overlay element */
+blinkid-in-browser::part(mb-overlay) {
+    background-color: green;
+}
+
+/* Change the background color of a specific overlay element */
+blinkid-in-browser::part(mb-overlay-camera-experience) {
+    background-color: yellow;
 }
 ```
 

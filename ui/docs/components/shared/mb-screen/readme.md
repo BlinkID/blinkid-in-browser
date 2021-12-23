@@ -12,13 +12,6 @@
 | `visible` | `visible` | Set to 'true' if screen should be visible. | `boolean` | `false` |
 
 
-## Shadow Parts
-
-| Part          | Description |
-| ------------- | ----------- |
-| `"mb-screen"` |             |
-
-
 ## Dependencies
 
 ### Used by

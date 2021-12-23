@@ -236,12 +236,14 @@ export interface WasmSDK
      */
     readonly mbWasmModule: WasmModuleProxy;
 
-    showOverlay: boolean;
+    delete: () => void;
 
     /**
      * The type of the WASM that was actually loaded.
      */
     loadedWasmType: WasmType;
+
+    showOverlay: boolean;
 }
 
 /**

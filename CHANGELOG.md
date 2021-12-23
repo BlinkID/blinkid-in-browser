@@ -1,5 +1,68 @@
 # Release notes
 
+## 5.15.0
+
+We support the latest versions of these documents:
+
+### Europe
+
+* Belgium - Driving License (front only)
+* Croatia - ID Card
+* France - ID Card
+* France - Residence Permit (beta)
+* Spain - ID Card
+* Switzerland - Residence Permit
+* UK - Residence Permit
+
+### Oceania
+
+* Australia - Northern Territory - Driving License (front only, beta)
+
+### Middle East and Africa
+
+* UAE - ID Card
+* UAE - Resident ID
+
+### Northern America
+
+* Honduras - ID Card (beta)
+* USA - Colorado - ID Card 
+* USA - Minnesota - Driving License
+* USA - Nevada - Driving License
+* USA - Oklahoma - Driving License
+* USA - Wyoming - Driving License
+
+### Changes to BlinkID(Combined) Recognizer
+
+* No API changes
+
+### Improvements
+
+* We now support `DataMatch` functionality on single side documents (Passports)
+    * We added a special case to support `DataMatch` for UAE ID Card and Resident ID Card documents for the field `personal_id_number`
+* We can now extract `additional_personal_id_number` on Ecuador ID Card
+* We've made improvements for reading NRIC number on Malaysian documents that have an asterisk (\*) character present 
+* We've improved document detection and cropping of the document image
+
+### Changes to IDBarcodeRecognizer
+
+* We've added document type `ArgentinaAlienID` and parser for `ArgentinaAlienID2012BarcodeParser`
+
+### Platform-related SDK changes
+
+* We've added methods for programmatically starting camera and image scan when using the UI component.
+    * It's possible to call `startCameraScan()` and `startImageScan(File)` methods on the custom web element.
+* We've standardized error structures returned from the WebAssembly library and the UI component.
+    * See [SDKError.ts](src/MicroblinkSDK/SDKError.ts) and [ErrorTypes.ts](src/MicroblinkSDK/ErrorTypes.ts) for a complete list of possible error codes.
+* We've completed support for `part::` selector and added [an example](ui/README.md#customization-ui-css-part).
+* We've simplified integration of the UI component with Angular and React frameworks.
+    * [Integration guide for Angular](ui/README.md#installation-angular)
+    * [Integration guide for React](ui/README.md#installation-react)
+
+### Bug fixes
+
+* We've ensured that all SDK errors can be visible from `fatalError` and `scanError` events in the UI component.
+
 ## 5.14.2
 
 * We've expanded support for `part::` selector by exposing all nested web components.

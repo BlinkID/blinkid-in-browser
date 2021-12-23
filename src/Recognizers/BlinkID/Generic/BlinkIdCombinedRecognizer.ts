@@ -33,6 +33,11 @@ export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings
      */
     maxAllowedMismatchesPerField = 0;
 
+    /**
+     * Skip the scan of the back side for documents where back side scanning is not supported.
+     */
+    skipUnsupportedBack = false;
+
     // implementation od the DigitalSignatureOptions interface
     allowSignature = false;
 }

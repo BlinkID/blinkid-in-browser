@@ -4,6 +4,7 @@
 
 import {
   Component,
+  Element,
   Event,
   EventEmitter,
   Host,
@@ -13,7 +14,7 @@ import {
 } from '@stencil/core';
 
 import { CameraEntry } from '../../../utils/data-structures';
-import { classNames } from '../../../utils/generic.helpers';
+import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
 import { getCameraDevices } from '../../../utils/sdk.service';
 
 @Component({
@@ -22,9 +23,10 @@ import { getCameraDevices } from '../../../utils/sdk.service';
   shadow: true,
 })
 export class MbCameraSelection {
+
   @State() activeCamera: CameraEntry = {
     prettyName: '-',
-    details: { deviceId: -1 }
+    details: null
   };
 
   @State() cameraList: Array<CameraEntry> = [];
@@ -65,6 +67,11 @@ export class MbCameraSelection {
     }
   }
 
+  /**
+   * Host element as variable for manipulation
+   */
+  @Element() hostEl: HTMLElement;
+
   private handleListOpen(ev: UIEvent) {
     ev.preventDefault();
     ev.stopPropagation();
@@ -83,6 +90,10 @@ export class MbCameraSelection {
     this.isListVisible = visible;
   }
 
+  connectedCallback() {
+    setWebComponentParts(this.hostEl);
+  }
+
   render() {
     const cameraListElements = this.cameraList.map((camera: CameraEntry) => {
       const isActive = this.activeCamera?.details?.deviceId === camera.details.deviceId;
@@ -98,7 +109,7 @@ export class MbCameraSelection {
       }
 
       return (
-        <li part="mb-camera-selection" class={ classNames({ active: isActive }) }>
+        <li class={ classNames({ active: isActive }) }>
           <a
             href="javascript:void(0)"
             onClick={ (ev: UIEvent) => this.handleCameraSelection(ev, camera) }>
@@ -110,7 +121,7 @@ export class MbCameraSelection {
     });
 
     return (
-      <Host part="mb-camera-selection">
+      <Host>
         <a
           href="javascript:void(0)"
           class={ this.isListVisible ? 'active-camera active' : 'active-camera' }

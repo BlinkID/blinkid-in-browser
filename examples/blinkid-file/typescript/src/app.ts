@@ -29,7 +29,7 @@ function main() {
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWKa04Zk/OIyg1ymyxyfVCTO3JMJN1y9rOdrdLRWWFZd1OO9wmZqMcLlTv9eD+tpBFyQbY2aoV+gz5caCvYBxr9UJfdR3Xe2uQcQGVI73rBLPEGvbIdV+veSW0SDL1fMS0IVmwDAQMTH62B9FoIM1RJuSGefEbNtBX/xHt1tRDc7PBz0tvc3elDjdivGBGVaIoVzEWP4WZPtSb3icsZ+DH2pVR6YCT99bb3V3w3n4dDOC72NRVXsR/pMyJidREqNbgLU0g85QtaKmqL4Owiq3ZUBgod/op5/xXed5GkJoazXHX9bPFLjg8D+XpWgiR9annH0ltghPN";
+    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLc09Zs/mjuGYKJq7GjtRvUpB50NLGDbNQfrme34VlyR9wNs/P4L6GtUVgiQ1Rahc34/rXvsi/ca+hsgPa6udsMam5GcIQBblkWcamv/qu2cYWmM8Tm9Uk2PwHy7Jw1jBRoK5tfvZgo7AiNWUmvJoR2JgkyCSH3ZZOZcGiOdOk5O86+LDIRCoLo//ARugB9Wh/3ym5JPQvYCyzyGpkJtlA4HTnRduma2oAT7Qw/XLjVX7t5Js7MeX59oY0pKA9EQUPIKFWYLcQKeKmTVdj1QVf17DBFJgHY3N587WALhyznh5CJTNMeSTgUikTAGvT48SSDonVqFc";
 
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(licenseKey);
@@ -43,7 +43,7 @@ function main() {
     loadSettings.loadProgressCallback = (progress: number) => progressEl!.value = progress;
 
     // Set absolute location of the engine, i.e. WASM and support JS files
-    loadSettings.engineLocation = window.location.origin;
+    loadSettings.engineLocation = window.location.href;
 
     // 3. Load SDK
     BlinkIDSDK.loadWasmModule(loadSettings).then((sdk: BlinkIDSDK.WasmSDK) => {
@@ -145,6 +145,7 @@ async function startScan(sdk: BlinkIDSDK.WasmSDK, fileList: FileList) {
 
     // Hide scanning screen and show scan button again
     inputImageFile.value = "";
+    scanImageElement.src = "";
     document.getElementById("screen-start")?.classList.remove("hidden");
     document.getElementById("screen-scanning")?.classList.add("hidden");
 }

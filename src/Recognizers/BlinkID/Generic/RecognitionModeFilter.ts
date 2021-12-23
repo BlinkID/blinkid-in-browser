@@ -1,11 +1,9 @@
 /**
  * Copyright (c) Microblink Ltd. All rights reserved.
+ *
+ * RecognitionModeFilter is used to enable/disable recognition of specific document groups.
+ * Setting is taken into account only if the right for that document is purchased.
  */
-
-/**
-* RecognitionModeFilter is used to enable/disable recognition of specific document groups.
-* Setting is taken into account only if the right for that document is purchased.
-*/
 export class RecognitionModeFilter
 {
     /** Enable scanning of MRZ IDs. Setting is taken into account only if the mrz_id right is purchased. */
@@ -23,8 +21,8 @@ export class RecognitionModeFilter
     /**
      * Enable scanning of barcode IDs. Setting is taken into account only if the barcode right to
      * scan that barcode is purchased.
-    */
-    enableBarcodeId = true;
+     */
+    enableBarcodeId = true
 
     /**
      * Enable full document recognition. Setting is taken into account only if the document right to

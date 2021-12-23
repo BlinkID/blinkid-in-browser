@@ -2,6 +2,9 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
+import { SDKError } from "./SDKError";
+import * as ErrorTypes from "./ErrorTypes";
+
 export enum LicenseTokenState
 {
     Invalid,
@@ -31,24 +34,6 @@ export enum LicenseErrorType {
     PayloadCorrupted                      = "PAYLOAD_CORRUPTED",
     PayloadSignatureVerificationFailed    = "PAYLOAD_SIGNATURE_VERIFICATION_FAILED",
     IncorrectTokenState                   = "INCORRECT_TOKEN_STATE"
-}
-export class LicenseErrorResponse
-{
-    readonly code: string = "UNLOCK_LICENSE_ERROR";
-
-    type: LicenseErrorType;
-
-    message?: string | null = null;
-
-    constructor( type: LicenseErrorType, message?: string )
-    {
-        this.type = type;
-
-        if ( message )
-        {
-            this.message = message;
-        }
-    }
 }
 
 const baltazar = "https://baltazar.microblink.com/api/v1/status/check";
@@ -114,7 +99,7 @@ export interface ServerPermissionSubmitResult
 
 export interface UnlockResult
 {
-    readonly error: LicenseErrorResponse | null;
+    readonly error: SDKError | null;
     readonly lease?: number;
     readonly showOverlay?: boolean;
 }
@@ -190,10 +175,15 @@ export async function unlockWasmSDK
     {
         case LicenseTokenState.Invalid:
             return {
-                error: new LicenseErrorResponse (
-                    LicenseErrorType.LicenseTokenStateInvalid,
-                    unlockResult.licenseError
-                )
+                error: new SDKError(
+                    {
+                        ...ErrorTypes.licenseErrors.licenseInvalid,
+                        message: unlockResult.licenseError
+                    },
+                    {
+                        type: LicenseErrorType.LicenseTokenStateInvalid,
+                    }
+                ),
             };
         case LicenseTokenState.Valid:
             return {
@@ -223,50 +213,65 @@ export async function unlockWasmSDK
                     }
 
                     return {
-                        error: new LicenseErrorResponse (
-                            LicenseErrorType.NetworkError,
-                            "There has been a network error while obtaining the server permission!" + additionalInfo
+                        error: new SDKError(
+                            {
+                                ...ErrorTypes.licenseErrors.licenseNetworkError,
+                                message: "There has been a network error while obtaining the server permission!"
+                                + additionalInfo
+                            },
+                            {
+                                type: LicenseErrorType.NetworkError,
+                            }
                         )
                     };
                 }
                 case ServerPermissionSubmitResultStatus.RemoteLock:
                     return {
-                        error: new LicenseErrorResponse (
-                            LicenseErrorType.RemoteLock,
-                            "Provided license key has been remotely locked." +
-                            "Please contact support for more information!"
+                        error: new SDKError(
+                            ErrorTypes.licenseErrors.licenseRemoteLocked,
+                            {
+                                type: LicenseErrorType.RemoteLock,
+                            }
                         ),
                         lease: serverPermission.lease
                     };
                 case ServerPermissionSubmitResultStatus.PermissionExpired:
                     return {
-                        error: new LicenseErrorResponse (
-                            LicenseErrorType.PermissionExpired,
-                            "Internal error (server permission expired)"
+                        error: new SDKError(
+                            ErrorTypes.licenseErrors.licensePermissionExpired,
+                            {
+                                type: LicenseErrorType.PermissionExpired
+                            }
                         ),
                         lease: serverPermission.lease
                     };
                 case ServerPermissionSubmitResultStatus.PayloadCorrupted:
                     return {
-                        error: new LicenseErrorResponse (
-                            LicenseErrorType.PayloadCorrupted,
-                            "Server permission payload is corrupted!"
+                        error: new SDKError(
+                            ErrorTypes.licenseErrors.licensePayloadCorrupted,
+                            {
+                                type: LicenseErrorType.PayloadCorrupted
+                            }
                         ),
                         lease: serverPermission.lease
                     };
                 case ServerPermissionSubmitResultStatus.PayloadSignatureVerificationFailed:
                     return {
-                        error: new LicenseErrorResponse (
-                            LicenseErrorType.PayloadSignatureVerificationFailed,
-                            "Failed to verify server permission's digital signature!"
+                        error: new SDKError(
+                            ErrorTypes.licenseErrors.licensePayloadVerificationFailed,
+                            {
+                                type: LicenseErrorType.PayloadSignatureVerificationFailed
+                            }
                         ),
                         lease: serverPermission.lease
                     };
                 case ServerPermissionSubmitResultStatus.IncorrectTokenState:
                     return {
-                        error: new LicenseErrorResponse (
-                            LicenseErrorType.IncorrectTokenState,
-                            "Internal error (Incorrect token state)"
+                        error: new SDKError(
+                            ErrorTypes.licenseErrors.licenseTokenStateIncorrect,
+                            {
+                                type: LicenseErrorType.IncorrectTokenState
+                            }
                         ),
                         lease: serverPermission.lease
                     };

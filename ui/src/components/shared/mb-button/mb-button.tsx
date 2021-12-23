@@ -4,16 +4,17 @@
 
 import {
   Component,
+  Element,
   Event,
   EventEmitter,
   Host,
   h,
   Prop,
-  State,
+  State
 } from '@stencil/core';
 
 import { TranslationService } from '../../../utils/translation.service';
-import { classNames } from '../../../utils/generic.helpers';
+import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
 
 @Component({
   tag: 'mb-button',
@@ -21,6 +22,7 @@ import { classNames } from '../../../utils/generic.helpers';
   shadow: true,
 })
 export class MbButton {
+
   /**
    * Set to 'true' if button should be disabled, and if click events should not be triggered.
    */
@@ -81,6 +83,11 @@ export class MbButton {
    */
   @Event() buttonClick: EventEmitter<UIEvent>;
 
+  /**
+   * Host element as variable for manipulation
+   */
+  @Element() hostEl: HTMLElement;
+
   private handleClick(ev: UIEvent) {
     if (this.preventDefault) {
       ev.preventDefault();
@@ -106,10 +113,13 @@ export class MbButton {
     }
   }
 
+  connectedCallback() {
+    setWebComponentParts(this.hostEl);
+  }
+
   render() {
     return (
       <Host
-        part="mb-button"
         className={ classNames({ visible: this.visible, disabled: this.disabled, icon: this.icon, selected: this.selected }) }
         onClick={ (ev: UIEvent) => this.handleClick(ev) }>
         <a onMouseOver={ this.handleMouseOver.bind(this) } onMouseOut={ this.handleMouseOut.bind(this) } href="javascript:void(0)">

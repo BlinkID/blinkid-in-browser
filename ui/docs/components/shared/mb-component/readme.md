@@ -48,10 +48,11 @@
 | ------------------- | ----------------------------------------------------------------------------- | ------------------------------- |
 | `block`             | Event containing boolean which used to check whether component is blocked.    | `CustomEvent<boolean>`          |
 | `cameraScanStarted` | See event 'cameraScanStarted' in public component.                            | `CustomEvent<null>`             |
-| `fatalError`        | See event 'fatalError' in public component.                                   | `CustomEvent<EventFatalError>`  |
+| `fatalError`        | See event 'fatalError' in public component.                                   | `CustomEvent<SDKError>`         |
 | `feedback`          | Event containing FeedbackMessage which can be passed to MbFeedback component. | `CustomEvent<FeedbackMessage>`  |
 | `imageScanStarted`  | See event 'imageScanStarted' in public component.                             | `CustomEvent<null>`             |
 | `ready`             | See event 'ready' in public component.                                        | `CustomEvent<EventReady>`       |
+| `scanAborted`       | See event 'scanAborted' in public component.                                  | `CustomEvent<null>`             |
 | `scanError`         | See event 'scanError' in public component.                                    | `CustomEvent<EventScanError>`   |
 | `scanSuccess`       | See event 'scanSuccess' in public component.                                  | `CustomEvent<EventScanSuccess>` |
 
@@ -71,12 +72,35 @@ Type: `Promise<void>`
 
 
 
+### `startCameraScan() => Promise<void>`
 
-## Shadow Parts
+Starts camera scan using camera overlay with usage instructions.
 
-| Part             | Description |
-| ---------------- | ----------- |
-| `"mb-component"` |             |
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `startCombinedImageScan(firstFile: File, secondFile: File) => Promise<void>`
+
+Starts combined image scan, emits results from provided files.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `startImageScan(file: File) => Promise<void>`
+
+Starts image scan, emits results from provided file.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
 
 
 ## Dependencies

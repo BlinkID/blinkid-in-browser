@@ -2,8 +2,10 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
+import { SDKError } from "./SDKError";
 import { defaultWasmModuleName } from "../defaultWasmModule";
 import { WasmType } from "./WasmType";
+import * as ErrorTypes from "./ErrorTypes";
 
 /**
  * Function that will be called during loading of the SDK.
@@ -88,7 +90,7 @@ export class WasmSDKLoadSettings
     {
         if ( !licenseKey )
         {
-            throw new Error( "Missing license key!" );
+            throw new SDKError( ErrorTypes.sdkErrors.licenseKeyMissing );
         }
         this.licenseKey = licenseKey;
     }
