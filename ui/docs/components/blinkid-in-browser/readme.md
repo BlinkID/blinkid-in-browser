@@ -58,6 +58,16 @@
 
 ## Methods
 
+### `getProductIntegrationInfo() => Promise<ProductIntegrationInfo>`
+
+Get information about product integration.
+
+#### Returns
+
+Type: `Promise<ProductIntegrationInfo>`
+
+
+
 ### `setUiMessage(state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK', message: string) => Promise<void>`
 
 Show message alongside UI component.

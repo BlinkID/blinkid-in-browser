@@ -19,7 +19,8 @@ import {
   EventScanSuccess,
   FeedbackMessage,
   MicroblinkUI,
-  SDKError
+  SDKError,
+  ProductIntegrationInfo
 } from '../../utils/data-structures';
 
 import { SdkService } from '../../utils/sdk.service';
@@ -444,6 +445,14 @@ export class BlinkidInBrowser implements MicroblinkUI {
   @Method()
   async setUiMessage(state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK', message: string) {
     this.feedbackEl.show({ state, message });
+  }
+
+  /**
+   * Get information about product integration.
+   */
+  @Method()
+  async getProductIntegrationInfo(): Promise<ProductIntegrationInfo> {
+    return this.sdkService?.getProductIntegrationInfo();
   }
 
   @Element() hostEl: HTMLElement;

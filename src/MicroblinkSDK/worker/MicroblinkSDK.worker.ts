@@ -98,6 +98,9 @@ export default class MicroblinkWorker
                 case Messages.SetClearTimeoutCallback.action:
                     this.registerClearTimeoutCallback( msg as Messages.SetClearTimeoutCallback );
                     break;
+                case Messages.GetProductIntegrationInfo.action:
+                    this.processGetProductIntegrationInfo( msg as Messages.GetProductIntegrationInfo );
+                    break;
                 default:
                     throw new SDKError( {
                         code: ErrorTypes.ErrorCodes.WORKER_MESSAGE_ACTION_UNKNOWN,
@@ -1097,6 +1100,49 @@ export default class MicroblinkWorker
         {
             this.notifyError( msg, new SDKError(
                 ErrorTypes.workerErrors.imageProcessFailure,
+                error
+            ) );
+        }
+    }
+
+    private processGetProductIntegrationInfo( msg: Messages.GetProductIntegrationInfo )
+    {
+        if ( this.wasmModule === null )
+        {
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.wasmInitMissing
+            ) );
+            return;
+        }
+
+        try
+        {
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access */
+            const activeLicenseTokenInfo = this.wasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
+            /* eslint-enable @typescript-eslint/no-unsafe-call,
+                             @typescript-eslint/no-unsafe-member-access */
+
+            const result = {
+                userId        : activeLicenseTokenInfo.userId,
+                licenseId     : activeLicenseTokenInfo.licenseId,
+                licensee      : activeLicenseTokenInfo.licensee,
+                productName   : activeLicenseTokenInfo.sdkName,
+                productVersion: activeLicenseTokenInfo.sdkVersion,
+                platform      : "Browser",
+                device        : self.navigator.userAgent,
+                packageName   : activeLicenseTokenInfo.packageName
+            };
+
+            this.context.postMessage
+            (
+                new Messages.ProductIntegrationResultMessage( msg.messageID, result )
+            );
+        }
+        catch ( error )
+        {
+            this.notifyError( msg, new SDKError(
+                ErrorTypes.workerErrors.objectInvokeFailure,
                 error
             ) );
         }

@@ -12,15 +12,13 @@ import { VIZResult } from "./VIZResult";
 import
 {
     Recognizer,
-    DigitalSignatureOptions,
-    DigitalSignature,
     WasmSDK
 } from "../../../MicroblinkSDK/DataStructures";
 
 /**
  * A settings object that is used for configuring the BlinkIdCombinedRecognizer.
  */
-export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings implements DigitalSignatureOptions
+export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings
 {
     /**
      * Proceed with scanning the back side even if the front side result is uncertain.
@@ -37,9 +35,6 @@ export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings
      * Skip the scan of the back side for documents where back side scanning is not supported.
      */
     skipUnsupportedBack = false;
-
-    // implementation od the DigitalSignatureOptions interface
-    allowSignature = false;
 }
 
 /**
@@ -47,11 +42,6 @@ export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings
  */
 export interface BlinkIdCombinedRecognizerResult extends BaseBlinkIdRecognizerResult, CombinedRecognizerResult
 {
-    /**
-     *  The digital signature
-     */
-    readonly digitalSignature: DigitalSignature;
-
     /**
      *  The full document back image
      */
