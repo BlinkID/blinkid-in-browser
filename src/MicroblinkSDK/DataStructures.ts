@@ -134,7 +134,7 @@ export interface Recognizer extends WasmNativeObject
      * If the SDK does not have this feature compiled into the WASM, this
      * method will return null.
      */
-    toJSON(): Promise< string | null >;
+    toSignedJSON(): Promise< SignedPayload | null >;
 }
 
 /**
@@ -238,6 +238,8 @@ export interface WasmSDK
 
     delete: () => void;
 
+    getProductIntegrationInfo: () => Promise<ProductIntegrationInfo>;
+
     /**
      * The type of the WASM that was actually loaded.
      */
@@ -274,19 +276,34 @@ export interface MBDate
 /**
  * Specifies a digital signature of the specific recognizer result.
  */
-export interface DigitalSignature
+export interface SignedPayload
 {
-    /** Version of the digital signature. */
-    readonly version: number;
+    /** The digital signature payload. */
+    readonly payload: string;
 
-    /** The digital signature of the recognition results. */
-    readonly signature: Uint8Array;
+    /** The digital signature of the payload. */
+    readonly signature: string;
+
+    /** Version of the digital signature. */
+    readonly signatureVersion: string;
 }
 
-export interface DigitalSignatureOptions
+/**
+ * Describes a structure containing information about product integration.
+ */
+export interface ProductIntegrationInfo
 {
-    /**
-     * Whether or not recognition result should be signed.
-     */
-    allowSignature: boolean
+    readonly userId: string;
+
+    readonly licenseId: string;
+
+    readonly licensee: string;
+
+    readonly productVersion: string;
+
+    readonly platform: string;
+
+    readonly device: string;
+
+    readonly packageName: string;
 }

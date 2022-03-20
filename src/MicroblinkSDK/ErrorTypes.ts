@@ -25,6 +25,7 @@ export enum ErrorCodes {
     WORKER_HANDLE_UNDEFINED                     = "WORKER_HANDLE_UNDEFINED",
     WORKER_MESSAGE_ACTION_UNKNOWN               = "WORKER_MESSAGE_ACTION_UNKNOWN",
     WORKER_LICENSE_UNLOCK_ERROR                 = "WORKER_LICENSE_UNLOCK_ERROR",
+    WORKER_INTEGRATION_INFO_FAILURE             = "WORKER_INTEGRATION_INFO_FAILURE",
 
     LOCAL_SDK_RUNNER_MISSING                    = "LOCAL_SDK_RUNNER_MISSING",
     LOCAL_SDK_RUNNER_EMPTY                      = "LOCAL_SDK_RUNNER_EMPTY",
@@ -69,6 +70,7 @@ export enum ErrorMessages {
     WORKER_RUNNER_DELETE_FAILURE               = "Failed to delete recognizer runner!",
     WORKER_OBJECT_INVOKE_FAILURE               = "Failed to invoke object!",
     WORKER_IMAGE_PROCESS_FAILURE               = "Recognizer runner is not initialized! Cannot process image!",
+    WORKER_INTEGRATION_INFO_FAILURE            = "Failed to get product integration info!",
 
     LOCAL_SDK_RUNNER_MISSING                   = "Property nativeRecognizerRunner is not available!",
     LOCAL_SDK_RUNNER_EMPTY                     = "Native RecognizerRunner cannot be empty!",
@@ -273,4 +275,8 @@ export const workerErrors = {
         message: ErrorMessages.WORKER_HANDLE_UNDEFINED,
         code: ErrorCodes.WORKER_HANDLE_UNDEFINED,
     },
+    integrationInfoFailure: {
+        message: ErrorMessages.WORKER_INTEGRATION_INFO_FAILURE,
+        code: ErrorCodes.WORKER_INTEGRATION_INFO_FAILURE
+    }
 };

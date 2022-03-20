@@ -1,5 +1,9 @@
 # Release notes
 
+## 5.15.2
+
+* We removed `digitalSignature` property and related recognizer options
+
 ## 5.15.1
 
 * We've updated Microblink logo and colors

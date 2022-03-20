@@ -221,8 +221,8 @@ export class SdkService {
 
                 recognitionResults.imageCapture = _IS_IMAGE_CAPTURE;
 
-                if (configuration.recognizerOptions?.[this.recognizerName].allowSignature) {
-                  recognitionResults.resultJSON = await recognizer.recognizer.toJSON();
+                if (configuration.recognizerOptions?.returnSignedJSON) {
+                  recognitionResults.resultSignedJSON = await recognizer.recognizer.toSignedJSON();
                 }
 
                 const scanData: any = {
@@ -391,8 +391,8 @@ export class SdkService {
             recognizerName: recognizer.name
           };
 
-          if (configuration.recognizerOptions?.[recognizer.name].allowSignature) {
-            recognitionResults.resultJSON = await recognizer.recognizer.toJSON();
+          if (configuration.recognizerOptions?.returnSignedJSON) {
+            recognitionResults.resultSignedJSON = await recognizer.recognizer.toSignedJSON();
           }
 
           eventCallback({
@@ -534,8 +534,8 @@ export class SdkService {
               recognizerName: recognizer.name
             };
 
-            if (configuration.recognizerOptions?.[recognizer.name].allowSignature) {
-              recognitionResults.resultJSON = await recognizer.recognizer.toJSON();
+            if (configuration.recognizerOptions?.returnSignedJSON) {
+              recognitionResults.resultSignedJSON = await recognizer.recognizer.toSignedJSON();
             }
 
             eventCallback({
@@ -609,6 +609,10 @@ export class SdkService {
         .then(() => resolve(true))
         .catch(() => resolve(false));
     });
+  }
+
+  public getProductIntegrationInfo(): Promise<BlinkIDSDK.ProductIntegrationInfo> {
+    return this.sdk.getProductIntegrationInfo();
   }
 
   //////////////////////////////////////////////////////////////////////////////

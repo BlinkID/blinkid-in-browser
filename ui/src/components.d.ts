@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CameraEntry, CameraExperience, CameraExperienceState, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, SDKError } from "./utils/data-structures";
+import { CameraEntry, CameraExperience, CameraExperienceState, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
 import { SdkService } from "./utils/sdk.service";
 export namespace Components {
@@ -34,6 +34,10 @@ export namespace Components {
           * Define whether to use 'FULLSCREEN' or 'INLINE' gallery overlay type.  If 'FULLSCREEN' is used, when a user selects an image from which data should be extracted, an overlay will pop up and cover the whole screen.  On the other hand, if 'INLINE' is used, there is no overlay but rather a 'Processing' message inside the UI component.  Default value is 'INLINE'.
          */
         "galleryOverlayType": 'FULLSCREEN' | 'INLINE';
+        /**
+          * Get information about product integration.
+         */
+        "getProductIntegrationInfo": () => Promise<ProductIntegrationInfo>;
         /**
           * If set to 'true', UI component will not display feedback, i.e. information and error messages.  Setting this attribute to 'false' won't disable 'scanError' and 'scanInfo' events.  Default value is 'false'.
          */
@@ -237,6 +241,9 @@ export namespace Components {
           * Populate list of camera devices.
          */
         "populateCameraDevices": () => Promise<void>;
+        /**
+          * Set camera state to initial method.
+         */
         "resetState": () => Promise<void>;
         /**
           * Change active camera.
@@ -246,6 +253,9 @@ export namespace Components {
           * Method is exposed outside which allow us to control Camera Flip state from parent component.
          */
         "setCameraFlipState": (isFlipped: boolean) => Promise<void>;
+        /**
+          * Set camera state which includes animation and message.
+         */
         "setState": (state: CameraExperienceState, isBackSide?: boolean, force?: boolean) => Promise<void>;
         /**
           * Show camera feedback message on camera for Barcode scanning

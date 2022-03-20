@@ -23,6 +23,7 @@ export interface LicenseUnlockResult
     readonly sdkName                      : string;
     readonly sdkVersion                   : string;
     readonly unlockResult                 : LicenseTokenState;
+    readonly userId                       : string;
     readonly licenseError                 : string;
 }
 

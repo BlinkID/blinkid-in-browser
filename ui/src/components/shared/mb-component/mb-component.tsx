@@ -396,6 +396,11 @@ export class MbComponent {
       if (state === 'SUCCESS') {
         window.setTimeout(() => this.stopRecognition(), 400);
       }
+
+      if (state === 'ERROR') {
+        this.hideScanFromImageUi(false);
+        this.clearInputImages();
+      }
     }, 400);
   }
 

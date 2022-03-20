@@ -41,7 +41,7 @@ Type: `Promise<void>`
 
 ### `resetState() => Promise<void>`
 
-
+Set camera state to initial method.
 
 #### Returns
 
@@ -71,7 +71,7 @@ Type: `Promise<void>`
 
 ### `setState(state: CameraExperienceState, isBackSide?: boolean, force?: boolean) => Promise<void>`
 
-
+Set camera state which includes animation and message.
 
 #### Returns
 

@@ -152,6 +152,9 @@ export class MbCameraExperience {
     this.cameraFlipped = isFlipped;
   }
 
+  /**
+   * Set camera state which includes animation and message.
+   */
   @Method()
   setState(state: CameraExperienceState, isBackSide: boolean = false, force: boolean = false): Promise<void> {
     return new Promise((resolve) => {
@@ -203,6 +206,9 @@ export class MbCameraExperience {
     });
   }
 
+  /**
+   * Set camera state to initial method.
+   */
   @Method()
   resetState(): Promise<void> {
     return new Promise((resolve) => {

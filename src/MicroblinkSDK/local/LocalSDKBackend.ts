@@ -10,9 +10,11 @@ import
     RecognizerRunner,
     WasmModuleProxy,
     WasmSDK,
-    Recognizer
+    Recognizer,
+    ProductIntegrationInfo
 } from "../DataStructures";
 
+import * as License from "../License";
 import { MetadataCallbacks } from "../MetadataCallbacks";
 import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
 import { WasmType } from "../WasmType";
@@ -215,6 +217,11 @@ class WasmModuleLocalProxy implements WasmModuleProxy
         );
         return Promise.resolve( new WasmLocalRecognizerRunner( nativeRecognizerRunner ) );
     }
+
+    getActiveLicenseTokenInfo(): License.LicenseUnlockResult
+    {
+        return this.realWasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
+    }
 }
 /* eslint-enable @typescript-eslint/no-unsafe-assignment,
                  @typescript-eslint/no-unsafe-call,
@@ -225,7 +232,7 @@ class WasmModuleLocalProxy implements WasmModuleProxy
                   @typescript-eslint/no-explicit-any */
 export class WasmSDKLocal implements WasmSDK
 {
-    readonly mbWasmModule: WasmModuleProxy;
+    readonly mbWasmModule: WasmModuleLocalProxy;
 
     readonly showOverlay: boolean;
 
@@ -241,6 +248,24 @@ export class WasmSDKLocal implements WasmSDK
     delete()
     {
         console.info( "Cannot delete local SDK backend." );
+    }
+
+    getProductIntegrationInfo(): Promise< ProductIntegrationInfo >
+    {
+        const activeLicenseTokenInfo = this.mbWasmModule.getActiveLicenseTokenInfo();
+
+        const result = {
+            userId        : activeLicenseTokenInfo.userId,
+            licenseId     : activeLicenseTokenInfo.licenseId,
+            licensee      : activeLicenseTokenInfo.licensee,
+            productName   : activeLicenseTokenInfo.sdkName,
+            productVersion: activeLicenseTokenInfo.sdkVersion,
+            platform      : "Browser",
+            device        : window.navigator.userAgent,
+            packageName   : activeLicenseTokenInfo.packageName
+        };
+
+        return Promise.resolve( result );
     }
 }
 /* eslint-enable @typescript-eslint/explicit-module-boundary-types,
