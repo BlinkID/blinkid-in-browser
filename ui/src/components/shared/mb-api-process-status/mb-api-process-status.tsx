@@ -52,13 +52,13 @@ export class MbApiProcessStatus {
    */
   @Element() hostEl: HTMLElement;
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 
   render() {
     return (
-      <Host className={ classNames({ visible: this.visible }) }>
+      <Host class={ classNames({ visible: this.visible }) }>
 
         { this.state === 'LOADING' &&
           <div class="reticle-container">

@@ -5,7 +5,7 @@
 import { BlinkIdRecognizerSettings, BaseBlinkIdRecognizerResult } from "./BlinkIdRecognizer";
 import { CombinedRecognizerResult } from "../CombinedRecognizer";
 import { ImageAnalysisResult } from "./ImageAnalysisResult";
-import { ImageResult } from "../ImageOptions";
+import { CameraFrameResult, ImageResult } from "../ImageOptions";
 import { ProcessingStatus } from "./ProcessingStatus";
 import { VIZResult } from "./VIZResult";
 
@@ -42,6 +42,21 @@ export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings
  */
 export interface BlinkIdCombinedRecognizerResult extends BaseBlinkIdRecognizerResult, CombinedRecognizerResult
 {
+    /**
+     * Camera frame from which barcode data was extracted.
+     */
+    readonly barcodeCameraFrame: CameraFrameResult;
+
+    /**
+     * Camera frame from which document data on front side was extracted.
+     */
+    readonly frontCameraFrame: CameraFrameResult;
+
+    /**
+     * Camera frame from which document data on back side was extracted.
+     */
+    readonly backCameraFrame: CameraFrameResult;
+
     /**
      *  The full document back image
      */

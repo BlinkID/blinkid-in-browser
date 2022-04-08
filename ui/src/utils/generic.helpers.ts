@@ -68,19 +68,21 @@ export function classNames(classes: Record<string, boolean>) {
   return result.join(' ');
 }
 
-export function getWebComponentParts(root: ShadowRoot): Array<Element> {
-  const partsChildren = root.querySelectorAll('[part]');
-  const parts = [];
+/**
+ * @param root shadowroot to apply the query from
+ * @returns array of part selectors
+ */
+export function getWebComponentParts(root: ShadowRoot): string[] {
+  const nodesWithPart = root.querySelectorAll('[part]');
 
-  partsChildren.forEach((el: Element) => {
-    const elementParts = el.getAttribute('part').split(' ');
+  const parts = new Set<string>();
 
-    while (elementParts && elementParts.length) {
-      parts.push(elementParts.pop());
-    }
+  nodesWithPart.forEach((el: Element) => {
+    const partsArray = el.getAttribute('part').split(' ');
+    partsArray.forEach(partName => parts.add(partName))
   });
 
-  return parts;
+  return [...parts];
 }
 
 export function setWebComponentParts(hostEl: Element): void {

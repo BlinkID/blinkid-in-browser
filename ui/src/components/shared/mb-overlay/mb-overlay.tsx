@@ -34,7 +34,7 @@ export class MbOverlay {
    */
   @Element() hostEl: HTMLElement;
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 
@@ -52,7 +52,7 @@ export class MbOverlay {
 
   render() {
     return (
-      <Host className={ `${classNames({ visible: this.visible, 'non-fullscreen': !this.fullscreen })} ${this.getHostClassNames()}` }>
+      <Host class={ `${classNames({ visible: this.visible, 'non-fullscreen': !this.fullscreen })} ${this.getHostClassNames()}` }>
         <slot></slot>
       </Host>
     );

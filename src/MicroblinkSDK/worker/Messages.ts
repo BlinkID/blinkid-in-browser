@@ -302,9 +302,12 @@ export class GetProductIntegrationInfo extends BaseRequestMessage
 {
     static readonly action: string = "getProductIntegrationInfo";
 
-    constructor()
+    readonly userId: string;
+
+    constructor( userId: string )
     {
         super( GetProductIntegrationInfo.action );
+        this.userId = userId;
     }
 }
 

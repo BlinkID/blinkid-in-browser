@@ -22,7 +22,7 @@ import {
   CameraExperienceStateDuration
 } from '../../../utils/data-structures';
 
-import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
+import { setWebComponentParts, classNames, getWebComponentParts } from '../../../utils/generic.helpers';
 
 import { TranslationService } from '../../../utils/translation.service';
 
@@ -355,8 +355,10 @@ export class MbCameraExperience {
     this.changeCameraDevice.emit(camera);
   }
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
+    const parts = getWebComponentParts(this.hostEl.shadowRoot);
+    this.hostEl.setAttribute('exportparts', parts.join(', '));
   }
 
   render() {

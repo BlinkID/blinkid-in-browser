@@ -34,13 +34,13 @@ export class MbSpinner {
    */
   @Element() hostEl: HTMLElement;
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 
   render() {
     return (
-      <Host className={ this.size }>
+      <Host class={ this.size }>
         <img src={ this.icon } />
       </Host>
     );

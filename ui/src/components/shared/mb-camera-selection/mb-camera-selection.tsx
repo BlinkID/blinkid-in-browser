@@ -90,7 +90,7 @@ export class MbCameraSelection {
     this.isListVisible = visible;
   }
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 

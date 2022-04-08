@@ -18,7 +18,7 @@ export const defaultTranslations: { [key: string]: string|Array<string> } = {
   'camera-generic-error': 'Cannot access camera.',
   'camera-feedback-scan-front': ['Scan the front side', 'of a document'],
   'camera-feedback-scan-back': ['Scan the back side', 'of a document'],
-  'camera-feedback-flip': 'Flip the document',
+  'camera-feedback-flip': 'Flip to the back side',
   'camera-feedback-barcode-message': 'Scan the barcode',
   'camera-feedback-move-farther': 'Move farther',
   'camera-feedback-move-closer': 'Move closer',

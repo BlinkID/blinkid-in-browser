@@ -64,17 +64,17 @@ export class MbCameraToolbar {
    */
   @Element() hostEl: HTMLElement;
 
-  connectedCallback() {
-    window.addEventListener('resize', this.handleResize.bind(this), false);
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 
-  componentDidRender() {
+  connectedCallback() {
+    window.addEventListener('resize', this.handleResize, false);
     this.handleResize();
   }
 
   disconnectedCallback() {
-    window.removeEventListener('resize', this.handleResize.bind(this), false);
+    window.removeEventListener('resize', this.handleResize, false);
   }
 
   /**
@@ -105,7 +105,7 @@ export class MbCameraToolbar {
     this.flipEvent.emit();
   }
 
-  private handleResize() {
+  private handleResize = () => {
     this.isDesktop = DeviceHelpers.isDesktop();
   }
 
