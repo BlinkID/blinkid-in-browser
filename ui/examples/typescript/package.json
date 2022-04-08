@@ -19,6 +19,6 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
-    "@microblink/blinkid-in-browser-sdk": "~5.15.2"
+    "@microblink/blinkid-in-browser-sdk": "~5.16.0"
   }
 }

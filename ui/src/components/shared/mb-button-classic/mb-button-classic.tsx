@@ -55,14 +55,14 @@ export class MbButtonClassic {
     this.buttonClick.emit(ev);
   }
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 
   render() {
     return (
       <Host
-        className={ classNames({ disabled: this.disabled }) }
+        class={ classNames({ disabled: this.disabled }) }
         onClick={ (ev: UIEvent) => this.handleClick(ev) }>
         <a href="javascript:void(0)">
           <slot></slot>

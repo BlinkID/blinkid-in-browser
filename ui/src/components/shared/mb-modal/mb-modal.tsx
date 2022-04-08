@@ -51,13 +51,13 @@ export class MbModal {
    */
   @Element() hostEl: HTMLElement;
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 
   render() {
     return (
-      <Host className={ classNames({ visible: this.visible }) }>
+      <Host class={ classNames({ visible: this.visible }) }>
 
         <div class="mb-modal">
           <div class="close-wrapper">

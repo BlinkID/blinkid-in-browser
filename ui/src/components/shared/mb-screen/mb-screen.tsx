@@ -29,13 +29,13 @@ export class MbScreen {
    */
   @Element() hostEl: HTMLElement;
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 
   render() {
     return (
-      <Host className={ classNames({ visible: this.visible }) }>
+      <Host class={ classNames({ visible: this.visible }) }>
         <slot></slot>
       </Host>
     );

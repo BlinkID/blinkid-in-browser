@@ -29,7 +29,7 @@ export class MbCompleted {
    */
   @Element() hostEl: HTMLElement;
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 

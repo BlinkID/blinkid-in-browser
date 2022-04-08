@@ -604,6 +604,7 @@ export class WasmSDKWorker implements WasmSDK
     private          loadCallback            : OptionalLoadProgressCallback;
     private          clearTimeoutCallback    : ClearTimeoutCallback | null = null;
     private          recognizersWithCallbacks: Map< number, RemoteRecognizer >;
+    private          userId                  : string;
     public           showOverlay             : boolean;
     public           loadedWasmType          : WasmType = WasmType.Basic; // will be updated after WASM gets loaded
     /* eslint-enable lines-between-class-members */
@@ -612,6 +613,7 @@ export class WasmSDKWorker implements WasmSDK
     (
         worker: Worker,
         loadProgressCallback: OptionalLoadProgressCallback,
+        userId: string,
         rejectHandler: ( message: string ) => void
     )
     {
@@ -625,6 +627,7 @@ export class WasmSDKWorker implements WasmSDK
         this.mbWasmModule = new WasmModuleWorkerProxy( this );
         this.loadCallback = loadProgressCallback;
         this.recognizersWithCallbacks = new Map< number, RemoteRecognizer >();
+        this.userId = userId;
         this.showOverlay = false;
     }
 
@@ -687,7 +690,7 @@ export class WasmSDKWorker implements WasmSDK
         (
             ( resolve, reject ) =>
             {
-                const msg = new Messages.GetProductIntegrationInfo();
+                const msg = new Messages.GetProductIntegrationInfo( this.userId );
                 const handler = defaultResultEventHandler
                 (
                     ( msg: Messages.ResponseMessage ) =>
@@ -802,7 +805,13 @@ export class WasmSDKWorker implements WasmSDK
         (
             ( resolve, reject ) =>
             {
-                const wasmWorker = new WasmSDKWorker( worker, wasmLoadSettings.loadProgressCallback, reject );
+                const wasmWorker = new WasmSDKWorker
+                (
+                    worker,
+                    wasmLoadSettings.loadProgressCallback,
+                    userId,
+                    reject
+                );
                 const initMessage = new Messages.InitMessage( wasmLoadSettings, userId );
                 const initEventHandler = defaultResultEventHandler
                 (

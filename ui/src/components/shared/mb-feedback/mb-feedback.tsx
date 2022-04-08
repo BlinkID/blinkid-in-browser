@@ -48,13 +48,13 @@ export class MbFeedback {
    */
   @Element() hostEl: HTMLElement;
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 
   render() {
     return (
-      <Host className={ classNames({ visible: this.visible }) }>
+      <Host class={ classNames({ visible: this.visible }) }>
         <p class={ this.paragraphClassName }>{ this.paragraphValue }</p>
       </Host>
     );

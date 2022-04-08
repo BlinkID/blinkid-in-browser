@@ -2,6 +2,8 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
+import { ImageOrientation } from "../../MicroblinkSDK/DataStructures";
+
 /**
  * Extension factors relative to corresponding dimension of the full image. For example,
  * {@code upFactor} and {@code downFactor} define extensions relative to image height, e.g.
@@ -168,4 +170,15 @@ export interface ImageResult
      * Contains the JPEG-encoded bytes of the image.
      */
     readonly encodedImage: Uint8Array | null;
+}
+
+export interface CameraFrameResult
+{
+    /**
+     * Contains both original image and JPEG-encoded bytes of the image.
+     */
+    readonly frame: ImageResult | null;
+
+    /** Orientation of the captured frame */
+    readonly orientation: ImageOrientation;
 }

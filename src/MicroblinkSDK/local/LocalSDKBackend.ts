@@ -238,11 +238,20 @@ export class WasmSDKLocal implements WasmSDK
 
     readonly loadedWasmType: WasmType;
 
-    constructor( wasmModule: any, showOverlay: boolean, loadedWasmType: WasmType )
+    readonly userId: string;
+
+    constructor
+    (
+        wasmModule: any,
+        showOverlay: boolean,
+        loadedWasmType: WasmType,
+        userId: string
+    )
     {
         this.mbWasmModule = new WasmModuleLocalProxy( wasmModule );
         this.showOverlay = showOverlay;
         this.loadedWasmType = loadedWasmType;
+        this.userId = userId;
     }
 
     delete()

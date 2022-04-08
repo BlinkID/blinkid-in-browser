@@ -50,7 +50,7 @@ export class MbImageBox {
    */
   @Element() hostEl: HTMLElement;
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 

@@ -14,6 +14,7 @@ import { VIZResult } from "./VIZResult";
 
 import
 {
+    CameraFrameResult,
     ExtensionFactors,
     FaceImageOptions,
     FullDocumentImageOptions,
@@ -85,6 +86,11 @@ export class BlinkIdRecognizerSettings implements RecognizerSettings,
      * By default all modes are enabled.
      */
     recognitionModeFilter = new RecognitionModeFilter();
+
+    /**
+     * Enable or disable the saving of camera frames from which data is extracted.
+     */
+    saveCameraFrames = false;
 
     /**
      * Configure the recognizer to only work on already cropped and dewarped images.
@@ -182,22 +188,27 @@ export class BlinkIdRecognizerSettings implements RecognizerSettings,
 export interface BaseBlinkIdRecognizerResult extends RecognizerResult
 {
     /**
-     *  THe additional address information of the document owner.
+     * The additional address information of the document owner.
      */
     readonly additionalAddressInformation: string;
 
     /**
-     *  The additional name information of the document owner.
+     * The additional name information of the document owner.
      */
     readonly additionalNameInformation: string;
 
     /**
-     *  The fathers name of the document owner.
+     * The one more additional address information of the document owner.
+     */
+    readonly additionalOptionalAddressInformation: string;
+
+    /**
+     * The fathers name of the document owner.
      */
     readonly fathersName: string;
 
     /**
-     *  The mothers name of the document owner.
+     * The mothers name of the document owner.
      */
     readonly mothersName: string;
 
@@ -212,32 +223,32 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
     readonly barcode: BarcodeResult;
 
     /**
-     *  The class info
+     * The class info
      */
     readonly classInfo: ClassInfo;
 
     /**
-     *  The date of birth of the document owner.
+     * The date of birth of the document owner.
      */
     readonly dateOfBirth: MBDate;
 
     /**
-     *  The date of expiry of the document.
+     * The date of expiry of the document.
      */
     readonly dateOfExpiry: MBDate;
 
     /**
-     *  Determines if date of expiry is permanent.
+     * Determines if date of expiry is permanent.
      */
     readonly dateOfExpiryPermanent: boolean;
 
     /**
-     *  The date of issue of the document.
+     * The date of issue of the document.
      */
     readonly dateOfIssue: MBDate;
 
     /**
-     *  The additional number of the document.
+     * The additional number of the document.
      */
     readonly documentAdditionalNumber: string;
 
@@ -247,72 +258,72 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
     readonly documentOptionalAdditionalNumber: string;
 
     /**
-     *  The document number.
+     * The document number.
      */
     readonly documentNumber: string;
 
     /**
-     *  The driver license detailed info
+     * The driver license detailed info
      */
     readonly driverLicenseDetailedInfo: DriverLicenseDetailedInfo;
 
     /**
-     *  The employer of the document owner.
+     * The employer of the document owner.
      */
     readonly employer: string;
 
     /**
-     *  The face image
+     * The face image
      */
     readonly faceImage: ImageResult;
 
     /**
-     *  The first name of the document owner.
+     * The first name of the document owner.
      */
     readonly firstName: string;
 
     /**
-     *  The full name of the document owner.
+     * The full name of the document owner.
      */
     readonly fullName: string;
 
     /**
-     *  The issuing authority of the document.
+     * The issuing authority of the document.
      */
     readonly issuingAuthority: string;
 
     /**
-     *  The last name of the document owner.
+     * The last name of the document owner.
      */
     readonly lastName: string;
 
     /**
-     *  The localized name of the document owner.
+     * The localized name of the document owner.
      */
     readonly localizedName: string;
 
     /**
-     *  The marital status of the document owner.
+     * The marital status of the document owner.
      */
     readonly maritalStatus: string;
 
     /**
-     *  The data extracted from the machine readable zone.
+     * The data extracted from the machine readable zone.
      */
     readonly mrz: MrzResult;
 
     /**
-     *  The nationality of the documet owner.
+     * The nationality of the documet owner.
      */
     readonly nationality: string;
 
     /**
-     *  The personal identification number.
+     * The personal identification number.
      */
     readonly personalIdNumber: string;
 
     /**
-     *  The place of birth of the document owner.
+     * The place of birth of the document owner.
      */
     readonly placeOfBirth: string;
 
@@ -322,12 +333,12 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
     readonly processingStatus: ProcessingStatus;
 
     /**
-     *  The profession of the document owner.
+     * The profession of the document owner.
      */
     readonly profession: string;
 
     /**
-     *  The race of the document owner.
+     * The race of the document owner.
      */
     readonly race: string;
 
@@ -337,17 +348,17 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
     readonly recognitionMode: RecognitionMode;
 
     /**
-     *  The religion of the document owner.
+     * The religion of the document owner.
      */
     readonly religion: string;
 
     /**
-     *  The residential status of the document owner.
+     * The residential status of the document owner.
      */
     readonly residentialStatus: string;
 
     /**
-     *  The sex of the document owner.
+     * The sex of the document owner.
      */
     readonly sex: string;
 
@@ -362,6 +373,16 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
  */
 export interface BlinkIdRecognizerResult extends BaseBlinkIdRecognizerResult
 {
+    /**
+     * Camera frame from which barcode data was extracted.
+     */
+    readonly barcodeCameraFrame: CameraFrameResult;
+
+    /**
+     * Camera frame from which document data was extracted.
+     */
+    readonly cameraFrame: CameraFrameResult;
+
     /**
      *  The full document image
      */

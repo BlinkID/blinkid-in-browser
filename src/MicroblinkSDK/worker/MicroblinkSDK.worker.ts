@@ -1124,7 +1124,7 @@ export default class MicroblinkWorker
                              @typescript-eslint/no-unsafe-member-access */
 
             const result = {
-                userId        : activeLicenseTokenInfo.userId,
+                userId        : msg.userId,
                 licenseId     : activeLicenseTokenInfo.licenseId,
                 licensee      : activeLicenseTokenInfo.licensee,
                 productName   : activeLicenseTokenInfo.sdkName,

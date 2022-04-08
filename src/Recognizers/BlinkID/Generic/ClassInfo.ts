@@ -401,7 +401,10 @@ export enum Region
     CAMPECHE = 111,
     COLIMA = 112,
     QUINTANA_ROO_BENITO_JUAREZ = 113,
-    COUNT = 114,
+    UINTANA_ROO = 114,
+    QUINTANA_ROO_SOLIDARIDAD = 115,
+    TLAXCALA = 116,
+    COUNT = 117,
 }
 
 export enum DocumentType
@@ -454,5 +457,6 @@ export enum DocumentType
     TRIBAL_ID = 45,
     VETERAN_ID = 46,
     CITIZENSHIP_CERTIFICATE = 47,
-    COUNT = 48,
+    MY_NUMBER_CARD = 48,
+    COUNT = 49,
 }

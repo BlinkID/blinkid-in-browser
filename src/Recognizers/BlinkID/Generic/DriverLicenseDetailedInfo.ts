@@ -1,6 +1,24 @@
 /**
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
+import
+{
+    MBDate
+} from "../../../MicroblinkSDK/DataStructures";
+
+/**
+ * The additional information on vehicle class.
+ */
+export interface VehicleClassInfo
+{
+    readonly vehicleClass: string;
+
+    readonly licenceType: string;
+
+    readonly effectiveDate: MBDate;
+
+    readonly expiryDate: MBDate;
+}
 
 /**
  * Driver's license specific data.
@@ -24,4 +42,9 @@ export interface DriverLicenseDetailedInfo
      * The type of vehicle the driver license owner has privilege to drive.
      */
     readonly vehicleClass: string;
+
+    /**
+     * The additional information on vehicle class.
+     */
+    readonly vehicleClassesInfo: Array< VehicleClassInfo >;
 }

@@ -302,21 +302,18 @@ export class MbComponent {
    */
   @Event() scanAborted: EventEmitter<null>;
 
-  connectedCallback() {
+  componentDidLoad() {
     GenericHelpers.setWebComponentParts(this.hostEl);
+    const parts = GenericHelpers.getWebComponentParts(this.hostEl.shadowRoot);
+    this.hostEl.setAttribute('exportparts', parts.join(', '));
 
     this.hostEl.addEventListener('keyup', (ev: any) => {
       if (ev.key === 'Escape' || ev.code === 'Escape') {
         this.abortScan();
       }
     });
-  }
 
-  componentDidRender() {
     this.init();
-
-    const parts = GenericHelpers.getWebComponentParts(this.hostEl.shadowRoot);
-    this.hostEl.setAttribute('exportparts', parts.join(', '));
   }
 
   disconnectedCallback() {
@@ -532,7 +529,7 @@ export class MbComponent {
     if (this.enableDrag) {
       this.setDragAndDrop();
     }
-  } 
+  }
 
   private async flipCameraAction(): Promise<void> {
     await this.sdkService.flipCamera();
@@ -1510,6 +1507,7 @@ export class MbComponent {
         >
           <div class="holder">
             <video
+              part="mb-camera-video"
               ref={el => this.videoElement = el as HTMLVideoElement}
               playsinline
             ></video>

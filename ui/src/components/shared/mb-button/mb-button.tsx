@@ -101,28 +101,28 @@ export class MbButton {
     this.buttonClick.emit(ev);
   }
 
-  private handleMouseOver() {
+  private handleMouseOver = () => {
     if (!this.disabled) {
       this.imageSrc = this.imageSrcActive;
     }
   }
 
-  private handleMouseOut() {
+  private handleMouseOut = () => {
     if (!this.disabled) {
       this.imageSrc = this.imageSrcDefault;
     }
   }
 
-  connectedCallback() {
+  componentDidLoad() {
     setWebComponentParts(this.hostEl);
   }
 
   render() {
     return (
       <Host
-        className={ classNames({ visible: this.visible, disabled: this.disabled, icon: this.icon, selected: this.selected }) }
+        class={ classNames({ visible: this.visible, disabled: this.disabled, icon: this.icon, selected: this.selected }) }
         onClick={ (ev: UIEvent) => this.handleClick(ev) }>
-        <a onMouseOver={ this.handleMouseOver.bind(this) } onMouseOut={ this.handleMouseOut.bind(this) } href="javascript:void(0)">
+        <a onMouseOver={ this.handleMouseOver } onMouseOut={ this.handleMouseOut } href="javascript:void(0)">
           {
             this.imageSrcDefault && this.imageAlt === 'action-alt-camera' &&
             <img src={ this.imageSrc } alt={ this.translationService.i(this.imageAlt).toString() } />
