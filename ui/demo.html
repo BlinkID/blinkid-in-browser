@@ -145,6 +145,7 @@ if (window.location.hostname === 'blinkid.github.io') {
   window.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRpaBIIDkCE4HJ94O33dMQ14Xh0jRHxWmjLbh0US8wo6AbRlj4fL95SnNVo1CX25E43EDRRXUcLV9X6tf9CZfRHEB8BNwW3zNSZ06WtW27RlB/7GpX1nZPOO0f0I5kpAKmPlT8ixjmGAIEh86wuP9LzNp8J3E3iTZ5TcJaqq8RqWV1yrZeCIsHd93TL0xx84ArMqBUYr1esGFcqDQcYl0bip9JEH0r/GRm/5hrEwml7OjZX1QbKRfvV5gtsFtoZW9kxj4pTKiCQDgO/05M1xZ/DvOD3W3O3vfAPIZkFOAuIOmdejywrCsMozTeWrbBvRBdAsf+B06ygM7";
 }
 window.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
+window.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
 </script>
   </head>
   <body>
@@ -172,6 +173,7 @@ window.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources"
   const el = document.querySelector('#example-minimal blinkid-in-browser');
 
   el.engineLocation = window.engineLocation;
+  el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
   el.recognizers = ['BlinkIdRecognizer'];
 
@@ -206,6 +208,7 @@ recognizers=&quot;BlinkIdCombinedRecognizer&quot;
   const el = document.querySelector('#example-combined blinkid-in-browser');
 
   el.engineLocation = window.engineLocation;
+  el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
 
   el.recognizers = ['BlinkIdCombinedRecognizer'];
@@ -230,6 +233,7 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
   const el = document.querySelector('#example-barcode blinkid-in-browser');
 
   el.engineLocation = window.engineLocation;
+  el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
 
   el.recognizers = ['IdBarcodeRecognizer'];
@@ -265,6 +269,7 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
   const el = document.querySelector('#example-localization blinkid-in-browser');
 
   el.engineLocation = window.engineLocation;
+  el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
   el.recognizers = ['BlinkIdRecognizer'];
   window.setTimeout(() => {
@@ -314,6 +319,7 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
   const el = document.querySelector('#example-localization-rtl blinkid-in-browser');
 
   el.engineLocation = window.engineLocation;
+  el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
   el.recognizers = ['BlinkIdRecognizer'];
 
@@ -410,6 +416,7 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
   const el = document.querySelector('#example-customization blinkid-in-browser');
 
   el.engineLocation = window.engineLocation;
+  el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
   el.recognizers = ['BlinkIdRecognizer'];
 
