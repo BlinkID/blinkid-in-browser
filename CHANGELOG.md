@@ -1,5 +1,28 @@
 # Release notes
 
+## 5.17.0
+
+### Changes to BlinkID(Combined) Recognizer
+
+* We've introduced the expanded DataMatch functionality for the BlinkID with the new result member called `dataMatchDetailedInfo`
+	* This result member will enable you to see for which field has been performed, or it did not, the DataMatch functionality. This is enabled for `dateOfBirth`, `documentNumber` and `dateOfExpiry`.
+	* For example, if the date of expiry is scanned from the front and back side of the document and values do not match, this method will return `DataMatchResult: Failed`.
+    * Result will be `DataMatchResult: Success` only if scanned values for all fields that are compared are the same. If data matching has not been performed, the result will be `DataMatchResult: NotPerformed`. This information is available for every of the three mentioned field values above.
+* We've fixed issues with scanning Argentina AlienID, where there were confusions with the regular ID. `ClassInfo` now correctly returns which ID type is present based on the barcode data.
+
+### Platform-related SDK changes
+
+* **[BREAKING CHANGE]** Due to security reasons, we've added a mechanism to load worker script from an external location.
+    * New property `WasmSDKLoadSettings.workerLocation` was added for this purpose and represents a path to the external worker script file.
+    * If omitted, SDK will look for the worker script in the `resources` directory.
+
+### UI Improvements
+
+* We've added property `recognitionPauseTimeout` to the UI component that defines scanning pause after the first side of a document has been scanned.
+    * The purpose of this property is to give the end-user enough time to flip the document before scanning is resumed.
+    * Default value is `3800` and represents time in milliseconds.
+* We've exposed property `cameraExperienceStateDurations` on the UI component that can be used to change the default durations of UI animations.
+
 ## 5.16.0
 
 We've added new documents to our list of supported documents:

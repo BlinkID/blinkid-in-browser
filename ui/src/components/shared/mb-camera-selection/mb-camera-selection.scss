@@ -5,19 +5,17 @@
 @import "../styles/_globals-sass";
 
 :host {
-  box-sizing: border-box;
+  * {
+    box-sizing: border-box;
+  }
 
   display: block;
-  position: relative;
-
-  padding: $padding-unit-small 0;
-
   font-family: inherit;
   font-size: var(--mb-font-size);
 
   .active-camera {
+    all: unset;
     box-sizing: border-box;
-
     display: block;
 
     // Width + border
@@ -57,6 +55,8 @@
       // width = 100% - padding width - 2 * width of an icon
       max-width: calc(100% - #{ 2 * $padding-unit-medium } - 40px);
 
+      font-weight: var(--mb-toolbar-camera-name-font-weight);
+
       padding: 0 $padding-unit-medium 0 $padding-unit-small;
 
       overflow: hidden;
@@ -74,10 +74,6 @@
     &:active,
     &:focus {
       background-color: rgba(map-get(map-get(map-get($base-colors, text-secondary), onlight), foreground), 0.3);
-    }
-
-    &:hover {
-
     }
 
     &.active,
@@ -144,31 +140,31 @@
 
     ul {
       margin: 0;
-      padding: $padding-unit-medium 0;
+      padding: $padding-unit-medium;
+
+      border-radius: var(--mb-toolbar-list-border-radius);
 
       list-style: none;
 
-      a {
-        display: block;
-        text-align: left;
-
-        color: inherit;
-        text-decoration: none;
-      }
-
       li {
         display: block;
-
-        padding: $padding-unit-small $padding-unit-large;
-        line-height: var(--mb-line-height);
-
         &.active {
           color: map-get(map-get(map-get($base-colors, primary-blue), onlight), background);
         }
+      }
 
-        &:last-child {
-          padding-bottom: 0;
-        }
+      button {
+        all: unset;
+        box-sizing: border-box;
+        display: block;
+        width: 100%;
+        appearance: none;
+
+        border-radius: var(--mb-toolbar-list-item-border-radius);
+
+        padding: $padding-unit-small $padding-unit-large;
+        line-height: var(--mb-line-height);
+        cursor: pointer;
 
         &:hover,
         &:focus {

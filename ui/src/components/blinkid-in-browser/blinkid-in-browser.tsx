@@ -20,10 +20,13 @@ import {
   FeedbackMessage,
   MicroblinkUI,
   SDKError,
-  ProductIntegrationInfo
+  ProductIntegrationInfo,
+  CameraExperienceTimeoutDurations
 } from '../../utils/data-structures';
 
 import { SdkService } from '../../utils/sdk.service';
+
+
 import { TranslationService } from '../../utils/translation.service';
 import * as GenericHelpers from '../../utils/generic.helpers';
 
@@ -34,6 +37,7 @@ import * as GenericHelpers from '../../utils/generic.helpers';
 })
 export class BlinkidInBrowser implements MicroblinkUI {
   private blocked: boolean = false;
+
 
   /**
    * Write a hello message to the browser console when license check is successfully performed.
@@ -58,6 +62,18 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * going to be used.
    */
   @Prop() engineLocation: string = '';
+
+  /**
+   * The absolute location of the Web Worker script file that loads the WebAssembly module.
+   *
+   * Important: the worker script must be served via HTTPS and must be of the same origin as the initiator.
+   * See https://github.com/w3c/ServiceWorker/issues/940 (same applies for Web Workers).
+   *
+   * Important: SDK, worker script and WebAssembly resources must be from the same version of the package.
+   *
+   * The default value is an empty string, i.e. "", and in that case, the worker script is loaded from the default location in resources folder.
+   */
+  @Prop() workerLocation: string = '';
 
   /**
    * License key which is going to be used to unlock WASM library.
@@ -153,6 +169,22 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * device.
    */
   @Prop() recognitionTimeout: number;
+
+  /**
+   * Amount of time in milliseconds before the recognition process is resumed after it is being paused previously.
+   *
+   * This setting applies only to video recognition.
+   *
+   * Keep in mind that the timer starts after the front side was scanned . This behaviour ensures
+   * that the user has enough time to flip the document and place its back side in front of the camera
+   * device.
+   */
+  @Prop() recognitionPauseTimeout: number = 3800;
+
+  /**
+   * Configure camera experience state timeout durations
+   */
+  @Prop() cameraExperienceStateDurations: CameraExperienceTimeoutDurations = null;
 
   /**
    * Set to 'true' if success frame should be included in final scanning results.
@@ -482,6 +514,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
     this.finalTranslations = this.translations ? this.translations : rawTranslations;
     this.translationService = new TranslationService(this.finalTranslations || {});
 
+
     this.sdkService = new SdkService();
   }
 
@@ -491,8 +524,12 @@ export class BlinkidInBrowser implements MicroblinkUI {
         <mb-container>
           <mb-component dir={ this.hostEl.getAttribute('dir') }
                         ref={ el => this.mbComponentEl = el as HTMLMbComponentElement }
+
                         allowHelloMessage={ this.allowHelloMessage }
+                        recognitionPauseTimeout={ this.recognitionPauseTimeout }
+                        cameraExperienceStateDurations={ this.cameraExperienceStateDurations }
                         engineLocation={ this.engineLocation }
+                        workerLocation={ this.workerLocation }
                         licenseKey={ this.licenseKey }
                         wasmType={ this.wasmType }
                         recognizers={ this.finalRecognizers }
@@ -538,4 +575,5 @@ export class BlinkidInBrowser implements MicroblinkUI {
 
   private feedbackEl!: HTMLMbFeedbackElement;
   private mbComponentEl!: HTMLMbComponentElement;
+
 }

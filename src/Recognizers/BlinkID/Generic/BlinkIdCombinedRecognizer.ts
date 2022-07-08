@@ -6,6 +6,7 @@ import { BlinkIdRecognizerSettings, BaseBlinkIdRecognizerResult } from "./BlinkI
 import { CombinedRecognizerResult } from "../CombinedRecognizer";
 import { ImageAnalysisResult } from "./ImageAnalysisResult";
 import { CameraFrameResult, ImageResult } from "../ImageOptions";
+import { DataMatchDetailedInfo } from "./DataMatchDetailedInfo";
 import { ProcessingStatus } from "./ProcessingStatus";
 import { VIZResult } from "./VIZResult";
 
@@ -96,6 +97,11 @@ export interface BlinkIdCombinedRecognizerResult extends BaseBlinkIdRecognizerRe
      * Status of the last recognition process for the back side of the document.
      */
     readonly backProcessingStatus: ProcessingStatus;
+
+    /**
+     * Detailed info on data match.
+     */
+    readonly dataMatchDetailedInfo: DataMatchDetailedInfo;
 }
 
 /**

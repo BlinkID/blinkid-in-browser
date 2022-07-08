@@ -27,6 +27,8 @@
   }
 
   .cta {
+    all: unset;
+    box-sizing: border-box;
     display: block;
     height: var(--mb-component-image-box-cta-height);
 

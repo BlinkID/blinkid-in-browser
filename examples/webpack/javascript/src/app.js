@@ -34,7 +34,7 @@ function main()
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWKcUTzdcqWaRng1QSi5A9tEaYqYE/mrIgOWqqBpoxwfVLSrWbBwrL9V01hhfqjAfc4FEpsDVG9opmEMiZbyoL3xlWra/DsWDfRLZiw3B4uBT4Z1OJQbWMGVY8bUBT29UyKcM3fhhlw7zl6y84B6IGbiMuNasOBsaUXvo32zAJXYHabHkgwuNVoaLLiWmaQ52S5po16g1RVJP1gvBlHZiQfCruICGlKc+j3ld8jZNnkqiTykFP2mJHR6uPJfehwu/KJl866wZzsWUtGT+g15HXKoPtCQbtEItRPyCgEfPAsFkWO+1fgRnxTIa8zqDHpyzAzu91WmIi";
+    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmLi0+YuohfnjQdHCqTOfRV9Lq0RKCZNI5y795ZS0pMak1P/M5hMJxYhvr3aNI3ZYK4SmjHxfmeULCXE2gfHpDDmGWz4dMWkoEKpxiBEoTfSkwdxzhinMKEy7LduGCLZMRvR6UbBmTijiKZp2CFxjL7yYQRYpgT1VpgqxkChf8Hw8EhlEttvgsAZPyv+9DrgkTFkux9nVFSy2RIlBiqqxmYsnoRFDhMbDFf3Jucch5ltRfN9e3dJoF5I1j0wLEjGP67EoWmSgg/m7+dmYdFG3GkVaqWsi66af9ILLzAcmOcfL3lnWf/6TwsHjCL9zAAeCbTViMfMs=";
 
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings( licenseKey );
@@ -49,6 +49,9 @@ function main()
 
     // Set absolute location of the engine, i.e. WASM and support JS files
     loadSettings.engineLocation = window.location.origin;
+
+    // Set absolute location of the worker file
+    loadSettings.workerLocation = window.location.origin + "/resources/BlinkIDWasmSDK.worker.min.js";
 
     // 3. Load SDK
     BlinkIDSDK.loadWasmModule( loadSettings ).then

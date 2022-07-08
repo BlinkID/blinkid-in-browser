@@ -5,15 +5,11 @@
 import {
   Component,
   Element,
-  Event,
-  EventEmitter,
   Host,
   h,
   Prop,
-  State
 } from '@stencil/core';
 
-import { TranslationService } from '../../../utils/translation.service';
 import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
 
 @Component({
@@ -23,20 +19,13 @@ import { setWebComponentParts, classNames } from '../../../utils/generic.helpers
 })
 export class MbButton {
 
+  /** Function to call on click */
+  @Prop() clickHandler!: (ev: UIEvent) => void;
+
   /**
    * Set to 'true' if button should be disabled, and if click events should not be triggered.
    */
   @Prop() disabled: boolean = false;
-
-  /**
-   * Set to 'true' if button contains an icon.
-   */
-  @Prop() icon: boolean = false;
-
-  /**
-   * Set to 'true' if default event should be prevented.
-   */
-  @Prop() preventDefault: boolean = false;
 
   /**
    * Set to 'true' if button should be visible.
@@ -51,12 +40,12 @@ export class MbButton {
   /**
    * Passed image from parent component.
    */
-  @Prop() imageSrcDefault: string = '';
+  @Prop() imageSrcDefault!: string;
 
   /**
    * Passed image from parent component.
    */
-  @Prop() imageSrcActive: string = '';
+  @Prop() imageSrcActive!: string;
 
   /**
    * Passed description text for image element from parent component.
@@ -70,75 +59,30 @@ export class MbButton {
    */
   @Prop() label: string = '';
 
-  /**
-   * Instance of TranslationService passed from root component.
-   */
-  @Prop() translationService: TranslationService;
-
-  @State() imageSrc: string = this.imageSrcDefault;
-
-  /**
-   * Event which is triggered when user clicks on button element. This event is not triggered
-   * when the button is disabled.
-   */
-  @Event() buttonClick: EventEmitter<UIEvent>;
+  @Prop() buttonTitle!: string;
 
   /**
    * Host element as variable for manipulation
    */
   @Element() hostEl: HTMLElement;
 
-  private handleClick(ev: UIEvent) {
-    if (this.preventDefault) {
-      ev.preventDefault();
-    }
-
-    if (this.disabled) {
-      ev.stopPropagation();
-      return;
-    }
-
-    this.buttonClick.emit(ev);
-  }
-
-  private handleMouseOver = () => {
-    if (!this.disabled) {
-      this.imageSrc = this.imageSrcActive;
-    }
-  }
-
-  private handleMouseOut = () => {
-    if (!this.disabled) {
-      this.imageSrc = this.imageSrcDefault;
-    }
-  }
-
-  componentDidLoad() {
+  connectedCallback() {
     setWebComponentParts(this.hostEl);
   }
 
   render() {
     return (
       <Host
-        class={ classNames({ visible: this.visible, disabled: this.disabled, icon: this.icon, selected: this.selected }) }
-        onClick={ (ev: UIEvent) => this.handleClick(ev) }>
-        <a onMouseOver={ this.handleMouseOver } onMouseOut={ this.handleMouseOut } href="javascript:void(0)">
-          {
-            this.imageSrcDefault && this.imageAlt === 'action-alt-camera' &&
-            <img src={ this.imageSrc } alt={ this.translationService.i(this.imageAlt).toString() } />
-          }
-
-          {
-            this.imageSrcDefault && this.imageAlt === 'action-alt-gallery' &&
-            <label htmlFor="scan-from-image-input">
-              <img src={ this.imageSrc } alt={ this.translationService.i(this.imageAlt).toString() } />
-            </label>
-          }
-        </a>
-        {
-          this.label !== '' &&
-          <span>{ this.label }</span>
-        }
+        class={classNames({
+          visible: this.visible,
+          selected: this.selected,
+        })}
+      >
+        <button onClick={this.clickHandler} title={this.buttonTitle} disabled={this.disabled}>
+          <img class="icon-default" src={this.imageSrcDefault} alt="" />
+          <img class="icon-active" src={this.imageSrcActive} alt="" />
+        </button>
+        {this.label !== "" && <span>{this.label}</span>}
       </Host>
     );
   }

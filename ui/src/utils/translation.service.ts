@@ -3,6 +3,8 @@
  */
 
 export const defaultTranslations: { [key: string]: string|Array<string> } = {
+
+
   'action-alt-camera': 'Device camera',
   'action-alt-gallery': 'From gallery',
   'action-message': 'Scan or choose from gallery',

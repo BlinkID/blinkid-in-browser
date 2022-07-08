@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+        <title>Example: BlinkID D2D demo</title>
+
+        <!-- Import UI component which includes WASM library -->
+        <!-- Keep in mind that Unpkg CDN is used for demonstration, it's not intended to be used in production! -->
+        <script type="module" src="ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+
+        <style type="text/css">
+            @font-face {
+                font-family: 'Satoshi';
+                src: url('../../fonts/Satoshi-Regular.woff2') format('woff2'),
+                    url('../../fonts/Satoshi-Regular.woff') format('woff'),
+                    url('../../fonts/Satoshi-Regular.ttf') format('truetype');
+                    font-weight: 400;
+                    font-display: swap;
+                    font-style: normal;
+            }
+
+            @font-face {
+                font-family: 'Satoshi';
+                src: url('../../fonts/Satoshi-Medium.woff2') format('woff2'),
+                    url('../../fonts/Satoshi-Medium.woff') format('woff'),
+                    url('../../fonts/Satoshi-Medium.ttf') format('truetype');
+                    font-weight: 500;
+                    font-display: swap;
+                    font-style: normal;
+            }
+
+            @font-face {
+                font-family: 'Satoshi';
+                src: url('../../fonts/Satoshi-Bold.woff2') format('woff2'),
+                    url('../../fonts/Satoshi-Bold.woff') format('woff'),
+                    url('../../fonts/Satoshi-Bold.ttf') format('truetype');
+                    font-weight: 700;
+                    font-display: swap;
+                    font-style: normal;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+
+                width: 100%;
+                height: 100%;
+            }
+
+            html {
+                font-family: 'Satoshi';
+            }
+
+            body {
+                background-color: #fff;
+                box-sizing: border-box;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                padding: 20px;
+            }
+
+            blinkid-in-browser {
+                --mb-font-family: 'Satoshi';
+                width: 100%;
+                --mb-component-font-size: 1px;
+                --mb-component-action-label-font-size: 14px;
+                /* Customization of UI - see variables in src/components/shared/styles/_globals.scss */
+                /*
+                --mb-component-background: red;
+                --mb-component-action-label: none;
+                --mb-component-border-width: 0;
+                --mb-component-action-buttons-width: 100%;
+                --mb-component-action-buttons-justify-content: space-evenly;
+                --mb-component-button-size: 48px;
+                --mb-component-button-border-radius: 24px;
+                */
+            }
+
+            .title {
+                font-style: normal;
+                font-weight: normal;
+                font-size: 30px;
+            }
+
+            .description {
+                font-style: normal;
+                font-weight: normal;
+                font-size: 16px;
+                color: #374151;
+                margin-bottom: 40px;
+            }
+
+            .text-input {
+                font-family: 'Satoshi';
+                border: 1px solid #E5E7EB;
+                border-radius: 4px;
+                padding: 16px;
+                margin-bottom: 20px;
+                font-size: 14px;
+            }
+
+            .radio-label {
+                font-family: 'Satoshi';
+                font-style: normal;
+                font-weight: normal;
+                font-size: 14px;
+                color: #374151;
+                padding-left: 6px;
+            }
+
+            #submit {
+                font-family: 'Satoshi';
+                background: #0062F2;
+                border-radius: 100px;
+                font-weight: 700;
+                font-size: 14px;
+                color: white;
+                padding: 8px 16px;
+                border: none;
+                cursor: pointer;
+                margin-bottom: 30px;
+            }
+
+            #overlay {
+                z-index: 1;
+                position: fixed;
+                display: none;
+                width: 100%;
+                height: 100%;
+                background-color: white;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- It's possible to obtain a free trial license key on microblink.com -->
+        <div id="overlay">
+            <h1 class="title">Account created</h1>
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQ0IiBoZWlnaHQ9IjE0NSIgdmlld0JveD0iMCAwIDE0NCAxNDUiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHk9IjAuMDAyOTkwNzIiIHdpZHRoPSIxNDQiIGhlaWdodD0iMTQ0IiByeD0iNzIiIGZpbGw9IiMwMEJGQTUiIGZpbGwtb3BhY2l0eT0iMC4xIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTA2LjgyOCA0OS4xNzQ2QzEwOC4zOTEgNTAuNzM2NyAxMDguMzkxIDUzLjI2OTMgMTA2LjgyOCA1NC44MzE0TDY2LjgyODQgOTQuODMxNEM2NS4yNjYzIDk2LjM5MzUgNjIuNzMzNyA5Ni4zOTM1IDYxLjE3MTYgOTQuODMxNEw0MS4xNzE2IDc0LjgzMTRDMzkuNjA5NSA3My4yNjkzIDM5LjYwOTUgNzAuNzM2NyA0MS4xNzE2IDY5LjE3NDZDNDIuNzMzNyA2Ny42MTI1IDQ1LjI2NjMgNjcuNjEyNSA0Ni44Mjg0IDY5LjE3NDZMNjQgODYuMzQ2MUwxMDEuMTcyIDQ5LjE3NDZDMTAyLjczNCA0Ny42MTI1IDEwNS4yNjYgNDcuNjEyNSAxMDYuODI4IDQ5LjE3NDZaIiBmaWxsPSIjMDBCRkE1Ii8+Cjwvc3ZnPgo=" />
+            <p class="description">Thank you for creating the account.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; height: 100%;">
+            <h1 class="title">Create account</h1>
+            <p class="description">To create your account please fill out your personal information. Choose how you want to do it</p>
+                <div style="display: flex; flex-direction: column; margin-bottom: 20px;">
+                <div>
+                <input checked name="type" id="automatic" type="radio" />
+                <label class="radio-label">Automatically by scanning your ID card</label>
+                </div>
+                <div style="margin-top: 20px;">
+                    <blinkid-in-browser
+                        license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmKoUWwfc6Vkn6RRypBHxEeSSmdYMVvgwiQiEqxAeY41EFrsGTJCAF3z5FlaYLcDb1WcvD3cruOZ0AV+2nNNuCN7Hu+ABFONnZVuKvLIGoqBpzvBoz5WsIwS5s3MihzaXo1vCk8NIYEgnnyAs3g5FRBUM1WHRP8tL2HPJTV2LE8RKADDkKj82Bz+Nc80ywjDh4wdT+AAvUsdz9hATUDODib76I+1dzCfaxvvWbE6iReWio2bdgUi5Svf9ClbMLEg3/A1yezoMK7e9rK+Vykn4tBGwMffbFUd09+CN/O1ASbHe88CHwtQZxdpi8T/jv0Gpai0+bkzmC"
+                        recognizers="BlinkIdCombinedRecognizer"
+                    ></blinkid-in-browser>
+                </div>
+            </div>
+            <div style="display: flex; flex-direction: row; align-items: center; margin-bottom: 20px;">
+                <input id="manual" name="type" value="manual" type="radio" />
+                <label class="radio-label">By typing</label>
+            </div>
+            <input id="firstName" disabled class="text-input" placeholder="First name" />
+            <input id="lastName" disabled class="text-input" placeholder="Last name" />
+            <input id="oib" disabled class="text-input" placeholder="OIB" />
+            <input id="documentNumber" disabled class="text-input" placeholder="Document number" />
+            <input id="address" disabled class="text-input" placeholder="Address" />
+            <input id="dateOfExpiry" disabled class="text-input" placeholder="Document expiration date" />
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <button id="submit">Create account</button>
+            </div>
+
+        <script type="text/javascript">
+            var parcelRequire;
+            const manualInput = document.getElementById('manual');
+            const automaticInput = document.getElementById('automatic');
+
+            const firstNameInput = document.getElementById('firstName');
+            const lastNameInput = document.getElementById('lastName');
+            const dateOfExpiryInput = document.getElementById('dateOfExpiry');
+            const documentNumberInput = document.getElementById('documentNumber');
+            const addressInput = document.getElementById('address');
+            const oibInput = document.getElementById('oib');
+            const submitButton = document.getElementById('submit');
+            const overlayElement = document.getElementById('overlay');
+
+            function extractPeerIdFromURL() {
+                const params = new URLSearchParams(location.search);
+                const peerId = params.get('peerId');
+
+                return peerId;
+            }
+
+            function generatePeerUrl(peerId) {
+                return window.location.href + `?peerId=${peerId}`;
+            }
+
+            function run()
+            {
+                // Important: if attributes or properties are changed, whole component is rerendered
+                const blinkId = document.querySelector( "blinkid-in-browser" );
+
+                blinkId.translations = {
+                    'action-message': 'Scan your ID',
+                };
+
+                blinkId.scanFromImage = false;
+
+                if ( window.location.hostname === "jenkins.microblink.com" )
+                {
+                    blinkId.licenseKey = "sRwAAAYWamVua2lucy5taWNyb2JsaW5rLmNvbdrgF99Ko66NYMsw4eAlplU7AM0sPaVV6fRUFB1onRLHpw8hTJmRqrmkh7IUUSpfzBSeSoQ6LJyZ30lLoKJQ+ElBn6zXrn726jpsjR+MuTAXojcpErZihe69lQq4LxlsCmNR3jYI/usaYdEwc6BpYT/EAG6bRdCPmMqZSXwqnR5+DCJMxH6SS7jueSwtC8QfAGKHsMcYTs65NQXD77+iSDO1j0Q1hTmcmlrE4q96WJMOLWIiHq+ixWY0eOp2/Mjsmt0wA40kuMuAckCjx1pjPigba2ukiErtPi7iIqtZvFwzxIjPb1YUnrm5i3QtWoXxML4ECOlxUaO1nLdBo0jnS+E9BA==";
+                }
+
+                if ( window.location.hostname === "demo-test.microblink.com" )
+                {
+                  blinkId.licenseKey = "sRwAAAYYZGVtby10ZXN0Lm1pY3JvYmxpbmsuY29t2vHcSJpDznqrFrrId7112q6rJ8rD3jLbXWQw7eyEdDcB4hQdBwEhIMeR9ONxUMpbZ++0zSr/1PUB/7UikLY+vqR0tc5jfpW+XMP5J6Km1uG2C//+uomkAhtueFQ2oM5nia0tLy31A81A4bZKiXu+FSpTZjHL54neP4Mm4gYIHSl5VGrTYdbY3j3rMVhXffiVkOJ0EYAqRJcPCrcuuMUhR5Cx9nQ0UhHx30wJ594xvd2PGLudzb01jaLCIoscAmL4cCN2ExnI+lv3+cuYa+itDNKeSB7ajFTZTxxa6CHttoNufDlyqU0YALPMAG2BhX/oOCLJOh12VcpEzqf0Y1+d7clI";
+                }
+
+                blinkId.d2dOptions = {
+                    secure: true,
+                    host: 'peerjs.dev.microblink.com',
+                    port: 443,
+                    urlFactory: generatePeerUrl,
+                    peerIdExtractor: extractPeerIdFromURL,
+                };
+
+                const resourcesLocation = window.location.origin + window.location.pathname.split( "index.html" )[ 0 ] + "resources/";
+                blinkId.engineLocation = resourcesLocation;
+                blinkId.workerLocation = window.location.origin + "/resources/BlinkIDWasmSDK.worker.min.js";
+
+                submitButton.addEventListener('click', () => {
+                    if (!firstNameInput.value && !lastNameInput.value && !dateOfExpiryInput.value && !documentNumberInput.value && !addressInput.value && !oibInput.value) {
+                        alert('Fields cannot be empty');
+                    } else {
+                        overlayElement.style="display: flex";
+                    }
+                });
+
+                manualInput.addEventListener('change', (event) => {
+                    event.preventDefault();
+
+                    if (event.target.checked) {
+                        firstNameInput.disabled = false;
+                        lastNameInput.disabled = false;
+                        dateOfExpiryInput.disabled = false;
+                        documentNumberInput.disabled = false;
+                        addressInput.disabled = false;
+                        oibInput.disabled = false;
+                    }
+                });
+
+                automaticInput.addEventListener('change', (event) => {
+                    event.preventDefault();
+
+                    if (event.target.checked) {
+                        firstNameInput.disabled = true;
+                        lastNameInput.disabled = true;
+                        dateOfExpiryInput.disabled = true;
+                        documentNumberInput.disabled = true;
+                        addressInput.disabled = true;
+                        oibInput.disabled = true;
+                    }
+                });
+                
+
+                blinkId.addEventListener
+                (
+                    "fatalError",
+                    ev => console.log( "fatalError", ev.detail )
+                );
+
+                blinkId.addEventListener
+                (
+                    "ready",
+                    ev => console.log( "ready", ev.detail )
+                );
+
+                blinkId.addEventListener
+                (
+                    "scanError",
+                    ev => console.log( "scanError", ev.detail )
+                );
+
+                blinkId.addEventListener
+                (
+                    "scanSuccess",
+                    ev => {
+                        console.log( "scanSuccess", ev.detail );
+                        firstNameInput.value = ev.detail.recognizer.firstName;
+                        lastNameInput.value = ev.detail.recognizer.lastName;
+                        dateOfExpiryInput.value = ev.detail.recognizer.dateOfExpiry.originalString;
+                        documentNumberInput.value = ev.detail.recognizer.documentNumber;
+                        addressInput.value = ev.detail.recognizer.address;
+                        oibInput.value = ev.detail.recognizer.personalIdNumber;
+                    }
+                );
+
+                blinkId.addEventListener
+                (
+                    "feedback",
+                    ev => console.log( "feedback", ev.detail )
+                );
+            }
+
+            window.addEventListener( "DOMContentLoaded", ev => run() );
+        </script>
+    </body>
+</html>

@@ -7,17 +7,12 @@
 
 ## Properties
 
-| Property         | Attribute         | Description                                                                              | Type      | Default |
-| ---------------- | ----------------- | ---------------------------------------------------------------------------------------- | --------- | ------- |
-| `disabled`       | `disabled`        | Set to 'true' if button should be disabled, and if click events should not be triggered. | `boolean` | `false` |
-| `preventDefault` | `prevent-default` | Set to 'true' if default event should be prevented.                                      | `boolean` | `false` |
-
-
-## Events
-
-| Event         | Description                                                                                                           | Type                   |
-| ------------- | --------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| `buttonClick` | Event which is triggered when user clicks on button element. This event is not triggered when the button is disabled. | `CustomEvent<UIEvent>` |
+| Property                    | Attribute         | Description                                                                              | Type                    | Default     |
+| --------------------------- | ----------------- | ---------------------------------------------------------------------------------------- | ----------------------- | ----------- |
+| `clickHandler` _(required)_ | --                | Function to call on click                                                                | `(ev: UIEvent) => void` | `undefined` |
+| `disabled`                  | `disabled`        | Set to 'true' if button should be disabled, and if click events should not be triggered. | `boolean`               | `false`     |
+| `inverted`                  | `inverted`        | Set to 'true' if button should be inverted style.                                        | `boolean`               | `false`     |
+| `preventDefault`            | `prevent-default` | Set to 'true' if default event should be prevented.                                      | `boolean`               | `false`     |
 
 
 ## Dependencies

@@ -21,13 +21,13 @@
   --mb-line-height:                             1.5em;
 
   /* Component (UI with buttons) */
-  --mb-component-background:                    #FFF;
+  --mb-component-background:                    #F9FAFB;
 
   --mb-component-width:                         100%;
 
   --mb-component-font-color:                    #000;
   --mb-component-font-color-secondary:          #3C3C43B2;
-  --mb-component-font-size:                     inherit;
+  --mb-component-font-size:                     14px;
   --mb-component-text-transform:                none;
 
   --mb-component-border-color:                  rgba(120, 120, 128, 0.2);
@@ -40,23 +40,32 @@
   --mb-component-button-size:                   #{$button-size};
   --mb-component-button-icon-size:              #{$button-icon-size};
   --mb-component-button-background:             #FFF;
+  --mb-component-button-hover-background:       #F9FAFB;
   --mb-component-button-background-selected:    rgba(72, 178, 232, 0.1);
-  --mb-component-button-border-color:           rgba(120, 120, 128, 0.2);
+  --mb-component-button-border-color:           #D1D5DB;
   --mb-component-button-border-color-selected:  rgba(120, 120, 128, 0.2);
-  --mb-component-button-border-color-focus:     rgba(72, 178, 232, 0.5);
+  --mb-component-button-border-color-focus:     #9CA3AF;
   --mb-component-button-border-color-hover:     rgba(60, 60, 67, 0.29);
   --mb-component-button-border-color-disabled:  rgba(116, 116, 128, 0.08);
-  --mb-component-button-border-radius:          20px;
+  --mb-component-button-border-radius:          50%;
   --mb-component-button-border-style:           solid;
   --mb-component-button-border-width:           1px;
 
   --mb-component-button-box-shadow:             0px 1px 4px rgba(0, 0, 0, 0.1);
   --mb-component-button-box-shadow-disabled:    none;
 
-  --mb-component-button-classic-background:     #48B2E8;
-  --mb-component-button-classic-font-size:      1em;
-  --mb-component-button-classic-font-weight:    500;
-  --mb-component-button-classic-text-color:     #FFF;
+  --mb-component-button-classic-background:                   #0062F2;
+  --mb-component-button-classic-hover-background:             #3A89FD;
+  --mb-component-button-classic-inverted-hover-background:    #F9FAFB;
+  --mb-component-button-classic-focused-border-color:         #142641;
+  --mb-component-button-classic-inverted-text-color:          #374151;
+  --mb-component-button-classic-inverted-border-color:        #9CA3AF;
+  --mb-component-button-classic-font-size:                      14px;
+  --mb-component-button-classic-font-weight:                    700;
+  --mb-component-button-classic-text-color:                     #FFF;
+  --mb-component-button-classic-line-height:                    20px;
+  --mb-component-button-classic-border-radius:                  100px;
+
 
   --mb-component-image-box-border-color:        rgba(120, 120, 128, 0.2);
   --mb-component-image-box-border-radius:       2px;
@@ -77,39 +86,45 @@
   --mb-component-image-box-file-font-weight:    400;
 
   --mb-component-action-buttons-justify-content: flex-end;
-  --mb-component-action-buttons-width:          calc(2 * #{$button-size} + #{$padding-unit-medium});
-  --mb-component-action-buttons-last-margin:    0 0 0 8px;
+  --mb-component-action-buttons-gap:            8px;
 
   --mb-component-action-label:                  block;
-  --mb-component-action-label-font-size:        inherit;
+  --mb-component-action-label-font-size:        14px;
 
   /* Camera scanning UI */
   --mb-blur-filter:                             27px;
   --mb-blur-scanning-line:                      4px;
 
-  --mb-toolbar-color:                           #FFF;
-  --mb-toolbar-border-color:                    #FFF;
-  --mb-toolbar-border-radius:                   4px;
-  --mb-toolbar-selection-width:                 298px;
-  --mb-toolbar-list-background:                 #FFF;
-  --mb-toolbar-list-shadow:                     0px 2px 8px rgba(0, 0, 0, 0.05), 0px 2px 24px rgba(0, 0, 0, 0.1);
+  --mb-toolbar-color:                                   #FFF;
+  --mb-toolbar-border-color:                            #FFF;
+  --mb-toolbar-border-radius:                             4px;
+  --mb-toolbar-list-border-radius:                        4px;
+  --mb-toolbar-list-item-border-radius:                   2px;
+  --mb-toolbar-list-item-active-text-color:             #0062F2;
+  --mb-toolbar-list-item-active-background-color:       #E7F0FF;
+  --mb-toolbar-selection-width:                           298px;
+  --mb-toolbar-list-background:                         #FFF;
+  --mb-toolbar-list-shadow:                               0px 2px 8px rgba(0, 0, 0, 0.05), 0px 2px 24px rgba(0, 0, 0, 0.1);
+  --mb-toolbar-camera-name-font-weight:                   500;
 
-  --mb-reticle-size:                            6em;
+  --mb-reticle-size:                                      6em;
 
   /* User feedback (messages below buttons) */
-  --mb-feedback-font-color-error:               #FF2D55;
-  --mb-feedback-font-color-info:                rgba(60, 60, 67, 0.7);
-  --mb-feedback-font-size:                      0.875em;
+  --mb-feedback-font-color-error:               #F43F5E;
+  --mb-feedback-font-color-info:                #6B7280;
+  --mb-feedback-font-size:                      12px;
   --mb-feedback-font-style:                     normal;
   --mb-feedback-font-weight:                    400;
   --mb-feedback-letter-spacing:                 normal;
-  --mb-feedback-line-height:                    1em;
+  --mb-feedback-line-height:                    16px;
   --mb-feedback-text-transform:                 none;
 
   /* Overlays */
-  --mb-overlay-draganddrop-background:          #EDF7FD;
+  --mb-overlay-draganddrop-background:          #DCEAFF;
   --mb-overlay-draganddrop-background-error:    #FFEAEE;
-  --mb-overlay-draganddrop-border-color:        #48B2E8;
+  --mb-overlay-draganddrop-border-color:        #3A89FD;
+  --mb-overlay-draganddrop-text-color:          #0062F2;
+  --mb-overlay-draganddrop-text-error-color:    #E11D48;
   --mb-overlay-draganddrop-border-color-error:  #FF2D55;
   --mb-overlay-draganddrop-border-style:        dashed;
 
@@ -119,9 +134,15 @@
   --mb-overlay-gallery-experience-font-weight:  500;
   --mb-overlay-gallery-experience-line-height:  1.5em;
 
+  --mb-overlay-deviceselection-background:      rgba(17, 24, 39, 0.15);
+
+
   /* Modals */
   --mb-modal-title-font-size:                   1em;
-  --mb-modal-title-line-height:                 1.5em;
+  --mb-modal-title-line-height:                 2em;
   --mb-modal-content-font-size:                 0.875em;
   --mb-modal-content-line-height:               1.4em;
+  --mb-modal-border-radius:                     8px;
+  --mb-modal-background:                        #FFFFFF;
+
 }

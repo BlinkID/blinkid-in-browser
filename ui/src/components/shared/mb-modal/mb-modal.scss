@@ -21,13 +21,21 @@
 
     .mb-modal {
         width: 100%;
-        max-width: 552px;
+
+        border-radius: var(--mb-modal-border-radius);
 
         position: relative;
-        background-color: var(--mb-component-background);
+        background-color: var(--mb-modal-background);
         color: var(--mb-component-font-color);
 
-        padding: 24px;
+        .inner {
+            padding: 24px;
+        }
+
+        .footer {
+            padding: 24px;
+            background-color: rgba(116, 116, 128, 0.08);
+        }
 
         .close-wrapper {
             position: absolute;
@@ -36,14 +44,26 @@
             cursor: pointer;
 
             svg {
-                width: 24px;
-                height: 24px;
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+        .back-wrapper {
+            position: absolute;
+            left: 24px;
+            top: 20px;
+            cursor: pointer;
+
+            svg {
+                width: 20px;
+                height: 20px;
             }
         }
 
         .title {
             text-align: center;
-            font-weight: 500;
+            font-weight: 400;
             font-size: var(--mb-modal-title-font-size);
             line-height: var(--mb-modal-title-line-height);
         }
@@ -81,3 +101,14 @@
     opacity: 1;
 }
 
+:host(.elevated) {
+    .mb-modal {
+        box-shadow: 0px 2px 24px 0px #0000001A;
+        box-shadow: 0px 2px 8px 0px #0000000D;
+    }
+}
+
+:host(.centered) {
+    align-items: center;
+    justify-content: center;
+}

@@ -31,11 +31,11 @@ function main()
   }
 
   // 1. It's possible to obtain a free trial license key on microblink.com
-  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmKuUfwQG/M5Aj/R/sm+fLC7g5KdrAq5kOnlCofVNmuVNwcKixzd94de+TeJ+axIkYPHkuwu7sPafUS+Fd7spSoorLOSEEALV5b0DE4Hbwr4uUB750tA+oB9yK2VQkCAhD1VRaAaCB5fdsGBnY747McuwO+qLYpAk4mejM0ZVycrJRwEIub+jLC43EboCF6h60WLHem+CAtoK28q5yFh8lCm5JcoSJOMdU3BQULVHHTu5/H8dj3PR6/S2IbHz3Ew+l29pdNgMBIDZqm3NgvW9ziWqPXhdlavTQNdpz/u03Tresx+WiustrhYKBtaEIK5opX4TDcE4=";
+  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmLi04YvSyT5sLzoao9hcCwO9Q460/aTFvrZVzOupKLv+IHP1PZAfZVqhEw86GxUM2iebY5IhDZ0V8LMBe6jhUG9RP0DXQS45U4e5y3fbcxwC9ywZH4HU1Z/esUyfzRBIHJtmpg3m0CqqxPBhT0ZcDrlLOvvHI1V8IM0FsLYdljjsjZuUlxPWWV5XZpCh9LPHZvCVKWvFANopemXIHdVO7Zi+nBcDXsL2eXjtGB84EbccvktWXB6ShjUixJ0h8rIAVNcIdgKM8TJvfcknoj7BwhlnUnCFMwY7baJ/YLkxVnoZPiK/lJ6DAiunZ9y1JLHZ7z0Ualne7cg==";
 
   if (window.location.hostname === "blinkid.github.io")
   {
-    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRpaF6KdHWhhjvGmrBJ9n/dMGaVEc4Z7e9GCi2VaKg/OjDGR9QvvwD1x8fODvvtrTwyP+BkhCaB6Np3JIfsxlzHGuqYCt8VPbn7ew3nzDlOAOGpIQXxg7hUyEjMw4/UzSz+QKp1LM7HC35av13mKo7Zfi89w+r8BLs2HNy0M8FRZd3Md1wXCX69dvwMRcH4tWIoIKUVulpqs1024SyDPp/G6iFOwcFVUv9N0hap92vaP/uf2Zc5Xh4rnoENterdBRxPNaf3u0wEE8K4mgQdkkU/uuAFSi7JHL6PG2I3vnQ3paEIplOEazonFZXzqlWsvAEs8g8+Tn+Q==";
+    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRpaBIIDkCE4HJ94O33dMQ14Xh0jRHxWmjLbh0US8wo6AbRlj4fL95SnNVo1CX25E43EDRRXUcLV9X6tf9CZfRHEB8BNwW3zNSZ06WtW27RlB/7GpX1nZPOO0f0I5kpAKmPlT8ixjmGAIEh86wuP9LzNp8J3E3iTZ5TcJaqq8RqWV1yrZeCIsHd93TL0xx84ArMqBUYr1esGFcqDQcYl0bip9JEH0r/GRm/5hrEwml7OjZX1QbKRfvV5gtsFtoZW9kxj4pTKiCQDgO/05M1xZ/DvOD3W3O3vfAPIZkFOAuIOmdejywrCsMozTeWrbBvRBdAsf+B06ygM7";
   }
 
   // 2. Create instance of SDK load settings with your license key
@@ -51,6 +51,9 @@ function main()
 
   // Set absolute location of the engine, i.e. WASM and support JS files
   loadSettings.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
+
+  // Set absolute location of the worker file
+  loadSettings.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
 
   // 3. Load SDK
   BlinkIDSDK.loadWasmModule(loadSettings).then(

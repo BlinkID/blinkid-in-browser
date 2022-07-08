@@ -6,68 +6,81 @@
 
 :host {
   box-sizing: border-box;
-
   display: none;
+}
 
-  a {
-    display: block;
-    margin: 0 auto;
+button {
+  display: grid;
+  place-items: center;
+  position: relative;
 
-    width: calc(var(--mb-component-button-size) - 2 * var(--mb-component-button-border-width));
-    height: calc(var(--mb-component-button-size) - 2 * var(--mb-component-button-border-width));
+  width: calc(var(--mb-component-button-size) - 2 * var(--mb-component-button-border-width));
+  height: calc(var(--mb-component-button-size) - 2 * var(--mb-component-button-border-width));
 
-    background: var(--mb-component-button-background);
-    border-color: var(--mb-component-button-border-color);
+  background-color: var(--mb-component-button-background);
+  border-color: var(--mb-component-button-border-color);
 
-    border-radius: var(--mb-component-button-border-radius);
-    border-style: var(--mb-component-button-border-style);
-    border-width: var(--mb-component-button-border-width);
+  border-radius: var(--mb-component-button-border-radius);
+  border-style: var(--mb-component-button-border-style);
+  border-width: var(--mb-component-button-border-width);
 
-    box-shadow: var(--mb-component-button-box-shadow);
+  box-shadow: var(--mb-component-button-box-shadow);
 
-    text-decoration: none;
+  text-decoration: none;
+  appearance: none;
+  cursor: pointer;
+
+  > * {
+    user-select: none;
+    pointer-events: none;
   }
 
-  a:hover,
-  a:active,
-  a:focus {
-    cursor: pointer;
+  .icon-active {
+    display: none;
   }
-}
 
-:host a:focus {
-  border-color: var(--mb-component-button-border-color-focus);
-}
-:host a:hover {
-  border-color: var(--mb-component-button-border-color-hover);
-}
+  &:focus-visible {
+    border-color: var(--mb-component-button-border-color--visible);
+  }
 
-:host(.disabled) {
-  a {
+  &:hover, &:active {
+    border-color: var(--mb-component-button-border-color-hover);
+
+    .icon-active {
+      display: block;
+    }
+
+    .icon-default {
+      display: none;
+    }
+  }
+
+  &:active {
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  &[disabled] {
     border-color: var(--mb-component-button-border-color-disabled);
     box-shadow: var(--mb-component-button-box-shadow-disabled);
+    pointer-events: none;
     cursor: default;
-  }
 
-  img { opacity: .5; }
+    &::before {
+      opacity: 0.5;
+    }
+  }
 }
 
 :host(.visible) {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 :host(.selected) {
-  a {
+  button {
     background-color: var(--mb-component-button-background-selected);
     border-color: var(--mb-component-button-border-color-selected);
-  }
-}
-
-:host(.icon) {
-  a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 
@@ -75,20 +88,14 @@
  * Action buttons
  */
 
-:host label {
+label {
   cursor: inherit;
-}
-
-:host img {
-  display: block;
-  width: var(--mb-component-button-icon-size);
-  height: var(--mb-component-button-icon-size);
 }
 
 /**
  * Action labels
  */
-:host span {
+span {
   display: block;
   padding-top: $padding-unit-medium;
 

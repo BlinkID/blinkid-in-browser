@@ -6,14 +6,12 @@
 
 :host {
   box-sizing: border-box;
-
-  display: none;
   width: 100%;
   height: 100%;
-
   padding: $padding-unit-medium $padding-unit-large;
+  display: grid;
 }
 
-:host(.visible) {
-  display: block;
+:host(:not(.visible)) {
+  display: none !important;
 }

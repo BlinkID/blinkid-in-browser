@@ -39,6 +39,7 @@ export enum ErrorCodes {
     SDK_LICENSE_KEY_MISSING                     = "SDK_LICENSE_KEY_MISSING",
     SDK_WASM_MODULE_NAME_MISSING                = "SDK_WASM_MODULE_NAME_MISSING",
     SDK_ENGINE_LOCATION_INVALID                 = "SDK_ENGINE_LOCATION_INVALID",
+    SDK_WORKER_LOCATION_INVALID                 = "SDK_WORKER_LOCATION_INVALID",
     SDK_MISSING                                 = "SDK_MISSING",
     SDK_RECOGNIZERS_MISSING                     = "SDK_RECOGNIZERS_MISSING",
 
@@ -88,6 +89,7 @@ export enum ErrorMessages {
     SDK_LICENSE_KEY_MISSING                    = "Missing license key!",
     SDK_WASM_MODULE_NAME_MISSING               = "Missing WASM module name!",
     SDK_ENGINE_LOCATION_INVALID                = "Setting property 'engineLocation' must be a string!",
+    SDK_WORKER_LOCATION_INVALID                = "Setting property 'workerLocation' must be a string!",
     SDK_MISSING                                = "SDK is not provided!",
     SDK_RECOGNIZERS_MISSING                    = "To create RecognizerRunner at least 1 recognizer is required.",
 
@@ -160,6 +162,10 @@ export const sdkErrors = {
     engineLocationInvalid: {
         message: ErrorMessages.SDK_ENGINE_LOCATION_INVALID,
         code: ErrorCodes.SDK_ENGINE_LOCATION_INVALID,
+    },
+    workerLocationInvalid: {
+        message: ErrorMessages.SDK_WORKER_LOCATION_INVALID,
+        code: ErrorCodes.SDK_WORKER_LOCATION_INVALID,
     },
     missing: {
         message: ErrorMessages.SDK_MISSING,
