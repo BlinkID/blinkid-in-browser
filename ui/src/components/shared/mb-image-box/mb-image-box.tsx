@@ -116,9 +116,8 @@ export class MbImageBox {
           type="file"
           accept="image/*"
           onChange={ (ev: UIEvent) => this.onImageChange(ev) } />
-        <a
+        <button
           class="cta"
-          href="javascript:void(0)"
           onClick={ (ev: UIEvent) => this.onFromImageClicked(ev) }>
           <p
             class="cta-label"
@@ -134,7 +133,7 @@ export class MbImageBox {
             width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M16.0893 5.58928C16.4147 5.26384 16.4147 4.7362 16.0893 4.41076C15.7638 4.08533 15.2362 4.08533 14.9108 4.41076L10.5 8.82151L6.08928 4.41076C5.76384 4.08533 5.2362 4.08533 4.91076 4.41076C4.58533 4.7362 4.58533 5.26384 4.91076 5.58928L9.32151 10L4.91076 14.4108C4.58533 14.7362 4.58533 15.2638 4.91076 15.5893C5.2362 15.9147 5.76384 15.9147 6.08928 15.5893L10.5 11.1785L14.9108 15.5893C15.2362 15.9147 15.7638 15.9147 16.0893 15.5893C16.4147 15.2638 16.4147 14.7362 16.0893 14.4108L11.6785 10L16.0893 5.58928Z" fill="#48B2E8"/>
           </svg>
-        </a>
+        </button>
       </Host>
     );
   }

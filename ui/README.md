@@ -149,6 +149,7 @@ export class MyComponent implements AfterViewInit {
 
     // Engine location depends on the actual location of WebAssembly resources
     this.el.nativeElement.engineLocation = window.location.origin + '/blinkid-resources/';
+    this.el.nativeElement.workerLocation = window.location.origin + `/resources/blinkid.worker.min.js`;
 
     this.el.nativeElement.addEventListener('ready', (ev: CustomEventInit<EventReady>) => {
       console.log('ready', ev.details);
@@ -215,7 +216,8 @@ function App() {
 
         // Engine location depends on the actual location of WebAssembly resources
         el.current.engineLocation = window.location.origin + '/resources';
-        
+        el.current.engineLocation = window.location.origin + `/resources/blinkid.worker.min.js`;
+
         el.current.addEventListener('ready', (ev) => {
           console.log('ready', ev.details);
         });
@@ -292,6 +294,7 @@ Required parameters are license key, engine location and one or more recognizers
 
     // Absolute path to location of WASM resource files
     el.engineLocation = 'http://localhost/resources';
+    el.workerLocation = 'http://localhost/resources/blinkid.worker.min.js';
 
     // License key
     el.licenseKey = '<PLACE-YOUR-LICENSE-KEY-HERE>';

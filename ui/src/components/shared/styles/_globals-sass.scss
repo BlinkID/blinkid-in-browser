@@ -7,7 +7,7 @@ $padding-unit-small: 4px;
 $padding-unit-medium: 8px;
 $padding-unit-large: 16px;
 
-$button-size: 40px;
+$button-size: 36px;
 $button-icon-size: 20px;
 
 $breakpoint-width-mobile-landscape: 568px;
@@ -26,8 +26,8 @@ $base-unit: 4px;
 $base-colors: (
   // Primary
   primary-blue: (
-    onlight:    ( name: "primary-blue", background: #48B2E8, foreground: #ffffff ),
-    ondark:     ( name: "primary-blue", background: #48B2E8, foreground: #ffffff )
+    onlight:    ( name: "primary-blue", background: #0062F2, foreground: #ffffff ),
+    ondark:     ( name: "primary-blue", background: #0062F2, foreground: #ffffff )
   ),
 
   primary-black: (
@@ -68,7 +68,7 @@ $base-colors: (
   ),
 
   text-secondary: (
-    onlight:    ( name: "text-secondary", foreground: #3C3C43 ),
+    onlight:    ( name: "text-secondary", foreground: #6B7280 ),
     ondark:     ( name: "text-secondary", foreground: #AEAEB5 )
   ),
 
@@ -78,7 +78,7 @@ $base-colors: (
   ),
 
   text-quaternary: (
-    onlight:    ( name: "text-quaternary", foreground: rgba(#3c3c43, 0.3) ),
+    onlight:    ( name: "text-quaternary", foreground: rgba(#6B7280, 0.3) ),
     ondark:     ( name: "text-quaternary", foreground: #5E5E61 )
   ),
 

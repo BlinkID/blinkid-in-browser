@@ -21,22 +21,37 @@ export async function detectWasmType( engineLocation: string ): Promise< WasmTyp
     {
         if ( haveThreads )
         {
-            /* The external worker files are loaded by the Emscripten’s thread support code - each
-             * worker represents a thread. It’s not currently possible to put all those workers
-             * inline.
+            /* The external worker files are loaded by the Emscripten’s thread
+             * support code - each worker represents a thread. It’s not
+             * currently possible to put all those workers inline.
              *
-             * Also, due to browser security rules, it's not possible to load external worker files
-             * from a different origin.
+             * Also, due to browser security rules, it's not possible to load
+             * external worker files from a different origin.
              *
-             * Therefore, we need to ensure that remote workers are accessible. For that reason,
-             * there is a dummy `Worker.test.js` file. If that file is loaded successfully, we can
-             * say that `AdvancedWithThreads` bundle is available.
+             * Therefore, we need to ensure that remote workers are accessible.
+             * For that reason, there is a dummy `WorkerTest.js` file. If that
+             * file is loaded successfully and responds to a message, we can say
+             * that `AdvancedWithThreads` bundle is available.
              */
             try
             {
-                const worker = new Worker( `${ engineLocation }/Worker.test.js` );
-                worker.terminate();
-                return WasmType.AdvancedWithThreads;
+                const worker = new Worker( `${ engineLocation }/WorkerTest.js` );
+
+                return new Promise( ( resolve ) =>
+                {
+                    worker.postMessage( 1 );
+                    worker.onmessage = () =>
+                    {
+                        resolve( WasmType.AdvancedWithThreads );
+                        worker.terminate();
+                    };
+
+                    setTimeout( () =>
+                    {
+                        resolve( WasmType.Advanced );
+                        worker.terminate();
+                    }, 1000 );
+                } );
             }
             catch
             {

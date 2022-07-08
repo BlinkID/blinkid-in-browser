@@ -88,15 +88,27 @@ export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promi
                 reject( new SDKError( ErrorTypes.sdkErrors.engineLocationInvalid ) );
                 return;
             }
+            if ( typeof loadSettings.workerLocation !== "string" )
+            {
+                reject( new SDKError( ErrorTypes.sdkErrors.workerLocationInvalid ) );
+                return;
+            }
             // obtain user ID from local storage
             const userId = getUserID();
 
 
             try
             {
-                const blob = new Blob( [ String.raw`@PLACEHOLDER:worker` ], { type: "application/javascript" } );
-                const url = URL.createObjectURL( blob );
-                const worker = new Worker( url );
+                const workerPath = `/resources/${ loadSettings.wasmModuleName }.worker.min.js`;
+                const defaultWorkerLocation = window.location.origin + workerPath;
+                const workerLocation = loadSettings.workerLocation || defaultWorkerLocation;
+
+                if ( loadSettings.allowHelloMessage )
+                {
+                    console.log( "Worker location is:", workerLocation );
+                }
+
+                const worker = new Worker( workerLocation );
 
                 WasmSDKWorker.createWasmWorker( worker, loadSettings, userId ).then
                 (

@@ -52,6 +52,19 @@ export class WasmSDKLoadSettings
     engineLocation = "";
 
     /**
+     * The absolute location of the Web Worker script file that loads the WebAssembly module.
+     *
+     * Important: the worker script must be served via HTTPS and must be of the same origin as the initiator.
+     * See https://github.com/w3c/ServiceWorker/issues/940 (same applies for Web Workers).
+     *
+     * Important: SDK, worker script and WebAssembly resources must be from the same version of the package.
+     *
+     * The default value is an empty string, i.e. "", and in that case, the worker script is loaded from the default
+     * location in resources folder.
+     */
+    workerLocation = "";
+
+    /**
      * Type of the WASM that will be loaded. By default, if not set, the SDK will automatically determine the best WASM
      * to load.
      */

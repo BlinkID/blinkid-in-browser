@@ -136,10 +136,10 @@ const config = {
         ]
     },
     workerTest: {
-        input: 'src/MicroblinkSDK/worker/Worker.test.js',
+        input: 'src/MicroblinkSDK/worker/WorkerTest.js',
         treeshake: false,
         output: {
-            file: 'resources/Worker.test.js',
+            file: 'resources/WorkerTest.js',
             format: 'iife',
             indent: false,
             banner: bannerMsg

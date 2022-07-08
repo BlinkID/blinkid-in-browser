@@ -102,28 +102,26 @@ export class MbCameraSelection {
 
       if (isActive) {
         content = (
-          <svg width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M17.256 5.24408C17.5814 5.56951 17.5814 6.09715 17.256 6.42259L8.92263 14.7559C8.59719 15.0814 8.06955 15.0814 7.74412 14.7559L3.57745 10.5893C3.25201 10.2638 3.25201 9.73618 3.57745 9.41074C3.90289 9.08531 4.43053 9.08531 4.75596 9.41074L8.33337 12.9882L16.0775 5.24408C16.4029 4.91864 16.9305 4.91864 17.256 5.24408Z" fill="#48B2E8"/>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M17.2559 5.24408C17.5813 5.56951 17.5813 6.09715 17.2559 6.42259L8.92257 14.7559C8.59713 15.0814 8.06949 15.0814 7.74406 14.7559L3.57739 10.5893C3.25195 10.2638 3.25195 9.73618 3.57739 9.41074C3.90283 9.08531 4.43047 9.08531 4.7559 9.41074L8.33331 12.9882L16.0774 5.24408C16.4028 4.91864 16.9305 4.91864 17.2559 5.24408Z" fill="#0062F2"/>
           </svg>
         )
       }
 
       return (
         <li class={ classNames({ active: isActive }) }>
-          <a
-            href="javascript:void(0)"
+          <button
             onClick={ (ev: UIEvent) => this.handleCameraSelection(ev, camera) }>
             { content }
             <span class="name">{ camera.prettyName }</span>
-          </a>
+          </button>
         </li>
       )
     });
 
     return (
       <Host>
-        <a
-          href="javascript:void(0)"
+        <button
           class={ this.isListVisible ? 'active-camera active' : 'active-camera' }
           onClick={ (ev: UIEvent) => this.handleListOpen(ev) }>
           <span class="icon">
@@ -138,7 +136,7 @@ export class MbCameraSelection {
               <path fill-rule="evenodd" clip-rule="evenodd" d="M4.9107 6.91076C5.23614 6.58533 5.76378 6.58533 6.08922 6.91076L10.5 11.3215L14.9107 6.91076C15.2361 6.58533 15.7638 6.58533 16.0892 6.91076C16.4147 7.2362 16.4147 7.76384 16.0892 8.08928L11.0892 13.0893C10.7638 13.4147 10.2361 13.4147 9.9107 13.0893L4.9107 8.08928C4.58527 7.76384 4.58527 7.2362 4.9107 6.91076Z" fill="white"/>
             </svg>
           </span>
-        </a>
+        </button>
         <div
           id="list-background"
           class={ classNames({ visible: this.isListVisible }) }

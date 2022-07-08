@@ -1,0 +1,75 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+:host {
+  display: block;
+}
+
+.mb-tooltip {
+  display: none;
+  position: absolute;
+  margin: 2px 40px 2px 32px;
+  padding: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #374151;
+  background-color: #fff;
+  border: 1px solid rgba(120, 120, 128, 0.2);
+  filter: drop-shadow(0px 2px 4px rgba(31, 41, 55, 0.06)) drop-shadow(0px 4px 6px rgba(31, 41, 55, 0.1));
+  border-radius: 4px;
+
+  &.text-center {
+    text-align: center;
+  }
+  &.text-left {
+    text-align: left;
+  }
+  &.text-right {
+    text-align: right;
+  }
+
+  svg {
+    display: block;
+    float: left;
+    margin: 6px 14px 6px 6px;
+  }
+
+  &::after {
+    position: absolute;
+    display: block;
+    content: " ";
+    background-color: #fff;
+    width: 10px;
+    height: 10px;
+    transform: rotate(-45deg);
+  }
+
+  &.arrow-none::after {
+    display: none;
+  }
+
+  &.arrow-left::after {
+    left: -3px;
+    top: calc(50% - 5px);
+  }
+
+  &.arrow-right::after {
+    right: -3px;
+    top: calc(50% - 5px);
+  }
+
+  &.arrow-up::after {
+    top: -3px;
+    left: calc(50% - 5px);
+  }
+
+  &.arrow-down::after {
+    bottom: -3px;
+    left: calc(50% - 5px);
+  }
+
+  &.visible {
+    display: block;
+  }
+}

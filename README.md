@@ -89,7 +89,7 @@ BlinkID will work in any browser that supports [WebAssembly](https://webassembly
 
 Using BlinkID in your web app requires a valid license key.
 
-You can obtain a free trial license key by registering to [Microblink dashboard](https://microblink.com/login). After registering, you will be able to generate a license key for your web app.
+A valid license key is required to initialize scanning. You can request a free trial license key, after you register, at [Microblink Developer Hub](https://account.microblink.com/signin).
 
 Make sure you enter a [fully qualified domain name](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) of your web app when filling out the form — the license key will be bound to it. Also, if you plan to serve your web app from different domains, you'll need a license key for each one.
 
@@ -334,10 +334,22 @@ loadSettings.allowHelloMessage = true;
 loadSettings.engineLocation = "";
 
 /**
+ * The absolute location of the Web Worker script file that loads the WebAssembly module.
+ *
+ * Important: the worker script must be served via HTTPS and must be of the same origin as the initiator.
+ * See https://github.com/w3c/ServiceWorker/issues/940 (same applies for Web Workers).
+ *
+ * Important: SDK, worker script and WebAssembly resources must be from the same version of the package.
+ *
+ * The default value is an empty string, i.e. "", and in that case, the worker script is loaded from the default location in resources folder.
+ */
+loadSettings.workerLocation = "";
+
+/**
  * Type of the WASM that will be loaded. By default, if not set, the SDK will automatically determine the best WASM
  * to load.
  */
-wasmType: WasmType | null = null;
+loadSettings.wasmType: WasmType | null = null;
 
 /**
  * Optional callback function that will report the SDK loading progress.

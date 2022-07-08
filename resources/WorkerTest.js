@@ -18,11 +18,9 @@ MERCHANTABLITY OR NON-INFRINGEMENT.
  * See comment in `WasmLoadUtils.ts` file for more information.
  */
 
-function test()
+onmessage = function ()
 {
-    // Do nothing
-}
-
-test();
+    this.postMessage( 1 );
+};
 
 }());

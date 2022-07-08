@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CameraEntry, CameraExperience, CameraExperienceState, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
+import { CameraEntry, CameraExperience, CameraExperienceState, CameraExperienceTimeoutDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
 import { SdkService } from "./utils/sdk.service";
 export namespace Components {
@@ -14,6 +14,10 @@ export namespace Components {
           * Write a hello message to the browser console when license check is successfully performed.  Hello message will contain the name and version of the SDK, which are required information for all support tickets.  Default value is true.
          */
         "allowHelloMessage": boolean;
+        /**
+          * Configure camera experience state timeout durations
+         */
+        "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
         /**
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
@@ -95,6 +99,10 @@ export namespace Components {
          */
         "rawTranslations": string;
         /**
+          * Amount of time in milliseconds before the recognition process is resumed after it is being paused previously.  This setting applies only to video recognition.  Keep in mind that the timer starts after the front side was scanned . This behaviour ensures that the user has enough time to flip the document and place its back side in front of the camera device.
+         */
+        "recognitionPauseTimeout": number;
+        /**
           * Amount of time in milliseconds before the recognition process is cancelled regardless of whether recognition was successful or not.  This setting applies only to video recognition.  Keep in mind that the timer starts after the first non-empty result. This behaviour ensures that the user has enough time to take out the document and place it in front of the camera device.
          */
         "recognitionTimeout": number;
@@ -161,6 +169,10 @@ export namespace Components {
           * Defines the type of the WebAssembly build that will be loaded. If omitted, SDK will determine the best possible WebAssembly build which should be loaded based on the browser support.  Available WebAssembly builds:  - 'BASIC' - 'ADVANCED' - 'ADVANCED_WITH_THREADS'  For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
          */
         "wasmType": string;
+        /**
+          * The absolute location of the Web Worker script file that loads the WebAssembly module.  Important: the worker script must be served via HTTPS and must be of the same origin as the initiator. See https://github.com/w3c/ServiceWorker/issues/940 (same applies for Web Workers).  Important: SDK, worker script and WebAssembly resources must be from the same version of the package.  The default value is an empty string, i.e. "", and in that case, the worker script is loaded from the default location in resources folder.
+         */
+        "workerLocation": string;
     }
     interface MbApiProcessStatus {
         /**
@@ -177,14 +189,15 @@ export namespace Components {
         "visible": boolean;
     }
     interface MbButton {
+        "buttonTitle": string;
+        /**
+          * Function to call on click
+         */
+        "clickHandler": (ev: UIEvent) => void;
         /**
           * Set to 'true' if button should be disabled, and if click events should not be triggered.
          */
         "disabled": boolean;
-        /**
-          * Set to 'true' if button contains an icon.
-         */
-        "icon": boolean;
         /**
           * Passed description text for image element from parent component.
          */
@@ -202,17 +215,9 @@ export namespace Components {
          */
         "label": string;
         /**
-          * Set to 'true' if default event should be prevented.
-         */
-        "preventDefault": boolean;
-        /**
           * Set to 'true' if button should enter 'selected' state.
          */
         "selected": boolean;
-        /**
-          * Instance of TranslationService passed from root component.
-         */
-        "translationService": TranslationService;
         /**
           * Set to 'true' if button should be visible.
          */
@@ -220,9 +225,17 @@ export namespace Components {
     }
     interface MbButtonClassic {
         /**
+          * Function to call on click
+         */
+        "clickHandler": (ev: UIEvent) => void;
+        /**
           * Set to 'true' if button should be disabled, and if click events should not be triggered.
          */
         "disabled": boolean;
+        /**
+          * Set to 'true' if button should be inverted style.
+         */
+        "inverted": boolean;
         /**
           * Set to 'true' if default event should be prevented.
          */
@@ -233,6 +246,10 @@ export namespace Components {
           * Api state passed from root component.
          */
         "apiState": string;
+        /**
+          * Configure camera experience state timeout durations
+         */
+        "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
         /**
           * Camera horizontal state passed from root component.  Horizontal camera image can be mirrored
          */
@@ -322,6 +339,10 @@ export namespace Components {
          */
         "allowHelloMessage": boolean;
         /**
+          * See description in public component.
+         */
+        "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
+        /**
           * Camera device ID passed from root component.
          */
         "cameraId": string | null;
@@ -356,6 +377,14 @@ export namespace Components {
         /**
           * See description in public component.
          */
+        "iconDragAndDropGalleryDefault": string;
+        /**
+          * See description in public component.
+         */
+        "iconDragAndDropWarningDefault": string;
+        /**
+          * See description in public component.
+         */
         "iconGalleryActive": string;
         /**
           * See description in public component.
@@ -385,6 +414,10 @@ export namespace Components {
           * See description in public component.
          */
         "licenseKey": string;
+        /**
+          * See description in public component.
+         */
+        "recognitionPauseTimeout": number;
         /**
           * See description in public component.
          */
@@ -460,6 +493,10 @@ export namespace Components {
           * See description in public component.
          */
         "wasmType": string | null;
+        /**
+          * See description in public component.
+         */
+        "workerLocation": string;
     }
     interface MbContainer {
     }
@@ -489,6 +526,10 @@ export namespace Components {
     }
     interface MbModal {
         /**
+          * Center component
+         */
+        "centered": boolean;
+        /**
           * Passed body content from parent component
          */
         "content": string;
@@ -497,9 +538,21 @@ export namespace Components {
          */
         "contentCentered": boolean;
         /**
+          * Show shadow drop
+         */
+        "elevated": boolean;
+        /**
+          * Whether to hide the footer or not
+         */
+        "hideFooter": boolean;
+        /**
           * Passed title content from parent component
          */
         "modalTitle": string;
+        /**
+          * Whether to show back arrow or not
+         */
+        "showBackButton": boolean;
         /**
           * Show modal content
          */
@@ -530,6 +583,15 @@ export namespace Components {
           * Spinner size, can be 'default' or 'large'.
          */
         "size": string;
+    }
+    interface MbTooltip {
+        "arrowPosition"?: 'arrow-left' | 'arrow-right' | 'arrow-up' | 'arrow-down' | 'arrow-none';
+        "containerWidth"?: string;
+        "message": string;
+        "show": boolean;
+        "showInfoIcon"?: boolean;
+        "showWarningIcon"?: boolean;
+        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
     }
 }
 declare global {
@@ -629,6 +691,12 @@ declare global {
         prototype: HTMLMbSpinnerElement;
         new (): HTMLMbSpinnerElement;
     };
+    interface HTMLMbTooltipElement extends Components.MbTooltip, HTMLStencilElement {
+    }
+    var HTMLMbTooltipElement: {
+        prototype: HTMLMbTooltipElement;
+        new (): HTMLMbTooltipElement;
+    };
     interface HTMLElementTagNameMap {
         "blinkid-in-browser": HTMLBlinkidInBrowserElement;
         "mb-api-process-status": HTMLMbApiProcessStatusElement;
@@ -646,6 +714,7 @@ declare global {
         "mb-overlay": HTMLMbOverlayElement;
         "mb-screen": HTMLMbScreenElement;
         "mb-spinner": HTMLMbSpinnerElement;
+        "mb-tooltip": HTMLMbTooltipElement;
     }
 }
 declare namespace LocalJSX {
@@ -654,6 +723,10 @@ declare namespace LocalJSX {
           * Write a hello message to the browser console when license check is successfully performed.  Hello message will contain the name and version of the SDK, which are required information for all support tickets.  Default value is true.
          */
         "allowHelloMessage"?: boolean;
+        /**
+          * Configure camera experience state timeout durations
+         */
+        "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
         /**
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
@@ -763,6 +836,10 @@ declare namespace LocalJSX {
          */
         "rawTranslations"?: string;
         /**
+          * Amount of time in milliseconds before the recognition process is resumed after it is being paused previously.  This setting applies only to video recognition.  Keep in mind that the timer starts after the front side was scanned . This behaviour ensures that the user has enough time to flip the document and place its back side in front of the camera device.
+         */
+        "recognitionPauseTimeout"?: number;
+        /**
           * Amount of time in milliseconds before the recognition process is cancelled regardless of whether recognition was successful or not.  This setting applies only to video recognition.  Keep in mind that the timer starts after the first non-empty result. This behaviour ensures that the user has enough time to take out the document and place it in front of the camera device.
          */
         "recognitionTimeout"?: number;
@@ -806,6 +883,10 @@ declare namespace LocalJSX {
           * Defines the type of the WebAssembly build that will be loaded. If omitted, SDK will determine the best possible WebAssembly build which should be loaded based on the browser support.  Available WebAssembly builds:  - 'BASIC' - 'ADVANCED' - 'ADVANCED_WITH_THREADS'  For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
          */
         "wasmType"?: string;
+        /**
+          * The absolute location of the Web Worker script file that loads the WebAssembly module.  Important: the worker script must be served via HTTPS and must be of the same origin as the initiator. See https://github.com/w3c/ServiceWorker/issues/940 (same applies for Web Workers).  Important: SDK, worker script and WebAssembly resources must be from the same version of the package.  The default value is an empty string, i.e. "", and in that case, the worker script is loaded from the default location in resources folder.
+         */
+        "workerLocation"?: string;
     }
     interface MbApiProcessStatus {
         /**
@@ -830,14 +911,15 @@ declare namespace LocalJSX {
         "visible"?: boolean;
     }
     interface MbButton {
+        "buttonTitle": string;
+        /**
+          * Function to call on click
+         */
+        "clickHandler": (ev: UIEvent) => void;
         /**
           * Set to 'true' if button should be disabled, and if click events should not be triggered.
          */
         "disabled"?: boolean;
-        /**
-          * Set to 'true' if button contains an icon.
-         */
-        "icon"?: boolean;
         /**
           * Passed description text for image element from parent component.
          */
@@ -845,31 +927,19 @@ declare namespace LocalJSX {
         /**
           * Passed image from parent component.
          */
-        "imageSrcActive"?: string;
+        "imageSrcActive": string;
         /**
           * Passed image from parent component.
          */
-        "imageSrcDefault"?: string;
+        "imageSrcDefault": string;
         /**
           * Set to string which should be displayed below the icon.  If omitted, nothing will show.
          */
         "label"?: string;
         /**
-          * Event which is triggered when user clicks on button element. This event is not triggered when the button is disabled.
-         */
-        "onButtonClick"?: (event: CustomEvent<UIEvent>) => void;
-        /**
-          * Set to 'true' if default event should be prevented.
-         */
-        "preventDefault"?: boolean;
-        /**
           * Set to 'true' if button should enter 'selected' state.
          */
         "selected"?: boolean;
-        /**
-          * Instance of TranslationService passed from root component.
-         */
-        "translationService"?: TranslationService;
         /**
           * Set to 'true' if button should be visible.
          */
@@ -877,13 +947,17 @@ declare namespace LocalJSX {
     }
     interface MbButtonClassic {
         /**
+          * Function to call on click
+         */
+        "clickHandler": (ev: UIEvent) => void;
+        /**
           * Set to 'true' if button should be disabled, and if click events should not be triggered.
          */
         "disabled"?: boolean;
         /**
-          * Event which is triggered when user clicks on button element. This event is not triggered when the button is disabled.
+          * Set to 'true' if button should be inverted style.
          */
-        "onButtonClick"?: (event: CustomEvent<UIEvent>) => void;
+        "inverted"?: boolean;
         /**
           * Set to 'true' if default event should be prevented.
          */
@@ -894,6 +968,10 @@ declare namespace LocalJSX {
           * Api state passed from root component.
          */
         "apiState"?: string;
+        /**
+          * Configure camera experience state timeout durations
+         */
+        "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
         /**
           * Camera horizontal state passed from root component.  Horizontal camera image can be mirrored
          */
@@ -975,6 +1053,10 @@ declare namespace LocalJSX {
          */
         "allowHelloMessage"?: boolean;
         /**
+          * See description in public component.
+         */
+        "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
+        /**
           * Camera device ID passed from root component.
          */
         "cameraId"?: string | null;
@@ -1006,6 +1088,14 @@ declare namespace LocalJSX {
           * See description in public component.
          */
         "iconCameraDefault"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconDragAndDropGalleryDefault"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconDragAndDropWarningDefault"?: string;
         /**
           * See description in public component.
          */
@@ -1077,6 +1167,10 @@ declare namespace LocalJSX {
         /**
           * See description in public component.
          */
+        "recognitionPauseTimeout"?: number;
+        /**
+          * See description in public component.
+         */
         "recognitionTimeout"?: number;
         /**
           * See description in public component.
@@ -1130,6 +1224,10 @@ declare namespace LocalJSX {
           * See description in public component.
          */
         "wasmType"?: string | null;
+        /**
+          * See description in public component.
+         */
+        "workerLocation"?: string;
     }
     interface MbContainer {
     }
@@ -1155,6 +1253,10 @@ declare namespace LocalJSX {
     }
     interface MbModal {
         /**
+          * Center component
+         */
+        "centered"?: boolean;
+        /**
           * Passed body content from parent component
          */
         "content"?: string;
@@ -1163,13 +1265,29 @@ declare namespace LocalJSX {
          */
         "contentCentered"?: boolean;
         /**
+          * Show shadow drop
+         */
+        "elevated"?: boolean;
+        /**
+          * Whether to hide the footer or not
+         */
+        "hideFooter"?: boolean;
+        /**
           * Passed title content from parent component
          */
         "modalTitle"?: string;
         /**
+          * Emitted when user clicks on 'Back Arrow' button.
+         */
+        "onBack"?: (event: CustomEvent<void>) => void;
+        /**
           * Emitted when user clicks on 'X' button.
          */
         "onClose"?: (event: CustomEvent<void>) => void;
+        /**
+          * Whether to show back arrow or not
+         */
+        "showBackButton"?: boolean;
         /**
           * Show modal content
          */
@@ -1201,6 +1319,15 @@ declare namespace LocalJSX {
          */
         "size"?: string;
     }
+    interface MbTooltip {
+        "arrowPosition"?: 'arrow-left' | 'arrow-right' | 'arrow-up' | 'arrow-down' | 'arrow-none';
+        "containerWidth"?: string;
+        "message"?: string;
+        "show"?: boolean;
+        "showInfoIcon"?: boolean;
+        "showWarningIcon"?: boolean;
+        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
+    }
     interface IntrinsicElements {
         "blinkid-in-browser": BlinkidInBrowser;
         "mb-api-process-status": MbApiProcessStatus;
@@ -1218,6 +1345,7 @@ declare namespace LocalJSX {
         "mb-overlay": MbOverlay;
         "mb-screen": MbScreen;
         "mb-spinner": MbSpinner;
+        "mb-tooltip": MbTooltip;
     }
 }
 export { LocalJSX as JSX };
@@ -1240,6 +1368,7 @@ declare module "@stencil/core" {
             "mb-overlay": LocalJSX.MbOverlay & JSXBase.HTMLAttributes<HTMLMbOverlayElement>;
             "mb-screen": LocalJSX.MbScreen & JSXBase.HTMLAttributes<HTMLMbScreenElement>;
             "mb-spinner": LocalJSX.MbSpinner & JSXBase.HTMLAttributes<HTMLMbSpinnerElement>;
+            "mb-tooltip": LocalJSX.MbTooltip & JSXBase.HTMLAttributes<HTMLMbTooltipElement>;
         }
     }
 }
