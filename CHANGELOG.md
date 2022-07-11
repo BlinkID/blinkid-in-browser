@@ -1,5 +1,9 @@
 # Release notes
 
+## 5.17.1
+
+* We've fixed a problem that has caused the enormous size of WebAssembly bundles.
+
 ## 5.17.0
 
 ### Changes to BlinkID(Combined) Recognizer
