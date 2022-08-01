@@ -31,7 +31,6 @@
 
 | Part               | Description |
 | ------------------ | ----------- |
-| `"mb-modal"`       |             |
 | `"mb-modal-inner"` |             |
 
 

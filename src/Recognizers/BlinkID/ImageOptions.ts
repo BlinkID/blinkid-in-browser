@@ -177,7 +177,7 @@ export interface CameraFrameResult
     /**
      * Contains both original image and JPEG-encoded bytes of the image.
      */
-    readonly frame: ImageResult | null;
+    readonly frame: ImageData | null;
 
     /** Orientation of the captured frame */
     readonly orientation: ImageOrientation;

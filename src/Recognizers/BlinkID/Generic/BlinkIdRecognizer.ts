@@ -374,17 +374,17 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult
 export interface BlinkIdRecognizerResult extends BaseBlinkIdRecognizerResult
 {
     /**
-     * Camera frame from which barcode data was extracted.
+     * Full video feed frame from which barcode data was extracted.
      */
     readonly barcodeCameraFrame: CameraFrameResult;
 
     /**
-     * Camera frame from which document data was extracted.
+     * Full video feed frame from which document data was extracted.
      */
     readonly cameraFrame: CameraFrameResult;
 
     /**
-     *  The full document image
+     * Cropped and dewarped image of a document that has been scanned.
      */
     readonly fullDocumentImage: ImageResult;
 

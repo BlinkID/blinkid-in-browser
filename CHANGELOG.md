@@ -1,5 +1,110 @@
 # Release notes
 
+## 5.18.0
+
+### New feature:
+
+* Updated machine learning models resulting in a 41% reduced error rate.
+
+### Support for 16 new document types:
+
+#### Northern America
+
+* USA - Passport Card
+* Usa - District of Columbia - ID Card
+* USA - Iowa - ID Card
+* USA - Tennessee - ID Card
+
+#### Latin America and the Caribbean
+
+* Cuba - Paper Passport
+* Dominican Republic - Paper Passport
+* Panama - Residence Permit (front onyl)
+* Peru - Paper Passport
+
+#### Europe 
+
+* Cyprus - Paper Passport
+* Germany - Minors Passport
+* UK - Proof of Age Card (front onyl)
+* Ukraine - Residence Permit
+* Ukraine - Temporrary Residence Permit
+
+#### Middle East and Africa
+
+* Qatar - Paper Passport
+* UAE - Paper Passport
+
+#### Oceania
+
+* Australia - Northern Territory - Proof of Age Card
+
+### Back side support added:
+
+* Austria - ID Card
+* Australia - South Australia - Driving license
+* Australia - Tasmania - Driving license
+* Canada - Quebec - Driving license
+* Mexico - Quintana Roo Solidaridad - Driving license
+* USA - Washington - Driving license
+
+### Added support for 26 new versions of already supported documents:
+
+* Afghanistan - ID Card
+* Bahrain - ID Card
+* Hungary - Residence Permit
+* India - ID Card
+* Mexico - Tabasco - Driving license
+* New Zealand - Driving license (front only)
+* The Philippines - Professional ID (front only)
+* Slovakia - Residence Permit
+* South Africa - ID Card
+* Switzerland - Residence Permit
+* UK - Driving license 
+* USA - Colorado - Driving license 
+* USA - Idaho - Driving license 
+* USA - Kansas - ID Card 
+* USA - Kentucky - Driving license 
+* USA - Maine - Driving license 
+* USA - Massachusetts - ID Card 
+* USA - Nebraska - Driving license 
+* USA - New Hampshire - Driving license 
+* USA - New Jersey - ID Card 
+* USA - New Mexico - ID Card 
+* USA - North Carolina - ID Card 
+* USA - Utah - Driving license 
+* USA - Vermont Driving license 
+* USA - West Virginia - Driving license 
+
+### These documents are no longer BETA:
+
+* Algeria - Paper Passport
+* Slovakia - Residence Permit
+* USA - Mississippi - ID Card
+
+### Added support for 8 new ID types in BETA:
+
+* Iceland - Paper Passport
+* South Africa - ID Card (front only)
+* Brazil - Consular Passport (beta)
+* Quintana Roo Cozumel - Driving license 
+* Canada - Social Security Card (front only)
+* Canada - British Columbia - Minor Public Services Card
+* USA - Maine - ID Card
+* USA - North Dakota - ID Card
+
+### Changes to BlinkID(Combined) Recognizer
+
+* Added new enums:
+	* Region: `QUINTANA_ROO_COZUMEL` 
+	* Type: `CONSULAR_PASSPORT`, `MINORS_PASSPORT`, and `MINORS_PUBLIC_SERVICES_CARD` 
+
+### Platform-related SDK changes
+
+* We've added a support for two different WebAssembly build versions.
+    * Standard and default build that has all the optimisations, but has considerably larger file size compared to lightweight version. 
+    * Lighter version of the WebAssembly bundle that doesn’t have all optimizations for reading of dense barcodes with low quality cameras.
+
 ## 5.17.1
 
 * We've fixed a problem that has caused the enormous size of WebAssembly bundles.

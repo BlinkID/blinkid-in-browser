@@ -282,7 +282,7 @@ export enum Country
     YUGOSLAVIA = 252,
     ZAMBIA = 253,
     ZIMBABWE = 254,
-    COUNT = 255,
+    COUNT = 255
 }
 
 export enum Region
@@ -404,7 +404,8 @@ export enum Region
     UINTANA_ROO = 114,
     QUINTANA_ROO_SOLIDARIDAD = 115,
     TLAXCALA = 116,
-    COUNT = 117,
+    QUINTANA_ROO_COZUMEL = 117,
+    COUNT = 118
 }
 
 export enum DocumentType
@@ -458,5 +459,8 @@ export enum DocumentType
     VETERAN_ID = 46,
     CITIZENSHIP_CERTIFICATE = 47,
     MY_NUMBER_CARD = 48,
-    COUNT = 49,
+    CONSULAR_PASSPORT = 49,
+    MINORS_PASSPORT = 50,
+    MINORS_PUBLIC_SERVICES_CARD = 51,
+    COUNT = 52
 }
