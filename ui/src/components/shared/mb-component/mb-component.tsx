@@ -768,11 +768,8 @@ export class MbComponent {
           if (!recognitionEvent.data.imageCapture) {
             this.cameraExperience.setState(CameraExperienceState.DoneAll, false, true)
               .then(() => {
-
-
                 this.cameraExperience.resetState();
                 this.cameraExperience.classList.add('hide');
-
 
                 this.scanSuccess.emit(recognitionEvent.data?.result);
                 this.feedback.emit({
@@ -780,6 +777,9 @@ export class MbComponent {
                   state: 'FEEDBACK_OK',
                   message: ''
                 });
+
+
+                this.showOverlay('');
               });
           }
           else {

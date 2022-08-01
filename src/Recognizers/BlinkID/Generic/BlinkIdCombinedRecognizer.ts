@@ -44,27 +44,27 @@ export class BlinkIdCombinedRecognizerSettings extends BlinkIdRecognizerSettings
 export interface BlinkIdCombinedRecognizerResult extends BaseBlinkIdRecognizerResult, CombinedRecognizerResult
 {
     /**
-     * Camera frame from which barcode data was extracted.
+     * Full video feed frame from which barcode data was extracted.
      */
     readonly barcodeCameraFrame: CameraFrameResult;
 
     /**
-     * Camera frame from which document data on front side was extracted.
+     * Full video feed frame from which document data on front side was extracted.
      */
     readonly frontCameraFrame: CameraFrameResult;
 
     /**
-     * Camera frame from which document data on back side was extracted.
+     * Full video feed frame from which document data on back side was extracted.
      */
     readonly backCameraFrame: CameraFrameResult;
 
     /**
-     *  The full document back image
+     * Cropped and dewarped back side image of a document that has been scanned.
      */
     readonly fullDocumentBackImage: ImageResult;
 
     /**
-     *  The full document front image
+     * Cropped and dewarped front side image of a document that has been scanned.
      */
     readonly fullDocumentFrontImage: ImageResult;
 
