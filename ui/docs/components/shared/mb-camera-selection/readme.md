@@ -5,11 +5,19 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property              | Attribute                | Description | Type      | Default |
+| --------------------- | ------------------------ | ----------- | --------- | ------- |
+| `clearIsCameraActive` | `clear-is-camera-active` |             | `boolean` | `false` |
+
+
 ## Events
 
 | Event                | Description                                          | Type                       |
 | -------------------- | ---------------------------------------------------- | -------------------------- |
 | `changeCameraDevice` | Emitted when user selects a different camera device. | `CustomEvent<CameraEntry>` |
+| `setIsCameraActive`  | Emitted when camera stream becomes active.           | `CustomEvent<boolean>`     |
 
 
 ## Methods

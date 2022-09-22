@@ -11,7 +11,8 @@ import {
   h,
   Method,
   Prop,
-  State
+  State,
+  Listen
 } from '@stencil/core';
 
 import { CameraEntry } from '../../../utils/data-structures';
@@ -27,12 +28,16 @@ export class MbCameraToolbar {
 
   private cameraSelection!: HTMLMbCameraSelectionElement;
 
-  @State() isDesktop: boolean = DeviceHelpers.isDesktop();
+  @State() showCloseButton: boolean = false;
 
+  @State() isDesktop: boolean = DeviceHelpers.isDesktop();
+  
   /**
    * Set to `true` if close button should be displayed.
    */
   @Prop() showClose: boolean = false;
+
+  @Prop() clearIsCameraActive: boolean = false;
 
   /**
    * Whether to show 'Camera flip' button.
@@ -43,6 +48,11 @@ export class MbCameraToolbar {
    * Whether the camera is flipped, this property will be flip the relevant icon.
    */
   @Prop() cameraFlipped: boolean = false;
+
+  /**
+   * Emitted when camera stream becomes active.
+   */
+  @Event() setIsCameraActive: EventEmitter<boolean>
 
   /**
    * Event which is triggered when close button is clicked.
@@ -83,6 +93,7 @@ export class MbCameraToolbar {
   @Method()
   async setActiveCamera(cameraId: string) {
     this.cameraSelection.setActiveCamera(cameraId);
+    this.showCloseButton = this.showClose;
   }
 
   /**
@@ -97,6 +108,7 @@ export class MbCameraToolbar {
     ev.preventDefault();
     ev.stopPropagation();
     this.closeEvent.emit();
+    this.showCloseButton = false;
   }
 
   private handleFlip(ev: UIEvent) {
@@ -111,6 +123,15 @@ export class MbCameraToolbar {
 
   private handleChangeCameraDevice(camera: CameraEntry) {
     this.changeCameraDevice.emit(camera);
+  }
+
+  @Listen('setIsCameraActive', { capture: true })
+  handleSetIsCameraActive(ev:CustomEvent<boolean>) {
+    if (ev.detail) {
+      this.showCloseButton = this.showClose;
+    } else {
+      this.showCloseButton = ev.detail;
+    }
   }
 
   render() {
@@ -133,7 +154,7 @@ export class MbCameraToolbar {
 
     let closeButton = '';
 
-    if (this.showClose) {
+    if (this.showCloseButton) {
       closeButton = (
         <button
           class="toolbar-button close-button"
@@ -145,14 +166,14 @@ export class MbCameraToolbar {
         </button>
       )
     }
-
     return (
       <Host>
         <header>
           { flipButton }
           <div class="camera-selection-wrapper">
-            <mb-camera-selection
-              onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.handleChangeCameraDevice(ev.detail)}
+            <mb-camera-selection  
+              clear-is-camera-active={ !this.showCloseButton || this.clearIsCameraActive } 
+              onChangeCameraDevice={ (ev: CustomEvent<CameraEntry>) => this.handleChangeCameraDevice(ev.detail) }
               class={ classNames({ visible: this.isDesktop }) }
               ref={ el => this.cameraSelection = el as HTMLMbCameraSelectionElement }
             ></mb-camera-selection>
