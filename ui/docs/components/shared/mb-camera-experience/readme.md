@@ -12,6 +12,7 @@
 | `apiState`                         | `api-state`                            | Api state passed from root component.                                                                                                                       | `string`                                                                                                                       | `undefined` |
 | `cameraExperienceStateDurations`   | --                                     | Configure camera experience state timeout durations                                                                                                         | `CameraExperienceTimeoutDurations`                                                                                             | `null`      |
 | `cameraFlipped`                    | `camera-flipped`                       | Camera horizontal state passed from root component.  Horizontal camera image can be mirrored                                                                | `boolean`                                                                                                                      | `false`     |
+| `clearIsCameraActive`              | `clear-is-camera-active`               |                                                                                                                                                             | `boolean`                                                                                                                      | `false`     |
 | `showCameraFeedbackBarcodeMessage` | `show-camera-feedback-barcode-message` | Show camera feedback message on camera for Barcode scanning                                                                                                 | `boolean`                                                                                                                      | `false`     |
 | `showOverlay`                      | `show-overlay`                         | Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay. | `boolean`                                                                                                                      | `true`      |
 | `showScanningLine`                 | `show-scanning-line`                   | Show scanning line on camera                                                                                                                                | `boolean`                                                                                                                      | `false`     |
@@ -26,6 +27,7 @@
 | `changeCameraDevice` | Emitted when user selects a different camera device. | `CustomEvent<CameraEntry>` |
 | `close`              | Emitted when user clicks on 'X' button.              | `CustomEvent<void>`        |
 | `flipCameraAction`   | Emitted when user clicks on Flip button.             | `CustomEvent<void>`        |
+| `setIsCameraActive`  | Emitted when camera stream becomes active.           | `CustomEvent<boolean>`     |
 
 
 ## Methods
