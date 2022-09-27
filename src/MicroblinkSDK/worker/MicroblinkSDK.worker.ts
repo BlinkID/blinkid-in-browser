@@ -386,7 +386,7 @@ export default class MicroblinkWorker
             return msg.wasmType;
         }
 
-        return await WasmLoadUtils.detectWasmType( msg.engineLocation );
+        return await WasmLoadUtils.detectWasmType();
     }
 
     private calculateEngineLocationPrefix( msg: Messages.InitMessage, wasmType: WasmType ): string

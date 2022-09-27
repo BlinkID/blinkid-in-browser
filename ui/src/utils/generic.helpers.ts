@@ -85,6 +85,19 @@ export function getWebComponentParts(root: ShadowRoot): string[] {
   return [...parts];
 }
 
+export function getWebComponentExportedParts(root: ShadowRoot): string[] {
+  const nodesWithPart = root.querySelectorAll('[exportparts]');
+
+  const exportedParts = new Set<string>();
+
+  nodesWithPart.forEach((el: Element) => {
+    const exportedPartsArray = el.getAttribute('exportparts').split(' ');
+    exportedPartsArray.forEach(partName => exportedParts.add(partName))
+  });
+
+  return [...exportedParts];
+}
+
 export function setWebComponentParts(hostEl: Element): void {
   const partParts = [
     hostEl.tagName.toLowerCase(),

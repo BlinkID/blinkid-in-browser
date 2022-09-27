@@ -12,7 +12,7 @@ import {
   Prop
 } from '@stencil/core';
 
-import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
+import { getWebComponentParts, setWebComponentParts, classNames } from '../../../utils/generic.helpers';
 
 @Component({
   tag: 'mb-modal',
@@ -78,13 +78,15 @@ export class MbModal {
 
   componentDidLoad() {
     setWebComponentParts(this.hostEl);
+    const parts = getWebComponentParts(this.hostEl.shadowRoot);
+    this.hostEl.setAttribute('exportparts', parts.join(', '));
   }
 
   render() {
     return (
       <Host class={ classNames({ visible: this.visible, elevated: this.elevated, centered: this.centered }) }>
 
-        <div part="mb-modal" class="mb-modal">
+        <div class="mb-modal">
           <div part="mb-modal-inner" class="inner">
             <div class="close-wrapper">
                 <div class="close-icon" onClick={ () => this.close.emit() }>
