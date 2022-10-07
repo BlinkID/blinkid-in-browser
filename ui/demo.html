@@ -133,8 +133,8 @@
         margin-bottom: 1.5rem;
       }
     </style>
-    <script type="module" src="../dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-    <script nomodule src="../dist/blinkid-in-browser.js"></script>
+    <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.19.1/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+    <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.19.1/ui/dist/blinkid-in-browser.js"></script>
         <script type="text/javascript">
 
 // Workaround for D2D
@@ -147,8 +147,8 @@ window.licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmLPU9Yj+zyMbXSZmZGtJh4uR
 if (window.location.hostname === 'blinkid.github.io') {
   window.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRpaD+IXkhtbp+3RoB7Y4e+Oz+QiRmsSq9tP8Vd+SuZ8xOWLI9rMBnD+B27aY+pthvmFKEhsyyPQyPDxjNeHnfvwOYI/mEtBkYBO46mlqJpmvjxfNJ7aJjBW0HEN1epq8Gux/9Ck7FnKjyiye/Kc144kDuM8CoMFfRNRcyd8bvBwv7nlLFUQadLtEWC7UTiSeul8QB2KdUwX/DuPitmg4kzaezcnmlpkZTsvtUQN4uBd8qt+mxqpm+4mJC4+sObNp+tOrejbB4JRDoYGBIe3mVwcJPkwslKbyeXjqaneKFuLs588/Tdr31yUkZDFhkTAwZkY4TcmQGjtB";
 }
-window.engineLocation = window.location.origin + '/../resources';
-window.workerLocation = window.location.origin + '/../resources/BlinkIDWasmSDK.worker.min.js';
+window.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
+window.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
 </script>
   </head>
   <body>
