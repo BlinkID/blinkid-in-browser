@@ -27,7 +27,7 @@ const config = {
     worker: {
         input: 'src/worker.ts',
         output: {
-            file: 'resources/BlinkIDSDK.worker.min.js',
+            file: 'resources/BlinkIDWasmSDK.worker.min.js',
             format: 'iife'
         },
         plugins: [

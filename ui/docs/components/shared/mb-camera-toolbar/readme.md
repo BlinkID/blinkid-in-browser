@@ -7,11 +7,12 @@
 
 ## Properties
 
-| Property           | Attribute            | Description                                                                  | Type      | Default |
-| ------------------ | -------------------- | ---------------------------------------------------------------------------- | --------- | ------- |
-| `cameraFlipped`    | `camera-flipped`     | Whether the camera is flipped, this property will be flip the relevant icon. | `boolean` | `false` |
-| `enableCameraFlip` | `enable-camera-flip` | Whether to show 'Camera flip' button.                                        | `boolean` | `false` |
-| `showClose`        | `show-close`         | Set to `true` if close button should be displayed.                           | `boolean` | `false` |
+| Property              | Attribute                | Description                                                                  | Type      | Default |
+| --------------------- | ------------------------ | ---------------------------------------------------------------------------- | --------- | ------- |
+| `cameraFlipped`       | `camera-flipped`         | Whether the camera is flipped, this property will be flip the relevant icon. | `boolean` | `false` |
+| `clearIsCameraActive` | `clear-is-camera-active` |                                                                              | `boolean` | `false` |
+| `enableCameraFlip`    | `enable-camera-flip`     | Whether to show 'Camera flip' button.                                        | `boolean` | `false` |
+| `showClose`           | `show-close`             | Set to `true` if close button should be displayed.                           | `boolean` | `false` |
 
 
 ## Events
@@ -21,6 +22,7 @@
 | `changeCameraDevice` | Emitted when user selects a different camera device.         | `CustomEvent<CameraEntry>` |
 | `closeEvent`         | Event which is triggered when close button is clicked.       | `CustomEvent<void>`        |
 | `flipEvent`          | Event which is triggered when flip camera button is clicked. | `CustomEvent<void>`        |
+| `setIsCameraActive`  | Emitted when camera stream becomes active.                   | `CustomEvent<boolean>`     |
 
 
 ## Methods
