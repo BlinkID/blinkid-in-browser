@@ -10,7 +10,8 @@ import {
   Host,
   h,
   Method,
-  State
+  State,
+  Prop
 } from '@stencil/core';
 
 import { CameraEntry } from '../../../utils/data-structures';
@@ -32,6 +33,13 @@ export class MbCameraSelection {
   @State() cameraList: Array<CameraEntry> = [];
 
   @State() isListVisible: boolean = false;
+
+  @Prop() clearIsCameraActive: boolean = false;
+
+  /**
+   * Emitted when camera stream becomes active.
+   */
+  @Event() setIsCameraActive: EventEmitter<boolean>;
 
   /**
    * Emitted when user selects a different camera device.
@@ -96,10 +104,12 @@ export class MbCameraSelection {
 
   render() {
     const cameraListElements = this.cameraList.map((camera: CameraEntry) => {
-      const isActive = this.activeCamera?.details?.deviceId === camera.details.deviceId;
-
+      const isActive = !this.clearIsCameraActive && this.activeCamera?.details?.deviceId === camera.details.deviceId;
+      
+      this.setIsCameraActive.emit(isActive);
+      
       let content = ( <span class="spacer"></span> )
-
+      
       if (isActive) {
         content = (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

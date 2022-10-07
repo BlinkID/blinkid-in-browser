@@ -60,6 +60,7 @@
 | `scanAborted`       | See event 'scanAborted' in public component.                                  | `CustomEvent<null>`             |
 | `scanError`         | See event 'scanError' in public component.                                    | `CustomEvent<EventScanError>`   |
 | `scanSuccess`       | See event 'scanSuccess' in public component.                                  | `CustomEvent<EventScanSuccess>` |
+| `setIsCameraActive` | Emitted when camera stream becomes active.                                    | `CustomEvent<boolean>`          |
 
 
 ## Methods
