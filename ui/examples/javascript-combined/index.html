@@ -6,7 +6,7 @@
         <title>Example: BlinkID UI: scan both documents sides</title>
 
         <!-- Import UI component which includes WASM library -->
-        <script type="module" src="/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+        <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.19.1/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
 
         <style type="text/css">
             html,
@@ -51,57 +51,55 @@
     </head>
     <body>
         <!-- It's possible to obtain a free trial license key on microblink.com -->
-        <blinkid-in-browser
-            license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWLc05ZhQNXh4/Bsv1d6RbzB2vqpcwowapdWtW2V44tRRd5aA2ZidDWaSsSCz1yX3lHWlY/OYWWssqqolQXV01ZedjJJ5hSiBLCAbG+KvhP07aXz7IOXTg1CbL6YQmIHa9NNIbNCdN1+b+CY78d/qNMcf3VG39vVzSvzFvUsN9MnGkp7TeiZ/fBisjhPyYPAmFHKBv48rMXDERqM3ZqDQOEgw6+c1E6ylQLX5nBzmx487PKDpe0IzYxGCG01iipqlRygYFuB2GTjSlW4GJqiENhbO3y5vpC1qFNtk342C8giTKa9TwVN+3YE76fCGW4qE+8GUP0bGW"
-            recognizers="BlinkIdCombinedRecognizer"
-        ></blinkid-in-browser>
+        <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmLPU9Yj+zyMbXSZmZGtJh4uRxzm2EDp6GzOxnSF7w2qGbSIGrVMWN34c2HWVeQmQ/HLtBBaex87OlACpzOLUesrx/n1w+txMGTrEWs1uhmpoSF9o3lKJoPVQ/7aHMuQiS5OkhzhrFMv4kogg41hE9FZ0IVEiSEJ9LFY9hLBqZ+ODeUyZ7FQdxcBhLLlS+j72z/F/4J2FoRX3krC+C7CJe6MDT9zdn3KCT/u4ZTsQ13EcBXdj0akWO+30oQ+hOqhRKXrKd7JmA5jzx+S53fz4xnsdUceUQDle5r3hJ9hl3jyNQqqCE/mdI5HJNV+LLwVcJtOnjAIicJQ==" recognizers="BlinkIdCombinedRecognizer"></blinkid-in-browser>
 
         <script type="text/javascript">
-            function run()
-            {
-                // Important: if attributes or properties are changed, whole component is rerendered
-                const blinkId = document.querySelector( "blinkid-in-browser" );
 
-                if ( window.location.hostname === "blinkid.github.io" )
-                {
-                    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaGyKtLE1z9s26m2Tiph83zrJ8BmmOXovSgjP0SWiVwR2PnaZ8CncDvZE7+geZiiRfZAiRr2ax3LPsNGZFDEMmk07M5Y85MaIS4pZh/meDRrdmOm7a4egXPAdCJ+eMdeIQtPSrAsOG+H6nwMroDVJGRRxevaPbloWKGVUTuBzjpfZN4rmu3V1xCI5U4FGtEvQXXMLR3sumfqK4Mrl6AaoSZYY+nU/knOFP4pKy6hAwvsnIlKJiRjv/WkIn0D21ar1Eijc+Y3U0B93IUvAc1TSjlhnGTiig9F6OFp1y0XgpaovwTGNT+edsIf9NE2IMwqAS0lZCLz7Q=";
-                }
+function run()
+{
+  // Important: if attributes or properties are changed, whole component is rerendered
+  const blinkId = document.querySelector("blinkid-in-browser");
 
-                blinkId.engineLocation = window.location.origin + "/resources/";
-                blinkId.workerLocation = window.location.origin + "/resources/BlinkIDWasmSDK.worker.min.js";
+  if (window.location.hostname === "blinkid.github.io")
+  {
+    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRpaD+IXkhtbp+3RoB7Y4e+Oz+QiRmsSq9tP8Vd+SuZ8xOWLI9rMBnD+B27aY+pthvmFKEhsyyPQyPDxjNeHnfvwOYI/mEtBkYBO46mlqJpmvjxfNJ7aJjBW0HEN1epq8Gux/9Ck7FnKjyiye/Kc144kDuM8CoMFfRNRcyd8bvBwv7nlLFUQadLtEWC7UTiSeul8QB2KdUwX/DuPitmg4kzaezcnmlpkZTsvtUQN4uBd8qt+mxqpm+4mJC4+sObNp+tOrejbB4JRDoYGBIe3mVwcJPkwslKbyeXjqaneKFuLs588/Tdr31yUkZDFhkTAwZkY4TcmQGjtB";
+  }
 
-                blinkId.addEventListener
-                (
-                    "fatalError",
-                    ev => console.log( "fatalError", ev.detail )
-                );
+  blinkId.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
+  blinkId.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
 
-                blinkId.addEventListener
-                (
-                    "ready",
-                    ev => console.log( "ready", ev.detail )
-                );
+  blinkId.addEventListener(
 
-                blinkId.addEventListener
-                (
-                    "scanError",
-                    ev => console.log( "scanError", ev.detail )
-                );
+  "fatalError",
+  (ev) => console.log("fatalError", ev.detail));
 
-                blinkId.addEventListener
-                (
-                    "scanSuccess",
-                    ev => console.log( "scanSuccess", ev.detail )
-                );
 
-                blinkId.addEventListener
-                (
-                    "feedback",
-                    ev => console.log( "feedback", ev.detail )
-                );
-            }
+  blinkId.addEventListener(
 
-            window.addEventListener( "DOMContentLoaded", ev => run() );
-        </script>
+  "ready",
+  (ev) => console.log("ready", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "scanError",
+  (ev) => console.log("scanError", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "scanSuccess",
+  (ev) => console.log("scanSuccess", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "feedback",
+  (ev) => console.log("feedback", ev.detail));
+
+}
+
+window.addEventListener("DOMContentLoaded", (ev) => run());
+</script>
     </body>
 </html>
