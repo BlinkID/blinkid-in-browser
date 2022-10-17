@@ -1,5 +1,9 @@
 # Release notes
 
+## 5.19.2
+
+* We've fixed a target endpoint for internal reporting logic.
+
 ## 5.19.1
 
 * We've fixed a major problem with internal reporting logic.
