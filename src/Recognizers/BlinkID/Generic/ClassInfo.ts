@@ -405,7 +405,8 @@ export enum Region
     QUINTANA_ROO_SOLIDARIDAD = 115,
     TLAXCALA = 116,
     QUINTANA_ROO_COZUMEL = 117,
-    COUNT = 118
+    SAO_PAOLO = 118,
+    COUNT = 119
 }
 
 export enum DocumentType

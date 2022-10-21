@@ -728,13 +728,13 @@ Requirements:
 
 Minimal browser versions with support for all features required by BlinkID.
 
-|Chrome|Safari|Edge|Firefox|Opera|iOS Safari|Android Browser|Opera Mobile|Chrome for Android|Firefox for Android|
-|------|------|----|-------|-----|----------|---------------|------------|------------------|-------------------|
-|    57|    11|  79|     52|   44|        14|             81|          59|                86|                 82|
+|Chrome|Safari|Edge|Firefox|Opera|iOS Safari|Android Browser|Chrome for Android|Firefox for Android|
+|------|------|----|-------|-----|----------|---------------|------------------|-------------------|
+|    96|    15|  93|     79|   82|        15|             81|                96|                 79|
 
 Internet Explorer is **not supported**.
 
-*Source: [caniuse](https://caniuse.com/wasm)*
+*Sources: [caniuse](https://caniuse.com/wasm) and [WebAssembly Roadmap](https://webassembly.org/roadmap/)*
 
 ## <a name="camera-devices"></a> Camera devices
 
