@@ -1,0 +1,33 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+@import "../styles/_globals-sass";
+
+:host {
+  display: block;
+
+  padding: 0;
+
+  img {
+    display: block;
+    width: 24px;
+    height: 24px;
+
+    animation: rotation 700ms linear infinite;
+  }
+}
+
+:host(.large) {
+  img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@keyframes rotation {
+  100% {
+    transform-origin: center;
+    transform: rotate(360deg);
+  }
+}

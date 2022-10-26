@@ -1,0 +1,12 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+:host {
+  display: block;
+  min-width: 280px;
+  width: 100%;
+  height: 100%;
+
+  font-family: var(--mb-font-family);
+}
