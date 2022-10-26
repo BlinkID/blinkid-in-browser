@@ -91,6 +91,10 @@
 
 * Fixed scanning for Argentina ID - there were confusions for Veteran ID, now we enabled successful extraction on Veteran ID as well
 
+### Environment changes
+
+* We've updated environment to Node v16.3.0.
+
 ## 5.19.2
 
 * We've fixed a target endpoint for internal reporting logic.

@@ -48,34 +48,31 @@
     </style>
   </head>
   <body>
-    <blinkid-in-browser
-      engine-location="http://localhost:3333/resources"
-      license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWKcUTzdcqWaRng1QSi5A9tEaYqYE/mrIgOWqqBpoxwfVLSrWbBwrL9V01hhfqjAfc4FEpsDVG9opmEMiZbyoL3xlWra/DsWDfRLZiw3B4uBT4Z1OJQbWMGVY8bUBT29UyKcM3fhhlw7zl6y84B6IGbiMuNasOBsaUXvo32zAJXYHabHkgwuNVoaLLiWmaQ52S5po16g1RVJP1gvBlHZiQfCruICGlKc+j3ld8jZNnkqiTykFP2mJHR6uPJfehwu/KJl866wZzsWUtGT+g15HXKoPtCQbtEItRPyCgEfPAsFkWO+1fgRnxTIa8zqDHpyzAzu91WmIi"
-      recognizers="BlinkIdRecognizer"
-    ></blinkid-in-browser>
+    <blinkid-in-browser engine-location="http://localhost:3333/resources" license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmK1U6Yli0HpHJQc9bBI2kJqvzZsSRdQuWozTM4DsMZtiyvbTqzeFyGGty0nOHADAYYKb67DoLfKGPrAz1Cqc70dz5qRXsYtGlR3tWyKi5bK//76TxQJcGRwZE6N8Bo20cRt/7IQPMT99oGvB8Ty7BfyNJ8H4aX//OHRYq7QxAUt7PYXNY2rTuLMxjw04lq4xxmIQpVi6NWOoeDT3hnMKwmgVHp3hjGZ1/daIYeRxT87Ai4BJHoYFZk7xCbBxxVQJ/ZPVq7NP5LNM01fQP5PUk0WDGuBSRajhT/8OMz96RU6fi7RsQf6RNJIXEU/0Hcrlmp9gLYIZZcQ==" recognizers="BlinkIdRecognizer"></blinkid-in-browser>
 
     <script type="text/javascript">
-      const blinkId = document.querySelector('blinkid-in-browser');
 
-      blinkId.addEventListener('fatalError', ev => {
-        console.log('fatalError', ev.detail);
-      });
+const blinkId = document.querySelector('blinkid-in-browser');
 
-      blinkId.addEventListener('ready', ev => {
-        console.log('ready', ev.detail);
-      });
+blinkId.addEventListener('fatalError', (ev) => {
+  console.log('fatalError', ev.detail);
+});
 
-      blinkId.addEventListener('scanError', ev => {
-        console.log('scanError', ev.detail);
-      });
+blinkId.addEventListener('ready', (ev) => {
+  console.log('ready', ev.detail);
+});
 
-      blinkId.addEventListener('scanSuccess', ev => {
-        console.log('scanSuccess', ev.detail);
-      });
+blinkId.addEventListener('scanError', (ev) => {
+  console.log('scanError', ev.detail);
+});
 
-      blinkId.addEventListener('feedback', ev => {
-        console.log('feedback', ev.detail);
-      });
-    </script>
+blinkId.addEventListener('scanSuccess', (ev) => {
+  console.log('scanSuccess', ev.detail);
+});
+
+blinkId.addEventListener('feedback', (ev) => {
+  console.log('feedback', ev.detail);
+});
+</script>
   </body>
 </html>

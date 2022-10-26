@@ -5,7 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CameraExperienceTimeoutDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
+import { CameraEntry, CameraExperience, CameraExperienceState, CameraExperienceTimeoutDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
+import { TranslationService } from "./utils/translation.service";
+import { SdkService } from "./utils/sdk.service";
 export namespace Components {
     interface BlinkidInBrowser {
         /**
@@ -172,6 +174,428 @@ export namespace Components {
          */
         "workerLocation": string;
     }
+    interface MbApiProcessStatus {
+        /**
+          * State value of API processing received from parent element ('loading' or 'success').
+         */
+        "state": 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS';
+        /**
+          * Instance of TranslationService passed from parent component.
+         */
+        "translationService": TranslationService;
+        /**
+          * Element visibility, default is 'false'.
+         */
+        "visible": boolean;
+    }
+    interface MbButton {
+        "buttonTitle": string;
+        /**
+          * Function to call on click
+         */
+        "clickHandler": (ev: UIEvent) => void;
+        /**
+          * Set to 'true' if button should be disabled, and if click events should not be triggered.
+         */
+        "disabled": boolean;
+        /**
+          * Passed description text for image element from parent component.
+         */
+        "imageAlt": string;
+        /**
+          * Passed image from parent component.
+         */
+        "imageSrcActive": string;
+        /**
+          * Passed image from parent component.
+         */
+        "imageSrcDefault": string;
+        /**
+          * Set to string which should be displayed below the icon.  If omitted, nothing will show.
+         */
+        "label": string;
+        /**
+          * Set to 'true' if button should enter 'selected' state.
+         */
+        "selected": boolean;
+        /**
+          * Set to 'true' if button should be visible.
+         */
+        "visible": boolean;
+    }
+    interface MbButtonClassic {
+        /**
+          * Function to call on click
+         */
+        "clickHandler": (ev: UIEvent) => void;
+        /**
+          * Set to 'true' if button should be disabled, and if click events should not be triggered.
+         */
+        "disabled": boolean;
+        /**
+          * Set to 'true' if button should be inverted style.
+         */
+        "inverted": boolean;
+        /**
+          * Set to 'true' if default event should be prevented.
+         */
+        "preventDefault": boolean;
+    }
+    interface MbCameraExperience {
+        /**
+          * Api state passed from root component.
+         */
+        "apiState": string;
+        /**
+          * Configure camera experience state timeout durations
+         */
+        "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
+        /**
+          * Camera horizontal state passed from root component.  Horizontal camera image can be mirrored
+         */
+        "cameraFlipped": boolean;
+        "clearIsCameraActive": boolean;
+        /**
+          * Populate list of camera devices.
+         */
+        "populateCameraDevices": () => Promise<void>;
+        /**
+          * Set camera state to initial method.
+         */
+        "resetState": () => Promise<void>;
+        /**
+          * Change active camera.
+         */
+        "setActiveCamera": (cameraId: string) => Promise<void>;
+        /**
+          * Method is exposed outside which allow us to control Camera Flip state from parent component.
+         */
+        "setCameraFlipState": (isFlipped: boolean) => Promise<void>;
+        /**
+          * Set camera state which includes animation and message.
+         */
+        "setState": (state: CameraExperienceState, isBackSide?: boolean, force?: boolean) => Promise<void>;
+        /**
+          * Show camera feedback message on camera for Barcode scanning
+         */
+        "showCameraFeedbackBarcodeMessage": boolean;
+        /**
+          * Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay.
+         */
+        "showOverlay": boolean;
+        /**
+          * Show scanning line on camera
+         */
+        "showScanningLine": boolean;
+        /**
+          * Instance of TranslationService passed from root component.
+         */
+        "translationService": TranslationService;
+        /**
+          * Choose desired camera experience.  Each experience type must be implemented in this component.
+         */
+        "type": CameraExperience;
+    }
+    interface MbCameraSelection {
+        "clearIsCameraActive": boolean;
+        /**
+          * Populate list of camera devices.
+         */
+        "populateCameraDevices": () => Promise<void>;
+        /**
+          * Change active camera.
+         */
+        "setActiveCamera": (cameraId: string) => Promise<void>;
+    }
+    interface MbCameraToolbar {
+        /**
+          * Whether the camera is flipped, this property will be flip the relevant icon.
+         */
+        "cameraFlipped": boolean;
+        "clearIsCameraActive": boolean;
+        /**
+          * Whether to show 'Camera flip' button.
+         */
+        "enableCameraFlip": boolean;
+        /**
+          * Populate list of camera devices.
+         */
+        "populateCameraDevices": () => Promise<void>;
+        /**
+          * Change active camera.
+         */
+        "setActiveCamera": (cameraId: string) => Promise<void>;
+        /**
+          * Set to `true` if close button should be displayed.
+         */
+        "showClose": boolean;
+    }
+    interface MbCompleted {
+        /**
+          * Value of `src` attribute for <img> element.
+         */
+        "icon": string;
+    }
+    interface MbComponent {
+        /**
+          * See description in public component.
+         */
+        "allowHelloMessage": boolean;
+        /**
+          * See description in public component.
+         */
+        "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
+        /**
+          * Camera device ID passed from root component.
+         */
+        "cameraId": string | null;
+        /**
+          * See description in public component.
+         */
+        "enableDrag": boolean;
+        /**
+          * See description in public component.
+         */
+        "engineLocation": string;
+        /**
+          * See description in public component.
+         */
+        "galleryDropType": 'FULLSCREEN' | 'INLINE';
+        /**
+          * See description in public component.
+         */
+        "galleryOverlayType": 'FULLSCREEN' | 'INLINE';
+        /**
+          * See description in public component.
+         */
+        "hideLoadingAndErrorUi": boolean;
+        /**
+          * See description in public component.
+         */
+        "iconCameraActive": string;
+        /**
+          * See description in public component.
+         */
+        "iconCameraDefault": string;
+        /**
+          * See description in public component.
+         */
+        "iconDragAndDropGalleryDefault": string;
+        /**
+          * See description in public component.
+         */
+        "iconDragAndDropWarningDefault": string;
+        /**
+          * See description in public component.
+         */
+        "iconGalleryActive": string;
+        /**
+          * See description in public component.
+         */
+        "iconGalleryDefault": string;
+        /**
+          * See description in public component.
+         */
+        "iconGalleryScanningCompleted": string;
+        /**
+          * See description in public component.
+         */
+        "iconInvalidFormat": string;
+        /**
+          * See description in public component.
+         */
+        "iconSpinnerFromGalleryExperience": string;
+        /**
+          * See description in public component.
+         */
+        "iconSpinnerScreenLoading": string;
+        /**
+          * See description in public component.
+         */
+        "includeSuccessFrame": boolean;
+        /**
+          * See description in public component.
+         */
+        "licenseKey": string;
+        /**
+          * See description in public component.
+         */
+        "recognitionPauseTimeout": number;
+        /**
+          * See description in public component.
+         */
+        "recognitionTimeout": number;
+        /**
+          * See description in public component.
+         */
+        "recognizerOptions": { [key: string]: any };
+        /**
+          * See description in public component.
+         */
+        "recognizers": Array<string>;
+        /**
+          * See description in public component.
+         */
+        "rtl": boolean;
+        /**
+          * See description in public component.
+         */
+        "scanFromCamera": boolean;
+        /**
+          * See description in public component.
+         */
+        "scanFromImage": boolean;
+        /**
+          * Instance of SdkService passed from root component.
+         */
+        "sdkService": SdkService;
+        /**
+          * Method is exposed outside which allow us to control UI state from parent component.  In case of state `ERROR` and if `showModalWindows` is set to `true`, modal window with error message will be displayed.
+         */
+        "setUiState": (state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') => Promise<void>;
+        /**
+          * See description in public component.
+         */
+        "showActionLabels": boolean;
+        /**
+          * See description in public component.
+         */
+        "showCameraFeedbackBarcodeMessage": boolean;
+        /**
+          * See description in public component.
+         */
+        "showModalWindows": boolean;
+        /**
+          * See description in public component.
+         */
+        "showScanningLine": boolean;
+        /**
+          * Starts camera scan using camera overlay with usage instructions.
+         */
+        "startCameraScan": () => Promise<void>;
+        /**
+          * Starts combined image scan, emits results from provided files.
+          * @param firstFile File to scan as first image
+          * @param secondFile File to scan as second image
+         */
+        "startCombinedImageScan": (firstFile: File, secondFile: File) => Promise<void>;
+        /**
+          * Starts image scan, emits results from provided file.
+          * @param file File to scan
+         */
+        "startImageScan": (file: File) => Promise<void>;
+        /**
+          * See description in public component.
+         */
+        "thoroughScanFromImage": boolean;
+        /**
+          * Instance of TranslationService passed from root component.
+         */
+        "translationService": TranslationService;
+        /**
+          * See description in public component.
+         */
+        "wasmType": string | null;
+        /**
+          * See description in public component.
+         */
+        "workerLocation": string;
+    }
+    interface MbContainer {
+    }
+    interface MbFeedback {
+        /**
+          * Call when FeedbackMessage which should be displayed.
+         */
+        "show": (feedback: FeedbackMessage) => Promise<void>;
+        /**
+          * Set to 'true' if component should be visible.
+         */
+        "visible": boolean;
+    }
+    interface MbImageBox {
+        /**
+          * Text which should be displayed inside 'Add image' anchor element when file is not selected.
+         */
+        "anchorText": string;
+        /**
+          * Text which represents name of the image.
+         */
+        "boxTitle": string;
+        /**
+          * Clear input image.
+         */
+        "clear": () => Promise<void>;
+    }
+    interface MbModal {
+        /**
+          * Center component
+         */
+        "centered": boolean;
+        /**
+          * Passed body content from parent component
+         */
+        "content": string;
+        /**
+          * Center content inside modal
+         */
+        "contentCentered": boolean;
+        /**
+          * Show shadow drop
+         */
+        "elevated": boolean;
+        /**
+          * Whether to hide the footer or not
+         */
+        "hideFooter": boolean;
+        /**
+          * Passed title content from parent component
+         */
+        "modalTitle": string;
+        /**
+          * Whether to show back arrow or not
+         */
+        "showBackButton": boolean;
+        /**
+          * Show modal content
+         */
+        "visible": boolean;
+    }
+    interface MbOverlay {
+        /**
+          * Set to 'false' if overlay should not cover whole screen.
+         */
+        "fullscreen": boolean;
+        /**
+          * Set to 'true' if overlay should be visible.
+         */
+        "visible": boolean;
+    }
+    interface MbScreen {
+        /**
+          * Set to 'true' if screen should be visible.
+         */
+        "visible": boolean;
+    }
+    interface MbSpinner {
+        /**
+          * Value of `src` attribute for <img> element.
+         */
+        "icon": string;
+        /**
+          * Spinner size, can be 'default' or 'large'.
+         */
+        "size": string;
+    }
+    interface MbTooltip {
+        "arrowPosition"?: 'arrow-left' | 'arrow-right' | 'arrow-up' | 'arrow-down' | 'arrow-none';
+        "containerWidth"?: string;
+        "message": string;
+        "show": boolean;
+        "showInfoIcon"?: boolean;
+        "showWarningIcon"?: boolean;
+        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
+    }
 }
 declare global {
     interface HTMLBlinkidInBrowserElement extends Components.BlinkidInBrowser, HTMLStencilElement {
@@ -180,8 +604,120 @@ declare global {
         prototype: HTMLBlinkidInBrowserElement;
         new (): HTMLBlinkidInBrowserElement;
     };
+    interface HTMLMbApiProcessStatusElement extends Components.MbApiProcessStatus, HTMLStencilElement {
+    }
+    var HTMLMbApiProcessStatusElement: {
+        prototype: HTMLMbApiProcessStatusElement;
+        new (): HTMLMbApiProcessStatusElement;
+    };
+    interface HTMLMbButtonElement extends Components.MbButton, HTMLStencilElement {
+    }
+    var HTMLMbButtonElement: {
+        prototype: HTMLMbButtonElement;
+        new (): HTMLMbButtonElement;
+    };
+    interface HTMLMbButtonClassicElement extends Components.MbButtonClassic, HTMLStencilElement {
+    }
+    var HTMLMbButtonClassicElement: {
+        prototype: HTMLMbButtonClassicElement;
+        new (): HTMLMbButtonClassicElement;
+    };
+    interface HTMLMbCameraExperienceElement extends Components.MbCameraExperience, HTMLStencilElement {
+    }
+    var HTMLMbCameraExperienceElement: {
+        prototype: HTMLMbCameraExperienceElement;
+        new (): HTMLMbCameraExperienceElement;
+    };
+    interface HTMLMbCameraSelectionElement extends Components.MbCameraSelection, HTMLStencilElement {
+    }
+    var HTMLMbCameraSelectionElement: {
+        prototype: HTMLMbCameraSelectionElement;
+        new (): HTMLMbCameraSelectionElement;
+    };
+    interface HTMLMbCameraToolbarElement extends Components.MbCameraToolbar, HTMLStencilElement {
+    }
+    var HTMLMbCameraToolbarElement: {
+        prototype: HTMLMbCameraToolbarElement;
+        new (): HTMLMbCameraToolbarElement;
+    };
+    interface HTMLMbCompletedElement extends Components.MbCompleted, HTMLStencilElement {
+    }
+    var HTMLMbCompletedElement: {
+        prototype: HTMLMbCompletedElement;
+        new (): HTMLMbCompletedElement;
+    };
+    interface HTMLMbComponentElement extends Components.MbComponent, HTMLStencilElement {
+    }
+    var HTMLMbComponentElement: {
+        prototype: HTMLMbComponentElement;
+        new (): HTMLMbComponentElement;
+    };
+    interface HTMLMbContainerElement extends Components.MbContainer, HTMLStencilElement {
+    }
+    var HTMLMbContainerElement: {
+        prototype: HTMLMbContainerElement;
+        new (): HTMLMbContainerElement;
+    };
+    interface HTMLMbFeedbackElement extends Components.MbFeedback, HTMLStencilElement {
+    }
+    var HTMLMbFeedbackElement: {
+        prototype: HTMLMbFeedbackElement;
+        new (): HTMLMbFeedbackElement;
+    };
+    interface HTMLMbImageBoxElement extends Components.MbImageBox, HTMLStencilElement {
+    }
+    var HTMLMbImageBoxElement: {
+        prototype: HTMLMbImageBoxElement;
+        new (): HTMLMbImageBoxElement;
+    };
+    interface HTMLMbModalElement extends Components.MbModal, HTMLStencilElement {
+    }
+    var HTMLMbModalElement: {
+        prototype: HTMLMbModalElement;
+        new (): HTMLMbModalElement;
+    };
+    interface HTMLMbOverlayElement extends Components.MbOverlay, HTMLStencilElement {
+    }
+    var HTMLMbOverlayElement: {
+        prototype: HTMLMbOverlayElement;
+        new (): HTMLMbOverlayElement;
+    };
+    interface HTMLMbScreenElement extends Components.MbScreen, HTMLStencilElement {
+    }
+    var HTMLMbScreenElement: {
+        prototype: HTMLMbScreenElement;
+        new (): HTMLMbScreenElement;
+    };
+    interface HTMLMbSpinnerElement extends Components.MbSpinner, HTMLStencilElement {
+    }
+    var HTMLMbSpinnerElement: {
+        prototype: HTMLMbSpinnerElement;
+        new (): HTMLMbSpinnerElement;
+    };
+    interface HTMLMbTooltipElement extends Components.MbTooltip, HTMLStencilElement {
+    }
+    var HTMLMbTooltipElement: {
+        prototype: HTMLMbTooltipElement;
+        new (): HTMLMbTooltipElement;
+    };
     interface HTMLElementTagNameMap {
         "blinkid-in-browser": HTMLBlinkidInBrowserElement;
+        "mb-api-process-status": HTMLMbApiProcessStatusElement;
+        "mb-button": HTMLMbButtonElement;
+        "mb-button-classic": HTMLMbButtonClassicElement;
+        "mb-camera-experience": HTMLMbCameraExperienceElement;
+        "mb-camera-selection": HTMLMbCameraSelectionElement;
+        "mb-camera-toolbar": HTMLMbCameraToolbarElement;
+        "mb-completed": HTMLMbCompletedElement;
+        "mb-component": HTMLMbComponentElement;
+        "mb-container": HTMLMbContainerElement;
+        "mb-feedback": HTMLMbFeedbackElement;
+        "mb-image-box": HTMLMbImageBoxElement;
+        "mb-modal": HTMLMbModalElement;
+        "mb-overlay": HTMLMbOverlayElement;
+        "mb-screen": HTMLMbScreenElement;
+        "mb-spinner": HTMLMbSpinnerElement;
+        "mb-tooltip": HTMLMbTooltipElement;
     }
 }
 declare namespace LocalJSX {
@@ -355,8 +891,483 @@ declare namespace LocalJSX {
          */
         "workerLocation"?: string;
     }
+    interface MbApiProcessStatus {
+        /**
+          * Emitted when user clicks on 'x' button.
+         */
+        "onCloseFromStart"?: (event: CustomEvent<void>) => void;
+        /**
+          * Emitted when user clicks on 'Retry' button.
+         */
+        "onCloseTryAgain"?: (event: CustomEvent<void>) => void;
+        /**
+          * State value of API processing received from parent element ('loading' or 'success').
+         */
+        "state"?: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS';
+        /**
+          * Instance of TranslationService passed from parent component.
+         */
+        "translationService"?: TranslationService;
+        /**
+          * Element visibility, default is 'false'.
+         */
+        "visible"?: boolean;
+    }
+    interface MbButton {
+        "buttonTitle": string;
+        /**
+          * Function to call on click
+         */
+        "clickHandler": (ev: UIEvent) => void;
+        /**
+          * Set to 'true' if button should be disabled, and if click events should not be triggered.
+         */
+        "disabled"?: boolean;
+        /**
+          * Passed description text for image element from parent component.
+         */
+        "imageAlt"?: string;
+        /**
+          * Passed image from parent component.
+         */
+        "imageSrcActive": string;
+        /**
+          * Passed image from parent component.
+         */
+        "imageSrcDefault": string;
+        /**
+          * Set to string which should be displayed below the icon.  If omitted, nothing will show.
+         */
+        "label"?: string;
+        /**
+          * Set to 'true' if button should enter 'selected' state.
+         */
+        "selected"?: boolean;
+        /**
+          * Set to 'true' if button should be visible.
+         */
+        "visible"?: boolean;
+    }
+    interface MbButtonClassic {
+        /**
+          * Function to call on click
+         */
+        "clickHandler": (ev: UIEvent) => void;
+        /**
+          * Set to 'true' if button should be disabled, and if click events should not be triggered.
+         */
+        "disabled"?: boolean;
+        /**
+          * Set to 'true' if button should be inverted style.
+         */
+        "inverted"?: boolean;
+        /**
+          * Set to 'true' if default event should be prevented.
+         */
+        "preventDefault"?: boolean;
+    }
+    interface MbCameraExperience {
+        /**
+          * Api state passed from root component.
+         */
+        "apiState"?: string;
+        /**
+          * Configure camera experience state timeout durations
+         */
+        "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
+        /**
+          * Camera horizontal state passed from root component.  Horizontal camera image can be mirrored
+         */
+        "cameraFlipped"?: boolean;
+        "clearIsCameraActive"?: boolean;
+        /**
+          * Emitted when user selects a different camera device.
+         */
+        "onChangeCameraDevice"?: (event: CustomEvent<CameraEntry>) => void;
+        /**
+          * Emitted when user clicks on 'X' button.
+         */
+        "onClose"?: (event: CustomEvent<void>) => void;
+        /**
+          * Emitted when user clicks on Flip button.
+         */
+        "onFlipCameraAction"?: (event: CustomEvent<void>) => void;
+        /**
+          * Emitted when camera stream becomes active.
+         */
+        "onSetIsCameraActive"?: (event: CustomEvent<boolean>) => void;
+        /**
+          * Show camera feedback message on camera for Barcode scanning
+         */
+        "showCameraFeedbackBarcodeMessage"?: boolean;
+        /**
+          * Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay.
+         */
+        "showOverlay"?: boolean;
+        /**
+          * Show scanning line on camera
+         */
+        "showScanningLine"?: boolean;
+        /**
+          * Instance of TranslationService passed from root component.
+         */
+        "translationService"?: TranslationService;
+        /**
+          * Choose desired camera experience.  Each experience type must be implemented in this component.
+         */
+        "type"?: CameraExperience;
+    }
+    interface MbCameraSelection {
+        "clearIsCameraActive"?: boolean;
+        /**
+          * Emitted when user selects a different camera device.
+         */
+        "onChangeCameraDevice"?: (event: CustomEvent<CameraEntry>) => void;
+        /**
+          * Emitted when camera stream becomes active.
+         */
+        "onSetIsCameraActive"?: (event: CustomEvent<boolean>) => void;
+    }
+    interface MbCameraToolbar {
+        /**
+          * Whether the camera is flipped, this property will be flip the relevant icon.
+         */
+        "cameraFlipped"?: boolean;
+        "clearIsCameraActive"?: boolean;
+        /**
+          * Whether to show 'Camera flip' button.
+         */
+        "enableCameraFlip"?: boolean;
+        /**
+          * Emitted when user selects a different camera device.
+         */
+        "onChangeCameraDevice"?: (event: CustomEvent<CameraEntry>) => void;
+        /**
+          * Event which is triggered when close button is clicked.
+         */
+        "onCloseEvent"?: (event: CustomEvent<void>) => void;
+        /**
+          * Event which is triggered when flip camera button is clicked.
+         */
+        "onFlipEvent"?: (event: CustomEvent<void>) => void;
+        /**
+          * Emitted when camera stream becomes active.
+         */
+        "onSetIsCameraActive"?: (event: CustomEvent<boolean>) => void;
+        /**
+          * Set to `true` if close button should be displayed.
+         */
+        "showClose"?: boolean;
+    }
+    interface MbCompleted {
+        /**
+          * Value of `src` attribute for <img> element.
+         */
+        "icon"?: string;
+    }
+    interface MbComponent {
+        /**
+          * See description in public component.
+         */
+        "allowHelloMessage"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
+        /**
+          * Camera device ID passed from root component.
+         */
+        "cameraId"?: string | null;
+        /**
+          * See description in public component.
+         */
+        "enableDrag"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "engineLocation"?: string;
+        /**
+          * See description in public component.
+         */
+        "galleryDropType"?: 'FULLSCREEN' | 'INLINE';
+        /**
+          * See description in public component.
+         */
+        "galleryOverlayType"?: 'FULLSCREEN' | 'INLINE';
+        /**
+          * See description in public component.
+         */
+        "hideLoadingAndErrorUi"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "iconCameraActive"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconCameraDefault"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconDragAndDropGalleryDefault"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconDragAndDropWarningDefault"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconGalleryActive"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconGalleryDefault"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconGalleryScanningCompleted"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconInvalidFormat"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconSpinnerFromGalleryExperience"?: string;
+        /**
+          * See description in public component.
+         */
+        "iconSpinnerScreenLoading"?: string;
+        /**
+          * See description in public component.
+         */
+        "includeSuccessFrame"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "licenseKey"?: string;
+        /**
+          * Event containing boolean which used to check whether component is blocked.
+         */
+        "onBlock"?: (event: CustomEvent<boolean>) => void;
+        /**
+          * See event 'cameraScanStarted' in public component.
+         */
+        "onCameraScanStarted"?: (event: CustomEvent<null>) => void;
+        /**
+          * See event 'fatalError' in public component.
+         */
+        "onFatalError"?: (event: CustomEvent<SDKError>) => void;
+        /**
+          * Event containing FeedbackMessage which can be passed to MbFeedback component.
+         */
+        "onFeedback"?: (event: CustomEvent<FeedbackMessage>) => void;
+        /**
+          * See event 'imageScanStarted' in public component.
+         */
+        "onImageScanStarted"?: (event: CustomEvent<null>) => void;
+        /**
+          * See event 'ready' in public component.
+         */
+        "onReady"?: (event: CustomEvent<EventReady>) => void;
+        /**
+          * See event 'scanAborted' in public component.
+         */
+        "onScanAborted"?: (event: CustomEvent<null>) => void;
+        /**
+          * See event 'scanError' in public component.
+         */
+        "onScanError"?: (event: CustomEvent<EventScanError>) => void;
+        /**
+          * See event 'scanSuccess' in public component.
+         */
+        "onScanSuccess"?: (event: CustomEvent<EventScanSuccess>) => void;
+        /**
+          * Emitted when camera stream becomes active.
+         */
+        "onSetIsCameraActive"?: (event: CustomEvent<boolean>) => void;
+        /**
+          * See description in public component.
+         */
+        "recognitionPauseTimeout"?: number;
+        /**
+          * See description in public component.
+         */
+        "recognitionTimeout"?: number;
+        /**
+          * See description in public component.
+         */
+        "recognizerOptions"?: { [key: string]: any };
+        /**
+          * See description in public component.
+         */
+        "recognizers"?: Array<string>;
+        /**
+          * See description in public component.
+         */
+        "rtl"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "scanFromCamera"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "scanFromImage"?: boolean;
+        /**
+          * Instance of SdkService passed from root component.
+         */
+        "sdkService"?: SdkService;
+        /**
+          * See description in public component.
+         */
+        "showActionLabels"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "showCameraFeedbackBarcodeMessage"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "showModalWindows"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "showScanningLine"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "thoroughScanFromImage"?: boolean;
+        /**
+          * Instance of TranslationService passed from root component.
+         */
+        "translationService"?: TranslationService;
+        /**
+          * See description in public component.
+         */
+        "wasmType"?: string | null;
+        /**
+          * See description in public component.
+         */
+        "workerLocation"?: string;
+    }
+    interface MbContainer {
+    }
+    interface MbFeedback {
+        /**
+          * Set to 'true' if component should be visible.
+         */
+        "visible"?: boolean;
+    }
+    interface MbImageBox {
+        /**
+          * Text which should be displayed inside 'Add image' anchor element when file is not selected.
+         */
+        "anchorText"?: string;
+        /**
+          * Text which represents name of the image.
+         */
+        "boxTitle"?: string;
+        /**
+          * Event which is triggered when selected image file is changed.
+         */
+        "onImageChange"?: (event: CustomEvent<FileList>) => void;
+    }
+    interface MbModal {
+        /**
+          * Center component
+         */
+        "centered"?: boolean;
+        /**
+          * Passed body content from parent component
+         */
+        "content"?: string;
+        /**
+          * Center content inside modal
+         */
+        "contentCentered"?: boolean;
+        /**
+          * Show shadow drop
+         */
+        "elevated"?: boolean;
+        /**
+          * Whether to hide the footer or not
+         */
+        "hideFooter"?: boolean;
+        /**
+          * Passed title content from parent component
+         */
+        "modalTitle"?: string;
+        /**
+          * Emitted when user clicks on 'Back Arrow' button.
+         */
+        "onBack"?: (event: CustomEvent<void>) => void;
+        /**
+          * Emitted when user clicks on 'X' button.
+         */
+        "onClose"?: (event: CustomEvent<void>) => void;
+        /**
+          * Whether to show back arrow or not
+         */
+        "showBackButton"?: boolean;
+        /**
+          * Show modal content
+         */
+        "visible"?: boolean;
+    }
+    interface MbOverlay {
+        /**
+          * Set to 'false' if overlay should not cover whole screen.
+         */
+        "fullscreen"?: boolean;
+        /**
+          * Set to 'true' if overlay should be visible.
+         */
+        "visible"?: boolean;
+    }
+    interface MbScreen {
+        /**
+          * Set to 'true' if screen should be visible.
+         */
+        "visible"?: boolean;
+    }
+    interface MbSpinner {
+        /**
+          * Value of `src` attribute for <img> element.
+         */
+        "icon"?: string;
+        /**
+          * Spinner size, can be 'default' or 'large'.
+         */
+        "size"?: string;
+    }
+    interface MbTooltip {
+        "arrowPosition"?: 'arrow-left' | 'arrow-right' | 'arrow-up' | 'arrow-down' | 'arrow-none';
+        "containerWidth"?: string;
+        "message"?: string;
+        "show"?: boolean;
+        "showInfoIcon"?: boolean;
+        "showWarningIcon"?: boolean;
+        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
+    }
     interface IntrinsicElements {
         "blinkid-in-browser": BlinkidInBrowser;
+        "mb-api-process-status": MbApiProcessStatus;
+        "mb-button": MbButton;
+        "mb-button-classic": MbButtonClassic;
+        "mb-camera-experience": MbCameraExperience;
+        "mb-camera-selection": MbCameraSelection;
+        "mb-camera-toolbar": MbCameraToolbar;
+        "mb-completed": MbCompleted;
+        "mb-component": MbComponent;
+        "mb-container": MbContainer;
+        "mb-feedback": MbFeedback;
+        "mb-image-box": MbImageBox;
+        "mb-modal": MbModal;
+        "mb-overlay": MbOverlay;
+        "mb-screen": MbScreen;
+        "mb-spinner": MbSpinner;
+        "mb-tooltip": MbTooltip;
     }
 }
 export { LocalJSX as JSX };
@@ -364,6 +1375,22 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "blinkid-in-browser": LocalJSX.BlinkidInBrowser & JSXBase.HTMLAttributes<HTMLBlinkidInBrowserElement>;
+            "mb-api-process-status": LocalJSX.MbApiProcessStatus & JSXBase.HTMLAttributes<HTMLMbApiProcessStatusElement>;
+            "mb-button": LocalJSX.MbButton & JSXBase.HTMLAttributes<HTMLMbButtonElement>;
+            "mb-button-classic": LocalJSX.MbButtonClassic & JSXBase.HTMLAttributes<HTMLMbButtonClassicElement>;
+            "mb-camera-experience": LocalJSX.MbCameraExperience & JSXBase.HTMLAttributes<HTMLMbCameraExperienceElement>;
+            "mb-camera-selection": LocalJSX.MbCameraSelection & JSXBase.HTMLAttributes<HTMLMbCameraSelectionElement>;
+            "mb-camera-toolbar": LocalJSX.MbCameraToolbar & JSXBase.HTMLAttributes<HTMLMbCameraToolbarElement>;
+            "mb-completed": LocalJSX.MbCompleted & JSXBase.HTMLAttributes<HTMLMbCompletedElement>;
+            "mb-component": LocalJSX.MbComponent & JSXBase.HTMLAttributes<HTMLMbComponentElement>;
+            "mb-container": LocalJSX.MbContainer & JSXBase.HTMLAttributes<HTMLMbContainerElement>;
+            "mb-feedback": LocalJSX.MbFeedback & JSXBase.HTMLAttributes<HTMLMbFeedbackElement>;
+            "mb-image-box": LocalJSX.MbImageBox & JSXBase.HTMLAttributes<HTMLMbImageBoxElement>;
+            "mb-modal": LocalJSX.MbModal & JSXBase.HTMLAttributes<HTMLMbModalElement>;
+            "mb-overlay": LocalJSX.MbOverlay & JSXBase.HTMLAttributes<HTMLMbOverlayElement>;
+            "mb-screen": LocalJSX.MbScreen & JSXBase.HTMLAttributes<HTMLMbScreenElement>;
+            "mb-spinner": LocalJSX.MbSpinner & JSXBase.HTMLAttributes<HTMLMbSpinnerElement>;
+            "mb-tooltip": LocalJSX.MbTooltip & JSXBase.HTMLAttributes<HTMLMbTooltipElement>;
         }
     }
 }

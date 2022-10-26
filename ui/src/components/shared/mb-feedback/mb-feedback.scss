@@ -1,0 +1,42 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+@import "../styles/globals-sass";
+
+:host {
+  display: none;
+
+  p {
+    margin: $padding-unit-small $padding-unit-large;
+
+    font-family: var(--mb-font-family);
+    font-size: var(--mb-feedback-font-size);
+    font-style: var(--mb-feedback-font-style);
+    font-weight: var(--mb-feedback-font-weight);
+
+    letter-spacing: var(--mb-feedback-letter-spacing);
+    line-height: var(--mb-feedback-line-height);
+
+    text-align: right;
+    text-transform: var(--mb-feedback-text-transform);
+
+    &.info {
+      color: var(--mb-feedback-font-color-info);
+    }
+
+    &.error {
+      color: var(--mb-feedback-font-color-error);
+    }
+  }
+}
+
+:host(.visible) {
+  display: block;
+}
+
+:host([dir="rtl"]) {
+  p {
+    text-align: left;
+  }
+}

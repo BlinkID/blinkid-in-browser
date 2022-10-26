@@ -741,7 +741,7 @@
 ├─ @microblink/blinkid-in-browser-sdk@5.20.0
 │  ├─ licenses: Custom: https://travis-ci.org/BlinkID/blinkid-in-browser.svg
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
-│  ├─ path: /opt/jenkins/jenkinsData/E5/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
+│  ├─ path: /opt/jenkins/jenkinsData/E2/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
 │  └─ licenseFile: README.md
 ├─ @nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.2
 │  ├─ licenses: MIT
@@ -795,7 +795,7 @@
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/json-schema
 │  └─ licenseFile: node_modules/@types/json-schema/LICENSE
-├─ @types/node@18.11.3
+├─ @types/node@18.11.6
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/node
@@ -850,7 +850,7 @@
 │  ├─ repository: https://github.com/acornjs/acorn
 │  ├─ path: node_modules/acorn
 │  └─ licenseFile: node_modules/acorn/LICENSE
-├─ acorn@8.8.0
+├─ acorn@8.8.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/acornjs/acorn
 │  ├─ path: node_modules/terser/node_modules/acorn
@@ -1086,7 +1086,7 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/callsites
 │  └─ licenseFile: node_modules/callsites/license
-├─ caniuse-lite@1.0.30001423
+├─ caniuse-lite@1.0.30001425
 │  ├─ licenses: CC-BY-4.0
 │  ├─ repository: https://github.com/browserslist/caniuse-lite
 │  ├─ publisher: Ben Briggs
@@ -1203,9 +1203,12 @@
 │  ├─ url: https://github.com/jonschlinkert
 │  ├─ path: node_modules/copy-descriptor
 │  └─ licenseFile: node_modules/copy-descriptor/LICENSE
-├─ core-js-compat@3.25.5
+├─ core-js-compat@3.26.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/zloirock/core-js
+│  ├─ publisher: Denis Pushkarev
+│  ├─ email: zloirock@zloirock.ru
+│  ├─ url: http://zloirock.ru
 │  ├─ path: node_modules/core-js-compat
 │  └─ licenseFile: node_modules/core-js-compat/LICENSE
 ├─ core-util-is@1.0.3
