@@ -96,7 +96,11 @@ export class MbComponent {
   private galleryImageSecondFile: File | null = null;
   private combinedScanFromImageButton: HTMLMbButtonClassicElement;
 
+  private isCameraActive: boolean = false;
+
   @State() galleryExperienceModalErrorWindowVisible: boolean = false;
+
+  @State() clearIsCameraActive: boolean = false;
 
   @State() apiProcessStatusVisible: boolean = false;
 
@@ -334,11 +338,20 @@ export class MbComponent {
    */
   @Event() scanAborted: EventEmitter<null>;
 
+  /**
+   * Emitted when camera stream becomes active.
+   */
+   @Event() setIsCameraActive: EventEmitter<boolean>;
+
 
   componentDidLoad() {
+    // Set `exportparts` attribute on root `mb-component` element to enable ::part() CSS customization
     GenericHelpers.setWebComponentParts(this.hostEl);
+
     const parts = GenericHelpers.getWebComponentParts(this.hostEl.shadowRoot);
-    this.hostEl.setAttribute('exportparts', parts.join(', '));
+    const exportedParts = GenericHelpers.getWebComponentExportedParts(this.hostEl.shadowRoot);
+
+    this.hostEl.setAttribute('exportparts', parts.concat(exportedParts).join(', '));
 
     this.init();
 
@@ -355,11 +368,18 @@ export class MbComponent {
   @Listen('keyup', { target: 'window' })
   handleKeyUp(ev: KeyboardEvent) {
     if (ev.key === 'Escape' || ev.code === 'Escape') {
-      if (this.overlays.camera.visible) {
+      if (this.overlays.camera.visible && this.isCameraActive) {
         this.abortScan();
+        this.handleSetIsCameraActive(false);
+        this.clearIsCameraActive = true;
       }
 
     }
+  }
+
+  private handleSetIsCameraActive(isCameraActive: boolean) {
+    this.isCameraActive = isCameraActive;
+    this.clearIsCameraActive = false;
   }
 
   /**
@@ -1591,8 +1611,10 @@ export class MbComponent {
               translationService={this.translationService}
               showScanningLine={this.showScanningLine}
               showCameraFeedbackBarcodeMessage={this.showCameraFeedbackBarcodeMessage}
+              clear-is-camera-active={this.clearIsCameraActive}
               onClose={() => this.abortScan()}
               onFlipCameraAction={() => this.flipCameraAction()}
+              onSetIsCameraActive={(ev: CustomEvent<boolean>) => this.handleSetIsCameraActive(ev.detail)}
               onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.changeCameraDevice(ev.detail)}
               class="overlay-camera-element"
             ></mb-camera-experience>

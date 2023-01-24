@@ -250,7 +250,10 @@ export class SdkService {
           }
 
           window.setTimeout(() => void this.cancelRecognition(), 400);
-        }, configuration.recognitionTimeout);
+        }, configuration.recognitionTimeout)
+        .then(() => { /* Scanning... */ })
+        .catch((error) => { throw error; });
+;
     } catch (error) {
       if (error && error.details?.reason) {
         const reason = error.details?.reason;

@@ -1,5 +1,38 @@
 # Release notes
 
+## 5.19.3
+
+* We've fixed a target endpoint for internal reporting logic.
+
+## 5.19.2
+
+* We've fixed a target endpoint for internal reporting logic.
+
+## 5.19.1
+
+* We've fixed a major problem with internal reporting logic.
+ 
+## 5.19.0
+ 
+What's new in the BlinkID(Combined) Recognizer?
+ 
+### Support for atypical Vietnam passports
+
+* Extract data from Vietnam Passports that have non-ICAO compliant MRZ fields. For example, when the filler arrow is facing the other way (>) instead of the standard way (<)
+​
+### Data anonymization
+
+* We've added the option to not extract the religion field on all supported Malaysian documents (MyKad, MyKas, MyKid, MyPR, MyTentera)
+​
+### Bugfixes
+
+* Resolved issues with RGB color overlay when extracting document image, which was present on some devices
+* We've fixed a bug with CSS `::part()` pseudo-selector to enable safe CSS customization of nested elements like `mb-camera-toolbar`.
+ 
+### Optimizing camera usage
+ 
+* We are now preventing aborting the scanning process when using the UI component until the camera is not being fully initialized due to potential issues with reusing the camera's resources.
+ 
 ## 5.18.0
 
 ### New feature:
