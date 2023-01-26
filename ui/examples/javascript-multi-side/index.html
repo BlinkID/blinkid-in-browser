@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+        <title>Example: BlinkID UI: scan both documents sides</title>
+
+        <!-- Import UI component which includes WASM library -->
+        <script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.0.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+
+        <style type="text/css">
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+
+                width: 100%;
+                height: 100%;
+            }
+
+            html {
+                font-family: "Avenir Next", sans-serif;
+            }
+
+            body {
+                background-color: #fff;
+                box-sizing: border-box;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                padding: 20px;
+            }
+
+            blinkid-in-browser {
+              max-width: 400px;
+
+              /* Customization of UI - see variables in src/components/shared/styles/_globals.scss */
+              /*
+              --mb-component-background: red;
+              --mb-component-action-label: none;
+              --mb-component-border-width: 0;
+              --mb-component-action-buttons-width: 100%;
+              --mb-component-action-buttons-justify-content: space-evenly;
+              --mb-component-button-size: 48px;
+              --mb-component-button-border-radius: 24px;
+              */
+            }
+        </style>
+    </head>
+    <body>
+        <!-- It's possible to obtain a free trial license key on microblink.com -->
+        <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWKoMVyeNcFTaxmtf88sb6Qf8DNp9wNpXg9N1mGlzl+RmOF9d+acztiBHkLNKCT+OdlRveDgR4ZelqCd6p6PgumkX8Ik7V0QiV2AVEmCWZOtdt+nTGVh3MLx1gnHtSzTdzPuKZFh1PlRIh6Pou3RBe+EmW2qZNmFG+ehXcPJsnqPve10JiLjiRzYo6AVNDtarTHfpzJWuR5ROz0eBjR/fc7SN4L8LUtCj63ZDS9UESheCJU+BKkftirZIlSLAZpURQxJeGVOvMV+p6XZ0NbKK0Z5kYf3NCex0tizTx95UjFSOnHrfStO6lTe+1TCqkYT1IZtfawg==" recognizers="BlinkIdMultiSideRecognizer"></blinkid-in-browser>
+
+        <script type="text/javascript">
+
+function run()
+{
+  // Important: if attributes or properties are changed, whole component is rerendered
+  const blinkId = document.querySelector("blinkid-in-browser");
+
+  if (window.location.hostname === "blinkid.github.io")
+  {
+    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaFjq1PfIzGgjCFT5gaKBwo4IpcpXpfqibOhurG3Ztft34xs8zvKJ/wQosqynpH+P0KSGbNPBIAKCLR5BQs1+KG82Ia2iTb4r/iI4Vw7jUX8TLdhbTKK6G4BoMNYyxDxeZ8EQEtFDQyRi8VK1xJn/fGuk/EBSqqJpFzvhOI8zHt+xNLT30su1MIV9s8oiVuSUbtx1mNK8Z5rQpqvYdRADsYULMj2YZ96GhWJTJa7KZz0Be2rBaqPPWFuBXHi25wYW7wM4Y6eFdUhV8zN3/3xU/7+HUqXhdDZJkU14ASQUdgQxOgwsSL5pKrBF4pUVPvbUEWKxW3";
+  }
+
+  blinkId.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
+  blinkId.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
+
+  blinkId.addEventListener(
+
+  "fatalError",
+  (ev) => console.log("fatalError", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "ready",
+  (ev) => console.log("ready", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "scanError",
+  (ev) => console.log("scanError", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "scanSuccess",
+  (ev) => console.log("scanSuccess", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "feedback",
+  (ev) => console.log("feedback", ev.detail));
+
+}
+
+window.addEventListener("DOMContentLoaded", (ev) => run());
+</script>
+    </body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Example: BlinkID Multi-side File</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <div id="screen-initial">
+            <h1 id="msg">Loading...</h1>
+            <progress id="load-progress" value="0" max="100"></progress>
+        </div>
+
+        <div id="screen-start" class="hidden">
+            <fieldset>
+                <label for="image-file-front-side">Front side image</label>
+                <input id="image-file-front-side" type="file" accept="image/*" capture="environment"/>
+            </fieldset>
+            <fieldset>
+                <label for="image-file-back-side">Back side image</label>
+                <input id="image-file-back-side" type="file" accept="image/*" capture="environment"/>
+            </fieldset>
+            <button id="start-button" type="button">Start</button>
+        </div>
+
+        <div id="screen-scanning" class="hidden">
+            <h1>Processing...</h1>
+            <img id="target-image" />
+        </div>
+    </body>
+    <script src="app.js"></script>
+</html>

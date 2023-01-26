@@ -1,6 +1,6 @@
 {
     "name": "@microblink/blinkid-in-browser-sdk",
-    "version": "5.20.1",
+    "version": "6.0.0",
     "description": "A simple ID scanning library for WebAssembly-enabled browsers.",
     "homepage": "https://github.com/BlinkID/blinkid-in-browser",
     "repository": "github:BlinkID/blinkid-in-browser",
@@ -21,7 +21,6 @@
     },
     "main": "lib/blinkid-sdk.js",
     "module": "es/blinkid-sdk.js",
-    "unpkg": "dist/blinkid-sdk.js",
     "types": "types/index.d.ts",
     "files": [
         "ui/dist",

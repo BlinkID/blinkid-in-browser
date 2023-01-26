@@ -4,7 +4,7 @@
 
 import { AddressDetailedInfo } from "./AddressDetailedInfo";
 import { BarcodeData } from "../../BlinkBarcode/BarcodeData";
-import { DriverLicenseDetailedInfo } from "./DriverLicenseDetailedInfo";
+import { BarcodeDriverLicenseDetailedInfo } from "./DriverLicenseDetailedInfo";
 import { MBDate } from "../../../MicroblinkSDK/DataStructures";
 
 /**
@@ -68,7 +68,7 @@ export interface BarcodeResult
     readonly addressDetailedInfo: AddressDetailedInfo;
 
     /* The driver license detailed info. */
-    readonly driverLicenseDetailedInfo: DriverLicenseDetailedInfo;
+    readonly driverLicenseDetailedInfo: BarcodeDriverLicenseDetailedInfo;
 
     /* Whether the result is empty */
     readonly empty: boolean;

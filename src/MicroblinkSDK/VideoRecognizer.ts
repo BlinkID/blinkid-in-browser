@@ -8,7 +8,8 @@ import
     PreferredCameraType,
     clearVideoFeed,
     selectCamera,
-    SelectedCamera
+    SelectedCamera,
+    isCameraFocusProblematic
 } from "./CameraUtils";
 
 import
@@ -121,7 +122,13 @@ export class VideoRecognizer
                             return;
                         }
 
-                        const cameraFlipped = await bindCameraToVideoFeed( selectedCamera, cameraFeed, preferredCameraType );
+                        const shouldMaxResolution = isCameraFocusProblematic();
+                        const cameraFlipped       = await bindCameraToVideoFeed(
+                            selectedCamera,
+                            cameraFeed,
+                            preferredCameraType,
+                            shouldMaxResolution
+                        );
 
                         // TODO: await maybe not needed here
                         await recognizerRunner.setCameraPreviewMirrored( cameraFlipped );
@@ -242,6 +249,7 @@ export class VideoRecognizer
         this.cameraFlipped = cameraFlipped;
         this.allowManualVideoPlayout = allowManualVideoPlayout;
         this.deviceId = deviceId;
+        this.isProblematicFocus = isCameraFocusProblematic();
     }
 
     deviceId: string | null = null;
@@ -570,7 +578,7 @@ export class VideoRecognizer
             this.pauseRecognition();
             clearVideoFeed( this.videoFeed );
 
-            bindCameraToVideoFeed( camera, this.videoFeed ).then
+            bindCameraToVideoFeed( camera, this.videoFeed, undefined, this.isProblematicFocus ).then
             (
                 () =>
                 {
@@ -648,6 +656,8 @@ export class VideoRecognizer
 
     private shouldReleaseVideoFeed = false;
 
+    private isProblematicFocus = false;
+
     private playPauseEvent(): Promise< void >
     {
         return new Promise( ( resolve, reject ) =>
@@ -689,12 +699,13 @@ export class VideoRecognizer
                 return;
             }
 
-            const cameraFrame = captureFrame( this.videoFeed );
+            const cameraFrame = captureFrame( this.videoFeed, this.isProblematicFocus );
 
             this.recognizerRunner.processImage( cameraFrame ).then
             (
                 ( processResult: RecognizerResultState ) =>
                 {
+                    const timeoutDuration = this.isProblematicFocus ? 33 : 1;
                     const completeFn = () =>
                     {
                         if ( !this.recognitionPaused )
@@ -709,7 +720,7 @@ export class VideoRecognizer
                                 (
                                     ( error ) => reject( error )
                                 );
-                            }, 1 );
+                            }, timeoutDuration );
                         }
                         else
                         {

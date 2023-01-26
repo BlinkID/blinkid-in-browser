@@ -39,7 +39,7 @@ export class CapturedFrame
  * @param imageSource image source from which frame should be captured
  * @returns instance of CapturedFrame
  */
-export function captureFrame( imageSource: CanvasImageSource ): CapturedFrame
+export function captureFrame( imageSource: CanvasImageSource, shouldCrop = false ): CapturedFrame
 {
     let imageWidth: number;
     let imageHeight: number;
@@ -68,7 +68,7 @@ export function captureFrame( imageSource: CanvasImageSource ): CapturedFrame
     canvas = canvas || document.createElement( "canvas" );
     canvas.width = imageWidth;
     canvas.height = imageHeight;
-    const ctx = canvas.getContext( "2d" );
+    const ctx = canvas.getContext( "2d", { willReadFrequently: true } ) as CanvasRenderingContext2D;
 
     if ( !ctx )
     {
@@ -76,7 +76,23 @@ export function captureFrame( imageSource: CanvasImageSource ): CapturedFrame
     }
 
     ctx.drawImage( imageSource, 0, 0, canvas.width, canvas.height );
-    const pixelData = ctx.getImageData( 0, 0, canvas.width, canvas.height );
+
+    /**
+     * Take full image or cropped image based on focus problems.
+     *
+     * iPhone 14 Pro has focus problems, i.e. user should place a document somehow
+     * far away from the camera to get the proper focus.
+     *
+     * In that case we're getting much bigger images (4K), and we're cropping the center
+     * of the image which is then sent to processing - rectangle that is 66% size of the
+     * original image is cropped from the image center.
+     */
+    const cropFactor   = shouldCrop ? 0.66 : 1;
+    const targetWidth  = canvas.width  * cropFactor;
+    const targetHeight = canvas.height * cropFactor;
+    const targetX      = ( canvas.width  - targetWidth  ) / 2;
+    const targetY      = ( canvas.height - targetHeight ) / 2;
+    const pixelData    = ctx.getImageData( targetX, targetY, targetWidth, targetHeight );
 
     return new CapturedFrame
     (

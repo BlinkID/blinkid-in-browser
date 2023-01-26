@@ -110,7 +110,7 @@ export class MbCameraExperience {
 
   @Watch('apiState')
   apiStateHandler(apiState: string, _oldValue: string) {
-    if (apiState === '' && (this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined))
+    if (apiState === '' && (this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardMultiSide))
       this.cardIdentityElement.classList.add('visible');
     else
       this.cardIdentityElement.classList.remove('visible');
@@ -192,7 +192,7 @@ export class MbCameraExperience {
 
       switch (this.type) {
         case CameraExperience.CardSingleSide:
-        case CameraExperience.CardCombined:
+        case CameraExperience.CardMultiSide:
           this.cameraCursorIdentityCardClassName = `reticle ${stateClass}`;
           break;
         case CameraExperience.Barcode:
@@ -275,7 +275,7 @@ export class MbCameraExperience {
 
     switch (type) {
       case CameraExperience.CardSingleSide:
-      case CameraExperience.CardCombined:
+      case CameraExperience.CardMultiSide:
         while (this.cameraMessageIdentityCard.firstChild) {
           this.cameraMessageIdentityCard.removeChild(this.cameraMessageIdentityCard.firstChild);
         }
@@ -408,7 +408,7 @@ export class MbCameraExperience {
         </div>
 
         {/* Identity card camera experience */}
-        <div id="card-identity" ref={(el) => this.cardIdentityElement = el as HTMLDivElement} class={ classNames({ visible: this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardCombined }) }>
+        <div id="card-identity" ref={(el) => this.cardIdentityElement = el as HTMLDivElement} class={ classNames({ visible: this.type === CameraExperience.CardSingleSide || this.type === CameraExperience.CardMultiSide }) }>
           <div class="reticle-container">
             <div class={ this.cameraCursorIdentityCardClassName }>
               <div class="reticle__cursor">

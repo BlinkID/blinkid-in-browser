@@ -29,7 +29,7 @@ function main() {
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmK4UdySQGTY4Dj9A5/admigB9hgd+YIjHxg4LXQ5StihU55nmCEXDMGp99UNyb5VzLZ41YE6JVGpY7DDgRY2/ZtMBY+5DOJ/lXEAkmkArolrS/gzMeaA+F8Fq4AGov5WeW1sp/aDX4s5AyHYXr58d+x836yDJMIx++3Q0FOCeouK7RIhflgO5dAkBFF2n0DkEKAnw/20kZPUoEcT92W9KvmLV8kZEvMaRLYoe0VbKX1q28b3B42W3/7+FH9KCI/zXcv6Q03jewCbQUAsUSrtbAaIEJXvDD5cb5hRacgyrUHK1SUcesOjmSQ2wmn5kv6yDe2PhyQ==";
+    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWKoMVyeNcFTaxmtf88sb6Qf8DNp9wNpXg9N1mGlzl+RmOF9d+acztiBHkLNKCT+OdlRveDgR4ZelqCd6p6PgumkX8Ik7V0QiV2AVEmCWZOtdt+nTGVh3MLx1gnHtSzTdzPuKZFh1PlRIh6Pou3RBe+EmW2qZNmFG+ehXcPJsnqPve10JiLjiRzYo6AVNDtarTHfpzJWuR5ROz0eBjR/fc7SN4L8LUtCj63ZDS9UESheCJU+BKkftirZIlSLAZpURQxJeGVOvMV+p6XZ0NbKK0Z5kYf3NCex0tizTx95UjFSOnHrfStO6lTe+1TCqkYT1IZtfawg==";
 
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(licenseKey);
@@ -72,8 +72,8 @@ async function startScan(sdk: BlinkIDSDK.WasmSDK, fileList: FileList) {
     // 1. Create a recognizer objects which will be used to recognize single image or stream of images.
     //
 
-    // Generic ID Recognizer - scan various ID documents
-    const genericIDRecognizer = await BlinkIDSDK.createBlinkIdRecognizer(sdk);
+    // BlinkID Single-side Recognizer - scan various ID documents
+    const singleSideIDRecognizer = await BlinkIDSDK.createBlinkIdSingleSideRecognizer(sdk);
 
     // 2. Create a RecognizerRunner object which orchestrates the recognition with one or more
 
@@ -84,7 +84,7 @@ async function startScan(sdk: BlinkIDSDK.WasmSDK, fileList: FileList) {
     sdk, 
 
     // List of recognizer objects that will be associated with created RecognizerRunner object
-    [genericIDRecognizer], 
+    [singleSideIDRecognizer], 
 
     // [OPTIONAL] Should recognition pipeline stop as soon as first recognizer in chain finished recognition
     false);
@@ -108,30 +108,42 @@ async function startScan(sdk: BlinkIDSDK.WasmSDK, fileList: FileList) {
         recognizerRunner?.delete();
 
         // Release memory on WebAssembly heap used by the recognizer
-        genericIDRecognizer?.delete();
+        singleSideIDRecognizer?.delete();
         inputImageFile.value = "";
         return;
     }
-    scanImageElement!.src = URL.createObjectURL(file);
-    await scanImageElement.decode();
-    const imageFrame = BlinkIDSDK.captureFrame(scanImageElement);
+    const imageElement = new Image();
+    const url = URL.createObjectURL(file);
+    imageElement.src = url;
+    scanImageElement.src = url;
+    await imageElement.decode();
+    const imageFrame = BlinkIDSDK.captureFrame(imageElement);
+    URL.revokeObjectURL(url);
 
     // 4. Start the recognition and await for the results
     const processResult = await recognizerRunner.processImage(imageFrame);
 
     // 5. If recognition was successful, obtain the result and display it
     if (processResult !== BlinkIDSDK.RecognizerResultState.Empty) {
-        const genericIDResults = await genericIDRecognizer.getResult();
-        if (genericIDResults.state !== BlinkIDSDK.RecognizerResultState.Empty) {
-            console.log("BlinkIDGeneric results", genericIDResults);
-            const firstName = genericIDResults.firstName || genericIDResults.mrz.secondaryID;
-            const lastName = genericIDResults.lastName || genericIDResults.mrz.primaryID;
+        const singleSideIDResults = await singleSideIDRecognizer.getResult();
+        if (singleSideIDResults.state !== BlinkIDSDK.RecognizerResultState.Empty) {
+            console.log("BlinkID Single-side recognizer results", singleSideIDResults);
+            const firstName = (singleSideIDResults.firstName.latin ||
+                singleSideIDResults.firstName.cyrillic ||
+                singleSideIDResults.firstName.arabic) || singleSideIDResults.mrz.secondaryID;
+            const lastName = (singleSideIDResults.lastName.latin ||
+                singleSideIDResults.lastName.cyrillic ||
+                singleSideIDResults.lastName.arabic) || singleSideIDResults.mrz.primaryID;
+            const fullName = (singleSideIDResults.fullName.latin ||
+                singleSideIDResults.fullName.cyrillic ||
+                singleSideIDResults.fullName.arabic) || `${singleSideIDResults.mrz.secondaryID} ${singleSideIDResults.mrz.primaryID}`;
             const dateOfBirth = {
-                year: genericIDResults.dateOfBirth.year || genericIDResults.mrz.dateOfBirth.year,
-                month: genericIDResults.dateOfBirth.month || genericIDResults.mrz.dateOfBirth.month,
-                day: genericIDResults.dateOfBirth.day || genericIDResults.mrz.dateOfBirth.day
+                year: singleSideIDResults.dateOfBirth.year || singleSideIDResults.mrz.dateOfBirth.year,
+                month: singleSideIDResults.dateOfBirth.month || singleSideIDResults.mrz.dateOfBirth.month,
+                day: singleSideIDResults.dateOfBirth.day || singleSideIDResults.mrz.dateOfBirth.day
             };
-            alert(`Hello, ${firstName} ${lastName}!\n You were born on ${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}.`);
+            const derivedFullName = `${firstName} ${lastName}`.trim() || fullName;
+            alert(`Hello, ${derivedFullName}!\n You were born on ${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}.`);
         }
     }
     else {
@@ -144,7 +156,7 @@ async function startScan(sdk: BlinkIDSDK.WasmSDK, fileList: FileList) {
     recognizerRunner?.delete();
 
     // Release memory on WebAssembly heap used by the recognizer
-    genericIDRecognizer?.delete();
+    singleSideIDRecognizer?.delete();
 
     // Hide scanning screen and show scan button again
     inputImageFile.value = "";

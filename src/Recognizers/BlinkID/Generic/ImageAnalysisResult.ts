@@ -10,6 +10,11 @@ export interface ImageAnalysisResult
     readonly blurred: boolean;
 
     /**
+     * Orientation of the card detected on the scanned image.
+     */
+    readonly cardOrientation: CardOrientation;
+
+    /**
      * The color status determined from scanned image.
      */
     readonly documentImageColorStatus: DocumentImageColorStatus;
@@ -63,4 +68,16 @@ export enum ImageAnalysisDetectionStatus
 
     /** Object detected on input image */
     Detected
+}
+
+/**
+ * CardOrientation enum defines possible states of card orientation.
+ */
+export enum CardOrientation
+{
+    /** Card is horizontally placed inside the camera frame */
+    Horizontal = 0,
+
+    /** Card is vertically placed inside the camera frame */
+    Vertical
 }

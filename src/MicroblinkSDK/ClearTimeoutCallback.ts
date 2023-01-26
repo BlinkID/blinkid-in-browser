@@ -5,7 +5,7 @@
 /**
  * @hidden
  * Private interface for letting RecognizerRunner inform VideoRecognizer when it
- * needs to clear timeout. This is usually required when combined recognizer has
+ * needs to clear timeout. This is usually required when multi-side recognizer has
  * finished scanning of the first side and needs a clean timeout start for the
  * recognition of the back side.
  */

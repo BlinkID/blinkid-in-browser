@@ -34,11 +34,11 @@ function main()
   }
 
   // 1. It's possible to obtain a free trial license key on microblink.com
-  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmK4UdySQGTY4Dj9A5/admigB9hgd+YIjHxg4LXQ5StihU55nmCEXDMGp99UNyb5VzLZ41YE6JVGpY7DDgRY2/ZtMBY+5DOJ/lXEAkmkArolrS/gzMeaA+F8Fq4AGov5WeW1sp/aDX4s5AyHYXr58d+x836yDJMIx++3Q0FOCeouK7RIhflgO5dAkBFF2n0DkEKAnw/20kZPUoEcT92W9KvmLV8kZEvMaRLYoe0VbKX1q28b3B42W3/7+FH9KCI/zXcv6Q03jewCbQUAsUSrtbAaIEJXvDD5cb5hRacgyrUHK1SUcesOjmSQ2wmn5kv6yDe2PhyQ==";
+  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWKoMVyeNcFTaxmtf88sb6Qf8DNp9wNpXg9N1mGlzl+RmOF9d+acztiBHkLNKCT+OdlRveDgR4ZelqCd6p6PgumkX8Ik7V0QiV2AVEmCWZOtdt+nTGVh3MLx1gnHtSzTdzPuKZFh1PlRIh6Pou3RBe+EmW2qZNmFG+ehXcPJsnqPve10JiLjiRzYo6AVNDtarTHfpzJWuR5ROz0eBjR/fc7SN4L8LUtCj63ZDS9UESheCJU+BKkftirZIlSLAZpURQxJeGVOvMV+p6XZ0NbKK0Z5kYf3NCex0tizTx95UjFSOnHrfStO6lTe+1TCqkYT1IZtfawg==";
 
   if (window.location.hostname === "blinkid.github.io")
   {
-    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRpaEiKVP2VygLDloxPX1rHhmpzIBK0oCL/U9gZl32nEZHrMO0HeafYERS+NUe44+NlgvVGabNbs71cu8da3BkqZU5YZ7rylRRpdtxP/JPDbvncuVKva183z5yzUvMS2zd60v7/aDAvoX++e0rS/6cl2qcpgn8qwn7ucuTbRc0T2Hvfx8SXQb3ZZ8KLODq8JVZiN0enq1NLQDUgTGpJOKynqiD5kPgwPCixNrRGmSMHv+MFP02MGM33+V+mKfSr9QKhYEl/bxOB44bLxDIaW6ALvJy6wwopKep1m2n+J5wf7B4oQLBG/MmVob5rkTc6d+S9opHsGV";
+    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaFjq1PfIzGgjCFT5gaKBwo4IpcpXpfqibOhurG3Ztft34xs8zvKJ/wQosqynpH+P0KSGbNPBIAKCLR5BQs1+KG82Ia2iTb4r/iI4Vw7jUX8TLdhbTKK6G4BoMNYyxDxeZ8EQEtFDQyRi8VK1xJn/fGuk/EBSqqJpFzvhOI8zHt+xNLT30su1MIV9s8oiVuSUbtx1mNK8Z5rQpqvYdRADsYULMj2YZ96GhWJTJa7KZz0Be2rBaqPPWFuBXHi25wYW7wM4Y6eFdUhV8zN3/3xU/7+HUqXhdDZJkU14ASQUdgQxOgwsSL5pKrBF4pUVPvbUEWKxW3";
   }
 
   // 2. Create instance of SDK load settings with your license key
@@ -89,15 +89,15 @@ async function startScan(sdk)
 
   // 1. Create a recognizer objects which will be used to recognize single image or stream of images.
   //
-  // Generic ID Recognizer - scan various ID documents
+  // BlinkID Single-side Recognizer - scan various ID documents
   // ID Barcode Recognizer - scan barcodes from various ID documents
-  const genericIDRecognizer = await BlinkIDSDK.createBlinkIdRecognizer(sdk);
+  const singleSideIDRecognizer = await BlinkIDSDK.createBlinkIdSingleSideRecognizer(sdk);
 
   // [OPTIONAL] Create a callbacks object that will receive recognition events, such as detected object location etc.
   const callbacks = {
     onQuadDetection: (quad) => drawQuad(quad),
-    onDetectionFailed: () => updateScanFeedback("Detection failed", true)
-  };
+    onDetectionFailed: () => updateScanFeedback("Detection failed", true) };
+
 
   // 2. Create a RecognizerRunner object which orchestrates the recognition with one or more
   //    recognizer objects.
@@ -106,7 +106,7 @@ async function startScan(sdk)
   // SDK instance to use
   sdk,
   // List of recognizer objects that will be associated with created RecognizerRunner object
-  [genericIDRecognizer],
+  [singleSideIDRecognizer],
   // [OPTIONAL] Should recognition pipeline stop as soon as first recognizer in chain finished recognition
   false,
   // [OPTIONAL] Callbacks object that will receive recognition events
@@ -126,22 +126,40 @@ async function startScan(sdk)
   // 5. If recognition was successful, obtain the result and display it
   if (processResult !== BlinkIDSDK.RecognizerResultState.Empty)
   {
-    const genericIDResults = await genericIDRecognizer.getResult();
-    if (genericIDResults.state !== BlinkIDSDK.RecognizerResultState.Empty)
+    const singleSideIDResults = await singleSideIDRecognizer.getResult();
+    if (singleSideIDResults.state !== BlinkIDSDK.RecognizerResultState.Empty)
     {
-      console.log("BlinkIDGeneric results", genericIDResults);
+      console.log("BlinkID Single-side recognizer results", singleSideIDResults);
 
-      const firstName = genericIDResults.firstName || genericIDResults.mrz.secondaryID;
-      const lastName = genericIDResults.lastName || genericIDResults.mrz.primaryID;
+      const firstName =
+      singleSideIDResults.firstName.latin ||
+      singleSideIDResults.firstName.cyrillic ||
+      singleSideIDResults.firstName.arabic ||
+      singleSideIDResults.mrz.secondaryID;
+
+      const lastName =
+      singleSideIDResults.lastName.latin ||
+      singleSideIDResults.lastName.cyrillic ||
+      singleSideIDResults.lastName.arabic ||
+      singleSideIDResults.mrz.primaryID;
+
+      const fullName =
+      singleSideIDResults.fullName.latin ||
+      singleSideIDResults.fullName.cyrillic ||
+      singleSideIDResults.fullName.arabic ||
+      `${singleSideIDResults.mrz.secondaryID} ${singleSideIDResults.mrz.primaryID}`;
+
       const dateOfBirth = {
-        year: genericIDResults.dateOfBirth.year || genericIDResults.mrz.dateOfBirth.year,
-        month: genericIDResults.dateOfBirth.month || genericIDResults.mrz.dateOfBirth.month,
-        day: genericIDResults.dateOfBirth.day || genericIDResults.mrz.dateOfBirth.day
-      };
+        year: singleSideIDResults.dateOfBirth.year || singleSideIDResults.mrz.dateOfBirth.year,
+        month: singleSideIDResults.dateOfBirth.month || singleSideIDResults.mrz.dateOfBirth.month,
+        day: singleSideIDResults.dateOfBirth.day || singleSideIDResults.mrz.dateOfBirth.day };
+
+
+      const derivedFullName = `${firstName} ${lastName}`.trim() || fullName;
 
       alert(
 
-      `Hello, ${firstName} ${lastName}!\n You were born on ${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}.`);
+      `Hello, ${derivedFullName}!\n You were born on ${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}.`);
 
     }
   } else
@@ -159,7 +177,7 @@ async function startScan(sdk)
   recognizerRunner?.delete();
 
   // Release memory on WebAssembly heap used by the recognizer
-  genericIDRecognizer?.delete();
+  singleSideIDRecognizer?.delete();
 
   // Clear any leftovers drawn to canvas
   clearDrawCanvas();

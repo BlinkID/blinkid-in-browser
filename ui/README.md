@@ -34,15 +34,15 @@ However, **we strongly advise** that you host the JavaScript bundles on your inf
 ```html
 <!-- Load custom element via `<script>` tag with fallback for older browsers -->
 <!-- IMPORTANT: change "X.Y.Z" to the version number you wish to use! -->
-<script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@X.Y.Z/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-<script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@X.Y.Z/ui/dist/blinkid-in-browser.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@X.Y.Z/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+<script nomodule src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@X.Y.Z/ui/dist/blinkid-in-browser.js"></script>
 
 <!-- Custom element is now available and location of WASM engine must be provided -->
 <!-- IMPORTANT: location of the engine must be an absolute path. See section "WASM resources" for more information about this property. -->
 <blinkid-in-browser license-key="..." engine-location="http://localhost/resources/"></blinkid-in-browser>
 ```
 
-*Keep in mind that Unpkg CDN is used for demonstration, it's not intended to be used in production!*
+*Keep in mind that the jsDelivr CDN is used for demonstration, it's not intended to be used in production!*
 
 ### <a name="installation-npm"></a> Installation via NPM
 
@@ -78,9 +78,9 @@ To load WebAssembly module, use `engine-location` attribute or `engineLocation` 
 
 If you're not using NPM, it's possible to download WASM resources from public CDN services.
 
-For example, all versions of BlinkID In-browser SDK are available on Unpkg CDN:
+For example, all versions of BlinkID In-browser SDK are available on the jsDelivr CDN:
 
-* Visit `https://unpkg.com/browse/@microblink/blinkid-in-browser-sdk@X.Y.Z/resources/` (change "X.Y.Z" to the version number you wish to use).
+* Visit `https://cdn.jsdelivr.net/npm/browse/@microblink/blinkid-in-browser-sdk@X.Y.Z/resources/` (change "X.Y.Z" to the version number you wish to use).
 * Download the whole folder.
 * Save everything in the local `resources` folder which is available through HTTP/S.
 * Point the engine to that location with `engine-location` attribute or `engineLocation` property on the UI component.
@@ -145,7 +145,7 @@ export class MyComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.el.nativeElement.licenseKey = '<PLACE-YOUR-LICENSE-KEY-HERE>';
-    this.el.nativeElement.recognizers = [ 'BlinkIdRecognizer' ];
+    this.el.nativeElement.recognizers = [ 'BlinkIdSingleSideRecognizer' ];
 
     // Engine location depends on the actual location of WebAssembly resources
     this.el.nativeElement.engineLocation = window.location.origin + '/blinkid-resources/';
@@ -212,7 +212,7 @@ function App() {
     applyPolyfills().then(() => {
       defineCustomElements().then(() => {
         el.current.licenseKey = '<PLACE-YOUR-LICENSE-KEY-HERE>';
-        el.current.recognizers = [ 'BlinkIdRecognizer' ];
+        el.current.recognizers = [ 'BlinkIdSingleSideRecognizer' ];
 
         // Engine location depends on the actual location of WebAssembly resources
         el.current.engineLocation = window.location.origin + '/resources';
@@ -265,7 +265,7 @@ Required parameters are license key, engine location and one or more recognizers
 <blinkid-in-browser
     engine-location="http://localhost/resources"
     license-key="<PLACE-YOUR-LICENSE-KEY-HERE>"
-    recognizers="BlinkIdRecognizer"
+    recognizers="BlinkIdSingleSideRecognizer"
 ></blinkid-in-browser>
 
 <script>
@@ -300,7 +300,7 @@ Required parameters are license key, engine location and one or more recognizers
     el.licenseKey = '<PLACE-YOUR-LICENSE-KEY-HERE>';
 
     // Recognizers - logic which should be used to extract data
-    el.recognizers = ['BlinkIdRecognizer'];
+    el.recognizers = ['BlinkIdSingleSideRecognizer'];
 
     /**
      * Optional properties

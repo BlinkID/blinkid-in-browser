@@ -3,7 +3,7 @@
  */
 
 /**
- * RecognitionMode enum defines possible recognition modes by BlinkID(Combined)Recognizer.
+ * RecognitionMode enum defines possible recognition modes for BlinkID Single-side and BlinkID Multi-side recognizers.
  */
 export enum RecognitionMode
 {

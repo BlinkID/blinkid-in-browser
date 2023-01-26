@@ -6,7 +6,7 @@
         <title>Example: BlinkID D2D demo</title>
 
         <!-- Import UI component which includes WASM library -->
-        <!-- Keep in mind that Unpkg CDN is used for demonstration, it's not intended to be used in production! -->
+        <!-- Keep in mind that the jsDelivr CDN is used for demonstration, it's not intended to be used in production! -->
         <script type="module" src="ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
 
         <style type="text/css">
@@ -157,7 +157,7 @@
                 <div style="margin-top: 20px;">
                     <blinkid-in-browser
                         license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmKoUWwfc6Vkn6RRypBHxEeSSmdYMVvgwiQiEqxAeY41EFrsGTJCAF3z5FlaYLcDb1WcvD3cruOZ0AV+2nNNuCN7Hu+ABFONnZVuKvLIGoqBpzvBoz5WsIwS5s3MihzaXo1vCk8NIYEgnnyAs3g5FRBUM1WHRP8tL2HPJTV2LE8RKADDkKj82Bz+Nc80ywjDh4wdT+AAvUsdz9hATUDODib76I+1dzCfaxvvWbE6iReWio2bdgUi5Svf9ClbMLEg3/A1yezoMK7e9rK+Vykn4tBGwMffbFUd09+CN/O1ASbHe88CHwtQZxdpi8T/jv0Gpai0+bkzmC"
-                        recognizers="BlinkIdCombinedRecognizer"
+                        recognizers="BlinkIdMultiSideRecognizer"
                     ></blinkid-in-browser>
                 </div>
             </div>
@@ -266,7 +266,7 @@
                         oibInput.disabled = true;
                     }
                 });
-                
+
 
                 blinkId.addEventListener
                 (

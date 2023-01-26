@@ -6,7 +6,7 @@ BlinkID In-browser SDK enables scanning of various identity documents, including
 
 For more information on how to integrate BlinkID SDK into your web app, read the [instructions](#integration) below. Make sure you read the latest [CHANGELOG.md](CHANGELOG.md) file to see the most recent changes and improvements.
 
-Check out the [official demo app](https://demo.microblink.com/in-browser-sdk/blinkid/index.html) or live examples of BlinkID SDK in action:
+Check out the [official demo app](https://demo.microblink.com/in-browser-sdk/blinkid/) or live examples of BlinkID SDK in action:
 
 1. [BlinkID SDK with built-in UI](https://blinkid.github.io/blinkid-in-browser/ui/demo.html)
     * See what the bare UI looks like at [Codepen](https://codepen.io/microblink/pen/GRZGQab)
@@ -14,9 +14,9 @@ Check out the [official demo app](https://demo.microblink.com/in-browser-sdk/bli
     * See example at [Codepen](https://codepen.io/microblink/pen/gOPJoRp)
 3. [Scan the front side of an identity document by uploading its image](https://blinkid.github.io/blinkid-in-browser/examples/blinkid-file/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/ExPzzda)
-4. [Scan both sides of an identity document with a web camera](https://blinkid.github.io/blinkid-in-browser/examples/combined/javascript/index.html)
+4. [Scan both sides of an identity document with a web camera](https://blinkid.github.io/blinkid-in-browser/examples/multi-side/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/BajeeMx)
-5. [Scan both sides of an identity document by uploading its image](https://blinkid.github.io/blinkid-in-browser/examples/combined-file/javascript/index.html)
+5. [Scan both sides of an identity document by uploading its image](https://blinkid.github.io/blinkid-in-browser/examples/multi-side-file/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/MWboMrr)
 6. [Scan barcode from an identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/idbarcode/javascript/index.html)
     * See example at [Codepen](https://codepen.io/microblink/pen/NWxVVJO)
@@ -42,10 +42,9 @@ Please keep in mind that BlinkID In-browser SDK is meant to be used natively in 
     * [Custom UX with `VideoRecognizer`](#customUXWithVideoRecognizer)
 * [Handling processing events with `MetadataCallbacks`](#metadataCallbacks)
 * [List of available recognizers](#recognizerList)
-    * [Success Frame Grabber Recognizer](#successFrameGrabber)
     * [ID barcode recognizer](#idBarcodeRecognizer)
-    * [BlinkID recognizer](#blinkidRecognizer)
-    * [BlinkID combined recognizer](#blinkidCombinedRecognizer)
+    * [BlinkID Single-side recognizer](#blinkidSingleSideRecognizer)
+    * [BlinkID Multi-side recognizer](#blinkidMultiSideRecognizer)
 * [Recognizer settings](#recognizerSettings)
 * [Technical requirements](#technicalRequirements)
 * [Supported browsers](#webassembly-support)
@@ -128,20 +127,20 @@ Alternatively, it's possible to use UMD builds which can be loaded from public C
 
 However, **we strongly advise** that you host the JavaScript bundles on your infrastructure since there is no guarantee that the public CDN service has satisfactory uptime and availability throughout the world.
 
-For example, it's possible to use UMD builds from [the `dist` folder on Unpkg CDN](https://unpkg.com/@microblink/blinkid-in-browser-sdk/dist/). The UMD builds make `BlinkIDSDK` available as a `window.BlinkIDSDK` global variable:
+For example, it's possible to use UMD builds from [the `dist` folder on the jsDelivr CDN](https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk/dist/). The UMD builds make `BlinkIDSDK` available as a `window.BlinkIDSDK` global variable:
 
 ```html
 <!-- IMPORTANT: change "X.Y.Z" to the version number you wish to use! -->
-<script src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@X.Y.Z/dist/blinkid-sdk.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@X.Y.Z/dist/blinkid-sdk.min.js"></script>
 ```
 
-Finally, it's possible to use ES builds, which can be downloaded from [the `es` folder on unpkg](https://unpkg.com/@microblink/blinkid-in-browser-sdk/es/). ES modules are used in a similar manner as NPM package:
+Finally, it's possible to use ES builds, which can be downloaded from [the `es` folder on jsDelivr](https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk/es/). ES modules are used in a similar manner as NPM package:
 
 ```javascript
 import * as BlinkIDSDK from "./es/blinkid-sdk.js";
 ```
 
-**Important:** Unpkg CDN is used here due to simplicity of usage. It's not intended to be used in production!
+**Important:** the jsDelivr CDN is used here due to simplicity of usage. It's not intended to be used in production!
 
 #### WASM Resources
 
@@ -203,7 +202,7 @@ For example, in `package.json` you should have something like `"@microblink/blin
     ```typescript
     import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 
-    const recognizer = await BlinkIDSDK.createBlinkIdRecognizer( wasmSDK );
+    const recognizer = await BlinkIDSDK.createBlinkIdSingleSideRecognizer( wasmSDK );
     const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
         wasmSDK,
         [ recognizer ],
@@ -658,31 +657,23 @@ Similarly, if you remove the `onQuadDetection` from `MetadataCallbacks` object a
 
 This section will give a list of all `Recognizer` objects that are available within BlinkID SDK, their purpose and recommendations on how they should be used to achieve  best performance and user experience.
 
-### <a name="successFrameGrabber"></a> Success Frame Grabber Recognizer
-
-The [`SuccessFrameGrabberRecognizer`](src/Recognizers/SuccessFrameGrabberRecognizer.ts) is a special `Recognizer` that wraps some other `Recognizer` and impersonates it while processing the image. However, when the `Recognizer` being impersonated changes its `Result` into `Valid` state, the `SuccessFrameGrabberRecognizer` captures the image and saves it into its own `Result` object.
-
-Since `SuccessFrameGrabberRecognizer` impersonates its slave `Recognizer` object, it is not possible to have both concrete `Recognizer` object and `SuccessFrameGrabberRecognizer` that wraps it in the same `RecognizerRunner` at the same time. Doing so will have the same effect as having multiple instances of the same `Recognizer` in the same `RecognizerRunner` - it will crash your application. For more information, see [paragraph about `RecognizerRunner`](#recognizerRunner).
-
-This recognizer is best for use cases when you need to capture the exact image that was being processed by some other `Recognizer` object at the time its `Result` became `Valid`. When that happens, `SuccessFrameGrabber's` `Result` will also become `Valid` and will contain described image. That image will be available in its `successFrame` property.
-
 ### <a name="idBarcodeRecognizer"></a> ID barcode recognizer
 
 The [`IdBarcodeRecognizer`](src/Recognizers/BlinkID/IDBarcode/IdBarcodeRecognizer.ts) is a recognizer specialized for scanning barcodes from various ID cards.
 
-### <a name="blinkidRecognizer"></a> BlinkID recognizer
+### <a name="blinkidSingleSideRecognizer"></a> BlinkID Single-side recognizer
 
-The [`BlinkIdRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts) scans and extracts data from the single side of the supported document.
+The [`BlinkIdSingleSideRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdSingleSideRecognizer.ts) scans and extracts data from the single side of the supported document.
 
 You can find the list of the currently supported documents [here](docs/BlinkIDRecognizer.md). For detailed information about which fields can be extracted from each document, [check this link](docs/BlinkIDDocumentFields.md).
 
 We will continue expanding this recognizer by adding support for new document types in the future. Star this repo to stay updated.
 
-### <a name="blinkidCombinedRecognizer"></a> BlinkID combined recognizer
+### <a name="blinkidMultiSideRecognizer"></a> BlinkID Multi-side recognizer
 
-Use [`BlinkIdCombinedRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdCombinedRecognizer.ts) for scanning both sides of the supported document. First, it scans and extracts data from the front, then scans and extracts data from the back, and finally, combines results from both sides.
+Use [`BlinkIdMultiSideRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdMultiSideRecognizer.ts) for scanning both sides of the supported document. First, it scans and extracts data from the front, then scans and extracts data from the back, and finally, combines results from both sides.
 
-The [`BlinkIdCombinedRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdCombinedRecognizer.ts) also performs data matching and returns a flag if the extracted data captured from the front side matches the data from the back.
+The [`BlinkIdMultiSideRecognizer`](src/Recognizers/BlinkID/Generic/BlinkIdMultiSideRecognizer.ts) also performs data matching and returns a flag if the extracted data captured from the front side matches the data from the back.
 
 You can find the list of the currently supported documents [here](docs/BlinkIDRecognizer.md). For detailed information about which fields can be extracted from each document, [check this link](docs/BlinkIDDocumentFields.md).
 
@@ -698,16 +689,16 @@ Recognizer settings should be enabled right after the recognizer has been create
 
 ```typescript
 // Create instance of recognizer
-const BlinkIdRecognizer = await BlinkIDSDK.createBlinkIdRecognizer( sdk );
+const BlinkIdSingleSideRecognizer = await BlinkIDSDK.createBlinkIdSingleSideRecognizer( sdk );
 
 // Retrieve current settings
-const settings = await BlinkIdRecognizer.currentSettings();
+const settings = await BlinkIdSingleSideRecognizer.currentSettings();
 
 // Update desired settings
 settings[ " <recognizer_available_setting> " ] = true;
 
 // Apply settings
-await BlinkIdRecognizer.updateSettings( settings );
+await BlinkIdSingleSideRecognizer.updateSettings( settings );
 
 ...
 ```

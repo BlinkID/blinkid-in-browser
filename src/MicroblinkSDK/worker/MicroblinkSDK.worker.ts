@@ -147,6 +147,7 @@ export default class MicroblinkWorker
     /* eslint-disable @typescript-eslint/no-explicit-any,
                       @typescript-eslint/no-unsafe-assignment,
                       @typescript-eslint/no-unsafe-member-access,
+                      @typescript-eslint/no-unsafe-argument,
                       @typescript-eslint/no-unsafe-return */
     private unwrapParameters( msgWithParams: MessageWithParameters ): Array< any >
     {
@@ -206,10 +207,12 @@ export default class MicroblinkWorker
     /* eslint-enable @typescript-eslint/no-explicit-any,
                      @typescript-eslint/no-unsafe-assignment,
                      @typescript-eslint/no-unsafe-member-access,
+                     @typescript-eslint/no-unsafe-argument,
                      @typescript-eslint/no-unsafe-return */
 
     /* eslint-disable @typescript-eslint/no-explicit-any,
                       @typescript-eslint/no-unsafe-assignment,
+                      @typescript-eslint/no-unsafe-argument,
                       @typescript-eslint/no-unsafe-member-access */
     private scanForTransferrables( object: any ): Array< Transferable >
     {
@@ -243,6 +246,7 @@ export default class MicroblinkWorker
     }
     /* eslint-enable @typescript-eslint/no-explicit-any,
                      @typescript-eslint/no-unsafe-assignment,
+                     @typescript-eslint/no-unsafe-argument,
                      @typescript-eslint/no-unsafe-member-access */
 
     private registerHeartBeat( lease: number )
@@ -638,7 +642,7 @@ export default class MicroblinkWorker
                                 {
                                     code: ErrorTypes.ErrorCodes.WORKER_LICENSE_UNLOCK_ERROR,
                                     message:
-                                    `Cannot initialize recognizers because of invalid server permission: 
+                                    `Cannot initialize recognizers because of invalid server permission:
                                     ${resultStatus}`,
                                 },
                                 {
@@ -758,6 +762,7 @@ export default class MicroblinkWorker
     {
         /* eslint-disable @typescript-eslint/no-explicit-any,
                           @typescript-eslint/no-unsafe-assignment,
+                          @typescript-eslint/no-unsafe-argument,
                           @typescript-eslint/no-unsafe-member-access */
         if ( typeof values !== "object" )
         {

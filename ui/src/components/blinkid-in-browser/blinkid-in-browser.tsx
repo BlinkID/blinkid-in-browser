@@ -102,14 +102,14 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * Available recognizers for BlinkID:
    *
    * - IdBarcodeRecognizer
-   * - BlinkIdRecognizer
-   * - BlinkIdCombinedRecognizer
+   * - BlinkIdSingleSideRecognizer
+   * - BlinkIdMultiSideRecognizer
    *    - cannot be used in combination with other recognizers
    *    - when defined, scan from image is not available
    *
    * Recognizers can be defined by setting HTML attribute "recognizers", for example:
    *
-   * `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdRecognizer"></blinkid-in-browser>`
+   * `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdSingleSideRecognizer"></blinkid-in-browser>`
    */
   @Prop({ attribute: 'recognizers' }) rawRecognizers: string;
 
@@ -119,8 +119,8 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * Available recognizers for BlinkID:
    *
    * - IdBarcodeRecognizer
-   * - BlinkIdRecognizer
-   * - BlinkIdCombinedRecognizer
+   * - BlinkIdSingleSideRecognizer
+   * - BlinkIdMultiSideRecognizer
    *    - cannot be used in combination with other recognizers
    *    - when defined, scan from image is not available
    *
@@ -128,7 +128,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
    *
    * ```
    * const blinkId = document.querySelector('blinkid-in-browser');
-   * blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdRecognizer'];
+   * blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdSingleSideRecognizer'];
    * ```
    */
   @Prop() recognizers: Array<string>;
@@ -141,7 +141,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
    *
    * ```
    * blinkId.recognizerOptions = {
-   *   'BlinkIdRecognizer': {
+   *   'BlinkIdSingleSideRecognizer': {
    *     'returnFullDocumentImage': true,
    *
    *     // When setting values for enums, check the source code to see possible values.
@@ -153,8 +153,8 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * ```
    *
    * For a full list of available recognizer options see source code of a recognizer. For example,
-   * list of available recognizer options for BlinkIdRecognizer can be seen in the
-   * `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
+   * list of available recognizer options for BlinkIdSingleSideRecognizer can be seen in the
+   * `src/Recognizers/BlinkID/Generic/BlinkIdSingleSideRecognizer.ts` file.
    */
   @Prop() recognizerOptions: { [key: string]: any };
 
@@ -185,13 +185,6 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * Configure camera experience state timeout durations
    */
   @Prop() cameraExperienceStateDurations: CameraExperienceTimeoutDurations = null;
-
-  /**
-   * Set to 'true' if success frame should be included in final scanning results.
-   *
-   * Default value is 'false'.
-   */
-  @Prop() includeSuccessFrame: boolean = false;
 
   /**
    * Set to 'false' if component should not enable drag and drop functionality.
@@ -459,14 +452,14 @@ export class BlinkidInBrowser implements MicroblinkUI {
   }
 
   /**
-   * Starts combined image scan, emits results from provided files.
+   * Starts multi-side image scan, emits results from provided files.
    *
    * @param firstFile File to scan as first image
    * @param secondFile File to scan as second image
    */
   @Method()
-  async startCombinedImageScan(firstFile: File, secondFile: File) {
-    this.mbComponentEl.startCombinedImageScan(firstFile, secondFile);
+  async startMultiSideImageScan(firstFile: File, secondFile: File) {
+    this.mbComponentEl.startMultiSideImageScan(firstFile, secondFile);
   }
 
   /**
@@ -535,7 +528,6 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         recognizers={ this.finalRecognizers }
                         recognizerOptions={ this.recognizerOptions }
                         recognitionTimeout={ this.recognitionTimeout }
-                        includeSuccessFrame={ this.includeSuccessFrame }
                         enableDrag={ this.enableDrag }
                         hideLoadingAndErrorUi={ this.hideLoadingAndErrorUi }
                         scanFromCamera={ this.scanFromCamera }

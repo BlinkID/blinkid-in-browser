@@ -83,15 +83,11 @@ export namespace Components {
          */
         "iconSpinnerScreenLoading": string;
         /**
-          * Set to 'true' if success frame should be included in final scanning results.  Default value is 'false'.
-         */
-        "includeSuccessFrame": boolean;
-        /**
           * License key which is going to be used to unlock WASM library.  Keep in mind that UI component will reinitialize every time license key is changed.
          */
         "licenseKey": string;
         /**
-          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdRecognizer"></blinkid-in-browser>`
+          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdSingleSideRecognizer - BlinkIdMultiSideRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdSingleSideRecognizer"></blinkid-in-browser>`
          */
         "rawRecognizers": string;
         /**
@@ -107,11 +103,11 @@ export namespace Components {
          */
         "recognitionTimeout": number;
         /**
-          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {   'BlinkIdRecognizer': {     'returnFullDocumentImage': true,      // When setting values for enums, check the source code to see possible values.     // For AnonymizationMode we can see the list of possible values in     // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.     'anonymizationMode': 0   } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
+          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {   'BlinkIdSingleSideRecognizer': {     'returnFullDocumentImage': true,      // When setting values for enums, check the source code to see possible values.     // For AnonymizationMode we can see the list of possible values in     // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.     'anonymizationMode': 0   } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdSingleSideRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdSingleSideRecognizer.ts` file.
          */
         "recognizerOptions": { [key: string]: any };
         /**
-          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdRecognizer']; ```
+          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdSingleSideRecognizer - BlinkIdMultiSideRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdSingleSideRecognizer']; ```
          */
         "recognizers": Array<string>;
         /**
@@ -147,16 +143,16 @@ export namespace Components {
          */
         "startCameraScan": () => Promise<void>;
         /**
-          * Starts combined image scan, emits results from provided files.
-          * @param firstFile File to scan as first image
-          * @param secondFile File to scan as second image
-         */
-        "startCombinedImageScan": (firstFile: File, secondFile: File) => Promise<void>;
-        /**
           * Starts image scan, emits results from provided file.
           * @param file File to scan
          */
         "startImageScan": (file: File) => Promise<void>;
+        /**
+          * Starts multi-side image scan, emits results from provided files.
+          * @param firstFile File to scan as first image
+          * @param secondFile File to scan as second image
+         */
+        "startMultiSideImageScan": (firstFile: File, secondFile: File) => Promise<void>;
         /**
           * Set to 'true' if scan from image should execute twice in case that first result is empty.  If enabled, this option will add/remove 'scanCroppedDocumentImage' recognizer option for the second scan action.
          */
@@ -474,16 +470,16 @@ export namespace Components {
          */
         "startCameraScan": () => Promise<void>;
         /**
-          * Starts combined image scan, emits results from provided files.
-          * @param firstFile File to scan as first image
-          * @param secondFile File to scan as second image
-         */
-        "startCombinedImageScan": (firstFile: File, secondFile: File) => Promise<void>;
-        /**
           * Starts image scan, emits results from provided file.
           * @param file File to scan
          */
         "startImageScan": (file: File) => Promise<void>;
+        /**
+          * Starts multi-side image scan, emits results from provided files.
+          * @param firstFile File to scan as first image
+          * @param secondFile File to scan as second image
+         */
+        "startMultiSideImageScan": (firstFile: File, secondFile: File) => Promise<void>;
         /**
           * See description in public component.
          */
@@ -791,10 +787,6 @@ declare namespace LocalJSX {
          */
         "iconSpinnerScreenLoading"?: string;
         /**
-          * Set to 'true' if success frame should be included in final scanning results.  Default value is 'false'.
-         */
-        "includeSuccessFrame"?: boolean;
-        /**
           * License key which is going to be used to unlock WASM library.  Keep in mind that UI component will reinitialize every time license key is changed.
          */
         "licenseKey"?: string;
@@ -831,7 +823,7 @@ declare namespace LocalJSX {
          */
         "onScanSuccess"?: (event: CustomEvent<EventScanSuccess>) => void;
         /**
-          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdRecognizer"></blinkid-in-browser>`
+          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdSingleSideRecognizer - BlinkIdMultiSideRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdSingleSideRecognizer"></blinkid-in-browser>`
          */
         "rawRecognizers"?: string;
         /**
@@ -847,11 +839,11 @@ declare namespace LocalJSX {
          */
         "recognitionTimeout"?: number;
         /**
-          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {   'BlinkIdRecognizer': {     'returnFullDocumentImage': true,      // When setting values for enums, check the source code to see possible values.     // For AnonymizationMode we can see the list of possible values in     // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.     'anonymizationMode': 0   } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdRecognizer.ts` file.
+          * Specify recognizer options. This option can only bet set as a JavaScript property.  Pass an object to `recognizerOptions` property where each key represents a recognizer, while the value represents desired recognizer options.  ``` blinkId.recognizerOptions = {   'BlinkIdSingleSideRecognizer': {     'returnFullDocumentImage': true,      // When setting values for enums, check the source code to see possible values.     // For AnonymizationMode we can see the list of possible values in     // `src/Recognizers/BlinkID/Generic/AnonymizationMode.ts` file.     'anonymizationMode': 0   } } ```  For a full list of available recognizer options see source code of a recognizer. For example, list of available recognizer options for BlinkIdSingleSideRecognizer can be seen in the `src/Recognizers/BlinkID/Generic/BlinkIdSingleSideRecognizer.ts` file.
          */
         "recognizerOptions"?: { [key: string]: any };
         /**
-          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdRecognizer - BlinkIdCombinedRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdRecognizer']; ```
+          * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdSingleSideRecognizer - BlinkIdMultiSideRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting JS property "recognizers", for example:  ``` const blinkId = document.querySelector('blinkid-in-browser'); blinkId.recognizers = ['IdBarcodeRecognizer', 'BlinkIdSingleSideRecognizer']; ```
          */
         "recognizers"?: Array<string>;
         /**

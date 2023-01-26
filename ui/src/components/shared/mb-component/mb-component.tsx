@@ -21,8 +21,8 @@ import {
   CameraExperienceState,
   CameraExperienceTimeoutDurations,
   Code,
-  CombinedImageRecognitionConfiguration,
-  CombinedImageType,
+  MultiSideImageRecognitionConfiguration,
+  MultiSideImageType,
   EventReady,
   EventScanError,
   EventScanSuccess,
@@ -88,13 +88,13 @@ export class MbComponent {
   private initialBodyOverflowValue: string;
   private cameraChangeInProgress: boolean = false;
   private blocked: boolean = false;
-  private combinedGalleryOpened = false;
+  private multiSideGalleryOpened = false;
   private imageRecognitionType: ImageRecognitionType;
   private imageBoxFirst: HTMLMbImageBoxElement;
   private imageBoxSecond: HTMLMbImageBoxElement;
   private galleryImageFirstFile: File | null = null;
   private galleryImageSecondFile: File | null = null;
-  private combinedScanFromImageButton: HTMLMbButtonClassicElement;
+  private multiSideScanFromImageButton: HTMLMbButtonClassicElement;
 
   private isCameraActive: boolean = false;
 
@@ -401,14 +401,14 @@ export class MbComponent {
   }
 
   /**
-   * Starts combined image scan, emits results from provided files.
+   * Starts multi-side image scan, emits results from provided files.
    *
    * @param firstFile File to scan as first image
    * @param secondFile File to scan as second image
    */
   @Method()
-  async startCombinedImageScan(firstFile: File, secondFile: File) {
-    this.startScanFromImageCombined(firstFile, secondFile)
+  async startMultiSideImageScan(firstFile: File, secondFile: File) {
+    this.startScanFromImageMultiSide(firstFile, secondFile)
   }
 
   /**
@@ -569,12 +569,12 @@ export class MbComponent {
       if (imageScanIsAvailable) {
         this.imageRecognitionType = this.sdkService.getScanFromImageType(this.recognizers, this.recognizerOptions);
 
-        if (this.imageRecognitionType === ImageRecognitionType.Single) {
-          this.screens.processing.setAttribute('data-type', 'single');
+        if (this.imageRecognitionType === ImageRecognitionType.SingleSide) {
+          this.screens.processing.setAttribute('data-type', 'single-sinde');
         }
 
-        if (this.imageRecognitionType === ImageRecognitionType.Combined) {
-          this.screens.processing.setAttribute('data-type', 'combined');
+        if (this.imageRecognitionType === ImageRecognitionType.MultiSide) {
+          this.screens.processing.setAttribute('data-type', 'multi-side');
         }
       }
       else {
@@ -1010,8 +1010,8 @@ export class MbComponent {
     }
   }
 
-  private async startScanFromImageCombined(firstFile?: File, secondFile?: File) {
-    const configuration: CombinedImageRecognitionConfiguration = {
+  private async startScanFromImageMultiSide(firstFile?: File, secondFile?: File) {
+    const configuration: MultiSideImageRecognitionConfiguration = {
       recognizers: this.recognizers,
       firstFile: firstFile || this.galleryImageFirstFile,
       secondFile: secondFile || this.galleryImageSecondFile
@@ -1124,7 +1124,7 @@ export class MbComponent {
         configuration.thoroughScan = true;
       }
 
-      await this.sdkService.scanFromImageCombined(configuration, eventHandler);
+      await this.sdkService.scanFromImageMultiSide(configuration, eventHandler);
     } catch (error) {
       this.handleScanError(error);
       this.hideScanFromImageUi(false);
@@ -1366,58 +1366,58 @@ export class MbComponent {
   }
 
   private onFromImageClicked(): void {
-    if (this.imageRecognitionType === ImageRecognitionType.Single) {
+    if (this.imageRecognitionType === ImageRecognitionType.SingleSide) {
       this.scanFromImageInput.click();
     }
 
-    if (this.imageRecognitionType === ImageRecognitionType.Combined) {
-      if (this.combinedGalleryOpened) {
-        this.closeCombinedGalleryUpload();
+    if (this.imageRecognitionType === ImageRecognitionType.MultiSide) {
+      if (this.multiSideGalleryOpened) {
+        this.closeMultiSideGalleryUpload();
       }
       else {
-        this.openCombinedGalleryUpload();
+        this.openMultiSideGalleryUpload();
       }
     }
   }
 
   private clearInputImages(): void {
-    if (this.imageRecognitionType === ImageRecognitionType.Single) {
+    if (this.imageRecognitionType === ImageRecognitionType.SingleSide) {
       this.scanFromImageInput.value = '';
     }
 
-    if (this.imageRecognitionType === ImageRecognitionType.Combined) {
+    if (this.imageRecognitionType === ImageRecognitionType.MultiSide) {
       this.imageBoxFirst.clear();
       this.imageBoxSecond.clear();
     }
   }
 
-  private openCombinedGalleryUpload(): void {
-    const dialog = this.screens.action.querySelector('.combined-image-upload');
+  private openMultiSideGalleryUpload(): void {
+    const dialog = this.screens.action.querySelector('.multi-side-image-upload');
     dialog.classList.add('visible');
 
     this.scanFromImageButton.selected = true;
-    this.combinedGalleryOpened = true;
+    this.multiSideGalleryOpened = true;
   }
 
-  private closeCombinedGalleryUpload(): void {
-    const dialog = this.screens.action.querySelector('.combined-image-upload');
+  private closeMultiSideGalleryUpload(): void {
+    const dialog = this.screens.action.querySelector('.multi-side-image-upload');
     dialog.classList.remove('visible');
 
     this.scanFromImageButton.selected = false;
-    this.combinedGalleryOpened = false;
+    this.multiSideGalleryOpened = false;
   }
 
-  private async onCombinedImageChange(ev: FileList, imageType: CombinedImageType) {
-    if (imageType === CombinedImageType.First) {
+  private async onMultiSideImageChange(ev: FileList, imageType: MultiSideImageType) {
+    if (imageType === MultiSideImageType.First) {
       this.galleryImageFirstFile = GenericHelpers.getImageFile(ev);
     }
 
-    if (imageType === CombinedImageType.Second) {
+    if (imageType === MultiSideImageType.Second) {
       this.galleryImageSecondFile = GenericHelpers.getImageFile(ev);
     }
 
     // Enable scan button only if both images have values
-    this.combinedScanFromImageButton.disabled = this.galleryImageFirstFile === null || this.galleryImageSecondFile === null;
+    this.multiSideScanFromImageButton.disabled = this.galleryImageFirstFile === null || this.galleryImageSecondFile === null;
   }
 
   private showScanFromImageUi(): void {
@@ -1524,22 +1524,22 @@ export class MbComponent {
             </div>
           </div>
 
-          {/* Combined image upload */}
-          <div class="combined-image-upload">
+          {/* Multi-side image upload */}
+          <div class="multi-side-image-upload">
             <mb-image-box
               ref={el => this.imageBoxFirst = el as HTMLMbImageBoxElement}
               box-title={this.translationService.i('process-image-box-first').toString()}
               anchor-text={this.translationService.i('process-image-box-add').toString()}
-              onImageChange={(ev: CustomEvent<FileList>) => this.onCombinedImageChange(ev.detail, CombinedImageType.First)}></mb-image-box>
+              onImageChange={(ev: CustomEvent<FileList>) => this.onMultiSideImageChange(ev.detail, MultiSideImageType.First)}></mb-image-box>
             <mb-image-box
               ref={el => this.imageBoxSecond = el as HTMLMbImageBoxElement}
               box-title={this.translationService.i('process-image-box-second').toString()}
               anchor-text={this.translationService.i('process-image-box-add').toString()}
-              onImageChange={(ev: CustomEvent<FileList>) => this.onCombinedImageChange(ev.detail, CombinedImageType.Second)}></mb-image-box>
+              onImageChange={(ev: CustomEvent<FileList>) => this.onMultiSideImageChange(ev.detail, MultiSideImageType.Second)}></mb-image-box>
             <mb-button-classic
-              ref={el => this.combinedScanFromImageButton = el as HTMLMbButtonClassicElement}
+              ref={el => this.multiSideScanFromImageButton = el as HTMLMbButtonClassicElement}
               disabled={true}
-              clickHandler={() => this.startScanFromImageCombined()}
+              clickHandler={() => this.startScanFromImageMultiSide()}
             >{this.translationService.i('process-image-upload-cta').toString()}</mb-button-classic>
           </div>
         </mb-screen>
