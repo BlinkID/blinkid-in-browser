@@ -172,8 +172,8 @@ export interface RecognizerRunner extends WasmNativeObject
     /**
      * Resets the state of all recognizers in current recognition chain, i.e. deletes the cached data from multiple
      * recognitions.
-     * @param hardReset If set to false, combined recognizers will not be reset. If set to true, all recognizers will be
-     *        reset.
+     * @param hardReset If set to false, multi-side recognizers will not be reset. If set to true, all recognizers
+     *        will be reset.
      */
     resetRecognizers( hardReset: boolean ): Promise< void >;
 

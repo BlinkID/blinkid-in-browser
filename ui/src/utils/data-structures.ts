@@ -23,7 +23,6 @@ export interface MicroblinkUI {
   recognizerOptions:     { [key: string]: any };
   recognitionTimeout?:   number;
   recognitionPauseTimeout?: number;
-  includeSuccessFrame?:  boolean;
   thoroughScanFromImage: boolean;
 
   // Functional properties
@@ -109,25 +108,19 @@ export class EventScanError {
 export class EventScanSuccess {
   recognizer:     BlinkIDSDK.RecognizerResult;
   recognizerName: string;
-  successFrame?:  BlinkIDSDK.SuccessFrameGrabberRecognizerResult;
 
   constructor(
     recognizer: BlinkIDSDK.RecognizerResult,
     recognizerName: string,
-    successFrame?: BlinkIDSDK.SuccessFrameGrabberRecognizerResult
   ) {
     this.recognizer = recognizer;
     this.recognizerName = recognizerName;
 
-    if (successFrame) {
-      this.successFrame = successFrame;
-    }
   }
 }
 
 export interface RecognitionResults {
   recognizer: BlinkIDSDK.RecognizerResult,
-  successFrame?: BlinkIDSDK.SuccessFrameGrabberRecognizerResult
 }
 
 /**
@@ -150,8 +143,8 @@ export enum Code {
  */
 export const AvailableRecognizers: { [key: string]: string } = {
   IdBarcodeRecognizer:                  'createIdBarcodeRecognizer',
-  BlinkIdRecognizer:                    'createBlinkIdRecognizer',
-  BlinkIdCombinedRecognizer:            'createBlinkIdCombinedRecognizer',
+  BlinkIdSingleSideRecognizer:          'createBlinkIdSingleSideRecognizer',
+  BlinkIdMultiSideRecognizer:           'createBlinkIdMultiSideRecognizer',
 }
 
 export interface VideoRecognitionConfiguration {
@@ -170,7 +163,7 @@ export interface ImageRecognitionConfiguration {
   file: File
 }
 
-export interface CombinedImageRecognitionConfiguration {
+export interface MultiSideImageRecognitionConfiguration {
   recognizers: Array<string>,
   recognizerOptions?: any,
   thoroughScan?: boolean,
@@ -179,11 +172,11 @@ export interface CombinedImageRecognitionConfiguration {
 }
 
 export enum ImageRecognitionType {
-  Single   = 'Single',
-  Combined = 'Combined'
+  SingleSide = 'SingleSide',
+  MultiSide  = 'MultiSide'
 }
 
-export enum CombinedImageType {
+export enum MultiSideImageType {
   First  = 'First',
   Second = 'Second'
 }
@@ -191,7 +184,6 @@ export enum CombinedImageType {
 export interface RecognizerInstance {
   name: string,
   recognizer: BlinkIDSDK.Recognizer & { objectHandle: number },
-  successFrame?: BlinkIDSDK.SuccessFrameGrabberRecognizer<BlinkIDSDK.Recognizer> & { objectHandle?: number }
 }
 
 export enum RecognitionStatus {
@@ -240,14 +232,13 @@ export interface RecognitionEvent {
 export interface RecognitionResults {
   recognizer:        BlinkIDSDK.RecognizerResult,
   recognizerName:    string,
-  successFrame?:     BlinkIDSDK.SuccessFrameGrabberRecognizerResult,
   imageCapture?:     boolean,
   resultSignedJSON?: BlinkIDSDK.SignedPayload
 }
 
 export enum CameraExperience {
   Barcode         = 'BARCODE',
-  CardCombined    = 'CARD_COMBINED',
+  CardMultiSide   = 'CARD_MULTI_SIDE',
   CardSingleSide  = 'CARD_SINGLE_SIDE',
   PaymentCard     = 'PAYMENT_CARD'
 }

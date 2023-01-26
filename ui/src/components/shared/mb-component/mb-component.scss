@@ -105,7 +105,7 @@
     flex: 1;
   }
 
-  .combined-image-upload {
+  .multi-side-image-upload {
     display: none;
     width: 100%;
     padding: 0;
@@ -169,13 +169,13 @@
   color: var(--mb-component-font-color);
 }
 
-:host #mb-screen-processing[data-type="single"] p {
+:host #mb-screen-processing[data-type="single-side"] p {
   span {
     margin-left: $padding-unit-medium;
   }
 }
 
-:host #mb-screen-processing[data-type="combined"] p {
+:host #mb-screen-processing[data-type="multi-side"] p {
   span {
     margin-left: $padding-unit-medium;
   }

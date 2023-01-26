@@ -3,7 +3,7 @@
  */
 
 import { DriverLicenseDetailedInfo } from "./DriverLicenseDetailedInfo";
-import { MBDate } from "../../../MicroblinkSDK/DataStructures";
+import { DateResult, StringResult } from "./GenericResultStructures";
 
 /**
  * VIZResult contains data extracted from the Visual Inspection Zone.
@@ -11,66 +11,66 @@ import { MBDate } from "../../../MicroblinkSDK/DataStructures";
 export interface VIZResult
 {
     /** The first name of the document owner. */
-    readonly firstName: string;
+    readonly firstName: StringResult;
     /** The last name of the document owner. */
-    readonly lastName: string;
+    readonly lastName: StringResult;
     /** The full name of the document owner. */
-    readonly fullName: string;
+    readonly fullName: StringResult;
     /** The additional name information of the document owner. */
-    readonly additionalNameInformation: string;
+    readonly additionalNameInformation: StringResult;
     /** The localized name of the document owner. */
-    readonly localizedName: string;
+    readonly localizedName: StringResult;
     /** The fathers name of the document owner. */
-    readonly fathersName: string;
+    readonly fathersName: StringResult;
     /** The mothers name of the document owner. */
-    readonly mothersName: string;
+    readonly mothersName: StringResult;
 
     /** The address of the document owner. */
-    readonly address: string;
+    readonly address: StringResult;
     /** THe additional address information of the document owner. */
-    readonly additionalAddressInformation: string;
+    readonly additionalAddressInformation: StringResult;
     /** The place of birth of the document owner. */
-    readonly placeOfBirth: string;
+    readonly placeOfBirth: StringResult;
     /** The nationality of the document owner. */
-    readonly nationality: string;
+    readonly nationality: StringResult;
 
     /** The race of the document owner. */
-    readonly race: string;
+    readonly race: StringResult;
     /** The religion of the document owner. */
-    readonly religion: string;
+    readonly religion: StringResult;
     /** The profession of the document owner. */
-    readonly profession: string;
+    readonly profession: StringResult;
     /** The marital status of the document owner. */
-    readonly maritalStatus: string;
+    readonly maritalStatus: StringResult;
     /** The residential status of the document owner. */
-    readonly residentialStatus: string;
+    readonly residentialStatus: StringResult;
     /** The employer of the document owner. */
-    readonly employer: string;
+    readonly employer: StringResult;
     /** The sex of the document owner. */
-    readonly sex: string;
+    readonly sex: StringResult;
 
     /** The date of birth of the document owner. */
-    readonly dateOfBirth: MBDate;
+    readonly dateOfBirth: DateResult;
     /** The date of issue of the document. */
-    readonly dateOfIssue: MBDate;
+    readonly dateOfIssue: DateResult;
     /** The date of expiry of the document. */
-    readonly dateOfExpiry: MBDate;
+    readonly dateOfExpiry: DateResult;
 
     /** Determines if date of expiry is permanent. */
     readonly dateOfExpiryPermanent: boolean;
 
     /** The document number. */
-    readonly documentNumber: string;
+    readonly documentNumber: StringResult;
     /** The personal identification number. */
-    readonly personalIdNumber: string;
+    readonly personalIdNumber: StringResult;
     /** The additional number of the document. */
-    readonly documentAdditionalNumber: string;
+    readonly documentAdditionalNumber: StringResult;
     /** The one more additional number of the document. */
-    readonly documentOptionalAdditionalNumber: string;
+    readonly documentOptionalAdditionalNumber: StringResult;
     /** The additional personal identification number. */
-    readonly additionalPersonalIdNumber: string;
+    readonly additionalPersonalIdNumber: StringResult;
     /** The issuing authority of the document. */
-    readonly issuingAuthority: string;
+    readonly issuingAuthority: StringResult;
 
     /** The driver license detailed info. */
     readonly driverLicenseDetailedInfo: DriverLicenseDetailedInfo;

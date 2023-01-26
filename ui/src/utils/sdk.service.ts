@@ -11,7 +11,7 @@ import {
   EventReady,
   VideoRecognitionConfiguration,
   ImageRecognitionConfiguration,
-  CombinedImageRecognitionConfiguration,
+  MultiSideImageRecognitionConfiguration,
   ImageRecognitionType,
   RecognizerInstance,
   RecognitionEvent,
@@ -103,10 +103,10 @@ export class SdkService {
         }
       }
 
-      if (recognizer === 'BlinkIdCombinedRecognizer' && recognizers.length > 1) {
+      if (recognizer === 'BlinkIdMultiSideRecognizer' && recognizers.length > 1) {
         return {
           status: false,
-          message: 'Recognizer "BlinkIdCombinedRecognizer" cannot be used in combination with other recognizers!'
+          message: 'Recognizer "BlinkIdMultiSideRecognizer" cannot be used in combination with other recognizers!'
         };
       }
     }
@@ -117,11 +117,11 @@ export class SdkService {
   }
 
   public getDesiredCameraExperience(_recognizers: Array<string> = [], _recognizerOptions: any = {}): CameraExperience {
-    if (_recognizers.indexOf('BlinkIdCombinedRecognizer') > -1) {
-      return CameraExperience.CardCombined;
+    if (_recognizers.indexOf('BlinkIdMultiSideRecognizer') > -1) {
+      return CameraExperience.CardMultiSide;
     }
 
-    if (_recognizers.indexOf('BlinkIdRecognizer') > -1) {
+    if (_recognizers.indexOf('BlinkIdSingleSideRecognizer') > -1) {
       return CameraExperience.CardSingleSide;
     }
 
@@ -158,9 +158,6 @@ export class SdkService {
           recognizer.recognizer.delete?.();
         }
 
-        if (recognizer.successFrame?.objectHandle > -1) {
-          recognizer.successFrame.delete?.();
-        }
       }
     });
 
@@ -168,7 +165,6 @@ export class SdkService {
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
       configuration.recognizerOptions,
-      configuration.successFrame
     );
 
     const recognizerRunner = await this.createRecognizerRunner(
@@ -212,13 +208,6 @@ export class SdkService {
                   recognizerName: this.recognizerName
                 }
 
-                if (recognizer.successFrame) {
-                  const successFrameResults = await recognizer.successFrame.getResult();
-
-                  if (successFrameResults && successFrameResults.state !== BlinkIDSDK.RecognizerResultState.Empty) {
-                    recognitionResults.successFrame = successFrameResults;
-                  }
-                }
 
                 recognitionResults.imageCapture = _IS_IMAGE_CAPTURE;
 
@@ -300,18 +289,18 @@ export class SdkService {
   }
 
   public isScanFromImageAvailable(_recognizers: Array<string> = [], _recognizerOptions: any = {}): boolean {
-    if (_recognizers.indexOf('BlinkIdCombinedRecognizer') > -1) {
+    if (_recognizers.indexOf('BlinkIdMultiSideRecognizer') > -1) {
       return false;
     }
     return true;
   }
 
   public getScanFromImageType(_recognizers: Array<string> = [], _recognizerOptions: any = {}): ImageRecognitionType {
-    if (_recognizers.indexOf('BlinkIdCombinedRecognizer') > -1) {
-      return ImageRecognitionType.Combined;
+    if (_recognizers.indexOf('BlinkIdMultiSideRecognizer') > -1) {
+      return ImageRecognitionType.MultiSide;
     }
 
-    return ImageRecognitionType.Single;
+    return ImageRecognitionType.SingleSide;
   }
 
   public async scanFromImage(
@@ -411,7 +400,7 @@ export class SdkService {
       // If necessary, scan the image once again with different settings
       if (
         configuration.thoroughScan &&
-        configuration.recognizers.indexOf('BlinkIdRecognizer') > -1
+        configuration.recognizers.indexOf('BlinkIdSingleSideRecognizer') > -1
       ) {
         const c = configuration;
 
@@ -446,8 +435,8 @@ export class SdkService {
     window.setTimeout(() => void this.cancelRecognition(), 500);
   }
 
-  public async scanFromImageCombined(
-    configuration: CombinedImageRecognitionConfiguration,
+  public async scanFromImageMultiSide(
+    configuration: MultiSideImageRecognitionConfiguration,
     eventCallback: (ev: RecognitionEvent) => void
   ): Promise<void> {
     eventCallback({ status: RecognitionStatus.Preparing });
@@ -564,7 +553,7 @@ export class SdkService {
       // If necessary, scan the image once again with different settings
       if (
         configuration.thoroughScan &&
-        configuration.recognizers.indexOf('BlinkIdCombinedRecognizer') > -1
+        configuration.recognizers.indexOf('BlinkIdMultiSideRecognizer') > -1
       ) {
         const c = configuration;
 
@@ -580,7 +569,7 @@ export class SdkService {
         const eventHandler = (recognitionEvent: RecognitionEvent) => eventCallback(recognitionEvent);
         const handleTerminateDone = () => {
           this.eventEmitter$.removeEventListener('terminate:done', handleTerminateDone);
-          this.scanFromImageCombined(configuration, eventHandler);
+          this.scanFromImageMultiSide(configuration, eventHandler);
         }
         this.eventEmitter$.addEventListener('terminate:done', handleTerminateDone);
         window.setTimeout(() => void this.cancelRecognition(), 500);
@@ -630,7 +619,6 @@ export class SdkService {
   private async createRecognizers(
     recognizers: Array<string>,
     recognizerOptions?: any,
-    successFrame: boolean = false
   ): Promise<Array<RecognizerInstance>> {
     const pureRecognizers = [];
 
@@ -670,10 +658,6 @@ export class SdkService {
       const recognizer = pureRecognizers[i];
       const instance: RecognizerInstance = { name: recognizers[i], recognizer }
 
-      if (successFrame) {
-        const successFrameGrabber = await BlinkIDSDK.createSuccessFrameGrabberRecognizer(this.sdk, recognizer);
-        instance.successFrame = successFrameGrabber;
-      }
 
       recognizerInstances.push(instance)
     }
@@ -730,16 +714,16 @@ export class SdkService {
       }
     }
 
-    const blinkIdGeneric = recognizers.find(el => el.recognizer.recognizerName === 'BlinkIdRecognizer');
-    const blinkIdCombined = recognizers.find(el => el.recognizer.recognizerName === 'BlinkIdCombinedRecognizer');
+    const blinkIdSingleSide = recognizers.find(el => el.recognizer.recognizerName === 'BlinkIdSingleSideRecognizer');
+    const blinkIdMultiSide = recognizers.find(el => el.recognizer.recognizerName === 'BlinkIdMultiSideRecognizer');
 
-    if (blinkIdGeneric || blinkIdCombined) {
+    if (blinkIdSingleSide || blinkIdMultiSide) {
       for (const el of recognizers) {
         if (
-          el.recognizer.recognizerName === 'BlinkIdRecognizer' ||
-          el.recognizer.recognizerName === 'BlinkIdCombinedRecognizer'
+          el.recognizer.recognizerName === 'BlinkIdSingleSideRecognizer' ||
+          el.recognizer.recognizerName === 'BlinkIdMultiSideRecognizer'
         ) {
-          const settings = await el.recognizer.currentSettings() as BlinkIDSDK.BlinkIdRecognizerSettings;
+          const settings = await el.recognizer.currentSettings() as BlinkIDSDK.BlinkIdSingleSideRecognizerSettings;
           settings.barcodeScanningStartedCallback = () => eventCallback({ status: RecognitionStatus.BarcodeScanningStarted });
           settings.classifierCallback = (supported: boolean) => {
             eventCallback({ status: RecognitionStatus.DocumentClassified, data: supported });
@@ -749,13 +733,13 @@ export class SdkService {
       }
     }
 
-    if (blinkIdCombined) {
+    if (blinkIdMultiSide) {
       metadataCallbacks.onFirstSideResult = () => eventCallback({ status: RecognitionStatus.OnFirstSideResult });
     }
 
     const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
       this.sdk,
-      recognizers.map((el: RecognizerInstance) => el.successFrame || el.recognizer),
+      recognizers.map((el: RecognizerInstance) =>  el.recognizer),
       false,
       metadataCallbacks
     );

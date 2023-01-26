@@ -4,8 +4,8 @@ Provided examples should help you with integration of this SDK with your app.
 
 1. Scan identity document from camera - `blinkid-camera`.
 2. Scan identity document from file - `blinkid-file`.
-3. Scan both sides of an identity document from camera - `combined`.
-4. Scan both sides of an identity document from file - `combined-file`.
+3. Scan both sides of an identity document from camera - `multi-side`.
+4. Scan both sides of an identity document from file - `multi-side-file`.
 5. Scan barcode on identity document from camera - `idbarcode`.
 6. Extract image frame from which data has been extracted - `success-frame-grabber`.
 7. Setup build system using Webpack - `webpack`.

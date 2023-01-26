@@ -133,8 +133,8 @@
         margin-bottom: 1.5rem;
       }
     </style>
-    <script type="module" src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.20.1/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-    <script nomodule src="https://unpkg.com/@microblink/blinkid-in-browser-sdk@5.20.1/ui/dist/blinkid-in-browser.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.0.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.0.0/ui/dist/blinkid-in-browser.js"></script>
         <script type="text/javascript">
 
 // Workaround for D2D
@@ -142,10 +142,10 @@ var parcelRequire;
 
 window.getSafePathname = (p) => p[p.length - 1] === '/' ? p : p.split('/').slice(0, -1).join('/') + '/';
 
-window.licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmK4UdySQGTY4Dj9A5/admigB9hgd+YIjHxg4LXQ5StihU55nmCEXDMGp99UNyb5VzLZ41YE6JVGpY7DDgRY2/ZtMBY+5DOJ/lXEAkmkArolrS/gzMeaA+F8Fq4AGov5WeW1sp/aDX4s5AyHYXr58d+x836yDJMIx++3Q0FOCeouK7RIhflgO5dAkBFF2n0DkEKAnw/20kZPUoEcT92W9KvmLV8kZEvMaRLYoe0VbKX1q28b3B42W3/7+FH9KCI/zXcv6Q03jewCbQUAsUSrtbAaIEJXvDD5cb5hRacgyrUHK1SUcesOjmSQ2wmn5kv6yDe2PhyQ==";
+window.licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWKoMVyeNcFTaxmtf88sb6Qf8DNp9wNpXg9N1mGlzl+RmOF9d+acztiBHkLNKCT+OdlRveDgR4ZelqCd6p6PgumkX8Ik7V0QiV2AVEmCWZOtdt+nTGVh3MLx1gnHtSzTdzPuKZFh1PlRIh6Pou3RBe+EmW2qZNmFG+ehXcPJsnqPve10JiLjiRzYo6AVNDtarTHfpzJWuR5ROz0eBjR/fc7SN4L8LUtCj63ZDS9UESheCJU+BKkftirZIlSLAZpURQxJeGVOvMV+p6XZ0NbKK0Z5kYf3NCex0tizTx95UjFSOnHrfStO6lTe+1TCqkYT1IZtfawg==";
 
 if (window.location.hostname === 'blinkid.github.io') {
-  window.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRpaEiKVP2VygLDloxPX1rHhmpzIBK0oCL/U9gZl32nEZHrMO0HeafYERS+NUe44+NlgvVGabNbs71cu8da3BkqZU5YZ7rylRRpdtxP/JPDbvncuVKva183z5yzUvMS2zd60v7/aDAvoX++e0rS/6cl2qcpgn8qwn7ucuTbRc0T2Hvfx8SXQb3ZZ8KLODq8JVZiN0enq1NLQDUgTGpJOKynqiD5kPgwPCixNrRGmSMHv+MFP02MGM33+V+mKfSr9QKhYEl/bxOB44bLxDIaW6ALvJy6wwopKep1m2n+J5wf7B4oQLBG/MmVob5rkTc6d+S9opHsGV";
+  window.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaFjq1PfIzGgjCFT5gaKBwo4IpcpXpfqibOhurG3Ztft34xs8zvKJ/wQosqynpH+P0KSGbNPBIAKCLR5BQs1+KG82Ia2iTb4r/iI4Vw7jUX8TLdhbTKK6G4BoMNYyxDxeZ8EQEtFDQyRi8VK1xJn/fGuk/EBSqqJpFzvhOI8zHt+xNLT30su1MIV9s8oiVuSUbtx1mNK8Z5rQpqvYdRADsYULMj2YZ96GhWJTJa7KZz0Be2rBaqPPWFuBXHi25wYW7wM4Y6eFdUhV8zN3/3xU/7+HUqXhdDZJkU14ASQUdgQxOgwsSL5pKrBF4pUVPvbUEWKxW3";
 }
 window.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
 window.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
@@ -161,13 +161,13 @@ window.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/
     <section id="example-minimal">
       <h2>Minimal example</h2>
       <p>UI component with default behaviour where it&apos;s required to set valid license key, engine location and recognizer.</p>
-      <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
+      <p><em>Recognizer: <strong>BlinkIdSingleSideRecognizer</strong></em></p>
       <p><em><strong>Note:</strong> since this page has multiple components, only this one has enabled drag and drop feature.</em></p>
       <blinkid-in-browser></blinkid-in-browser>
 <pre>&lt;blinkid-in-browser
   engine-location=&quot;http://localhost/resources/&quot;
   license-key=&quot;LICENSE-KEY-GOES-HERE&quot;
-  recognizers=&quot;BlinkIdRecognizer&quot;
+  recognizers=&quot;BlinkIdSingleSideRecognizer&quot;
 &gt;&lt;/blinkid-in-browser&gt;</pre>
     </section>
     <script type="text/javascript">
@@ -178,7 +178,7 @@ window.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/
   el.engineLocation = window.engineLocation;
   el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
-  el.recognizers = ['BlinkIdRecognizer'];
+  el.recognizers = ['BlinkIdSingleSideRecognizer'];
 
 
 
@@ -194,27 +194,27 @@ window.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/
 })();
 </script>
 
-      <section id="example-combined">
+      <section id="example-multi-side">
     <h2>Scan both sides</h2>
     <p>UI component with default behaviour where it&apos;s required to set valid license key and recognizer.</p>
-    <p><em>Recognizer: <strong>BlinkIdCombinedRecognizer</strong></em></p>
+    <p><em>Recognizer: <strong>BlinkIdMultiSideRecognizer</strong></em></p>
     <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
 <pre>&lt;blinkid-in-browser
 engine-location=&quot;http://localhost/resources/&quot;
 license-key=&quot;LICENSE-KEY-GOES-HERE&quot;
-recognizers=&quot;BlinkIdCombinedRecognizer&quot;
+recognizers=&quot;BlinkIdMultiSideRecognizer&quot;
 &gt;&lt;/blinkid-in-browser&gt;</pre>
   </section>
   <script type="text/javascript">
 
 (function () {
-  const el = document.querySelector('#example-combined blinkid-in-browser');
+  const el = document.querySelector('#example-multi-side blinkid-in-browser');
 
   el.engineLocation = window.engineLocation;
   el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
 
-  el.recognizers = ['BlinkIdCombinedRecognizer'];
+  el.recognizers = ['BlinkIdMultiSideRecognizer'];
 })();
 </script>
 
@@ -250,12 +250,12 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
       <h2>Custom messages</h2>
       <p>It&apos;s possible to change default text messages which are displayed to the user.</p>
       <p>Use attribute/property <code>translations</code> to change default messages.</p>
-      <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
+      <p><em>Recognizer: <strong>BlinkIdSingleSideRecognizer</strong></em></p>
       <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
 <pre>&lt;blinkid-in-browser
   engine-location=&quot;http://localhost/resources/&quot;
   license-key=&quot;LICENSE-KEY-GOES-HERE&quot;
-  recognizers=&quot;BlinkIdRecognizer&quot;
+  recognizers=&quot;BlinkIdSingleSideRecognizer&quot;
 &gt;&lt;/blinkid-in-browser&gt;
 &lt;script&gt;
   const el = document.querySelector(&apos;blinkid-in-browser&apos;);
@@ -274,11 +274,11 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
   el.engineLocation = window.engineLocation;
   el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
-  el.recognizers = ['BlinkIdRecognizer'];
+  el.recognizers = ['BlinkIdSingleSideRecognizer'];
   window.setTimeout(() => {
     el.translations = {
-      'action-message': 'Alternative CTA'
-    };
+      'action-message': 'Alternative CTA' };
+
   }, 3000);
 
 
@@ -299,12 +299,12 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
     <section id="example-localization-rtl">
       <h2>RTL support</h2>
       <p>Set HTML attribute <code>dir=&quot;rtl&quot;</code>.</p>
-      <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
+      <p><em>Recognizer: <strong>BlinkIdSingleSideRecognizer</strong></em></p>
       <blinkid-in-browser fullscreen-drop="false" dir="rtl"></blinkid-in-browser>
 <pre>&lt;blinkid-in-browser
   engine-location=&quot;http://localhost/resources/&quot;
   license-key=&quot;LICENSE-KEY-GOES-HERE&quot;
-  recognizers=&quot;BlinkIdRecognizer&quot;
+  recognizers=&quot;BlinkIdSingleSideRecognizer&quot;
   dir=&quot;rtl&quot;
 &gt;&lt;/blinkid-in-browser&gt;
 &lt;script&gt;
@@ -324,12 +324,12 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
   el.engineLocation = window.engineLocation;
   el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
-  el.recognizers = ['BlinkIdRecognizer'];
+  el.recognizers = ['BlinkIdSingleSideRecognizer'];
 
   window.setTimeout(() => {
     el.translations = {
-      'action-message': 'Alternative CTA'
-    };
+      'action-message': 'Alternative CTA' };
+
   }, 3000);
 
 
@@ -348,8 +348,8 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
 
     <section id="example-customization">
       <h2>UI customization</h2>
-      <p>It&apos;s possible to ize UI of BlinkIdRecognizer component by using preset CSS variables.</p>
-      <p><em>Recognizer: <strong>BlinkIdRecognizer</strong></em></p>
+      <p>It&apos;s possible to ize UI of BlinkIdSingleSideRecognizer component by using preset CSS variables.</p>
+      <p><em>Recognizer: <strong>BlinkIdSingleSideRecognizer</strong></em></p>
       <div class="box">
         <blinkid-in-browser fullscreen-drop="false"></blinkid-in-browser>
       </div>
@@ -421,7 +421,7 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
   el.engineLocation = window.engineLocation;
   el.workerLocation = window.workerLocation;
   el.licenseKey = window.licenseKey;
-  el.recognizers = ['BlinkIdRecognizer'];
+  el.recognizers = ['BlinkIdSingleSideRecognizer'];
 
 
 

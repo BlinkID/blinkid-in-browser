@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
 /**
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
@@ -597,7 +599,7 @@ class WasmModuleWorkerProxy implements WasmModuleProxy
 export class WasmSDKWorker implements WasmSDK
 {
     /* eslint-disable lines-between-class-members */
-            readonly mbWasmModule            : WasmModuleWorkerProxy;
+    readonly mbWasmModule            : WasmModuleWorkerProxy;
     private readonly mbWasmWorker            : Worker;
     private          eventHandlers           : { [ key: number ] : EventHandler } = {};
     private          metadataCallbacks       : MetadataCallbacks = {};

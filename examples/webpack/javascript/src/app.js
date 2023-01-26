@@ -34,7 +34,7 @@ function main()
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJmmKxU6YoniEUKwvOuCAWUpJIgFOTME0O8zylcAyFs4HHTwQ2xmfAU4FAShUN8+yikYnwBXWT4JXx8gwFyEeTs0obwe1INpiRCwga6z2Nxax4e/PIm+ahBx8FYK6icDLh8ri3K7dz+wgoJjkIgWqQlcUnGietK6hTHtUD04hid13dg0Q56YDOShlXSxt5dsjuRbJvyZ2SSb2N+m8hiXrTFVf9sgTlfcCIQwHv5uhmRlPuYCRacu/k4vkDhab5VqOmH175OAhiES1PHlfIHbP3gspbW5QPc790qZxt1wGe+Vrv9Y7CYMG2KlPwLwzw4ZqWUndcLyToBpiw==";
+    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWKtM/YjwAlxo3YlnwcViKytrHR0x3/z6s7KVqbQxc3DfjigFJFvD1XOyptDGFONr1FEmFNAmFLw8Yk/+7XxqGiUIeat4DQa2iiE8mxVdpeYpcn9CwIsA/Ft2g0qoF7NRWATVeBlygb7C24X3FpRiRt+2QQYtHZc0rXVXMUdy41913vkWIXL6wV0aLXtvAyZ8poWVyn67/qQrg0gaSqJqZ0aKpJkUKKhUO6f+kF8nsnaxERX2zwmWf86wRYv++gVVmMcMVKRIavq62VBiZhIPbaSAhC0ldjJ+h5MT2sRRT8cDXj1GksoLP/YDFuZvFBM79H7ow66h5mA==";
 
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings( licenseKey );
@@ -84,9 +84,9 @@ async function startScan( sdk )
 
     // 1. Create a recognizer objects which will be used to recognize single image or stream of images.
     //
-    // Generic ID Recognizer - scan various ID documents
+    // BlinkID Single-side Recognizer - scan various ID documents
     // ID Barcode Recognizer - scan barcodes from various ID documents
-    const genericIDRecognizer = await BlinkIDSDK.createBlinkIdRecognizer( sdk );
+    const singleSideIDRecognizer = await BlinkIDSDK.createBlinkIdSingleSideRecognizer( sdk );
     const idBarcodeRecognizer = await BlinkIDSDK.createIdBarcodeRecognizer( sdk );
 
     // [OPTIONAL] Create a callbacks object that will receive recognition events, such as detected object location etc.
@@ -102,7 +102,7 @@ async function startScan( sdk )
         // SDK instance to use
         sdk,
         // List of recognizer objects that will be associated with created RecognizerRunner object
-        [ genericIDRecognizer, idBarcodeRecognizer ],
+        [ singleSideIDRecognizer, idBarcodeRecognizer ],
         // [OPTIONAL] Should recognition pipeline stop as soon as first recognizer in chain finished recognition
         false,
         // [OPTIONAL] Callbacks object that will receive recognition events
@@ -122,22 +122,40 @@ async function startScan( sdk )
     // 5. If recognition was successful, obtain the result and display it
     if ( processResult !== BlinkIDSDK.RecognizerResultState.Empty )
     {
-        const genericIDResults = await genericIDRecognizer.getResult();
-        if ( genericIDResults.state !== BlinkIDSDK.RecognizerResultState.Empty )
+        const singleSideIDResults = await singleSideIDRecognizer.getResult();
+        if ( singleSideIDResults.state !== BlinkIDSDK.RecognizerResultState.Empty )
         {
-            console.log( "BlinkIDGeneric results", genericIDResults );
+            console.log( "BlinkID Single-side recognizer results", singleSideIDResults );
 
-            const firstName = genericIDResults.firstName || genericIDResults.mrz.secondaryID;
-            const lastName = genericIDResults.lastName || genericIDResults.mrz.primaryID;
+            const firstName = (
+                singleSideIDResults.firstName.latin ||
+                singleSideIDResults.firstName.cyrillic ||
+                singleSideIDResults.firstName.arabic
+            ) || singleSideIDResults.mrz.secondaryID;
+
+            const lastName = (
+                singleSideIDResults.lastName.latin ||
+                singleSideIDResults.lastName.cyrillic ||
+                singleSideIDResults.lastName.arabic
+            ) || singleSideIDResults.mrz.primaryID;
+
+            const fullName = (
+                singleSideIDResults.fullName.latin ||
+                singleSideIDResults.fullName.cyrillic ||
+                singleSideIDResults.fullName.arabic
+            ) || `${ singleSideIDResults.mrz.secondaryID } ${ singleSideIDResults.mrz.primaryID }`;
+
             const dateOfBirth = {
-                year: genericIDResults.dateOfBirth.year || genericIDResults.mrz.dateOfBirth.year,
-                month: genericIDResults.dateOfBirth.month || genericIDResults.mrz.dateOfBirth.month,
-                day: genericIDResults.dateOfBirth.day || genericIDResults.mrz.dateOfBirth.day
+                year: singleSideIDResults.dateOfBirth.year || singleSideIDResults.mrz.dateOfBirth.year,
+                month: singleSideIDResults.dateOfBirth.month || singleSideIDResults.mrz.dateOfBirth.month,
+                day: singleSideIDResults.dateOfBirth.day || singleSideIDResults.mrz.dateOfBirth.day
             }
+
+            const derivedFullName = `${firstName} ${lastName}`.trim() || fullName
 
             alert
             (
-                `Hello, ${ firstName } ${ lastName }!\n You were born on ${ dateOfBirth.year }-${ dateOfBirth.month }-${ dateOfBirth.day }.`
+                `Hello, ${ derivedFullName }!\n You were born on ${ dateOfBirth.year }-${ dateOfBirth.month }-${ dateOfBirth.day }.`
             );
         }
 
@@ -174,7 +192,7 @@ async function startScan( sdk )
     recognizerRunner?.delete();
 
     // Release memory on WebAssembly heap used by the recognizer
-    genericIDRecognizer?.delete();
+    singleSideIDRecognizer?.delete();
     idBarcodeRecognizer?.delete();
 
     // Clear any leftovers drawn to canvas

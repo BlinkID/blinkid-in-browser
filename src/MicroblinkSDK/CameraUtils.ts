@@ -189,7 +189,7 @@ export async function selectCamera(
             }
             if ( cameraId )
             {
-                let cameraDevice = null;
+                let cameraDevice: SelectedCamera;
 
                 cameraDevice = frontCameras.filter( device => device.deviceId === cameraId )[0];
                 if ( !cameraDevice )
@@ -223,7 +223,8 @@ export async function selectCamera(
 export async function bindCameraToVideoFeed(
     camera:                 SelectedCamera,
     videoFeed:              HTMLVideoElement,
-    preferredCameraType:    PreferredCameraType = PreferredCameraType.BackFacingCamera
+    preferredCameraType:    PreferredCameraType = PreferredCameraType.BackFacingCamera,
+    shouldMaxResolution = false
 ): Promise< boolean >
 {
     const constraints: MediaStreamConstraints =
@@ -245,6 +246,7 @@ export async function bindCameraToVideoFeed(
             }
         }
     };
+
     if ( camera.deviceId === "" )
     {
         const isPreferredBackFacing = preferredCameraType === PreferredCameraType.BackFacingCamera;
@@ -265,12 +267,33 @@ export async function bindCameraToVideoFeed(
     videoFeed.controls = false;
     videoFeed.srcObject = stream;
 
+    const videoFeedTransform: Array< string > = [];
     let cameraFlipped = false;
     if ( camera.facing === PreferredCameraType.FrontFacingCamera )
     {
-        videoFeed.style.transform = "scaleX(-1)";
+        videoFeedTransform.push( "scaleX(-1)" );
         cameraFlipped = true;
     }
+
+    if ( shouldMaxResolution )
+    {
+        const tracks       = stream.getVideoTracks();
+        const track        = tracks[ 0 ];
+        const capabilities = track.getCapabilities();
+
+        void track.applyConstraints
+        (
+            {
+                width: capabilities.width?.max,
+                height: capabilities.height?.max
+            }
+        );
+
+        // Scale should be ~1.5 if 66% of the image is cropped (see cropFactor in FrameCapture.ts)
+        videoFeedTransform.push( "scale(1.5)" );
+    }
+
+    videoFeed.style.transform = videoFeedTransform.join( " " );
 
     return cameraFlipped;
 }
@@ -282,4 +305,9 @@ export function clearVideoFeed( videoFeed: HTMLVideoElement ): void
         ( videoFeed.srcObject as MediaStream ).getTracks().forEach( track => track.stop() );
         videoFeed.srcObject = null;
     }
+}
+
+export function isCameraFocusProblematic(): boolean
+{
+    return navigator.userAgent.indexOf( "iPhone OS 16_" ) > -1;
 }

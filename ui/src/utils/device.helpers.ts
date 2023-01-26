@@ -48,7 +48,5 @@ export async function checkMandatoryCapabilites(): Promise<boolean> {
  * Determine whether this is a desktop device based on the screen resolution.
  */
 export function isDesktop(): boolean {
-  const viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-
-  return viewportWidth >= 1024;
+  return !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
 }

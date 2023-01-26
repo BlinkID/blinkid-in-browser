@@ -738,10 +738,10 @@
 │  ├─ email: justin@ridgewell.name
 │  ├─ path: node_modules/@jridgewell/trace-mapping
 │  └─ licenseFile: node_modules/@jridgewell/trace-mapping/LICENSE
-├─ @microblink/blinkid-in-browser-sdk@5.20.1
+├─ @microblink/blinkid-in-browser-sdk@6.0.0
 │  ├─ licenses: Custom: https://travis-ci.org/BlinkID/blinkid-in-browser.svg
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
-│  ├─ path: /opt/jenkins/jenkinsData/E6/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
+│  ├─ path: /opt/jenkins/jenkinsData/E5/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
 │  └─ licenseFile: README.md
 ├─ @nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.2
 │  ├─ licenses: MIT

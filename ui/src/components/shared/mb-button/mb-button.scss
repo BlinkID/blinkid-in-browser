@@ -16,6 +16,7 @@ button {
 
   width: calc(var(--mb-component-button-size) - 2 * var(--mb-component-button-border-width));
   height: calc(var(--mb-component-button-size) - 2 * var(--mb-component-button-border-width));
+  padding: 0;
 
   background-color: var(--mb-component-button-background);
   border-color: var(--mb-component-button-border-color);

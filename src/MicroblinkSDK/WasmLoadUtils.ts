@@ -5,21 +5,38 @@
 import * as WasmFeatureDetect from "wasm-feature-detect";
 import { WasmType } from "./WasmType";
 
-export async function detectWasmType(): Promise< WasmType >
+/* eslint-disable max-len */
+/**
+ * Safari 16 shipped with WASM threads support, but it didn't ship with nested
+ * workers support, so an extra check is needed
+ * https://github.com/GoogleChromeLabs/squoosh/pull/1325/files#diff-904900db64cd3f48b0e765dbbdc6a218a7ea74a199671bde82a8944a904db86f
+ */
+/* eslint-enable max-len */
+export default async function checkThreadsSupport(): Promise<boolean>
+{
+    const supportsWasmThreads = await WasmFeatureDetect.threads();
+    if ( !supportsWasmThreads ) return false;
+
+    if ( !( "importScripts" in self ) )
+    {
+        throw Error( "Not implemented" );
+    }
+
+    return "Worker" in self;
+}
+
+export async function detectWasmType(): Promise<WasmType>
 {
     // determine if all features required for advanced WASM are available
-    // currently, advanced wasm requires bulk memory, non-trapping floating point
-    // and sign extension (this may change in the future).
+    // currently, advanced wasm requires SIMD
 
-    const haveBulkMemory = await WasmFeatureDetect.bulkMemory();
-    const haveNonTrappingFloatingPoint = await WasmFeatureDetect.saturatedFloatToInt();
-    const haveSignExtension = await WasmFeatureDetect.signExtensions();
     const haveSIMD = await WasmFeatureDetect.simd();
-    const haveThreads = await WasmFeatureDetect.threads();
 
-    if ( haveBulkMemory && haveNonTrappingFloatingPoint && haveSignExtension && haveSIMD )
+    const threadsSupported = await checkThreadsSupport();
+
+    if ( haveSIMD )
     {
-        if ( haveThreads )
+        if ( threadsSupported )
         {
             return WasmType.AdvancedWithThreads;
         }
@@ -36,10 +53,13 @@ export async function detectWasmType(): Promise< WasmType >
 
 export function wasmFolder( wasmType: WasmType ): string
 {
-    switch( wasmType )
+    switch ( wasmType )
     {
-        case WasmType.AdvancedWithThreads: return "advanced-threads";
-        case WasmType.Advanced           : return "advanced";
-        case WasmType.Basic              : return "basic";
+        case WasmType.AdvancedWithThreads:
+            return "advanced-threads";
+        case WasmType.Advanced:
+            return "advanced";
+        case WasmType.Basic:
+            return "basic";
     }
 }

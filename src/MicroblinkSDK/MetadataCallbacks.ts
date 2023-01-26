@@ -35,7 +35,7 @@ export interface MetadataCallbacks
     onPointsDetection?( pointSet: DisplayablePoints ): void
 
     /**
-     * Called when first side recognition with the combined recognizer completes.
+     * Called when first side recognition with the multi-side recognizer completes.
      */
     onFirstSideResult?(): void
 

@@ -1,15 +1,57 @@
 /**
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
-import
-{
-    MBDate
-} from "../../../MicroblinkSDK/DataStructures";
+
+import { DateResult, StringResult } from "./GenericResultStructures";
+import { MBDate } from "../../../MicroblinkSDK/DataStructures";
 
 /**
  * The additional information on vehicle class.
  */
 export interface VehicleClassInfo
+{
+    readonly vehicleClass: StringResult;
+
+    readonly licenceType: StringResult;
+
+    readonly effectiveDate: DateResult;
+
+    readonly expiryDate: DateResult;
+}
+
+/**
+ * Driver's license specific data.
+ */
+export interface DriverLicenseDetailedInfo
+{
+    /** The driver license conditions. */
+    readonly conditions: StringResult;
+
+    /**
+     * The restrictions to driving privileges for the driver license owner.
+     */
+    readonly restrictions: StringResult;
+
+    /**
+     * The additional privileges granted to the driver license owner.
+     */
+    readonly endorsements: StringResult;
+
+    /**
+     * The type of vehicle the driver license owner has privilege to drive.
+     */
+    readonly vehicleClass: StringResult;
+
+    /**
+     * The additional information on vehicle class.
+     */
+    readonly vehicleClassesInfo: Array< VehicleClassInfo >;
+}
+
+/**
+ * The additional information on vehicle class for barcodes.
+ */
+export interface BarcodeVehicleClassInfo
 {
     readonly vehicleClass: string;
 
@@ -21,9 +63,9 @@ export interface VehicleClassInfo
 }
 
 /**
- * Driver's license specific data.
+ * Driver's license specific data for barcodes.
  */
-export interface DriverLicenseDetailedInfo
+export interface BarcodeDriverLicenseDetailedInfo
 {
     /** The driver license conditions. */
     readonly conditions: string;
@@ -46,5 +88,5 @@ export interface DriverLicenseDetailedInfo
     /**
      * The additional information on vehicle class.
      */
-    readonly vehicleClassesInfo: Array< VehicleClassInfo >;
+    readonly vehicleClassesInfo: Array< BarcodeVehicleClassInfo >;
 }

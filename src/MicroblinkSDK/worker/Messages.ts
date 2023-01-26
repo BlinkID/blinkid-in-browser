@@ -222,7 +222,7 @@ export class ResetRecognizers extends BaseRequestMessage
 {
     static readonly action: string = "resetRecognizers";
 
-    readonly hardReset: boolean
+    readonly hardReset: boolean;
 
     constructor( hardReset: boolean )
     {
@@ -289,7 +289,7 @@ export class SetCameraPreviewMirrored extends BaseRequestMessage
 {
     static readonly action: string = "setCameraPreviewMirrored";
 
-    readonly cameraPreviewMirrored: boolean
+    readonly cameraPreviewMirrored: boolean;
 
     constructor( cameraPreviewMirrored: boolean )
     {
