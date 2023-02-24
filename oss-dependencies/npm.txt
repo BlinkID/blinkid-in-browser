@@ -19,7 +19,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/code-frame
 │  └─ licenseFile: node_modules/@babel/code-frame/LICENSE
-├─ @babel/compat-data@7.20.10
+├─ @babel/compat-data@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -33,7 +33,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/core
 │  └─ licenseFile: node_modules/@babel/core/LICENSE
-├─ @babel/generator@7.20.7
+├─ @babel/generator@7.21.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -61,14 +61,14 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-compilation-targets
 │  └─ licenseFile: node_modules/@babel/helper-compilation-targets/LICENSE
-├─ @babel/helper-create-class-features-plugin@7.20.12
+├─ @babel/helper-create-class-features-plugin@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-create-class-features-plugin
 │  └─ licenseFile: node_modules/@babel/helper-create-class-features-plugin/LICENSE
-├─ @babel/helper-create-regexp-features-plugin@7.20.5
+├─ @babel/helper-create-regexp-features-plugin@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -94,7 +94,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-explode-assignable-expression
 │  └─ licenseFile: node_modules/@babel/helper-explode-assignable-expression/LICENSE
-├─ @babel/helper-function-name@7.19.0
+├─ @babel/helper-function-name@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -108,7 +108,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-hoist-variables
 │  └─ licenseFile: node_modules/@babel/helper-hoist-variables/LICENSE
-├─ @babel/helper-member-expression-to-functions@7.20.7
+├─ @babel/helper-member-expression-to-functions@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -122,7 +122,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-module-imports
 │  └─ licenseFile: node_modules/@babel/helper-module-imports/LICENSE
-├─ @babel/helper-module-transforms@7.20.11
+├─ @babel/helper-module-transforms@7.21.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -192,7 +192,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-validator-identifier
 │  └─ licenseFile: node_modules/@babel/helper-validator-identifier/LICENSE
-├─ @babel/helper-validator-option@7.18.6
+├─ @babel/helper-validator-option@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -206,7 +206,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-wrap-function
 │  └─ licenseFile: node_modules/@babel/helper-wrap-function/LICENSE
-├─ @babel/helpers@7.20.13
+├─ @babel/helpers@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -220,7 +220,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/highlight
 │  └─ licenseFile: node_modules/@babel/highlight/LICENSE
-├─ @babel/parser@7.20.13
+├─ @babel/parser@7.21.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -248,7 +248,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/plugin-proposal-class-properties
 │  └─ licenseFile: node_modules/@babel/plugin-proposal-class-properties/LICENSE
-├─ @babel/plugin-proposal-class-static-block@7.20.7
+├─ @babel/plugin-proposal-class-static-block@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -311,7 +311,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/plugin-proposal-optional-catch-binding
 │  └─ licenseFile: node_modules/@babel/plugin-proposal-optional-catch-binding/LICENSE
-├─ @babel/plugin-proposal-optional-chaining@7.20.7
+├─ @babel/plugin-proposal-optional-chaining@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -325,7 +325,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/plugin-proposal-private-methods
 │  └─ licenseFile: node_modules/@babel/plugin-proposal-private-methods/LICENSE
-├─ @babel/plugin-proposal-private-property-in-object@7.20.5
+├─ @babel/plugin-proposal-private-property-in-object@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -436,14 +436,14 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/plugin-transform-block-scoped-functions
 │  └─ licenseFile: node_modules/@babel/plugin-transform-block-scoped-functions/LICENSE
-├─ @babel/plugin-transform-block-scoping@7.20.11
+├─ @babel/plugin-transform-block-scoping@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/plugin-transform-block-scoping
 │  └─ licenseFile: node_modules/@babel/plugin-transform-block-scoping/LICENSE
-├─ @babel/plugin-transform-classes@7.20.7
+├─ @babel/plugin-transform-classes@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -485,7 +485,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/plugin-transform-exponentiation-operator
 │  └─ licenseFile: node_modules/@babel/plugin-transform-exponentiation-operator/LICENSE
-├─ @babel/plugin-transform-for-of@7.18.8
+├─ @babel/plugin-transform-for-of@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -520,7 +520,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/plugin-transform-modules-amd
 │  └─ licenseFile: node_modules/@babel/plugin-transform-modules-amd/LICENSE
-├─ @babel/plugin-transform-modules-commonjs@7.20.11
+├─ @babel/plugin-transform-modules-commonjs@7.21.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -651,7 +651,14 @@
 │  ├─ repository: https://github.com/babel/preset-modules
 │  ├─ path: node_modules/@babel/preset-modules
 │  └─ licenseFile: node_modules/@babel/preset-modules/LICENSE
-├─ @babel/runtime@7.20.13
+├─ @babel/regjsgen@0.8.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/bnjmnt4n/regjsgen
+│  ├─ publisher: Benjamin Tan
+│  ├─ url: https://ofcr.se/
+│  ├─ path: node_modules/@babel/regjsgen
+│  └─ licenseFile: node_modules/@babel/regjsgen/LICENSE-MIT.txt
+├─ @babel/runtime@7.21.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -665,14 +672,14 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/template
 │  └─ licenseFile: node_modules/@babel/template/LICENSE
-├─ @babel/traverse@7.20.13
+├─ @babel/traverse@7.21.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/traverse
 │  └─ licenseFile: node_modules/@babel/traverse/LICENSE
-├─ @babel/types@7.20.7
+├─ @babel/types@7.21.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -738,10 +745,10 @@
 │  ├─ email: justin@ridgewell.name
 │  ├─ path: node_modules/@jridgewell/trace-mapping
 │  └─ licenseFile: node_modules/@jridgewell/trace-mapping/LICENSE
-├─ @microblink/blinkid-in-browser-sdk@6.0.0
+├─ @microblink/blinkid-in-browser-sdk@6.0.1
 │  ├─ licenses: Custom: https://travis-ci.org/BlinkID/blinkid-in-browser.svg
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
-│  ├─ path: /opt/jenkins/jenkinsData/E5/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
+│  ├─ path: /opt/jenkins/jenkinsData/E3/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
 │  └─ licenseFile: README.md
 ├─ @nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.2
 │  ├─ licenses: MIT
@@ -795,7 +802,7 @@
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/json-schema
 │  └─ licenseFile: node_modules/@types/json-schema/LICENSE
-├─ @types/node@18.11.18
+├─ @types/node@18.14.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/node
@@ -968,13 +975,13 @@
 │  ├─ url: github.com/kevva
 │  ├─ path: node_modules/astral-regex
 │  └─ licenseFile: node_modules/astral-regex/license
-├─ async-each@1.0.3
+├─ async-each@1.0.6
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/paulmillr/async-each
 │  ├─ publisher: Paul Miller
 │  ├─ url: https://paulmillr.com/
 │  ├─ path: node_modules/async-each
-│  └─ licenseFile: node_modules/async-each/README.md
+│  └─ licenseFile: node_modules/async-each/LICENSE
 ├─ atob@2.1.2
 │  ├─ licenses: (MIT OR Apache-2.0)
 │  ├─ repository: git://git.coolaj86.com/coolaj86/atob.js
@@ -1051,7 +1058,7 @@
 │  ├─ url: https://github.com/jonschlinkert
 │  ├─ path: node_modules/fast-glob/node_modules/braces
 │  └─ licenseFile: node_modules/fast-glob/node_modules/braces/LICENSE
-├─ browserslist@4.21.4
+├─ browserslist@4.21.5
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/browserslist/browserslist
 │  ├─ publisher: Andrey Sitnik
@@ -1086,7 +1093,7 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/callsites
 │  └─ licenseFile: node_modules/callsites/license
-├─ caniuse-lite@1.0.30001448
+├─ caniuse-lite@1.0.30001457
 │  ├─ licenses: CC-BY-4.0
 │  ├─ repository: https://github.com/browserslist/caniuse-lite
 │  ├─ publisher: Ben Briggs
@@ -1203,7 +1210,7 @@
 │  ├─ url: https://github.com/jonschlinkert
 │  ├─ path: node_modules/copy-descriptor
 │  └─ licenseFile: node_modules/copy-descriptor/LICENSE
-├─ core-js-compat@3.27.2
+├─ core-js-compat@3.28.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/zloirock/core-js
 │  ├─ publisher: Denis Pushkarev
@@ -1256,7 +1263,7 @@
 │  ├─ url: http://thlorenz.com
 │  ├─ path: node_modules/deep-is
 │  └─ licenseFile: node_modules/deep-is/LICENSE
-├─ deepmerge@4.2.2
+├─ deepmerge@4.3.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/TehShrike/deepmerge
 │  ├─ path: node_modules/deepmerge
@@ -1295,7 +1302,7 @@
 │  ├─ repository: https://github.com/eslint/doctrine
 │  ├─ path: node_modules/doctrine
 │  └─ licenseFile: node_modules/doctrine/LICENSE
-├─ electron-to-chromium@1.4.284
+├─ electron-to-chromium@1.4.310
 │  ├─ licenses: ISC
 │  ├─ repository: https://github.com/kilian/electron-to-chromium
 │  ├─ publisher: Kilian Valkhof
@@ -1391,7 +1398,7 @@
 │  ├─ email: ariya.hidayat@gmail.com
 │  ├─ path: node_modules/esprima
 │  └─ licenseFile: node_modules/esprima/LICENSE.BSD
-├─ esquery@1.4.0
+├─ esquery@1.4.2
 │  ├─ licenses: BSD-3-Clause
 │  ├─ repository: https://github.com/estools/esquery
 │  ├─ publisher: Joel Feenstra
@@ -1623,7 +1630,7 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/globals
 │  └─ licenseFile: node_modules/globals/license
-├─ globals@13.19.0
+├─ globals@13.20.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/sindresorhus/globals
 │  ├─ publisher: Sindre Sorhus
@@ -2152,7 +2159,7 @@
 │  ├─ url: https://github.com/litejs/natural-compare-lite
 │  ├─ path: node_modules/natural-compare
 │  └─ licenseFile: node_modules/natural-compare/README.md
-├─ node-releases@2.0.8
+├─ node-releases@2.0.10
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/chicoxyzzy/node-releases
 │  ├─ publisher: Sergey Rubanov
@@ -2362,7 +2369,7 @@
 │  ├─ repository: https://github.com/crypto-browserify/randombytes
 │  ├─ path: node_modules/randombytes
 │  └─ licenseFile: node_modules/randombytes/LICENSE
-├─ readable-stream@2.3.7
+├─ readable-stream@2.3.8
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/nodejs/readable-stream
 │  ├─ path: node_modules/readable-stream
@@ -2425,20 +2432,13 @@
 │  ├─ url: https://github.com/mysticatea
 │  ├─ path: node_modules/regexpp
 │  └─ licenseFile: node_modules/regexpp/LICENSE
-├─ regexpu-core@5.2.2
+├─ regexpu-core@5.3.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/mathiasbynens/regexpu-core
 │  ├─ publisher: Mathias Bynens
 │  ├─ url: https://mathiasbynens.be/
 │  ├─ path: node_modules/regexpu-core
 │  └─ licenseFile: node_modules/regexpu-core/LICENSE-MIT.txt
-├─ regjsgen@0.7.1
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/bnjmnt4n/regjsgen
-│  ├─ publisher: Benjamin Tan
-│  ├─ url: https://ofcr.se/
-│  ├─ path: node_modules/regjsgen
-│  └─ licenseFile: node_modules/regjsgen/LICENSE-MIT.txt
 ├─ regjsparser@0.9.1
 │  ├─ licenses: BSD-2-Clause
 │  ├─ repository: https://github.com/jviereck/regjsparser
@@ -2770,7 +2770,7 @@
 │  ├─ url: http://gajus.com
 │  ├─ path: node_modules/table
 │  └─ licenseFile: node_modules/table/LICENSE
-├─ terser@5.16.1
+├─ terser@5.16.5
 │  ├─ licenses: BSD-2-Clause
 │  ├─ repository: https://github.com/terser/terser
 │  ├─ publisher: Mihai Bazon
