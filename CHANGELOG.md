@@ -1,5 +1,15 @@
 # Release notes
 
+## 6.0.1
+
+### Platform-related SDK changes
+
+* The SDK can now be used with the `wasm-unsafe-eval` content security policy.
+
+### Bugfixes
+
+* We've fixed a regression in the recognizer runner that could cause subsequent scans to fail.
+
 ## 6.0.0
 
 ### New features:
@@ -14,7 +24,7 @@
 
 ### What's new in the BlinkId(Combined) Recognizer?
 
-* Renamed `BlinkIdRecognier` to **BlinkIdSingleSideRecognizer**
+* Renamed `BlinkIdRecognizer` to **BlinkIdSingleSideRecognizer**
 * Renamed `BlinkIdCombinedRecognizer` to **BlinkIdMultiSideRecognizer**
 * We introduced new classes: `StringResult`, `DateResult`, and `Date` in order to support multiple alphabets. If a recognizer supports multiple alphabets, its result class (e.g., `BlinkIdMultiSideRecognizer.Result`) will return `StringResult` for results that previously returned `String`.
 * Added new result property of an `AdditionalProcessingInfo` type that provides information about `missingMandatoryFields`, `invalidCharacterFields`, and `extraPresentFields`
