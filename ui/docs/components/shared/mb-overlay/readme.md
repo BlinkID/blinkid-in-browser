@@ -18,11 +18,15 @@
 ### Used by
 
  - [mb-component](../mb-component)
+ - [mb-device-selection-quit](../mb-device-selection/mb-device-selection-quit)
+ - [mb-help](../mb-help)
 
 ### Graph
 ```mermaid
 graph TD;
   mb-component --> mb-overlay
+  mb-device-selection-quit --> mb-overlay
+  mb-help --> mb-overlay
   style mb-overlay fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

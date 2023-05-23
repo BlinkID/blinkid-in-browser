@@ -23,7 +23,7 @@ To run TypeScript example:
     npm run build
     ```
 2. Runtime resources are copied to `dist/` folder during build action, check `rollup.config.js` file.
-3. Serve `dist/` folder, e.g. `serve dist/`.
+3. Serve `dist/` folder, e.g. install globally `https-localhost` via npm and run `serve dist/`.
 
 ## JavaScript Example
 

@@ -18,24 +18,12 @@
     display: flex;
     height: 44px;
     align-items: center;
-    padding-inline: #{ $padding-unit-large * 2 };
-  }
-
-  header > * {
-    display: block;
-    flex-grow: 1;
+    justify-content: space-between;
   }
 
   .camera-selection-wrapper {
     position: relative;
-  }
-
-  mb-camera-selection {
-    display: none;
-
-    &.visible {
-      display: block;
-    }
+    margin-inline: auto;
   }
 }
 
@@ -86,11 +74,18 @@ $button-size: 40px;
   .flip-button {
     transform-style: preserve-3d;
     perspective: 600px;
-    transition: transform 800ms;
     z-index: 1;
 
+    svg {
+      transition: transform 300ms;
+      backface-visibility: visible;
+      will-change: transform;
+    }
+
     &.flipped {
-      transform: rotateY(180deg);
+      svg {
+        transform: rotateY(180deg);
+      }
     }
   }
 }

@@ -7,17 +7,22 @@
 
 ## Properties
 
-| Property                           | Attribute                              | Description                                                                                                                                                 | Type                                                                                                                            | Default     |
-| ---------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `apiState`                         | `api-state`                            | Api state passed from root component.                                                                                                                       | `string`                                                                                                                        | `undefined` |
-| `cameraExperienceStateDurations`   | --                                     | Configure camera experience state timeout durations                                                                                                         | `CameraExperienceTimeoutDurations`                                                                                              | `null`      |
-| `cameraFlipped`                    | `camera-flipped`                       | Camera horizontal state passed from root component.  Horizontal camera image can be mirrored                                                                | `boolean`                                                                                                                       | `false`     |
-| `clearIsCameraActive`              | `clear-is-camera-active`               |                                                                                                                                                             | `boolean`                                                                                                                       | `false`     |
-| `showCameraFeedbackBarcodeMessage` | `show-camera-feedback-barcode-message` | Show camera feedback message on camera for Barcode scanning                                                                                                 | `boolean`                                                                                                                       | `false`     |
-| `showOverlay`                      | `show-overlay`                         | Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay. | `boolean`                                                                                                                       | `true`      |
-| `showScanningLine`                 | `show-scanning-line`                   | Show scanning line on camera                                                                                                                                | `boolean`                                                                                                                       | `false`     |
-| `translationService`               | --                                     | Instance of TranslationService passed from root component.                                                                                                  | `TranslationService`                                                                                                            | `undefined` |
-| `type`                             | `type`                                 | Choose desired camera experience.  Each experience type must be implemented in this component.                                                              | `CameraExperience.Barcode \| CameraExperience.CardMultiSide \| CameraExperience.CardSingleSide \| CameraExperience.PaymentCard` | `undefined` |
+| Property                               | Attribute                                  | Description                                                                                                                                                 | Type                                                                                                                            | Default     |
+| -------------------------------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `allowHelpScreens`                     | `allow-help-screens`                       | Dictates if Help Screens usage is allowed (turned on).                                                                                                      | `boolean`                                                                                                                       | `false`     |
+| `allowHelpScreensFab`                  | `allow-help-screens-fab`                   | See description in public component.                                                                                                                        | `boolean`                                                                                                                       | `false`     |
+| `allowHelpScreensOnboarding`           | `allow-help-screens-onboarding`            | See description in public component.                                                                                                                        | `boolean`                                                                                                                       | `false`     |
+| `allowHelpScreensOnboardingPerpetuity` | `allow-help-screens-onboarding-perpetuity` | See description in public component.                                                                                                                        | `boolean`                                                                                                                       | `false`     |
+| `apiState`                             | `api-state`                                | Api state passed from root component.                                                                                                                       | `string`                                                                                                                        | `undefined` |
+| `cameraExperienceStateDurations`       | --                                         | Configure camera experience state timeout durations                                                                                                         | `CameraExperienceTimeoutDurations`                                                                                              | `null`      |
+| `cameraFlipped`                        | `camera-flipped`                           | Camera horizontal state passed from root component.  Horizontal camera image can be mirrored                                                                | `boolean`                                                                                                                       | `false`     |
+| `clearIsCameraActive`                  | `clear-is-camera-active`                   |                                                                                                                                                             | `boolean`                                                                                                                       | `false`     |
+| `helpScreensTooltipPauseTimeout`       | `help-screens-tooltip-pause-timeout`       | See description in public component.                                                                                                                        | `number`                                                                                                                        | `15000`     |
+| `showCameraFeedbackBarcodeMessage`     | `show-camera-feedback-barcode-message`     | Show camera feedback message on camera for Barcode scanning                                                                                                 | `boolean`                                                                                                                       | `false`     |
+| `showOverlay`                          | `show-overlay`                             | Unless specifically granted by your license key, you are not allowed to modify or remove the Microblink logo displayed on the bottom of the camera overlay. | `boolean`                                                                                                                       | `true`      |
+| `showScanningLine`                     | `show-scanning-line`                       | Show scanning line on camera                                                                                                                                | `boolean`                                                                                                                       | `false`     |
+| `translationService`                   | --                                         | Instance of TranslationService passed from root component.                                                                                                  | `TranslationService`                                                                                                            | `undefined` |
+| `type`                                 | `type`                                     | Choose desired camera experience.  Each experience type must be implemented in this component.                                                              | `CameraExperience.Barcode \| CameraExperience.CardMultiSide \| CameraExperience.CardSingleSide \| CameraExperience.PaymentCard` | `undefined` |
 
 
 ## Events
@@ -31,6 +36,26 @@
 
 
 ## Methods
+
+### `initializeHelpScreens(callbacks: MbHelpCallbacks) => Promise<void>`
+
+Initializes Help Screens.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `openHelpScreensOnboarding() => Promise<void>`
+
+Opens Help Screens in the Onboarding mode.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
 
 ### `populateCameraDevices() => Promise<void>`
 
@@ -82,6 +107,16 @@ Type: `Promise<void>`
 
 
 
+### `terminateHelpScreens() => Promise<void>`
+
+Terminates Help Screens.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 
 ## Dependencies
 
@@ -92,12 +127,19 @@ Type: `Promise<void>`
 ### Depends on
 
 - [mb-camera-toolbar](../mb-camera-toolbar)
+- [mb-help](../mb-help)
 
 ### Graph
 ```mermaid
 graph TD;
   mb-camera-experience --> mb-camera-toolbar
+  mb-camera-experience --> mb-help
   mb-camera-toolbar --> mb-camera-selection
+  mb-help --> mb-tooltip-advanced
+  mb-help --> mb-overlay
+  mb-help --> mb-modal
+  mb-help --> mb-progress-tracker
+  mb-help --> mb-button-classic
   mb-component --> mb-camera-experience
   style mb-camera-experience fill:#f9f,stroke:#333,stroke-width:4px
 ```

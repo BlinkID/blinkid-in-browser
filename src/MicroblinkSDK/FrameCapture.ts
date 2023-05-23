@@ -10,7 +10,9 @@ import * as ErrorTypes from "./ErrorTypes";
 // Frame capture and camera management support. /
 // ============================================ /
 
-let canvas : HTMLCanvasElement;
+let canvas: HTMLCanvasElement;
+let ctx: CanvasRenderingContext2D;
+
 
 /**
  * Represents a captured frame from HTMLVideoElement.
@@ -28,7 +30,15 @@ export class CapturedFrame
 
     constructor( imageData: ImageData, orientation: ImageOrientation, videoFrame: boolean )
     {
-        this.imageData = imageData;
+        // workaround for memory leak: https://github.com/ivancuric/memory-leak-repro
+        const fakeImageData = {
+            data: imageData.data,
+            width: imageData.width,
+            height: imageData.height,
+            colorSpace: imageData.colorSpace,
+        } satisfies ImageData;
+
+        this.imageData = fakeImageData;
         this.orientation = orientation;
         this.videoFrame = videoFrame;
     }
@@ -66,9 +76,16 @@ export function captureFrame( imageSource: CanvasImageSource, shouldCrop = false
     }
 
     canvas = canvas || document.createElement( "canvas" );
-    canvas.width = imageWidth;
-    canvas.height = imageHeight;
-    const ctx = canvas.getContext( "2d", { willReadFrequently: true } ) as CanvasRenderingContext2D;
+
+    if ( canvas.width !== imageWidth && canvas.height !== imageHeight )
+    {
+        canvas.width = imageWidth;
+        canvas.height = imageHeight;
+    }
+
+
+    ctx = ctx || canvas.getContext( "2d", { willReadFrequently: true,
+        alpha: false } );
 
     if ( !ctx )
     {
@@ -87,15 +104,14 @@ export function captureFrame( imageSource: CanvasImageSource, shouldCrop = false
      * of the image which is then sent to processing - rectangle that is 66% size of the
      * original image is cropped from the image center.
      */
-    const cropFactor   = shouldCrop ? 0.66 : 1;
-    const targetWidth  = canvas.width  * cropFactor;
+    const cropFactor = shouldCrop ? 0.66 : 1;
+    const targetWidth = canvas.width * cropFactor;
     const targetHeight = canvas.height * cropFactor;
-    const targetX      = ( canvas.width  - targetWidth  ) / 2;
-    const targetY      = ( canvas.height - targetHeight ) / 2;
-    const pixelData    = ctx.getImageData( targetX, targetY, targetWidth, targetHeight );
+    const targetX = ( canvas.width - targetWidth ) / 2;
+    const targetY = ( canvas.height - targetHeight ) / 2;
+    const pixelData = ctx.getImageData( targetX, targetY, targetWidth, targetHeight );
 
-    return new CapturedFrame
-    (
+    return new CapturedFrame(
         pixelData,
         // TODO: https://developer.mozilla.org/en-US/docs/Web/API/Screen/orientation
         // or https://developer.mozilla.org/en-US/docs/Web/API/Window/orientation

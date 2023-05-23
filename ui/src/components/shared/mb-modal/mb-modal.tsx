@@ -62,6 +62,11 @@ export class MbModal {
   @Prop() hideFooter: boolean = false;
 
   /**
+   * Whether to hide the close button or not.
+   */
+  @Prop() hideCloseButton: boolean = false;
+
+  /**
    * Emitted when user clicks on 'X' button.
    */
   @Event() close: EventEmitter<void>;
@@ -88,14 +93,16 @@ export class MbModal {
 
         <div class="mb-modal">
           <div part="mb-modal-inner" class="inner">
-            <div class="close-wrapper">
-                <div class="close-icon" onClick={ () => this.close.emit() }>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5892 4.41058C15.9147 4.73602 15.9147 5.26366 15.5892 5.58909L5.58925 15.5891C5.26381 15.9145 4.73617 15.9145 4.41073 15.5891C4.0853 15.2637 4.0853 14.736 4.41073 14.4106L14.4107 4.41058C14.7362 4.08514 15.2638 4.08514 15.5892 4.41058Z" fill="#9CA3AF"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.41073 4.41058C4.73617 4.08514 5.26381 4.08514 5.58925 4.41058L15.5892 14.4106C15.9147 14.736 15.9147 15.2637 15.5892 15.5891C15.2638 15.9145 14.7362 15.9145 14.4107 15.5891L4.41073 5.58909C4.0853 5.26366 4.0853 4.73602 4.41073 4.41058Z" fill="#9CA3AF"/>
-                  </svg>
-                </div>
-            </div>
+            { this.hideCloseButton ? null : (
+              <div class="close-wrapper">
+                  <div class="close-icon" onClick={ () => this.close.emit() }>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5892 4.41058C15.9147 4.73602 15.9147 5.26366 15.5892 5.58909L5.58925 15.5891C5.26381 15.9145 4.73617 15.9145 4.41073 15.5891C4.0853 15.2637 4.0853 14.736 4.41073 14.4106L14.4107 4.41058C14.7362 4.08514 15.2638 4.08514 15.5892 4.41058Z" fill="#9CA3AF"/>
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M4.41073 4.41058C4.73617 4.08514 5.26381 4.08514 5.58925 4.41058L15.5892 14.4106C15.9147 14.736 15.9147 15.2637 15.5892 15.5891C15.2638 15.9145 14.7362 15.9145 14.4107 15.5891L4.41073 5.58909C4.0853 5.26366 4.0853 4.73602 4.41073 4.41058Z" fill="#9CA3AF"/>
+                    </svg>
+                  </div>
+              </div>
+            ) }
 
             {this.showBackButton ? (
               <div class="back-wrapper">

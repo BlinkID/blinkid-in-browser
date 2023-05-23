@@ -9,8 +9,10 @@
 
   padding: $padding-unit-medium;
 
-  border: var(--mb-component-image-box-border-width) solid var(--mb-component-image-box-border-color);
+  border: var(--mb-component-image-box-border-width) solid
+    var(--mb-component-image-box-border-color);
   border-radius: var(--mb-component-image-box-border-radius);
+  max-width: 100%;
 
   .label {
     margin: 0;
@@ -21,6 +23,10 @@
 
     color: var(--mb-component-image-box-label-color);
 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
     font-family: var(--mb-font-family);
     font-size: var(--mb-component-image-box-label-font-size);
     font-weight: var(--mb-component-image-box-label-font-weight);
@@ -29,8 +35,9 @@
   .cta {
     all: unset;
     box-sizing: border-box;
-    display: block;
+    display: flex;
     height: var(--mb-component-image-box-cta-height);
+    max-width: 100%;
 
     color: var(--mb-component-image-box-cta-color);
 
@@ -40,14 +47,14 @@
     font-size: var(--mb-component-image-box-cta-font-size);
     font-weight: var(--mb-component-image-box-cta-font-weight);
 
-    .cta-label,
-    svg {
-      vertical-align: middle;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--mb-component-image-box-cta-color-hover);
     }
 
+    .cta-label,
     .cta-label {
-      display: inline-block;
-
       max-width: calc(100% - #{$padding-unit-medium + 20px});
       height: var(--mb-component-image-box-cta-label-height);
       line-height: var(--mb-component-image-box-cta-label-height);
@@ -56,14 +63,13 @@
       padding: 0 $padding-unit-medium 0 0;
 
       &.filename {
-        max-width: unset;
-        width: calc(100% - 20px);
         padding: 0;
         color: var(--mb-component-image-box-file-color);
         font-weight: var(--mb-component-image-box-file-font-weight);
 
         text-overflow: ellipsis;
         overflow: hidden;
+        white-space: nowrap;
       }
     }
 

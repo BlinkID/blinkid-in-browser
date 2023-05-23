@@ -20,6 +20,7 @@ import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
 import { setupModule, supportsThreads, waitForThreadWorkers } from "../PThreadHelper";
 import { WasmType } from "../WasmType";
 import { SDKError } from "../SDKError";
+import { CapturedFrame } from "../FrameCapture";
 
 interface MessageWithParameters extends Messages.RequestMessage
 {
@@ -850,7 +851,7 @@ export default class MicroblinkWorker
 
         try
         {
-            const image = msg.frame;
+            let image: CapturedFrame | null = msg.frame;
             /* eslint-disable @typescript-eslint/no-unsafe-call,
                               @typescript-eslint/no-unsafe-member-access,
                               @typescript-eslint/no-unsafe-assignment */
@@ -859,7 +860,10 @@ export default class MicroblinkWorker
                              @typescript-eslint/no-unsafe-member-access,
                              @typescript-eslint/no-unsafe-assignment */
 
-            this.context.postMessage( new Messages.ImageProcessResultMessage( msg.messageID, result ) );
+            // deref the image
+            this.context.postMessage( new Messages.ImageProcessResultMessage( msg.messageID, result ),
+                [image.imageData.data.buffer] );
+            image = null;
         }
         catch( error )
         {

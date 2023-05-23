@@ -26,6 +26,7 @@ import {
 
 import { SdkService } from '../../utils/sdk.service';
 
+import { D2DOptions, D2DSettings } from '../../utils/d2d.service';
 
 import { TranslationService } from '../../utils/translation.service';
 import * as GenericHelpers from '../../utils/generic.helpers';
@@ -38,6 +39,16 @@ import * as GenericHelpers from '../../utils/generic.helpers';
 export class BlinkidInBrowser implements MicroblinkUI {
   private blocked: boolean = false;
 
+  /**
+   * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical 
+   * limitations, without the need to restart the existing process, such as form filling.
+   * In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements. 
+   * There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary
+   * device browsers.
+   * For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md 
+   * where you can also find more information about this feature.
+   */
+  @Prop() d2dOptions: D2DOptions = null;
 
   /**
    * Write a hello message to the browser console when license check is successfully performed.
@@ -375,6 +386,41 @@ export class BlinkidInBrowser implements MicroblinkUI {
   @Prop() cameraId: string | null = null;
 
   /**
+   * Dictates if the Help Screens Floating-Action-Button (Fab) is offered.
+   * (in the bottom right corner of the Camera Experience). 
+   * 
+   * Default value is 'true'.
+   */
+  @Prop() allowHelpScreensFab: boolean = true;
+
+  /**
+   * Dictates if the Help Screens Onboarding is active.
+   * 
+   * Onboarding is a process of opening the Help Screens initial guides when the Camera Experience is being started.
+   * 
+   * Default value is 'true'.
+   */
+  @Prop() allowHelpScreensOnboarding: boolean = true;
+
+  /**
+   * Dictates if the Help Screens Onboarding process is being started on every Camera Experience start,
+   * or just on the first one.
+   * 
+   * Default value is 'false' - onboarding ran only once.
+   */
+  @Prop() allowHelpScreensOnboardingPerpetuity: boolean = false;
+
+  /**
+   * Miliseconds timeout on which the "Need Help?" tooltip is turned on.
+   * 
+   * First timeout is started each time the Camera Experience starts and is being reset every time
+   * the Help Screens are consumed.
+   * 
+   * Default value is 15000 - 15 seconds.
+   */
+  @Prop() helpScreensTooltipPauseTimeout: number = 15000;
+
+  /**
    * Event which is emitted during initialization of UI component.
    *
    * Each event contains `code` property which has deatils about fatal errror.
@@ -507,6 +553,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
     this.finalTranslations = this.translations ? this.translations : rawTranslations;
     this.translationService = new TranslationService(this.finalTranslations || {});
 
+    this.d2dSettings = this.d2dOptions ? new D2DSettings(this.d2dOptions) : null;
 
     this.sdkService = new SdkService();
   }
@@ -517,7 +564,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
         <mb-container>
           <mb-component dir={ this.hostEl.getAttribute('dir') }
                         ref={ el => this.mbComponentEl = el as HTMLMbComponentElement }
-
+                        d2dOptions={ this.d2dSettings }
                         allowHelloMessage={ this.allowHelloMessage }
                         recognitionPauseTimeout={ this.recognitionPauseTimeout }
                         cameraExperienceStateDurations={ this.cameraExperienceStateDurations }
@@ -549,6 +596,11 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         sdkService={ this.sdkService }
                         translationService={ this.translationService }
                         cameraId={ this.cameraId }
+                        allowHelpScreens={ true }
+                        allowHelpScreensFab={ this.allowHelpScreensFab }
+                        allowHelpScreensOnboarding={ this.allowHelpScreensOnboarding }
+                        allowHelpScreensOnboardingPerpetuity={ this.allowHelpScreensOnboardingPerpetuity }
+                        helpScreensTooltipPauseTimeout={ this.helpScreensTooltipPauseTimeout }
                         onBlock={ (ev: CustomEvent<boolean>) => { this.blocked = ev.detail } }
                         onFeedback={ (ev: CustomEvent<FeedbackMessage>) => this.feedbackEl.show(ev.detail) }></mb-component>
           <mb-feedback dir={ this.hostEl.getAttribute('dir') }
@@ -568,4 +620,5 @@ export class BlinkidInBrowser implements MicroblinkUI {
   private feedbackEl!: HTMLMbFeedbackElement;
   private mbComponentEl!: HTMLMbComponentElement;
 
+  private d2dSettings: D2DSettings;
 }

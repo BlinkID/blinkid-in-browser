@@ -1,5 +1,128 @@
 # Release notes
 
+## 6.1.0
+### New features
+* New and improved machine learning models for data extraction
+* Further improved barcode scanning (parsing for non-standard US DLs)
+* Added anonymization for QR code on Dutch ID card
+* Anonymization of religion field on Malaysian documents
+* Device-to-device (D2D) feature - BETA (see more in UI improvements section below)
+
+### Added support for 9 new documents:
+- Australia - Victoria - Proof of Age Card
+- Brazil - Rio de Janeiro - ID Card
+- Liechtenstein - ID Card
+- Luxembourg - Passport
+- Mozambique - ID Card
+- Norway - ID Card
+- Togo - ID Card
+- USA - Wyoming - ID Card
+- Zimbabwe - ID Card
+
+### Added support for 9 new documents in BETA:
+- Barbados - ID Card
+- Belgium - Passport
+- Brazil - Rio Grande do Sul - ID Card
+- Ireland - Residence Permit
+- Japan - Residence Permit
+- Lithuania - Residence Permit
+- Saint Lucia - ID Card
+- USA - New Hampshire - ID Card
+- USA - South Dakota - ID Card
+
+### Added support for 34 new versions of already supported documents:
+- Belgium - Resident ID Card
+- Canada - Residence Permit
+- Estonia - ID Card
+- Finland - Alien ID Card
+- Finland - ID Card
+- Latvia - Alien ID Card
+- Lithuania - ID Card
+- Luxembourg - ID Card
+- Malta - Residence Permit
+- Netherlands - ID Card
+- Netherlands - Residence Permit
+- Poland - ID Card
+- Sweden Residence Permit
+- USA - Alabama - ID Card
+- USA - Alaska - ID Card
+- USA - Colorado - Driving License
+- USA - Connecticut - ID Card
+- USA - District of Colombia - Driving License
+- USA - District of Colombia - ID Card
+- USA - Iowa - ID Card
+- USA - Kansas - ID Card
+- USA - Louisiana - Driving License
+- USA - Maine - Driving License
+- USA - Maine - ID Card
+- USA - Minnesota - ID Card
+- USA - Mississippi - ID Card
+- USA - Nevada - Driving License
+- USA - New York - Driving License
+- USA - South Carolina - ID Card
+- USA - South Dakota - Driving License
+- USA - Texas - ID Card
+- USA - Vermont - Driving License
+- USA - Washington - ID Card
+- USA - Wisconsin - Driving License
+
+### Added support for 2 new versions of already supported documents in BETA:
+- Poland - Residence Permit
+- Portugal - Residence Permit
+
+### Changes to BlinkID VideoRecognizer
+
+`VideoRecognizer` has been refactored.
+* This refactor has fixed some memory leak issues present in the previous implementation.
+* Now uses `requestVideoFrameCallback` for queuing video frames in browsers which support it.
+* Errors are no longer treated as rejected promises, but are instead thrown.
+* `this.videoElement` can no longer be changed or removed on the instance.
+* Implemented iOS browser security rules for video playback.
+* Added a helper `this.getVideoElement` method for getting the reference to the video.
+
+**Breaking changes:**
+* `NotSupportedReason` has been removed and `videoRecognizerErrors` are used directly instead.
+* `onScanningDone` will no longer trigger on user cancellation.
+* `setClearTimeoutCallback` has been removed from the `RecognizerRunner` as it's effectively the same thing as `onFirstSideDone` — it triggers once any recognizer has anything recognized for multi-side recognizers, which is the same as `RecognizerResultState.StageValid`.
+
+Environmental changes
+* TypeScript has been upgraded to 5.x .
+* Packages are now built without regenerator runtime. TSconfig compile target is now `ES2020`.
+
+### UI improvements
+
+#### Device-to-device (D2D) feature - BETA
+
+* The idea behind the device-to-device (D2D) feature is to provide extraction functionality when the initial device has technical limitations like no camera or no support for WebAssembly. Also, it can be used to direct users to use mobile instead of web cameras for a better scanning experience. Being optimized for conference calls, web cameras often struggle with a focus which causes the image of a document to have a high level of blur thus making it hard to read.
+
+* D2D can achieve these goals without the need to restart the existing process, such as form filling. When D2D is used, the scanning process is moved from a problematic device to another auxiliary device that has the necessary requirements or better camera quality. There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers without sending images or result data to a Microblink server.
+
+* Please check out our [D2D documentation](https://github.com/BlinkID/blinkid-in-browser/tree/master/ui#d2d) to learn more about this fantastic feature.
+
+#### BlinkID MultiSide image upload
+
+*  The UI component now supports image upload on both front and back sides, meaning that through our UI component, it is now possible to use the MultiSide recognizer as well.
+
+#### New user instructions, help screens, that lead to successful scans
+
+* Detailed instructions on how to scan identity documents, via an intro tutorial (onboarding) or floating-action-button (FAB) during scanning, leading to improved success rates in ID scanning and data extraction.
+    * New [properties](https://github.com/BlinkID/blinkid-in-browser/blob/master/ui/docs/components/blinkid-in-browser/readme.md#properties) introduced: `allowHelpScreensFab`, `allowHelpScreensOnboarding`, `allowHelpScreensOnboardingPerpetuity` and `helpScreensTooltipPauseTimeout`.
+
+#### Camera selection toolbar 
+* We've introduced the default option of camera selection through a dropdown menu of all available device cameras.
+    * If only one camera is available, the camera selection dropdown will not be displayed.
+* We've introduced icon/button for the option of mirroring the camera video feed.
+* Camera device names are now reported as `"[Front/Back] facing camera [n]"` on Android devices.
+
+#### General
+
+* We've improved the responsiveness of our user interface accross different browsers for users on mobile devices.
+
+### Other platform-related SDK changes
+
+* We've improved error exposure to console.
+* We've fixed minor internal reporting logic issue.
+
 ## 6.0.1
 
 ### Platform-related SDK changes

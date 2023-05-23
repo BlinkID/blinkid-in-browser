@@ -18,11 +18,15 @@
 ### Used by
 
  - [mb-component](../mb-component)
+ - [mb-device-selection-connection](../mb-device-selection/mb-device-selection-connection)
+ - [mb-device-selection-mobile](../mb-device-selection/mb-device-selection-mobile)
 
 ### Graph
 ```mermaid
 graph TD;
   mb-component --> mb-spinner
+  mb-device-selection-connection --> mb-spinner
+  mb-device-selection-mobile --> mb-spinner
   style mb-spinner fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

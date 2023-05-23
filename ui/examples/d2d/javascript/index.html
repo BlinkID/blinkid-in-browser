@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+        <title>Example: BlinkID UI - D2D activated</title>
+
+        <!-- Import UI component which includes WASM library -->
+        <!-- Keep in mind that the jsDelivr CDN is used for demonstration, it's not intended to be used in production! -->
+        <script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.1.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+
+        <style type="text/css">
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+
+                width: 100%;
+                height: 100%;
+            }
+
+            html {
+                font-family: "Avenir Next", sans-serif;
+            }
+
+            body {
+                background-color: #fff;
+                box-sizing: border-box;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                padding: 20px;
+            }
+
+            blinkid-in-browser {
+              max-width: 400px;
+
+              /* Customization of UI - see variables in src/components/shared/styles/_globals.scss */
+              /*
+              --mb-component-background: red;
+              --mb-component-action-label: none;
+              --mb-component-border-width: 0;
+              --mb-component-action-buttons-width: 100%;
+              --mb-component-action-buttons-justify-content: space-evenly;
+              --mb-component-button-size: 48px;
+              --mb-component-button-border-radius: 24px;
+              */
+            }
+        </style>
+    </head>
+    <body>
+        <!-- It's possible to obtain a free trial license key on microblink.com -->
+        <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLjM8ZY9al1B+dHT1pvkVLDlPi2TrNIleC/ZCr2/SCnbqKTEiEgN7pWFr0Qk/PJQyjnslTbSSENvp1un8OJTDhtTlz33EWHz3HMhHcBcmNHGVcshRgrlnCwb0j/5Z3DBqGHzAJl+lDRItIEO2F0f+U9YOrp6mJXKRHF2o6nMmSxdyK8E1bw8W3k4FN1mppgXE7fIc/W9OV+YpsjzUba91QVd1Zfd2qJ6OCj9B4eUQTE90EN5ICYZ6HdjxIdgn/+swmIPdmJGHpyKj0Nmv9K1Rz4llL5rTFffJ0kx3l/DklE+S5GUGmQ+GWOuLx6M5eNE=" recognizers="BlinkIdSingleSideRecognizer"></blinkid-in-browser>
+
+        <script type="text/javascript">
+
+var parcelRequire;
+
+function extractPeerIdFromURL() {
+  const params = new URLSearchParams(location.search);
+  const peerId = params.get("peerId");
+
+  return peerId;
+}
+
+function generatePeerUrl(peerId) {
+  return window.location.href + `?peerId=${peerId}`;
+}
+
+function run()
+{
+  // Important: if attributes or properties are changed, whole component is rerendered
+  const blinkId = document.querySelector("blinkid-in-browser");
+
+  if (window.location.hostname === "blinkid.github.io")
+  {
+    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaBPoTjCZAYcmGQYLnBDuzt17ppUyNkH1n7wT0pbn/mT4DHblrCE7O75KMTQXA7MkhJLtlnHPKcYnFtCobUbMpkv99k/Q5PbpMm2WomH0goldSzMPTCy7/5azojUj9F86QvW28qkYrsltK+ZQy3LNE64XdthLCo4NCCXZC34sr0UhTW37wzbuj7z34w9kq3A3q6tV7POqq8q+fSLTZkMFxSNThFHYOydO93HwbDw1ywV1bU1KO4KXz8ft4ckEQ5eTBC0l4iu0m5oyuRHoje0+F6WCcEYQx1ySJYWGicj0EWN2ijXl+DuMWgzUqxpANKVQ==";
+  }
+
+  blinkId.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
+  blinkId.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
+
+  blinkId.d2dOptions = {
+    secure: true,
+    host: "0.peerjs.com",
+    port: 443,
+    urlFactory: generatePeerUrl,
+    peerIdExtractor: extractPeerIdFromURL };
+
+
+  blinkId.addEventListener(
+
+  "fatalError",
+  (ev) => console.log("fatalError", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "ready",
+  (ev) => console.log("ready", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "scanError",
+  (ev) => console.log("scanError", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "scanSuccess",
+  (ev) => console.log("scanSuccess", ev.detail));
+
+
+  blinkId.addEventListener(
+
+  "feedback",
+  (ev) => console.log("feedback", ev.detail));
+
+}
+
+window.addEventListener("DOMContentLoaded", (ev) => run());
+</script>
+    </body>
+</html>
