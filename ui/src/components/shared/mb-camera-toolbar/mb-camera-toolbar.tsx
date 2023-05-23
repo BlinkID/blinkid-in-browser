@@ -17,7 +17,7 @@ import {
 
 import { CameraEntry } from '../../../utils/data-structures';
 import * as DeviceHelpers from '../../../utils/device.helpers';
-import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
+import { setWebComponentParts } from '../../../utils/generic.helpers';
 
 @Component({
   tag: 'mb-camera-toolbar',
@@ -31,7 +31,7 @@ export class MbCameraToolbar {
   @State() showCloseButton: boolean = false;
 
   @State() isDesktop: boolean = DeviceHelpers.isDesktop();
-  
+
   /**
    * Set to `true` if close button should be displayed.
    */
@@ -42,7 +42,7 @@ export class MbCameraToolbar {
   /**
    * Whether to show 'Camera flip' button.
    */
-  @Prop() enableCameraFlip: boolean = false;
+  @Prop() enableCameraFlip: boolean = true;
 
   /**
    * Whether the camera is flipped, this property will be flip the relevant icon.
@@ -78,15 +78,6 @@ export class MbCameraToolbar {
     setWebComponentParts(this.hostEl);
   }
 
-  connectedCallback() {
-    window.addEventListener('resize', this.handleResize, false);
-    this.handleResize();
-  }
-
-  disconnectedCallback() {
-    window.removeEventListener('resize', this.handleResize, false);
-  }
-
   /**
    * Change active camera.
    */
@@ -115,10 +106,6 @@ export class MbCameraToolbar {
     ev.preventDefault();
     ev.stopPropagation();
     this.flipEvent.emit();
-  }
-
-  private handleResize = () => {
-    this.isDesktop = DeviceHelpers.isDesktop();
   }
 
   private handleChangeCameraDevice(camera: CameraEntry) {
@@ -171,10 +158,9 @@ export class MbCameraToolbar {
         <header>
           { flipButton }
           <div class="camera-selection-wrapper">
-            <mb-camera-selection  
-              clear-is-camera-active={ !this.showCloseButton || this.clearIsCameraActive } 
+            <mb-camera-selection
+              clear-is-camera-active={ !this.showCloseButton || this.clearIsCameraActive }
               onChangeCameraDevice={ (ev: CustomEvent<CameraEntry>) => this.handleChangeCameraDevice(ev.detail) }
-              class={ classNames({ visible: this.isDesktop }) }
               ref={ el => this.cameraSelection = el as HTMLMbCameraSelectionElement }
             ></mb-camera-selection>
           </div>

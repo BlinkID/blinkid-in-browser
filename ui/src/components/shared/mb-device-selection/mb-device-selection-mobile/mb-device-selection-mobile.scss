@@ -1,0 +1,70 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+@import "../../styles/globals-sass";
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: white;
+  flex-direction: column;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+}
+
+:host .content {
+  padding: 48px 24px;
+  flex: 1;
+
+  .title {
+    margin: 0;
+    font-size: 20px;
+    line-height: 32px;
+  }
+
+  .description {
+    color: map-get(map-get(map-get($base-colors, text-secondary), onlight), foreground);
+    margin-top: 24px;
+    margin-bottom: 24px;
+    font-size: 16px;
+  }
+
+  .info {
+    font-size: 12px;
+    color: rgba(107, 114, 128, 1);
+  }
+}
+
+:host .mb-mobile-icon {
+  margin-top: 48px;
+  height: 100px;
+  width: 100px;
+}
+
+:host .mb-mobile-icon-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 48px;
+  padding-bottom: 24px;
+}
+
+:host .footer {
+  padding: 24px;
+  background-color: rgba(116, 116, 128, 0.08);
+  text-align: center;
+  width: 100%;
+}
+
+:host .button-wrapper-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}

@@ -1,0 +1,30 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+:host {
+  --mb-progress-tracker-dot-active-color: #0062F2;
+  --mb-progress-tracker-dot-inactive-color: #C6C6C8;
+  display: block;
+}
+
+.mb-progress-tracker {
+  display: flex;
+  flex-direction: row;
+  align-items: space-between;
+}
+
+.mb-progress-tracker .dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  margin: 0px 6px;
+
+  &.active {
+    background-color: var(--mb-progress-tracker-dot-active-color);
+  }
+
+  &.inactive {
+    background-color: var(--mb-progress-tracker-dot-inactive-color);
+  }
+}

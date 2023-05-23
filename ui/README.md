@@ -20,6 +20,11 @@ One of the main goals of UI component is to simplify integration of BlinkID in w
     * [Custom icons](#customization-icons)
     * [Localization](#customization-localization)
         * [RTL support](#customization-rtl-support)
+* [Device-to-device (D2D) - BETA](#d2d)
+    * [Usage scenarios](#d2d-usage)
+    * [Setup](#d2d-setup)
+    * [Configuration](#d2d-configuration)
+    * [Why is this beta?](#d2d-beta)
 
 ## <a name="installation"></a> Installation
 
@@ -444,3 +449,176 @@ To use UI component in RTL interfaces, explicitly set `dir="rtl"` attribute on H
 ```html
 <blinkid-in-browser ... dir="rtl"></blinkid-in-browser>
 ```
+
+## <a name="d2d"></a> Device-to-device (D2D) - BETA
+
+The idea behind the device-to-device (D2D) feature is to provide extraction functionality when the initial device has technical limitations like no camera or no support for WebAsembly. Also, it can be used to direct users to use mobile instead of web cameras for a better scanning experience. Being optimized for conference calls, web cameras often struggle with a focus which causes the image of a document to have a high level of blur thus making it hard to read.
+
+D2D can achieve these goals without the need to restart the existing process, such as form filling. When D2D is used, the scanning process is moved from a problematic device to another auxiliary device that has the necessary requirements or better camera quality. There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers without sending images or result data to a Microblink server.
+
+This feature has undergone thorough testing in various environmental scenarios, including different WiFi and mobile networks, using a variety of desktop and mobile devices. Currently, there are no known bugs, and it functions properly. However, it is important to note that the complexity of this feature, primarily due to the sensitivity of P2P communication and the configuration of necessary signaling and STUN servers, may result in some networks with high security, such as those with strict firewall policies, preventing communication between peers. Since these environments can differ significantly and are somewhat beyond our control, we consider this feature to be in the BETA state until we gain a better understanding and can precisely specify the cases in which D2D may not be possible.
+
+### <a name="d2d-usage"></a> Usage scenarios
+
+The D2D feature can be activated in the following usage scenarios:
+
+* **The initial device doesn’t have a web camera device (nor WebAssembly support)**
+    * To use the D2D feature, the auxiliary device has to have a web camera device and WebAssembly support.
+* **The initial device has WebAssembly support, but poor quality web camera device**
+    * To use the D2D feature, the auxiliary device has to have a web camera device and WebAssembly support.
+
+### <a name="d2d-setup"></a> Setup
+
+* **Frontend**
+
+    * Our UI component is being used for the initial and auxiliary devices.
+        -  Scenario: *myapp.com* can instantiate the initial and the auxiliary UI component.
+        -  Scenario: the initial UI component is on *myapp.com*, while the auxiliary UI component is on *d2d.myapp.com*, the same UI component is used for both web locations.
+
+* **Backend**
+
+    A single backend service needs to be set up.
+
+    The D2D feature is based on [PeerJS](https://peerjs.com) - a JavaScript library that simplifies peer-to-peer (P2P) communication between web browsers via WebRTC technology. 
+    It uses a signaling server and STUN servers to establish P2P connections between peers (devices). Data is sent directly between the browsers of connected devices (peers).
+
+    * **Signaling server**
+
+        - By default, the PeerJS library uses the [PeerJS server](https://github.com/peers/peerjs-server) for signaling. The PeerJS server has the role of a central server (signaling server) for mediating communication between peers. It itself does not retain data or have insight into data sent via a P2P connection.
+            
+            When two peers want to establish a P2P connection, they use the PeerJS server to exchange signaling data, such as information about identity, availability, and technical details of the connection. This signaling data helps peers find each other and establish a direct P2P connection.
+
+            Once a P2P connection is established, data is sent directly between peers, bypassing the PeerJS server. The PeerJS server is no longer involved in data transfer. Data is transferred directly between peers, usually via WebRTC technology, which enables secure and fast data transfer between browsers.
+
+            The PeerJS server only acts as an intermediary in the process of establishing a P2P connection but does not retain or have insight into the data transmitted between peers. This means that data privacy and security depend on the P2P connection itself, not on the PeerJS server.
+
+        - The PeerJS server is an open-source server implemented in Node.js that is available as a separate project. You can run it on your own server or use hosting services that support Node.js applications. The PeerJS server allows peers to register with a unique ID, exchange messages through the server, and use it to discover and connect with other peers.
+
+        - The PeerJS library and PeerJS server are independent projects. The PeerJS library is a JavaScript library used on the client side for peer-to-peer communication, while the PeerJS server is software that enables peer-to-peer connections to.
+
+    * **STUN servers**
+
+        - A STUN (Session Traversal Utilities for NAT) server is a key element in facilitating communication between two devices behind NAT (Network Address Translation) devices, such as routers or firewalls. NAT devices assign private IP addresses to devices within the local network while using public IP addresses to communicate with the Internet.
+
+        - When two devices try to establish a direct communication channel, they may face problems due to NAT. NAT devices change the source IP addresses and ports of incoming packets to properly deliver them within the local network. However, this makes it difficult to establish direct connections between two devices because their actual IP addresses and ports are not visible outside the local network. In such situations, the STUN server acts as an intermediary between the two devices.
+
+        - PeerJS has built-in default STUN servers that it uses if you have not explicitly defined other servers through the settings. The PeerJS library uses STUN servers to discover the external IP addresses and ports of peers to enable P2P connections.
+    
+        - **Firewall**
+            
+            - A firewall can be one of the factors preventing successful P2P communication between devices, even if PeerJS is being used correctly. Firewalls are designed to control traffic entering and leaving a network and can block or restrict certain types of communication, including P2P communication.
+
+            - Here are some reasons why a firewall can affect P2P communication:
+
+                - Blocking certain protocols or ports: The firewall can block certain protocols or ports that are required for P2P communication. For example, if a certain port is used that is blocked on the firewall, the communication will not go through.
+                - Blocking inbound traffic: A firewall can be configured to block inbound traffic coming from the Internet, and P2P communication usually involves establishing a connection between peers that are behind a NAT. If incoming traffic is blocked, peers from different networks will not be able to communicate.
+                - NAT traversal restrictions: Firewalls can use special security mechanisms, such as SIP ALG (Application Layer Gateway), which can change data in packets to maintain security policies. However, such mechanisms can negatively affect P2P communication that relies on data consistency and integrity.
+
+            - If you are experiencing problems with P2P communication using PeerJS, we recommend checking your firewall configuration to ensure that traffic required for P2P communication is not being blocked. You may need to open certain ports or configure your firewall to allow P2P traffic to pass through. Also, make sure the STUN server is turned on to enable the discovery of public IP addresses and ports. If necessary, consult your network administrator or service provider to configure the firewall appropriately.
+
+    For more information, see the official [PeerJS](https://peerjs.com) documentation and/or the [PeerJS server](https://peerjs.com/peerserver) documentation.
+
+### <a name="d2d-configuration"></a> Configuration
+
+```html
+<blinkid-in-browser
+    engine-location="http://localhost/resources"
+    license-key="<PLACE-YOUR-LICENSE-KEY-HERE>"
+    recognizers="BlinkIdSingleSideRecognizer"
+></blinkid-in-browser>
+```
+```javascript
+<script>
+    // Register listener for successful scan event to obtain results
+    const el = document.querySelector('blinkid-in-browser');
+
+    function extractPeerIdFromURL() {
+        const params = new URLSearchParams(location.search);
+        const peerId = params.get('peerId');
+
+        return peerId;
+    }
+
+    function generatePeerUrl(peerId) {
+        return window.location.href + `?peerId=${peerId}`;
+    }
+
+    el.d2dOptions = {
+        secure: true,
+        host: 'my-peerjs-server.com',
+        port: 443,
+        urlFactory: generatePeerUrl,
+        peerIdExtractor: extractPeerIdFromURL,
+    };
+
+    el.addEventListener('scanSuccess', ev => {
+        // Since UI component uses custom events, data is placed in `detail` property
+        console.log('Results', ev.detail);
+    });
+</script>
+```
+
+The D2D feature is configured through the `d2dOptions` setting, which contains the following properties:
+
+* `secure`
+    - Indicates whether the connection between peers will be established through the secure HTTPS protocol.
+
+        When set to `true`, the PeerJS library will use the HTTPS protocol to establish a connection between peers. This ensures that communication takes place over an encrypted connection, which helps protect the privacy and security of data transmitted between peers.
+
+        If not specified or set to `false` (which is the default), PeerJS will use the standard HTTP protocol for peer-to-peer communication. In this case, the connection is not encrypted, and there may be a greater risk of eavesdropping or data manipulation during transmission.
+
+    - Note that to use the HTTPS protocol, the PeerJS signaling server should be configured and accessible via HTTPS.
+
+* `host`
+
+    - URL or IP address of the server that will be used for signaling and mediating communication between peers. In this way, peers will use a specific PeerJS server as a central server for exchanging signaling data and managing P2P connections.
+
+    - In this example, the `host` property is set to *'my-peerjs-server.com'*, indicating that the PeerJS library will use that server to signal and mediate communication between peers.
+        
+        If set to `0.peerjs.com`, then the PeerJS library is going to automatically connect to the default [PeerServer Cloud](https://peerjs.com/peerserver) service.
+
+    - STUN servers are usually automatically detected and used by the PeerJS library and do not need to be explicitly configured via host settings. The PeerJS library has built-in default STUN servers that it uses if no other STUN servers are specified through the settings.
+
+* `port`
+
+    - Indicates the TCP port that will be used for peer-to-peer communication.
+
+        When defined, the PeerJS library will try to use that particular TCP port to establish a connection between peers. This allows the desired port to be specified and used for P2P communication.
+
+        If not specified, the PeerJS library will automatically select an available free TCP port for communication.
+
+    - Note that if you are using a PeerJS server, it is necessary to ensure that the same TCP port is open on the server so that peers can establish connections through that port. Also, if you use hosting or a firewall, you should check whether the selected port is allowed for communication between peers.
+
+* `urlFactory`
+
+    - Represents a function used to generate a URL or address that will be used to establish a P2P connection between peers. 
+
+        This allows each peer to have a unique URL and identifier (peerId) used to establish a connection with other peers.
+
+    - In this example, the `generatePeerUrl` function is defined as `urlFactor`. It takes `peerId` as an input parameter and generates a URL containing that peerId. The generated URL is used to identify peers and exchange information about them during P2P connection establishment.
+
+        The `generatePeerUrl` function uses `window.location.href` to retrieve the current URL and then adds the peerId as a query parameter. 
+
+    - This generated URL is used to display the QR code (through the QRCode library) on the canvas to allow scanning of the URL with another device and establishing a peer-to-peer P2P connection.
+
+* `peerIdExtractor`
+
+    - Represents a function used to extract the `peerId` value from the current URL or other source information.
+
+        This allows a corresponding `peerId` to be associated with each peer to establish a connection between them and enable P2P communication.
+
+    - In this example, the `extractPeerIdFromURL` function is defined as `peerIdExtractor`. It uses the `URLSearchParams` object to retrieve the `peerId` value from the current URL. The function retrieves the parameters from the URL query and then retrieves the `peerId` value using the `get('peerId')` method.
+
+    - This function is used to retrieve a `peerId` value that was previously generated on another device or from another source. That `peerId` is then used to establish a connection with another peer using the PeerJS library.
+
+### <a name="d2d-beta"></a> Why is this beta?
+
+Our initial testing hasn't discovered any obvious cases in which D2D would fail. We are confident that it works as expected on most Wi-Fi networks people use at home or in office environments that don't have tighter than average security policies. However, due to underlying tech used to facilitate P2P communication (WebRTC, STUN), we suspect there may be cases, still uncovered by our tests, in which this feature may be blocked by firewall and thus fail to work.
+
+In addition to this, we also need to test how communication with STUN server works if PeerJS server is deployed with different configuration than our recommendation. We believe a more thorough tests are in order so that we can provide better and faster support for different cloud setups.
+
+In order to remove beta status from this feature, we plan to:
+* test with various network settings to try to clearly identify cases in which STUN/WebRTC traffic may be blocked
+* test various PeerJS implementations to be able to provide clear recommendations, better support and more flexibility
+
+Our priority is to promote D2D to a regular feature as soon as possible.

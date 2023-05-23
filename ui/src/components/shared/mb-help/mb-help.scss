@@ -1,0 +1,238 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+@import "../styles/_globals-sass";
+
+// vars - general
+$mb-help-font-color-primary: var(--mb-help-font-color-primary);
+$mb-help-font-color-secondary: var(--mb-help-font-color-secondary);
+$mb-help-modal-background-color: var(--mb-help-modal-background-color);
+$mb-help-modal-backdrop-color: var(--mb-help-modal-backdrop-color);
+// vars - lobby button standby
+$mb-help-lobby-button-width: 36px;
+$mb-help-lobby-button-height: 36px;
+$mb-help-lobby-button-tooltop-offset: 5px;
+$mb-help-lobby-button-background-color: var(--mb-help-lobby-button-background-color);
+$mb-help-lobby-button-border-color: var(--mb-help-lobby-button-border-color);
+// vars - lobby button hovered
+$mb-help-lobby-button-hovered-background-color: var(--mb-help-lobby-button-hovered-background-color);
+$mb-help-lobby-button-hovered-border-color: var(--mb-help-lobby-button-hovered-border-color);
+// vars - lobby button focused
+$mb-help-lobby-button-focused-background-color: var(--mb-help-lobby-button-focused-background-color);
+$mb-help-lobby-button-focused-border-color: var(--mb-help-lobby-button-focused-border-color);
+// vars - lobby button icon
+$mb-help-lobby-button-icon-width: auto;
+$mb-help-lobby-button-icon-height: 18px;
+// vars - progress tracker
+$mb-help-progress-tracker-dot-active-color: var(--mb-help-progress-tracker-dot-active-color);
+$mb-help-progress-tracker-dot-inactive-color: var(--mb-help-progress-tracker-dot-inactive-color);
+// vars - tooltip
+$mb-help-lobby-button-tooltip-background-color: var(--mb-help-lobby-button-tooltip-background-color);
+$mb-help-lobby-button-tooltip-font-color: var(--mb-help-lobby-button-tooltip-font-color);
+// $mb-help-color-success: var(--mb-help-color-success); // used in Svgs
+// $mb-help-color-danger: var(--mb-help-color-danger); // used in Svgs
+// $mb-help-lobby-button-icon-color: var(--mb-help-lobby-button-icon-color); // used in Svgs
+
+:host {
+  font-family: inherit;
+  visibility: hidden;
+  opacity: 0;
+}
+
+:host(.visible) {
+  visibility: visible;
+  opacity: 1;
+}
+
+// Lobby -------------------------------------------------------------------------------------------
+
+.lobby {
+  display: block;
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  width: auto;
+  height: auto;
+
+  mb-tooltip-advanced {
+    --background-color: #{$mb-help-lobby-button-tooltip-background-color};
+    --font-color: #{$mb-help-lobby-button-tooltip-font-color};
+  }
+
+  mb-tooltip-advanced::part(tooltip) {
+    left: -46px;
+    right: calc(50% - 19px);
+    bottom: calc($mb-help-lobby-button-height + $mb-help-lobby-button-tooltop-offset);
+    width: auto;
+  }
+}
+
+.lobby button {
+  width: $mb-help-lobby-button-width;
+  height: $mb-help-lobby-button-height;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 0px;
+
+  background-color: $mb-help-lobby-button-background-color;
+  border: 1px solid $mb-help-lobby-button-border-color;
+  border-radius: 50%;
+
+  cursor: pointer;
+}
+
+.lobby button:hover {
+  background-color: $mb-help-lobby-button-hovered-background-color;
+  border-color: $mb-help-lobby-button-hovered-border-color;
+}
+
+.lobby button:focus {
+  background-color: $mb-help-lobby-button-focused-background-color;
+  border-color: $mb-help-lobby-button-focused-border-color;
+}
+
+.lobby button svg.icon-question-mark {
+  width: $mb-help-lobby-button-icon-width; // auto
+  height: $mb-help-lobby-button-icon-height;
+}
+
+// Modal -------------------------------------------------------------------------------------------
+
+mb-overlay {
+  background-color: $mb-help-modal-backdrop-color;
+}
+
+mb-modal::part(mb-modal-inner) {
+  background-color: $mb-help-modal-background-color;
+  border-radius: var(--mb-modal-border-radius);
+}
+
+.modal-content {
+  display: block;
+  padding-top: 20px;
+}
+
+.modal-content .svg-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.modal-content .svg-container svg {
+  width: 280px;
+  height: auto;
+  margin: 0px auto;
+}
+
+.modal-content p.title {
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+  text-align: center;
+  
+  color: $mb-help-font-color-primary;
+
+  margin-bottom: 8px;
+}
+
+.modal-content p.description {
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  margin-bottom: 0px;
+
+  color: $mb-help-font-color-secondary;
+
+  min-height: 96px;
+}
+
+.modal-content .progress-tracker-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.modal-content .buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 0px;
+}
+
+.modal-content .buttons mb-button-classic {
+  margin: 0px 8px;
+}
+
+.modal-content .buttons mb-button-classic::part(button) {
+  min-width: 200px;
+  width: auto;
+}
+
+.modal-content .buttons.onboarding {
+  margin-top: 24px;
+  margin-bottom: 20px;
+}
+
+.modal-content .buttons.onboarding mb-button-classic::part(button) {
+  min-width: 155px;
+  width: auto;
+  height: 56px;
+}
+
+// Modal - Progress Tracker ------------------------------------------------------------------------
+
+.modal-content mb-progress-tracker {
+  --mb-progress-tracker-dot-active-color: #{$mb-help-progress-tracker-dot-active-color};
+  --mb-progress-tracker-dot-inactive-color: #{$mb-help-progress-tracker-dot-inactive-color};
+}
+
+// Responsivness -----------------------------------------------------------------------------------
+
+@media only screen and (max-width: $breakpoint-width-mobile-landscape) {
+  .lobby {
+    bottom: 30px;
+    right: 20px;
+  }
+
+  .modal-content p.description {
+    text-align: left;
+    min-height: 120px;
+  }
+
+  .modal-content .progress-tracker-container {
+    margin-top: 24px;
+  }
+
+  .modal-content .buttons {
+    margin-top: 24px;
+  }
+
+  .modal-content .buttons mb-button-classic {
+    margin: 0px 4px;
+  }
+
+  .modal-content .buttons mb-button-classic::part(button) {
+    min-width: 112px;
+    width: auto;
+  }
+}
+
+@media only screen and (min-width: $breakpoint-width-mobile-landscape) {
+  mb-modal {
+    width: 500px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

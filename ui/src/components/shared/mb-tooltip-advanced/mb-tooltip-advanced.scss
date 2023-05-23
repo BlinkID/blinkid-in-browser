@@ -1,0 +1,116 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+$arrow-left-right-offset: 15px;
+
+:host {
+  --background-color: #0062F2;
+  --font-color: white;
+
+  display: block;
+
+  font-family: inherit;
+}
+
+.mb-tooltip {
+  display: none;
+  position: absolute;
+
+  margin: 0px;
+  margin-bottom: 5px;
+  padding: 2px 4px 4px 4px;
+
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 16px;
+
+  color: var(--font-color);
+  background-color: var(--background-color);
+
+  border: 1px solid rgba(120, 120, 128, 0.2);
+  filter: drop-shadow(0px 2px 4px rgba(31, 41, 55, 0.06)) drop-shadow(0px 4px 6px rgba(31, 41, 55, 0.1));
+  border-radius: 4px;
+
+  &.text-center {
+    text-align: center;
+  }
+  &.text-left {
+    text-align: left;
+  }
+  &.text-right {
+    text-align: right;
+  }
+
+  svg {
+    display: block;
+    float: left;
+    margin: 6px 14px 6px 6px;
+  }
+
+  &::after {
+    position: absolute;
+    z-index: -1;
+    display: block;
+    content: " ";
+    background-color: var(--background-color);
+    width: 10px;
+    height: 10px;
+  }
+
+  &.arrow-none::after {
+    display: none;
+  }
+
+  &.arrow-left::after {
+    left: -3px;
+    top: calc(50% - 5px);
+  }
+
+  &.arrow-right::after {
+    right: -3px;
+    top: calc(50% - 5px);
+  }
+
+  &.arrow-up::after {
+    top: -3px;
+    left: calc(50% - 5px);
+    transform: rotate(-45deg) translateY(-3px);
+  }
+
+  &.arrow-up-left::after {
+    top: -3px;
+    left: $arrow-left-right-offset;
+    transform: rotate(-45deg) translateY(-3px);
+  }
+
+  &.arrow-up-right::after {
+    top: -3px;
+    right: $arrow-left-right-offset;
+    transform: rotate(-45deg) translateY(-3px);
+  }
+
+  &.arrow-down::after {
+    bottom: -3px;
+    left: calc(50% - 5px);
+    transform: rotate(-45deg) translateY(3px);
+  }
+
+  &.arrow-down-left::after {
+    bottom: -3px;
+    left: $arrow-left-right-offset;
+    transform: rotate(-45deg) translateY(3px);
+  }
+
+  &.arrow-down-right::after {
+    bottom: -3px;
+    right: $arrow-left-right-offset;
+    transform: rotate(-45deg) translateY(3px);
+  }
+
+  &.visible {
+    display: block;
+  }
+}

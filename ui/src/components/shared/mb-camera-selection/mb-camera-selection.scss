@@ -16,15 +16,15 @@
   .active-camera {
     all: unset;
     box-sizing: border-box;
-    display: block;
+    display: flex;
+    cursor: pointer;
 
     // Width + border
-    width: var(--mb-toolbar-selection-width);
+    // width: var(--mb-toolbar-selection-width);
+    // width: 100%;
 
     // Line height + padding + border
-    height: calc(var(--mb-line-height) + #{ $padding-unit-small * 2 } + 2px);
-
-    margin: 0 auto;
+    align-items: center;
 
     color: var(--mb-toolbar-color);
     line-height: var(--mb-line-height);
@@ -34,12 +34,6 @@
 
     border: 1px solid transparent;
     border-radius: var(--mb-toolbar-border-radius);
-
-    .icon,
-    .name {
-      display: inline-block;
-      vertical-align: middle;
-    }
 
     .icon {
       width: 20px;
@@ -53,7 +47,7 @@
 
     .name {
       // width = 100% - padding width - 2 * width of an icon
-      max-width: calc(100% - #{ 2 * $padding-unit-medium } - 40px);
+      // max-width: calc(100% - #{ 2 * $padding-unit-medium } - 40px);
 
       font-weight: var(--mb-toolbar-camera-name-font-weight);
 
@@ -85,8 +79,6 @@
   }
 
   #list-background {
-    display: none;
-
     position: fixed;
     top: 0;
     left: 0;
@@ -94,14 +86,12 @@
     width: 100vw;
     height: 100vh;
 
-    &.visible {
-      display: block;
+    &:not(.visible) {
+      display: none;
     }
   }
 
   .list {
-    display: none;
-
     position: absolute;
     top: calc(var(--mb-font-size) * 1.5 + #{ $padding-unit-small * 2 * 2 });
     left: calc(50% - var(--mb-toolbar-selection-width) / 2);
@@ -114,8 +104,8 @@
     border-radius: var(--mb-toolbar-border-radius);
     box-shadow: var(--mb-toolbar-list-shadow);
 
-    &.visible {
-      display: block;
+    &:not(.visible) {
+      display: none;
     }
 
     svg,

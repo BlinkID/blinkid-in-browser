@@ -105,11 +105,9 @@ export class MbCameraSelection {
   render() {
     const cameraListElements = this.cameraList.map((camera: CameraEntry) => {
       const isActive = !this.clearIsCameraActive && this.activeCamera?.details?.deviceId === camera.details.deviceId;
-      
-      this.setIsCameraActive.emit(isActive);
-      
+
       let content = ( <span class="spacer"></span> )
-      
+
       if (isActive) {
         content = (
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,6 +126,10 @@ export class MbCameraSelection {
         </li>
       )
     });
+
+    const doNotRender = !(this.cameraList?.length > 1);
+
+    if (doNotRender) { return undefined; }
 
     return (
       <Host>

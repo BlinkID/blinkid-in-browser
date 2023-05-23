@@ -25,6 +25,19 @@
 | `"tooltip"` |             |
 
 
+## Dependencies
+
+### Used by
+
+ - [mb-device-selection](../mb-device-selection)
+
+### Graph
+```mermaid
+graph TD;
+  mb-device-selection --> mb-tooltip
+  style mb-tooltip fill:#f9f,stroke:#333,stroke-width:4px
+```
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

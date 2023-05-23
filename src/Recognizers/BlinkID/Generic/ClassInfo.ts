@@ -406,7 +406,9 @@ export enum Region
     TLAXCALA = 116,
     QUINTANA_ROO_COZUMEL = 117,
     SAO_PAOLO = 118,
-    COUNT = 119
+    RIO_DE_JANEIRO = 119,
+    RIO_GRANDE_DO_SUL = 120,
+    COUNT = 121
 }
 
 export enum DocumentType
@@ -463,5 +465,6 @@ export enum DocumentType
     CONSULAR_PASSPORT = 49,
     MINORS_PASSPORT = 50,
     MINORS_PUBLIC_SERVICES_CARD = 51,
-    COUNT = 52
+    DRIVING_PRIVILEGE_CARD = 52,
+    COUNT = 53
 }

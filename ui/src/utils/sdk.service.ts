@@ -183,7 +183,7 @@ export class SdkService {
 
       await this.videoRecognizer.setVideoRecognitionMode(BlinkIDSDK.VideoRecognitionMode.Recognition);
 
-      this.videoRecognizer.startRecognition(
+      await this.videoRecognizer.startRecognition(
         async (recognitionState: BlinkIDSDK.RecognizerResultState) => {
           this.videoRecognizer.pauseRecognition();
 
@@ -244,34 +244,30 @@ export class SdkService {
         .catch((error) => { throw error; });
 ;
     } catch (error) {
-      if (error && error.details?.reason) {
-        const reason = error.details?.reason;
-
-        switch (reason) {
-          case BlinkIDSDK.NotSupportedReason.MediaDevicesNotSupported:
+      if (!error.code) {
+        eventCallback({ status: RecognitionStatus.UnknownError });
+      } else {
+        switch (error.code) {
+          case BlinkIDSDK.ErrorCodes.VIDEO_RECOGNIZER_MEDIA_DEVICES_UNSUPPORTED:
             eventCallback({ status: RecognitionStatus.NoSupportForMediaDevices });
             break;
-
-          case BlinkIDSDK.NotSupportedReason.CameraNotFound:
+          case BlinkIDSDK.ErrorCodes.VIDEO_RECOGNIZER_CAMERA_MISSING:
             eventCallback({ status: RecognitionStatus.CameraNotFound });
             break;
-
-          case BlinkIDSDK.NotSupportedReason.CameraNotAllowed:
+          case BlinkIDSDK.ErrorCodes.VIDEO_RECOGNIZER_CAMERA_NOT_ALLOWED:
             eventCallback({ status: RecognitionStatus.CameraNotAllowed });
             break;
-
-          case BlinkIDSDK.NotSupportedReason.CameraInUse:
+          case BlinkIDSDK.ErrorCodes.VIDEO_RECOGNIZER_CAMERA_IN_USE:
             eventCallback({ status: RecognitionStatus.CameraInUse });
             break;
 
           default:
             eventCallback({ status: RecognitionStatus.UnableToAccessCamera });
+            break;
         }
-
-        console.warn('VideoRecognizerError', error.name, '[' + reason + ']:', error.message);
-      } else {
-        eventCallback({ status: RecognitionStatus.UnknownError });
       }
+
+      console.warn('Error in VideoRecognizer', error.code, error.message);
 
       void this.cancelRecognition();
     }
@@ -289,9 +285,6 @@ export class SdkService {
   }
 
   public isScanFromImageAvailable(_recognizers: Array<string> = [], _recognizerOptions: any = {}): boolean {
-    if (_recognizers.indexOf('BlinkIdMultiSideRecognizer') > -1) {
-      return false;
-    }
     return true;
   }
 

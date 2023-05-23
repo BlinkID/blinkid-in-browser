@@ -11,7 +11,7 @@
 | --------------------- | ------------------------ | ---------------------------------------------------------------------------- | --------- | ------- |
 | `cameraFlipped`       | `camera-flipped`         | Whether the camera is flipped, this property will be flip the relevant icon. | `boolean` | `false` |
 | `clearIsCameraActive` | `clear-is-camera-active` |                                                                              | `boolean` | `false` |
-| `enableCameraFlip`    | `enable-camera-flip`     | Whether to show 'Camera flip' button.                                        | `boolean` | `false` |
+| `enableCameraFlip`    | `enable-camera-flip`     | Whether to show 'Camera flip' button.                                        | `boolean` | `true`  |
 | `showClose`           | `show-close`             | Set to `true` if close button should be displayed.                           | `boolean` | `false` |
 
 

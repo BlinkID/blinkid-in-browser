@@ -1,0 +1,73 @@
+/**
+ * Copyright (c) Microblink Ltd. All rights reserved.
+ */
+
+@import "../../styles/_globals-sass";
+
+:host {
+  display: block;
+
+  mb-overlay {
+    position: fixed;
+    background-color: var(--mb-overlay-deviceselection-background);
+    border-top-right-radius: var(--mb-modal-border-radius);
+    border-top-left-radius: var(--mb-modal-border-radius);
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+  }
+
+  mb-modal {
+    padding: 0;
+
+    &::part(mb-modal) {
+      border-top-right-radius: var(--mb-modal-border-radius);
+      border-top-left-radius: var(--mb-modal-border-radius);
+      border-bottom-right-radius: 0px;
+      border-bottom-left-radius: 0px;
+    }
+  }
+
+  .description {
+    color: map-get(map-get(map-get($base-colors, text-secondary), onlight), foreground);
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  .button-wrapper {
+    margin-top: 24px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+
+    @media only screen and (min-width: $breakpoint-width-tablet-landscape) {
+      display: flex;
+      justify-content: center;
+      flex-direction: row-reverse;
+
+      mb-button-classic:last-of-type {
+        margin-right: 10px;
+      }
+    }
+
+    mb-button-classic {
+      margin-bottom: 10px;
+    }
+  }
+
+  .button-wrapper-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+}

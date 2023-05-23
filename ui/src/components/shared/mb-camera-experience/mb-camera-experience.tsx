@@ -29,6 +29,8 @@ import { TranslationService } from '../../../utils/translation.service';
 
 import * as Utils from './mb-camera-experience.utils';
 
+import { MbHelpCallbacks } from '../mb-help/mb-help.model';
+
 @Component({
   tag: 'mb-camera-experience',
   styleUrl: 'mb-camera-experience.scss',
@@ -54,6 +56,7 @@ export class MbCameraExperience {
   private cameraMessageBarcode!: HTMLParagraphElement;
   private cameraToolbar!: HTMLMbCameraToolbarElement;
   private cardIdentityElement!: HTMLDivElement;
+  private helpScreens!: HTMLMbHelpElement;
 
   private cameraStateChangeId: number = 0;
   private cameraStateInProgress: boolean = false;
@@ -117,6 +120,31 @@ export class MbCameraExperience {
   }
 
   /**
+   * Dictates if Help Screens usage is allowed (turned on).
+   */
+  @Prop() allowHelpScreens: boolean = false;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() allowHelpScreensFab: boolean = false;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() allowHelpScreensOnboarding: boolean = false;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() allowHelpScreensOnboardingPerpetuity: boolean = false;
+
+  /**
+   * See description in public component.
+   */
+  @Prop() helpScreensTooltipPauseTimeout: number = 15000;
+
+  /**
    * Emitted when user clicks on 'X' button.
    */
   @Event() close: EventEmitter<void>;
@@ -163,6 +191,30 @@ export class MbCameraExperience {
   @Method()
   async setCameraFlipState(isFlipped: boolean) {
     this.cameraFlipped = isFlipped;
+  }
+
+  /**
+   * Initializes Help Screens.
+   */
+  @Method()
+  async initializeHelpScreens(callbacks: MbHelpCallbacks) {
+    this.helpScreens.initialize(callbacks);
+  }
+
+  /**
+   * Opens Help Screens in the Onboarding mode.
+   */
+  @Method()
+  async openHelpScreensOnboarding() {
+    this.helpScreens.openOnboarding();
+  }
+
+  /**
+   * Terminates Help Screens.
+   */
+  @Method()
+  async terminateHelpScreens() {
+    this.helpScreens.terminate();
   }
 
   /**
@@ -457,6 +509,15 @@ export class MbCameraExperience {
           onChangeCameraDevice={(ev: CustomEvent<CameraEntry>) => this.handleChangeCameraDevice(ev.detail)}
           ref={ el => this.cameraToolbar = el as HTMLMbCameraToolbarElement }
         ></mb-camera-toolbar>
+        <mb-help
+          allow={ this.allowHelpScreens }
+          allowFab={ this.allowHelpScreensFab }
+          allowOnboarding={ this.allowHelpScreensOnboarding }
+          allowOnboardingPerpetuity={ this.allowHelpScreensOnboardingPerpetuity }
+          tooltipPauseTimeout={ this.helpScreensTooltipPauseTimeout }
+          translationService={ this.translationService }
+          ref={ (el) => { this.helpScreens = el as HTMLMbHelpElement; } }
+        />
       </Host>
     );
   }

@@ -5,8 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CameraEntry, CameraExperience, CameraExperienceState, CameraExperienceTimeoutDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
+import { D2DOptions } from "./utils/d2d.service";
+import { CameraEntry, CameraExperience, CameraExperienceState, CameraExperienceTimeoutDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, RecognitionEvent, SDKError } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
+import { MbHelpCallbacks } from "./components/shared/mb-help/mb-help.model";
 import { SdkService } from "./utils/sdk.service";
 export namespace Components {
     interface BlinkidInBrowser {
@@ -15,6 +17,18 @@ export namespace Components {
          */
         "allowHelloMessage": boolean;
         /**
+          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).   Default value is 'true'.
+         */
+        "allowHelpScreensFab": boolean;
+        /**
+          * Dictates if the Help Screens Onboarding is active.  Onboarding is a process of opening the Help Screens initial guides when the Camera Experience is being started.  Default value is 'true'.
+         */
+        "allowHelpScreensOnboarding": boolean;
+        /**
+          * Dictates if the Help Screens Onboarding process is being started on every Camera Experience start, or just on the first one.  Default value is 'false' - onboarding ran only once.
+         */
+        "allowHelpScreensOnboardingPerpetuity": boolean;
+        /**
           * Configure camera experience state timeout durations
          */
         "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
@@ -22,6 +36,10 @@ export namespace Components {
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
         "cameraId": string | null;
+        /**
+          * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical  limitations, without the need to restart the existing process, such as form filling. In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements.  There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers. For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md  where you can also find more information about this feature.
+         */
+        "d2dOptions": D2DOptions;
         /**
           * Set to 'false' if component should not enable drag and drop functionality.  Default value is 'true'.
          */
@@ -42,6 +60,10 @@ export namespace Components {
           * Get information about product integration.
          */
         "getProductIntegrationInfo": () => Promise<ProductIntegrationInfo>;
+        /**
+          * Miliseconds timeout on which the "Need Help?" tooltip is turned on.  First timeout is started each time the Camera Experience starts and is being reset every time the Help Screens are consumed.  Default value is 15000 - 15 seconds.
+         */
+        "helpScreensTooltipPauseTimeout": number;
         /**
           * If set to 'true', UI component will not display feedback, i.e. information and error messages.  Setting this attribute to 'false' won't disable 'scanError' and 'scanInfo' events.  Default value is 'false'.
          */
@@ -236,8 +258,25 @@ export namespace Components {
           * Set to 'true' if default event should be prevented.
          */
         "preventDefault": boolean;
+        "quit": boolean;
     }
     interface MbCameraExperience {
+        /**
+          * Dictates if Help Screens usage is allowed (turned on).
+         */
+        "allowHelpScreens": boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensFab": boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensOnboarding": boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensOnboardingPerpetuity": boolean;
         /**
           * Api state passed from root component.
          */
@@ -251,6 +290,18 @@ export namespace Components {
          */
         "cameraFlipped": boolean;
         "clearIsCameraActive": boolean;
+        /**
+          * See description in public component.
+         */
+        "helpScreensTooltipPauseTimeout": number;
+        /**
+          * Initializes Help Screens.
+         */
+        "initializeHelpScreens": (callbacks: MbHelpCallbacks) => Promise<void>;
+        /**
+          * Opens Help Screens in the Onboarding mode.
+         */
+        "openHelpScreensOnboarding": () => Promise<void>;
         /**
           * Populate list of camera devices.
          */
@@ -283,6 +334,10 @@ export namespace Components {
           * Show scanning line on camera
          */
         "showScanningLine": boolean;
+        /**
+          * Terminates Help Screens.
+         */
+        "terminateHelpScreens": () => Promise<void>;
         /**
           * Instance of TranslationService passed from root component.
          */
@@ -338,6 +393,22 @@ export namespace Components {
          */
         "allowHelloMessage": boolean;
         /**
+          * Dictates if Help Screens usage is allowed (turned on).
+         */
+        "allowHelpScreens": boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensFab": boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensOnboarding": boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensOnboardingPerpetuity": boolean;
+        /**
           * See description in public component.
          */
         "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
@@ -345,6 +416,10 @@ export namespace Components {
           * Camera device ID passed from root component.
          */
         "cameraId": string | null;
+        /**
+          * See description in public component.
+         */
+        "d2dOptions": D2DOptions;
         /**
           * See description in public component.
          */
@@ -361,6 +436,10 @@ export namespace Components {
           * See description in public component.
          */
         "galleryOverlayType": 'FULLSCREEN' | 'INLINE';
+        /**
+          * See description in public component.
+         */
+        "helpScreensTooltipPauseTimeout": number;
         /**
           * See description in public component.
          */
@@ -499,6 +578,29 @@ export namespace Components {
     }
     interface MbContainer {
     }
+    interface MbDeviceSelection {
+        "closeModal": () => Promise<void>;
+        "d2dOptions": D2DOptions;
+    }
+    interface MbDeviceSelectionConnection {
+        "variant": string;
+    }
+    interface MbDeviceSelectionHandoff {
+        "urlFactory": D2DOptions['urlFactory'];
+    }
+    interface MbDeviceSelectionIntro {
+        "d2dOptions": D2DOptions;
+    }
+    interface MbDeviceSelectionMobile {
+        "d2dOptions": D2DOptions;
+    }
+    interface MbDeviceSelectionQuit {
+        "confirmLabel": string;
+        "denyLabel": string;
+        "description": string;
+        "modalLabel": string;
+        "visible": boolean;
+    }
     interface MbFeedback {
         /**
           * Call when FeedbackMessage which should be displayed.
@@ -508,6 +610,52 @@ export namespace Components {
           * Set to 'true' if component should be visible.
          */
         "visible": boolean;
+    }
+    interface MbHelp {
+        /**
+          * Dictates if usage is allowed (turned on).
+         */
+        "allow": boolean;
+        /**
+          * Dictates if Floating-Action-Button (Fab) is shown.
+         */
+        "allowFab": boolean;
+        /**
+          * Dictates if the onboarding is allowed.
+         */
+        "allowOnboarding": boolean;
+        /**
+          * Dictates if onboarding is executed all the time, or just once.
+         */
+        "allowOnboardingPerpetuity": boolean;
+        /**
+          * Closes modal.
+         */
+        "close": () => Promise<void>;
+        /**
+          * Initializes - starts tooltip timer, etc.
+         */
+        "initialize": (callbacks: MbHelpCallbacks) => Promise<void>;
+        /**
+          * Opens modal for Help Screens purpose.
+         */
+        "openHelpScreens": () => Promise<void>;
+        /**
+          * Opens modal for Onboarding purpose.
+         */
+        "openOnboarding": () => Promise<void>;
+        /**
+          * Terminates - cancels tooltip timer, closes modal, etc.
+         */
+        "terminate": () => Promise<void>;
+        /**
+          * Dictates Milliseconds after which a "Need Help?" tooltip will be shown.
+         */
+        "tooltipPauseTimeout": number;
+        /**
+          * Translation service.
+         */
+        "translationService": TranslationService;
     }
     interface MbImageBox {
         /**
@@ -541,6 +689,10 @@ export namespace Components {
          */
         "elevated": boolean;
         /**
+          * Whether to hide the close button or not.
+         */
+        "hideCloseButton": boolean;
+        /**
           * Whether to hide the footer or not
          */
         "hideFooter": boolean;
@@ -567,6 +719,16 @@ export namespace Components {
          */
         "visible": boolean;
     }
+    interface MbProgressTracker {
+        /**
+          * Current step.  Steps start from 1 up to the size number.  Default is 1.
+         */
+        "current": number;
+        /**
+          * Steps count.  Default is 3.
+         */
+        "size": number;
+    }
     interface MbScreen {
         /**
           * Set to 'true' if screen should be visible.
@@ -590,6 +752,14 @@ export namespace Components {
         "show": boolean;
         "showInfoIcon"?: boolean;
         "showWarningIcon"?: boolean;
+        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
+    }
+    interface MbTooltipAdvanced {
+        "arrowPosition"?: 'arrow-left' | 'arrow-right'
+    | 'arrow-up' | 'arrow-up-left' | 'arrow-up-right'
+    | 'arrow-down' | 'arrow-down-left' | 'arrow-down-right';
+        "message": string;
+        "show": boolean;
         "textAlign"?: 'text-center' | 'text-left' | 'text-right';
     }
 }
@@ -654,11 +824,53 @@ declare global {
         prototype: HTMLMbContainerElement;
         new (): HTMLMbContainerElement;
     };
+    interface HTMLMbDeviceSelectionElement extends Components.MbDeviceSelection, HTMLStencilElement {
+    }
+    var HTMLMbDeviceSelectionElement: {
+        prototype: HTMLMbDeviceSelectionElement;
+        new (): HTMLMbDeviceSelectionElement;
+    };
+    interface HTMLMbDeviceSelectionConnectionElement extends Components.MbDeviceSelectionConnection, HTMLStencilElement {
+    }
+    var HTMLMbDeviceSelectionConnectionElement: {
+        prototype: HTMLMbDeviceSelectionConnectionElement;
+        new (): HTMLMbDeviceSelectionConnectionElement;
+    };
+    interface HTMLMbDeviceSelectionHandoffElement extends Components.MbDeviceSelectionHandoff, HTMLStencilElement {
+    }
+    var HTMLMbDeviceSelectionHandoffElement: {
+        prototype: HTMLMbDeviceSelectionHandoffElement;
+        new (): HTMLMbDeviceSelectionHandoffElement;
+    };
+    interface HTMLMbDeviceSelectionIntroElement extends Components.MbDeviceSelectionIntro, HTMLStencilElement {
+    }
+    var HTMLMbDeviceSelectionIntroElement: {
+        prototype: HTMLMbDeviceSelectionIntroElement;
+        new (): HTMLMbDeviceSelectionIntroElement;
+    };
+    interface HTMLMbDeviceSelectionMobileElement extends Components.MbDeviceSelectionMobile, HTMLStencilElement {
+    }
+    var HTMLMbDeviceSelectionMobileElement: {
+        prototype: HTMLMbDeviceSelectionMobileElement;
+        new (): HTMLMbDeviceSelectionMobileElement;
+    };
+    interface HTMLMbDeviceSelectionQuitElement extends Components.MbDeviceSelectionQuit, HTMLStencilElement {
+    }
+    var HTMLMbDeviceSelectionQuitElement: {
+        prototype: HTMLMbDeviceSelectionQuitElement;
+        new (): HTMLMbDeviceSelectionQuitElement;
+    };
     interface HTMLMbFeedbackElement extends Components.MbFeedback, HTMLStencilElement {
     }
     var HTMLMbFeedbackElement: {
         prototype: HTMLMbFeedbackElement;
         new (): HTMLMbFeedbackElement;
+    };
+    interface HTMLMbHelpElement extends Components.MbHelp, HTMLStencilElement {
+    }
+    var HTMLMbHelpElement: {
+        prototype: HTMLMbHelpElement;
+        new (): HTMLMbHelpElement;
     };
     interface HTMLMbImageBoxElement extends Components.MbImageBox, HTMLStencilElement {
     }
@@ -678,6 +890,12 @@ declare global {
         prototype: HTMLMbOverlayElement;
         new (): HTMLMbOverlayElement;
     };
+    interface HTMLMbProgressTrackerElement extends Components.MbProgressTracker, HTMLStencilElement {
+    }
+    var HTMLMbProgressTrackerElement: {
+        prototype: HTMLMbProgressTrackerElement;
+        new (): HTMLMbProgressTrackerElement;
+    };
     interface HTMLMbScreenElement extends Components.MbScreen, HTMLStencilElement {
     }
     var HTMLMbScreenElement: {
@@ -696,6 +914,12 @@ declare global {
         prototype: HTMLMbTooltipElement;
         new (): HTMLMbTooltipElement;
     };
+    interface HTMLMbTooltipAdvancedElement extends Components.MbTooltipAdvanced, HTMLStencilElement {
+    }
+    var HTMLMbTooltipAdvancedElement: {
+        prototype: HTMLMbTooltipAdvancedElement;
+        new (): HTMLMbTooltipAdvancedElement;
+    };
     interface HTMLElementTagNameMap {
         "blinkid-in-browser": HTMLBlinkidInBrowserElement;
         "mb-api-process-status": HTMLMbApiProcessStatusElement;
@@ -707,13 +931,22 @@ declare global {
         "mb-completed": HTMLMbCompletedElement;
         "mb-component": HTMLMbComponentElement;
         "mb-container": HTMLMbContainerElement;
+        "mb-device-selection": HTMLMbDeviceSelectionElement;
+        "mb-device-selection-connection": HTMLMbDeviceSelectionConnectionElement;
+        "mb-device-selection-handoff": HTMLMbDeviceSelectionHandoffElement;
+        "mb-device-selection-intro": HTMLMbDeviceSelectionIntroElement;
+        "mb-device-selection-mobile": HTMLMbDeviceSelectionMobileElement;
+        "mb-device-selection-quit": HTMLMbDeviceSelectionQuitElement;
         "mb-feedback": HTMLMbFeedbackElement;
+        "mb-help": HTMLMbHelpElement;
         "mb-image-box": HTMLMbImageBoxElement;
         "mb-modal": HTMLMbModalElement;
         "mb-overlay": HTMLMbOverlayElement;
+        "mb-progress-tracker": HTMLMbProgressTrackerElement;
         "mb-screen": HTMLMbScreenElement;
         "mb-spinner": HTMLMbSpinnerElement;
         "mb-tooltip": HTMLMbTooltipElement;
+        "mb-tooltip-advanced": HTMLMbTooltipAdvancedElement;
     }
 }
 declare namespace LocalJSX {
@@ -723,6 +956,18 @@ declare namespace LocalJSX {
          */
         "allowHelloMessage"?: boolean;
         /**
+          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).   Default value is 'true'.
+         */
+        "allowHelpScreensFab"?: boolean;
+        /**
+          * Dictates if the Help Screens Onboarding is active.  Onboarding is a process of opening the Help Screens initial guides when the Camera Experience is being started.  Default value is 'true'.
+         */
+        "allowHelpScreensOnboarding"?: boolean;
+        /**
+          * Dictates if the Help Screens Onboarding process is being started on every Camera Experience start, or just on the first one.  Default value is 'false' - onboarding ran only once.
+         */
+        "allowHelpScreensOnboardingPerpetuity"?: boolean;
+        /**
           * Configure camera experience state timeout durations
          */
         "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
@@ -730,6 +975,10 @@ declare namespace LocalJSX {
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
         "cameraId"?: string | null;
+        /**
+          * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical  limitations, without the need to restart the existing process, such as form filling. In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements.  There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers. For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md  where you can also find more information about this feature.
+         */
+        "d2dOptions"?: D2DOptions;
         /**
           * Set to 'false' if component should not enable drag and drop functionality.  Default value is 'true'.
          */
@@ -746,6 +995,10 @@ declare namespace LocalJSX {
           * Define whether to use 'FULLSCREEN' or 'INLINE' gallery overlay type.  If 'FULLSCREEN' is used, when a user selects an image from which data should be extracted, an overlay will pop up and cover the whole screen.  On the other hand, if 'INLINE' is used, there is no overlay but rather a 'Processing' message inside the UI component.  Default value is 'INLINE'.
          */
         "galleryOverlayType"?: 'FULLSCREEN' | 'INLINE';
+        /**
+          * Miliseconds timeout on which the "Need Help?" tooltip is turned on.  First timeout is started each time the Camera Experience starts and is being reset every time the Help Screens are consumed.  Default value is 15000 - 15 seconds.
+         */
+        "helpScreensTooltipPauseTimeout"?: number;
         /**
           * If set to 'true', UI component will not display feedback, i.e. information and error messages.  Setting this attribute to 'false' won't disable 'scanError' and 'scanInfo' events.  Default value is 'false'.
          */
@@ -957,8 +1210,25 @@ declare namespace LocalJSX {
           * Set to 'true' if default event should be prevented.
          */
         "preventDefault"?: boolean;
+        "quit"?: boolean;
     }
     interface MbCameraExperience {
+        /**
+          * Dictates if Help Screens usage is allowed (turned on).
+         */
+        "allowHelpScreens"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensFab"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensOnboarding"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensOnboardingPerpetuity"?: boolean;
         /**
           * Api state passed from root component.
          */
@@ -972,6 +1242,10 @@ declare namespace LocalJSX {
          */
         "cameraFlipped"?: boolean;
         "clearIsCameraActive"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "helpScreensTooltipPauseTimeout"?: number;
         /**
           * Emitted when user selects a different camera device.
          */
@@ -1063,6 +1337,22 @@ declare namespace LocalJSX {
          */
         "allowHelloMessage"?: boolean;
         /**
+          * Dictates if Help Screens usage is allowed (turned on).
+         */
+        "allowHelpScreens"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensFab"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensOnboarding"?: boolean;
+        /**
+          * See description in public component.
+         */
+        "allowHelpScreensOnboardingPerpetuity"?: boolean;
+        /**
           * See description in public component.
          */
         "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
@@ -1070,6 +1360,10 @@ declare namespace LocalJSX {
           * Camera device ID passed from root component.
          */
         "cameraId"?: string | null;
+        /**
+          * See description in public component.
+         */
+        "d2dOptions"?: D2DOptions;
         /**
           * See description in public component.
          */
@@ -1086,6 +1380,10 @@ declare namespace LocalJSX {
           * See description in public component.
          */
         "galleryOverlayType"?: 'FULLSCREEN' | 'INLINE';
+        /**
+          * See description in public component.
+         */
+        "helpScreensTooltipPauseTimeout"?: number;
         /**
           * See description in public component.
          */
@@ -1245,11 +1543,70 @@ declare namespace LocalJSX {
     }
     interface MbContainer {
     }
+    interface MbDeviceSelection {
+        "d2dOptions"?: D2DOptions;
+        /**
+          * Close event
+         */
+        "onClose"?: (event: CustomEvent<void>) => void;
+        "onDone"?: (event: CustomEvent<RecognitionEvent>) => void;
+        "onInit"?: (event: CustomEvent<void>) => void;
+    }
+    interface MbDeviceSelectionConnection {
+        "onClose"?: (event: CustomEvent<void>) => void;
+        "variant"?: string;
+    }
+    interface MbDeviceSelectionHandoff {
+        "urlFactory"?: D2DOptions['urlFactory'];
+    }
+    interface MbDeviceSelectionIntro {
+        "d2dOptions"?: D2DOptions;
+        "onDone"?: (event: CustomEvent<RecognitionEvent>) => void;
+    }
+    interface MbDeviceSelectionMobile {
+        "d2dOptions"?: D2DOptions;
+        "onInit"?: (event: CustomEvent<void>) => void;
+    }
+    interface MbDeviceSelectionQuit {
+        "confirmLabel"?: string;
+        "denyLabel"?: string;
+        "description"?: string;
+        "modalLabel"?: string;
+        "onCancel"?: (event: CustomEvent<void>) => void;
+        "onConfirm"?: (event: CustomEvent<void>) => void;
+        "visible"?: boolean;
+    }
     interface MbFeedback {
         /**
           * Set to 'true' if component should be visible.
          */
         "visible"?: boolean;
+    }
+    interface MbHelp {
+        /**
+          * Dictates if usage is allowed (turned on).
+         */
+        "allow"?: boolean;
+        /**
+          * Dictates if Floating-Action-Button (Fab) is shown.
+         */
+        "allowFab"?: boolean;
+        /**
+          * Dictates if the onboarding is allowed.
+         */
+        "allowOnboarding"?: boolean;
+        /**
+          * Dictates if onboarding is executed all the time, or just once.
+         */
+        "allowOnboardingPerpetuity"?: boolean;
+        /**
+          * Dictates Milliseconds after which a "Need Help?" tooltip will be shown.
+         */
+        "tooltipPauseTimeout"?: number;
+        /**
+          * Translation service.
+         */
+        "translationService": TranslationService;
     }
     interface MbImageBox {
         /**
@@ -1282,6 +1639,10 @@ declare namespace LocalJSX {
           * Show shadow drop
          */
         "elevated"?: boolean;
+        /**
+          * Whether to hide the close button or not.
+         */
+        "hideCloseButton"?: boolean;
         /**
           * Whether to hide the footer or not
          */
@@ -1317,6 +1678,16 @@ declare namespace LocalJSX {
          */
         "visible"?: boolean;
     }
+    interface MbProgressTracker {
+        /**
+          * Current step.  Steps start from 1 up to the size number.  Default is 1.
+         */
+        "current"?: number;
+        /**
+          * Steps count.  Default is 3.
+         */
+        "size"?: number;
+    }
     interface MbScreen {
         /**
           * Set to 'true' if screen should be visible.
@@ -1342,6 +1713,14 @@ declare namespace LocalJSX {
         "showWarningIcon"?: boolean;
         "textAlign"?: 'text-center' | 'text-left' | 'text-right';
     }
+    interface MbTooltipAdvanced {
+        "arrowPosition"?: 'arrow-left' | 'arrow-right'
+    | 'arrow-up' | 'arrow-up-left' | 'arrow-up-right'
+    | 'arrow-down' | 'arrow-down-left' | 'arrow-down-right';
+        "message"?: string;
+        "show"?: boolean;
+        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
+    }
     interface IntrinsicElements {
         "blinkid-in-browser": BlinkidInBrowser;
         "mb-api-process-status": MbApiProcessStatus;
@@ -1353,13 +1732,22 @@ declare namespace LocalJSX {
         "mb-completed": MbCompleted;
         "mb-component": MbComponent;
         "mb-container": MbContainer;
+        "mb-device-selection": MbDeviceSelection;
+        "mb-device-selection-connection": MbDeviceSelectionConnection;
+        "mb-device-selection-handoff": MbDeviceSelectionHandoff;
+        "mb-device-selection-intro": MbDeviceSelectionIntro;
+        "mb-device-selection-mobile": MbDeviceSelectionMobile;
+        "mb-device-selection-quit": MbDeviceSelectionQuit;
         "mb-feedback": MbFeedback;
+        "mb-help": MbHelp;
         "mb-image-box": MbImageBox;
         "mb-modal": MbModal;
         "mb-overlay": MbOverlay;
+        "mb-progress-tracker": MbProgressTracker;
         "mb-screen": MbScreen;
         "mb-spinner": MbSpinner;
         "mb-tooltip": MbTooltip;
+        "mb-tooltip-advanced": MbTooltipAdvanced;
     }
 }
 export { LocalJSX as JSX };
@@ -1376,13 +1764,22 @@ declare module "@stencil/core" {
             "mb-completed": LocalJSX.MbCompleted & JSXBase.HTMLAttributes<HTMLMbCompletedElement>;
             "mb-component": LocalJSX.MbComponent & JSXBase.HTMLAttributes<HTMLMbComponentElement>;
             "mb-container": LocalJSX.MbContainer & JSXBase.HTMLAttributes<HTMLMbContainerElement>;
+            "mb-device-selection": LocalJSX.MbDeviceSelection & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionElement>;
+            "mb-device-selection-connection": LocalJSX.MbDeviceSelectionConnection & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionConnectionElement>;
+            "mb-device-selection-handoff": LocalJSX.MbDeviceSelectionHandoff & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionHandoffElement>;
+            "mb-device-selection-intro": LocalJSX.MbDeviceSelectionIntro & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionIntroElement>;
+            "mb-device-selection-mobile": LocalJSX.MbDeviceSelectionMobile & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionMobileElement>;
+            "mb-device-selection-quit": LocalJSX.MbDeviceSelectionQuit & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionQuitElement>;
             "mb-feedback": LocalJSX.MbFeedback & JSXBase.HTMLAttributes<HTMLMbFeedbackElement>;
+            "mb-help": LocalJSX.MbHelp & JSXBase.HTMLAttributes<HTMLMbHelpElement>;
             "mb-image-box": LocalJSX.MbImageBox & JSXBase.HTMLAttributes<HTMLMbImageBoxElement>;
             "mb-modal": LocalJSX.MbModal & JSXBase.HTMLAttributes<HTMLMbModalElement>;
             "mb-overlay": LocalJSX.MbOverlay & JSXBase.HTMLAttributes<HTMLMbOverlayElement>;
+            "mb-progress-tracker": LocalJSX.MbProgressTracker & JSXBase.HTMLAttributes<HTMLMbProgressTrackerElement>;
             "mb-screen": LocalJSX.MbScreen & JSXBase.HTMLAttributes<HTMLMbScreenElement>;
             "mb-spinner": LocalJSX.MbSpinner & JSXBase.HTMLAttributes<HTMLMbSpinnerElement>;
             "mb-tooltip": LocalJSX.MbTooltip & JSXBase.HTMLAttributes<HTMLMbTooltipElement>;
+            "mb-tooltip-advanced": LocalJSX.MbTooltipAdvanced & JSXBase.HTMLAttributes<HTMLMbTooltipAdvancedElement>;
         }
     }
 }

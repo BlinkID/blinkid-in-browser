@@ -59,7 +59,7 @@ export enum ImageOrientation
 export enum RecognizerResultState
 {
     /** Nothing has been recognized. */
-    Empty = 0,
+    Empty,
     /** Something has been recognized, but some mandatory data is still missing. */
     Uncertain,
     /** All required data has been recognized. */
