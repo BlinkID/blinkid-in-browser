@@ -30,11 +30,11 @@ function main()
   }
 
   // 1. It's possible to obtain a free trial license key on microblink.com
-  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLjM8ZY9al1B+dHT1pvkVLDlPi2TrNIleC/ZCr2/SCnbqKTEiEgN7pWFr0Qk/PJQyjnslTbSSENvp1un8OJTDhtTlz33EWHz3HMhHcBcmNHGVcshRgrlnCwb0j/5Z3DBqGHzAJl+lDRItIEO2F0f+U9YOrp6mJXKRHF2o6nMmSxdyK8E1bw8W3k4FN1mppgXE7fIc/W9OV+YpsjzUba91QVd1Zfd2qJ6OCj9B4eUQTE90EN5ICYZ6HdjxIdgn/+swmIPdmJGHpyKj0Nmv9K1Rz4llL5rTFffJ0kx3l/DklE+S5GUGmQ+GWOuLx6M5eNE=";
+  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWKOMcx/QH5w9TfQhK1dJsFJdYOQwT2jNFFuyaTqCL8pcT+uqbJw2Jg0N2UsDSn0kLbOXB+qHQrpRd2qcdmDqZH+5WQwB6h+yU7aIyKkIGt9TmA9UbQ4EatnFhDA3kAdfzjHEDqrmuP82iRLMgrqPKet+rGjRekeGKutTwMXOyQQXWyzwqVr4bU0xuRt+jQSiAR/OepN1ajvrg6Ev5uz2VUsUolzY33JG9NMdkEf0I8y9b7HCXlSo1vQdyAZvjLpRC1hlXhM0ZuFeKBGsfadeb5L6xBzubXDf0Gh4Fjm7+Z1s6j9RwmmBgtmAmrREH8GQ=";
 
   if (window.location.hostname === "blinkid.github.io")
   {
-    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaBPoTjCZAYcmGQYLnBDuzt17ppUyNkH1n7wT0pbn/mT4DHblrCE7O75KMTQXA7MkhJLtlnHPKcYnFtCobUbMpkv99k/Q5PbpMm2WomH0goldSzMPTCy7/5azojUj9F86QvW28qkYrsltK+ZQy3LNE64XdthLCo4NCCXZC34sr0UhTW37wzbuj7z34w9kq3A3q6tV7POqq8q+fSLTZkMFxSNThFHYOydO93HwbDw1ywV1bU1KO4KXz8ft4ckEQ5eTBC0l4iu0m5oyuRHoje0+F6WCcEYQx1ySJYWGicj0EWN2ijXl+DuMWgzUqxpANKVQ==";
+    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaH7qRBA0TsvD+fPJE7dKUHydTGM7sBlN+vENQlWD9wAs+akaU2HgIQ9Hf6wZcpNb6kMYitO5wkucj/Ca0cc05Lw+IqBMDkQhbT+5uQM3lCSaITpmmIYqbufawTrqRUgVZJNhuwbVHjikftefhGyiAPBXdNHRJmf89BKoPb90mSUixBhu7veXxsprKnJ2UbyI/tfBZHfq8IJadrBWsGeV99ok59tYOBlSE84LZmv+EciyWNdOJHWbt9lxnWDG9DoyHpO6YRWlCeFpVK/aO9eTwDkRTodydNWCJNptr+DskQYuBVl1gm/T4Mzs+dRn+gNA==";
   }
 
   // 2. Create instance of SDK load settings with your license key
@@ -57,22 +57,22 @@ function main()
   // 3. Load SDK
   BlinkIDSDK.loadWasmModule(loadSettings).then(
 
-  (sdk) =>
-  {
-    document.getElementById("screen-initial")?.classList.add("hidden");
-    document.getElementById("screen-start")?.classList.remove("hidden");
-    document.getElementById("start-button")?.addEventListener("click", (ev) =>
+    (sdk) =>
     {
-      ev.preventDefault();
-      startScan(sdk);
-    });
-  },
-  (error) =>
-  {
-    initialMessageEl.innerText = "Failed to load SDK!";
-    console.error("Failed to load SDK!", error);
-  });
-
+      document.getElementById("screen-initial")?.classList.add("hidden");
+      document.getElementById("screen-start")?.classList.remove("hidden");
+      document.getElementById("start-button")?.addEventListener("click", (ev) =>
+      {
+        ev.preventDefault();
+        startScan(sdk);
+      });
+    },
+    (error) =>
+    {
+      initialMessageEl.innerText = "Failed to load SDK!";
+      console.error("Failed to load SDK!", error);
+    }
+  );
 }
 
 /**
@@ -97,13 +97,13 @@ async function startScan(sdk)
   //    recognizer objects.
   const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
 
-  // SDK instance to use
-  sdk,
-  // List of recognizer objects that will be associated with created RecognizerRunner object
-  [multiSideGenericIDRecognizer],
-  // [OPTIONAL] Should recognition pipeline stop as soon as first recognizer in chain finished recognition
-  false);
-
+    // SDK instance to use
+    sdk,
+    // List of recognizer objects that will be associated with created RecognizerRunner object
+    [multiSideGenericIDRecognizer],
+    // [OPTIONAL] Should recognition pipeline stop as soon as first recognizer in chain finished recognition
+    false
+  );
 
   // 3. Prepare front side image for scan action - keep in mind that SDK can only process images represented
   //    in internal CapturedFrame data structure. Therefore, auxiliary method "captureFrame" is provided.
@@ -181,15 +181,15 @@ async function startScan(sdk)
         const dateOfBirth = {
           year: results.dateOfBirth.year || results.mrz.dateOfBirth.year,
           month: results.dateOfBirth.month || results.mrz.dateOfBirth.month,
-          day: results.dateOfBirth.day || results.mrz.dateOfBirth.day };
-
+          day: results.dateOfBirth.day || results.mrz.dateOfBirth.day
+        };
 
         const derivedFullName = `${firstName} ${lastName}`.trim() || fullName;
 
         alert(
 
-        `Hello, ${derivedFullName}!\n You were born on ${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}.`);
-
+          `Hello, ${derivedFullName}!\n You were born on ${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}.`
+        );
       }
     } else
 

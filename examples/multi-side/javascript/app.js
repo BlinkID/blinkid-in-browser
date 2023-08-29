@@ -34,11 +34,11 @@ function main()
   }
 
   // 1. It's possible to obtain a free trial license key on microblink.com
-  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLjM8ZY9al1B+dHT1pvkVLDlPi2TrNIleC/ZCr2/SCnbqKTEiEgN7pWFr0Qk/PJQyjnslTbSSENvp1un8OJTDhtTlz33EWHz3HMhHcBcmNHGVcshRgrlnCwb0j/5Z3DBqGHzAJl+lDRItIEO2F0f+U9YOrp6mJXKRHF2o6nMmSxdyK8E1bw8W3k4FN1mppgXE7fIc/W9OV+YpsjzUba91QVd1Zfd2qJ6OCj9B4eUQTE90EN5ICYZ6HdjxIdgn/+swmIPdmJGHpyKj0Nmv9K1Rz4llL5rTFffJ0kx3l/DklE+S5GUGmQ+GWOuLx6M5eNE=";
+  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWKOMcx/QH5w9TfQhK1dJsFJdYOQwT2jNFFuyaTqCL8pcT+uqbJw2Jg0N2UsDSn0kLbOXB+qHQrpRd2qcdmDqZH+5WQwB6h+yU7aIyKkIGt9TmA9UbQ4EatnFhDA3kAdfzjHEDqrmuP82iRLMgrqPKet+rGjRekeGKutTwMXOyQQXWyzwqVr4bU0xuRt+jQSiAR/OepN1ajvrg6Ev5uz2VUsUolzY33JG9NMdkEf0I8y9b7HCXlSo1vQdyAZvjLpRC1hlXhM0ZuFeKBGsfadeb5L6xBzubXDf0Gh4Fjm7+Z1s6j9RwmmBgtmAmrREH8GQ=";
 
   if (window.location.hostname === "blinkid.github.io")
   {
-    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaBPoTjCZAYcmGQYLnBDuzt17ppUyNkH1n7wT0pbn/mT4DHblrCE7O75KMTQXA7MkhJLtlnHPKcYnFtCobUbMpkv99k/Q5PbpMm2WomH0goldSzMPTCy7/5azojUj9F86QvW28qkYrsltK+ZQy3LNE64XdthLCo4NCCXZC34sr0UhTW37wzbuj7z34w9kq3A3q6tV7POqq8q+fSLTZkMFxSNThFHYOydO93HwbDw1ywV1bU1KO4KXz8ft4ckEQ5eTBC0l4iu0m5oyuRHoje0+F6WCcEYQx1ySJYWGicj0EWN2ijXl+DuMWgzUqxpANKVQ==";
+    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaH7qRBA0TsvD+fPJE7dKUHydTGM7sBlN+vENQlWD9wAs+akaU2HgIQ9Hf6wZcpNb6kMYitO5wkucj/Ca0cc05Lw+IqBMDkQhbT+5uQM3lCSaITpmmIYqbufawTrqRUgVZJNhuwbVHjikftefhGyiAPBXdNHRJmf89BKoPb90mSUixBhu7veXxsprKnJ2UbyI/tfBZHfq8IJadrBWsGeV99ok59tYOBlSE84LZmv+EciyWNdOJHWbt9lxnWDG9DoyHpO6YRWlCeFpVK/aO9eTwDkRTodydNWCJNptr+DskQYuBVl1gm/T4Mzs+dRn+gNA==";
   }
 
   // 2. Create instance of SDK load settings with your license key
@@ -61,22 +61,22 @@ function main()
   // 3. Load SDK
   BlinkIDSDK.loadWasmModule(loadSettings).then(
 
-  (sdk) =>
-  {
-    document.getElementById("screen-initial")?.classList.add("hidden");
-    document.getElementById("screen-start")?.classList.remove("hidden");
-    document.getElementById("start-scan")?.addEventListener("click", (ev) =>
+    (sdk) =>
     {
-      ev.preventDefault();
-      startScan(sdk);
-    });
-  },
-  (error) =>
-  {
-    initialMessageEl.innerText = "Failed to load SDK!";
-    console.error("Failed to load SDK!", error);
-  });
-
+      document.getElementById("screen-initial")?.classList.add("hidden");
+      document.getElementById("screen-start")?.classList.remove("hidden");
+      document.getElementById("start-scan")?.addEventListener("click", (ev) =>
+      {
+        ev.preventDefault();
+        startScan(sdk);
+      });
+    },
+    (error) =>
+    {
+      initialMessageEl.innerText = "Failed to load SDK!";
+      console.error("Failed to load SDK!", error);
+    }
+  );
 }
 
 /**
@@ -98,111 +98,111 @@ async function startScan(sdk)
     onDetectionFailed: () => updateScanFeedback("Detection failed", true),
 
     // This callback is required for multi-side experience.
-    onFirstSideResult: () => alert("Flip the document") };
-
+    onFirstSideResult: () => alert("Flip the document")
+  };
 
   // 2. Create a RecognizerRunner object which orchestrates the recognition with one or more
   //    recognizer objects.
   const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
 
-  // SDK instance to use
-  sdk,
-  // List of recognizer objects that will be associated with created RecognizerRunner object
-  [multiSideGenericIDRecognizer],
-  // [OPTIONAL] Should recognition pipeline stop as soon as first recognizer in chain finished recognition
-  false,
-  // Callbacks object that will receive recognition events
-  callbacks);
-
+    // SDK instance to use
+    sdk,
+    // List of recognizer objects that will be associated with created RecognizerRunner object
+    [multiSideGenericIDRecognizer],
+    // [OPTIONAL] Should recognition pipeline stop as soon as first recognizer in chain finished recognition
+    false,
+    // Callbacks object that will receive recognition events
+    callbacks
+  );
 
   // 3. Create a VideoRecognizer object and attach it to HTMLVideoElement that will be used for displaying the camera feed
   const videoRecognizer = await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
 
-  cameraFeed,
-  recognizerRunner);
-
+    cameraFeed,
+    recognizerRunner
+  );
 
   // 4. Start the recognition and get results from callback
   try
   {
     videoRecognizer.startRecognition(
 
-    // 5. Obtain the results
-    async (recognitionState) =>
-    {
-      if (!videoRecognizer)
+      // 5. Obtain the results
+      async (recognitionState) =>
       {
-        return;
+        if (!videoRecognizer)
+        {
+          return;
+        }
+
+        // Pause recognition before performing any async operation
+        videoRecognizer.pauseRecognition();
+
+        if (recognitionState === BlinkIDSDK.RecognizerResultState.Empty)
+        {
+          return;
+        }
+
+        const result = await multiSideGenericIDRecognizer.getResult();
+
+        if (result.state === BlinkIDSDK.RecognizerResultState.Empty)
+        {
+          return;
+        }
+
+        // Inform the user about results
+        console.log("BlinkID Multi-side recognizer results", result);
+
+        const firstName =
+        result.firstName.latin ||
+        result.firstName.cyrillic ||
+        result.firstName.arabic ||
+        result.mrz.secondaryID;
+
+        const lastName =
+        result.lastName.latin ||
+        result.lastName.cyrillic ||
+        result.lastName.arabic ||
+        result.mrz.primaryID;
+
+        const fullName =
+        result.fullName.latin ||
+        result.fullName.cyrillic ||
+        result.fullName.arabic ||
+        `${result.mrz.secondaryID} ${result.mrz.primaryID}`;
+
+        const dateOfBirth = {
+          year: result.dateOfBirth.year || result.mrz.dateOfBirth.year,
+          month: result.dateOfBirth.month || result.mrz.dateOfBirth.month,
+          day: result.dateOfBirth.day || result.mrz.dateOfBirth.day
+        };
+
+        const derivedFullName = `${firstName} ${lastName}`.trim() || fullName;
+
+        alert(
+
+          `Hello, ${derivedFullName}!\n You were born on ${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}.`
+        );
+
+        // 6. Release all resources allocated on the WebAssembly heap and associated with camera stream
+
+        // Release browser resources associated with the camera stream
+        videoRecognizer?.releaseVideoFeed();
+
+        // Release memory on WebAssembly heap used by the RecognizerRunner
+        recognizerRunner?.delete();
+
+        // Release memory on WebAssembly heap used by the recognizer
+        multiSideGenericIDRecognizer?.delete();
+
+        // Clear any leftovers drawn to canvas
+        clearDrawCanvas();
+
+        // Hide scanning screen and show scan button again
+        document.getElementById("screen-start")?.classList.remove("hidden");
+        document.getElementById("screen-scanning")?.classList.add("hidden");
       }
-
-      // Pause recognition before performing any async operation
-      videoRecognizer.pauseRecognition();
-
-      if (recognitionState === BlinkIDSDK.RecognizerResultState.Empty)
-      {
-        return;
-      }
-
-      const result = await multiSideGenericIDRecognizer.getResult();
-
-      if (result.state === BlinkIDSDK.RecognizerResultState.Empty)
-      {
-        return;
-      }
-
-      // Inform the user about results
-      console.log("BlinkID Multi-side recognizer results", result);
-
-      const firstName =
-      result.firstName.latin ||
-      result.firstName.cyrillic ||
-      result.firstName.arabic ||
-      result.mrz.secondaryID;
-
-      const lastName =
-      result.lastName.latin ||
-      result.lastName.cyrillic ||
-      result.lastName.arabic ||
-      result.mrz.primaryID;
-
-      const fullName =
-      result.fullName.latin ||
-      result.fullName.cyrillic ||
-      result.fullName.arabic ||
-      `${result.mrz.secondaryID} ${result.mrz.primaryID}`;
-
-      const dateOfBirth = {
-        year: result.dateOfBirth.year || result.mrz.dateOfBirth.year,
-        month: result.dateOfBirth.month || result.mrz.dateOfBirth.month,
-        day: result.dateOfBirth.day || result.mrz.dateOfBirth.day };
-
-
-      const derivedFullName = `${firstName} ${lastName}`.trim() || fullName;
-
-      alert(
-
-      `Hello, ${derivedFullName}!\n You were born on ${dateOfBirth.year}-${dateOfBirth.month}-${dateOfBirth.day}.`);
-
-
-      // 6. Release all resources allocated on the WebAssembly heap and associated with camera stream
-
-      // Release browser resources associated with the camera stream
-      videoRecognizer?.releaseVideoFeed();
-
-      // Release memory on WebAssembly heap used by the RecognizerRunner
-      recognizerRunner?.delete();
-
-      // Release memory on WebAssembly heap used by the recognizer
-      multiSideGenericIDRecognizer?.delete();
-
-      // Clear any leftovers drawn to canvas
-      clearDrawCanvas();
-
-      // Hide scanning screen and show scan button again
-      document.getElementById("screen-start")?.classList.remove("hidden");
-      document.getElementById("screen-scanning")?.classList.add("hidden");
-    });
-
+    );
   }
   catch (error)
   {
@@ -266,21 +266,21 @@ function applyTransform(transformMatrix)
   // second, scale the canvas to fit the scaled video
   drawContext.scale(
 
-  scaledVideoWidth / cameraFeed.videoWidth,
-  scaledVideoHeight / cameraFeed.videoHeight);
-
+    scaledVideoWidth / cameraFeed.videoWidth,
+    scaledVideoHeight / cameraFeed.videoHeight
+  );
 
   // finally, apply transformation from image coordinate system to
   // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform
   drawContext.transform(
 
-  transformMatrix[0],
-  transformMatrix[3],
-  transformMatrix[1],
-  transformMatrix[4],
-  transformMatrix[2],
-  transformMatrix[5]);
-
+    transformMatrix[0],
+    transformMatrix[3],
+    transformMatrix[1],
+    transformMatrix[4],
+    transformMatrix[2],
+    transformMatrix[5]
+  );
 }
 
 function clearDrawCanvas()
@@ -290,11 +290,11 @@ function clearDrawCanvas()
 
   drawContext.clearRect(
 
-  0,
-  0,
-  cameraFeedback.width,
-  cameraFeedback.height);
-
+    0,
+    0,
+    cameraFeedback.width,
+    cameraFeedback.height
+  );
 }
 
 function setupColor(displayable)
@@ -338,8 +338,8 @@ function setupMessage(displayable)
       updateScanFeedback("Move document farther");
       break;
     default:
-      console.warn("Unhandled detection status!", displayable.detectionStatus);}
-
+      console.warn("Unhandled detection status!", displayable.detectionStatus);
+  }
 }
 
 let scanFeedbackLock = false;

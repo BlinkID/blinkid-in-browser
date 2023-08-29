@@ -408,7 +408,10 @@ export enum Region
     SAO_PAOLO = 118,
     RIO_DE_JANEIRO = 119,
     RIO_GRANDE_DO_SUL = 120,
-    COUNT = 121
+    NORTHWEST_TERRITORIES = 121,
+    NUNAVUT = 122,
+    PRINCE_EDWARD_ISLAND = 123,
+    COUNT = 124
 }
 
 export enum DocumentType
@@ -421,10 +424,10 @@ export enum DocumentType
     FIN_CARD = 5,
     ID = 6,
     MULTIPURPOSE_ID = 7,
-    MyKad = 8,
-    MyKid = 9,
-    MyPR = 10,
-    MyTentera = 11,
+    MYKAD = 8,
+    MYKID = 9,
+    MYPR = 10,
+    MYTENTERA = 11,
     PAN_CARD = 12,
     PROFESSIONAL_ID = 13,
     PUBLIC_SERVICES_CARD = 14,
@@ -433,9 +436,9 @@ export enum DocumentType
     TEMPORARY_RESIDENCE_PERMIT = 17,
     VOTER_ID = 18,
     WORK_PERMIT = 19,
-    iKAD = 20,
+    IKAD = 20,
     MILITARY_ID = 21,
-    MyKAS = 22,
+    MYKAS = 22,
     SOCIAL_SECURITY_CARD = 23,
     HEALTH_INSURANCE_CARD = 24,
     PASSPORT = 25,
@@ -453,7 +456,7 @@ export enum DocumentType
     BORDER_CROSSING_CARD = 37,
     DRIVER_CARD = 38,
     GLOBAL_ENTRY_CARD = 39,
-    MyPolis = 40,
+    MYPOLIS = 40,
     NEXUS_CARD = 41,
     PASSPORT_CARD = 42,
     PROOF_OF_AGE_CARD = 43,
@@ -466,5 +469,11 @@ export enum DocumentType
     MINORS_PASSPORT = 50,
     MINORS_PUBLIC_SERVICES_CARD = 51,
     DRIVING_PRIVILEGE_CARD = 52,
-    COUNT = 53
+    ASYLUM_REQUEST = 53,
+    DRIVER_QUALIFICATION_CARD = 54,
+    PROVISIONAL_DL = 55,
+    REFUGEE_PASSPORT = 56,
+    SPECIAL_ID = 57,
+    UNIFORMED_SERVICES_ID = 58,
+    COUNT = 59
 }

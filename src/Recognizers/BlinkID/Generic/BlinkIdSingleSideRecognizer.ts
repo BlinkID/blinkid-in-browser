@@ -27,6 +27,7 @@ import {
 import { MrzResult } from "../MRTD/MrtdStructures";
 
 import { Recognizer, RecognizerResult, RecognizerSettings, WasmSDK } from "../../../MicroblinkSDK/DataStructures";
+import { ClassAnonymizationSettings } from "./ClassAnonymizationSettings";
 
 // required for the final SDK
 export * from "./AddressDetailedInfo";
@@ -113,6 +114,15 @@ implements RecognizerSettings, FullDocumentImageOptions, FaceImageOptions, Signa
      * The setting applies to certain documents only.
      */
     anonymizationMode = AnonymizationMode.FullResult;
+
+    /**
+     * Redact fields for specific document class.
+     *
+     * Fields specified by requirements or laws for a specific document will be redacted regardless of this setting.
+     *
+     * Based on anonymizationMode setting, data will be redacted from the image, the result or both.
+     */
+    additionalAnonymization: Array<ClassAnonymizationSettings>  | null = null ;
 
     /**
      * Called when barcode scanning step starts.

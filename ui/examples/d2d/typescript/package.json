@@ -20,6 +20,6 @@
     "https-localhost": "4.7.1"
   },
   "dependencies": {
-    "@microblink/blinkid-in-browser-sdk": "~6.1.0"
+    "@microblink/blinkid-in-browser-sdk": "~6.2.0"
   }
 }

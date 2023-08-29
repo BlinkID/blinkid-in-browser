@@ -41,6 +41,8 @@ export enum FieldType
     Restrictions = 33,
     Sex = 34,
     VehicleClass = 35,
+    BloodType = 36,
+    Sponsor = 37,
 
     /** Number of possible field types. */
     Count

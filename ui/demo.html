@@ -133,8 +133,8 @@
         margin-bottom: 1.5rem;
       }
     </style>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.1.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-    <script nomodule src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.1.0/ui/dist/blinkid-in-browser.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.2.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.2.0/ui/dist/blinkid-in-browser.js"></script>
         <script type="text/javascript">
 
 // Workaround for D2D
@@ -142,10 +142,10 @@ var parcelRequire;
 
 window.getSafePathname = (p) => p[p.length - 1] === '/' ? p : p.split('/').slice(0, -1).join('/') + '/';
 
-window.licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLjM8ZY9al1B+dHT1pvkVLDlPi2TrNIleC/ZCr2/SCnbqKTEiEgN7pWFr0Qk/PJQyjnslTbSSENvp1un8OJTDhtTlz33EWHz3HMhHcBcmNHGVcshRgrlnCwb0j/5Z3DBqGHzAJl+lDRItIEO2F0f+U9YOrp6mJXKRHF2o6nMmSxdyK8E1bw8W3k4FN1mppgXE7fIc/W9OV+YpsjzUba91QVd1Zfd2qJ6OCj9B4eUQTE90EN5ICYZ6HdjxIdgn/+swmIPdmJGHpyKj0Nmv9K1Rz4llL5rTFffJ0kx3l/DklE+S5GUGmQ+GWOuLx6M5eNE=";
+window.licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWKOMcx/QH5w9TfQhK1dJsFJdYOQwT2jNFFuyaTqCL8pcT+uqbJw2Jg0N2UsDSn0kLbOXB+qHQrpRd2qcdmDqZH+5WQwB6h+yU7aIyKkIGt9TmA9UbQ4EatnFhDA3kAdfzjHEDqrmuP82iRLMgrqPKet+rGjRekeGKutTwMXOyQQXWyzwqVr4bU0xuRt+jQSiAR/OepN1ajvrg6Ev5uz2VUsUolzY33JG9NMdkEf0I8y9b7HCXlSo1vQdyAZvjLpRC1hlXhM0ZuFeKBGsfadeb5L6xBzubXDf0Gh4Fjm7+Z1s6j9RwmmBgtmAmrREH8GQ=";
 
 if (window.location.hostname === 'blinkid.github.io') {
-  window.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaBPoTjCZAYcmGQYLnBDuzt17ppUyNkH1n7wT0pbn/mT4DHblrCE7O75KMTQXA7MkhJLtlnHPKcYnFtCobUbMpkv99k/Q5PbpMm2WomH0goldSzMPTCy7/5azojUj9F86QvW28qkYrsltK+ZQy3LNE64XdthLCo4NCCXZC34sr0UhTW37wzbuj7z34w9kq3A3q6tV7POqq8q+fSLTZkMFxSNThFHYOydO93HwbDw1ywV1bU1KO4KXz8ft4ckEQ5eTBC0l4iu0m5oyuRHoje0+F6WCcEYQx1ySJYWGicj0EWN2ijXl+DuMWgzUqxpANKVQ==";
+  window.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaH7qRBA0TsvD+fPJE7dKUHydTGM7sBlN+vENQlWD9wAs+akaU2HgIQ9Hf6wZcpNb6kMYitO5wkucj/Ca0cc05Lw+IqBMDkQhbT+5uQM3lCSaITpmmIYqbufawTrqRUgVZJNhuwbVHjikftefhGyiAPBXdNHRJmf89BKoPb90mSUixBhu7veXxsprKnJ2UbyI/tfBZHfq8IJadrBWsGeV99ok59tYOBlSE84LZmv+EciyWNdOJHWbt9lxnWDG9DoyHpO6YRWlCeFpVK/aO9eTwDkRTodydNWCJNptr+DskQYuBVl1gm/T4Mzs+dRn+gNA==";
 }
 window.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
 window.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
@@ -277,8 +277,8 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
   el.recognizers = ['BlinkIdSingleSideRecognizer'];
   window.setTimeout(() => {
     el.translations = {
-      'action-message': 'Alternative CTA' };
-
+      'action-message': 'Alternative CTA'
+    };
   }, 3000);
 
 
@@ -328,8 +328,8 @@ recognizers=&quot;IdBarcodeRecognizer&quot;
 
   window.setTimeout(() => {
     el.translations = {
-      'action-message': 'Alternative CTA' };
-
+      'action-message': 'Alternative CTA'
+    };
   }, 3000);
 
 
@@ -502,8 +502,8 @@ function run() {
     ev.preventDefault();
 
     document.querySelector(
-    '#example-customization .box').
-    style.background = document.getElementById('customization-background').value;
+      '#example-customization .box'
+    ).style.background = document.getElementById('customization-background').value;
 
     const cssVariables = document.querySelectorAll('#customizator-variables input');
     const targetUI = document.querySelector('#example-customization blinkid-in-browser');
