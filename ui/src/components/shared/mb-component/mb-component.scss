@@ -92,10 +92,6 @@
     cursor: default;
 
     font-size: var(--mb-component-action-label-font-size);
-
-    &:dir(rtl) {
-      background-color: black;
-    }
   }
 
   .action-buttons {

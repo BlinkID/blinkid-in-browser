@@ -12,6 +12,7 @@ export interface DateResult
     readonly year?: number;
     readonly originalString?: StringResult;
     readonly successfullyParsed?: boolean;
+    readonly filledByDomainKnowledge?: boolean;
     readonly empty?: boolean;
 }
 
