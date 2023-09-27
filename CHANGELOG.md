@@ -1,15 +1,20 @@
 # Release notes
 
+## 6.2.1
+
+- fixed "payload corrupted" error when using online license key
+- fixed integer overflow in BlinkID class filter implementation
+
 ## 6.2.0
 ### New features
 - new and improved machine learning models for data extraction
 - expanded support for arabic documents
-- added isFilledByDomainKnowledge flag to Date and DateResult 
+- added isFilledByDomainKnowledge flag to Date and DateResult
   - indicates that date is not extracted from image but filled based on our internal document knowledge
-- added new setting additionalAnonymization 
+- added new setting additionalAnonymization
   - enables custom anonymization for any field per country, region and type of document
 - added new items to enums:
-  - Region: 
+  - Region:
     - NORTHWEST_TERRITORIES (added item to enum, no document support for NORTHWEST_TERRITORIES yet)
     - NUNAVUT (added item to enum, no document support for NUNAVUT yet)
     - PRINCE_EDWARD_ISLAND
@@ -40,7 +45,7 @@
 - Belarus - Polycarbonate Passport
 - Belarus - Residence Permit
 - Belgium - Provisional Driving License
-- Belgium - Special ID Card 
+- Belgium - Special ID Card
 - Bulgaria - Alien ID Card
 - Bulgaria - Residence Permit
 - Canada - New Brunswick - ID Card
@@ -50,7 +55,7 @@
 - Guyana - Driving License
 - Kuwait - Paper Passport
 - Lebanon - Paper Passport
-- Liechtenstein - Driving License 
+- Liechtenstein - Driving License
 - Malta - Paper Passport
 - Malta - Polycarbonate Passport
 - Moldova - Driving License
@@ -211,7 +216,7 @@ Environmental changes
 * Detailed instructions on how to scan identity documents, via an intro tutorial (onboarding) or floating-action-button (FAB) during scanning, leading to improved success rates in ID scanning and data extraction.
     * New [properties](https://github.com/BlinkID/blinkid-in-browser/blob/master/ui/docs/components/blinkid-in-browser/readme.md#properties) introduced: `allowHelpScreensFab`, `allowHelpScreensOnboarding`, `allowHelpScreensOnboardingPerpetuity` and `helpScreensTooltipPauseTimeout`.
 
-#### Camera selection toolbar 
+#### Camera selection toolbar
 * We've introduced the default option of camera selection through a dropdown menu of all available device cameras.
     * If only one camera is available, the camera selection dropdown will not be displayed.
 * We've introduced icon/button for the option of mirroring the camera video feed.
@@ -246,7 +251,7 @@ Environmental changes
 
 #### Better barcode scanning and data extraction
 
-* We’ve improved scanning accuracy for all IDs that hold a PDF417 or other barcode types. This means that the error rate is now 20% lower, which brings even cleaner and more reliable data with every scan of an identity document. 
+* We’ve improved scanning accuracy for all IDs that hold a PDF417 or other barcode types. This means that the error rate is now 20% lower, which brings even cleaner and more reliable data with every scan of an identity document.
 
 ### What's new in the BlinkId(Combined) Recognizer?
 
@@ -256,12 +261,12 @@ Environmental changes
 * Added new result property of an `AdditionalProcessingInfo` type that provides information about `missingMandatoryFields`, `invalidCharacterFields`, and `extraPresentFields`
 * Unified `DataMatchResult` and `DataMatchDetailedInfo` into a single structure `DataMatchResult` (removed `dataMatchDetailedInfo` result member)
 * Added new result member `cardOrientation` to `ImageAnalysisResult` structure
-* More info about transitioning to **BlinkID v6.0.0** can be found in [Transition Guide](docs/Transition%20Guide.md) 
+* More info about transitioning to **BlinkID v6.0.0** can be found in [Transition Guide](docs/Transition%20Guide.md)
 
 ### Added support for 50 new versions of already supported documents:
 
 * Mexico - Aguascalientes - Driving license
-* Mexico - Baja California - Driving license 
+* Mexico - Baja California - Driving license
 * Mexico - Hidalgo - Driving license
 * USA - Delaware - Driving license
 * USA - Florida - ID card
@@ -274,12 +279,12 @@ Environmental changes
 * USA - Missouri - ID card
 * USA - Ohio - ID card
 * USA - Oklahoma - ID card
-* USA - Rhode Island - Driving license 
+* USA - Rhode Island - Driving license
 
 ### These documents are no longer BETA:
 
 * Australia - New South Wales - ID card
-* Australia - South Australia - Proof of Age Card 
+* Australia - South Australia - Proof of Age Card
 * Belgium - Minors ID card
 * Belgium - Passport
 * Canada - Tribal ID card
@@ -289,10 +294,10 @@ Environmental changes
 * Israel - ID card
 * Ivory Coast - Driving License
 * Lebanon - ID card
-* Libya - Polycarbonate Passport 
+* Libya - Polycarbonate Passport
 * Mexico - Colima - Driving license
 * Mexico - Michoacan - Driving license
-* Mexico - Tamaulipas - Driving license 
+* Mexico - Tamaulipas - Driving license
 * Mexico - Zacatecas - Driving license
 * Myanmar - Driving license
 * Panama - Temporary Residence Permit
@@ -348,7 +353,7 @@ Environmental changes
 
 #### Northern America
 
-* USA - Polycarbonate Passport 
+* USA - Polycarbonate Passport
 * USA - Nebraska - ID Card
 * USA - New York - ID Card
 * USA - Utah - ID Card
@@ -358,7 +363,7 @@ Environmental changes
 * Mexico - Polycarbonate Passport
 * Brazil - Sao Paolo - ID Card
 
-#### Europe 
+#### Europe
 
 * Austria - Residence Permit
 
@@ -392,7 +397,7 @@ Environmental changes
 * Slovenia - ID Card
 * Sweden - ID Card
 * Sweden - Polycarbonate Passport
-* USA - Georgia - ID Card 
+* USA - Georgia - ID Card
 * USA - Iowa - ID Card
 * USA - Kansas - Driving license
 * USA - Maryland - ID Card
@@ -424,7 +429,7 @@ Environmental changes
 	* JSON serialization update: stringData member is now in base64 format
 
 * Added new item to enums:
-	* Region: 
+	* Region:
 		* Sao Paulo, when scanning Brazilian Driving licenses
 
 * Fixed scanning for Argentina ID - there were confusions for Veteran ID, now we enabled successful extraction on Veteran ID as well
@@ -440,11 +445,11 @@ Environmental changes
 ## 5.19.1
 
 * We've fixed a major problem with internal reporting logic.
- 
+
 ## 5.19.0
- 
+
 What's new in the BlinkID(Combined) Recognizer?
- 
+
 ### Support for atypical Vietnam passports
 
 * Extract data from Vietnam Passports that have non-ICAO compliant MRZ fields. For example, when the filler arrow is facing the other way (>) instead of the standard way (<)
@@ -457,11 +462,11 @@ What's new in the BlinkID(Combined) Recognizer?
 
 * Resolved issues with RGB color overlay when extracting document image, which was present on some devices
 * We've fixed a bug with CSS `::part()` pseudo-selector to enable safe CSS customization of nested elements like `mb-camera-toolbar`.
- 
+
 ### Optimizing camera usage
- 
+
 * We are now preventing aborting the scanning process when using the UI component until the camera is not being fully initialized due to potential issues with reusing the camera's resources.
- 
+
 ## 5.18.0
 
 ### New feature:
@@ -484,7 +489,7 @@ What's new in the BlinkID(Combined) Recognizer?
 * Panama - Residence Permit (front onyl)
 * Peru - Paper Passport
 
-#### Europe 
+#### Europe
 
 * Cyprus - Paper Passport
 * Germany - Minors Passport
@@ -522,21 +527,21 @@ What's new in the BlinkID(Combined) Recognizer?
 * Slovakia - Residence Permit
 * South Africa - ID Card
 * Switzerland - Residence Permit
-* UK - Driving license 
-* USA - Colorado - Driving license 
-* USA - Idaho - Driving license 
-* USA - Kansas - ID Card 
-* USA - Kentucky - Driving license 
-* USA - Maine - Driving license 
-* USA - Massachusetts - ID Card 
-* USA - Nebraska - Driving license 
-* USA - New Hampshire - Driving license 
-* USA - New Jersey - ID Card 
-* USA - New Mexico - ID Card 
-* USA - North Carolina - ID Card 
-* USA - Utah - Driving license 
-* USA - Vermont Driving license 
-* USA - West Virginia - Driving license 
+* UK - Driving license
+* USA - Colorado - Driving license
+* USA - Idaho - Driving license
+* USA - Kansas - ID Card
+* USA - Kentucky - Driving license
+* USA - Maine - Driving license
+* USA - Massachusetts - ID Card
+* USA - Nebraska - Driving license
+* USA - New Hampshire - Driving license
+* USA - New Jersey - ID Card
+* USA - New Mexico - ID Card
+* USA - North Carolina - ID Card
+* USA - Utah - Driving license
+* USA - Vermont Driving license
+* USA - West Virginia - Driving license
 
 ### These documents are no longer BETA:
 
@@ -549,7 +554,7 @@ What's new in the BlinkID(Combined) Recognizer?
 * Iceland - Paper Passport
 * South Africa - ID Card (front only)
 * Brazil - Consular Passport (beta)
-* Quintana Roo Cozumel - Driving license 
+* Quintana Roo Cozumel - Driving license
 * Canada - Social Security Card (front only)
 * Canada - British Columbia - Minor Public Services Card
 * USA - Maine - ID Card
@@ -558,13 +563,13 @@ What's new in the BlinkID(Combined) Recognizer?
 ### Changes to BlinkID(Combined) Recognizer
 
 * Added new enums:
-	* Region: `QUINTANA_ROO_COZUMEL` 
-	* Type: `CONSULAR_PASSPORT`, `MINORS_PASSPORT`, and `MINORS_PUBLIC_SERVICES_CARD` 
+	* Region: `QUINTANA_ROO_COZUMEL`
+	* Type: `CONSULAR_PASSPORT`, `MINORS_PASSPORT`, and `MINORS_PUBLIC_SERVICES_CARD`
 
 ### Platform-related SDK changes
 
 * We've added a support for two different WebAssembly build versions.
-    * Standard and default build that has all the optimisations, but has considerably larger file size compared to lightweight version. 
+    * Standard and default build that has all the optimisations, but has considerably larger file size compared to lightweight version.
     * Lighter version of the WebAssembly bundle that doesn’t have all optimizations for reading of dense barcodes with low quality cameras.
 
 ## 5.17.1
@@ -638,7 +643,7 @@ We've added new documents to our list of supported documents:
 
 #### Back side support added:
 
-* Mexico - Chiapas - Driving License 
+* Mexico - Chiapas - Driving License
 
 #### No longer BETA:
 
@@ -664,7 +669,7 @@ We've added new documents to our list of supported documents:
 #### Changes to IDBarcodeRecognizer
 
 * For barcodes in countries: Argentina, Colombia, Nigeria, Panama, and South Africa, we now also extract data from the field `Sex` when it's populated with the character "X".
- 
+
 ### Improvements
 
 * We've added support for Brazil ID Card when the cardholder's face image is rotated for 90 degrees on the document.
@@ -705,7 +710,7 @@ We support the latest versions of these documents:
 ### Northern America
 
 * Honduras - ID Card (beta)
-* USA - Colorado - ID Card 
+* USA - Colorado - ID Card
 * USA - Minnesota - Driving License
 * USA - Nevada - Driving License
 * USA - Oklahoma - Driving License
@@ -720,7 +725,7 @@ We support the latest versions of these documents:
 * We now support `DataMatch` functionality on single side documents (Passports)
     * We added a special case to support `DataMatch` for UAE ID Card and Resident ID Card documents for the field `personal_id_number`
 * We can now extract `additional_personal_id_number` on Ecuador ID Card
-* We've made improvements for reading NRIC number on Malaysian documents that have an asterisk (\*) character present 
+* We've made improvements for reading NRIC number on Malaysian documents that have an asterisk (\*) character present
 * We've improved document detection and cropping of the document image
 
 ### Changes to IDBarcodeRecognizer
@@ -800,14 +805,14 @@ We’ve added 61 new documents:
 
 #### Europe
 
-* Austria - Paper Passport 
+* Austria - Paper Passport
 * Belarus - Paper Passport
 * Belgium - Paper Passport (beta)
 * Bulgaria - Paper Passport
 * Estonia - Paper Passport
 * France - Paper Passport (beta)
 * Georgia - Paper Passport (beta)
-* Germany - Paper Passport 
+* Germany - Paper Passport
 * Greece - Paper Passport
 * Hungary- Paper Passport
 * Italy - Paper Passport (beta)
@@ -823,7 +828,7 @@ We’ve added 61 new documents:
 
 * Algeria - Paper Passport (beta)
 * Egypt - Paper Passport (beta)
-* Eswatini - Paper Passport 
+* Eswatini - Paper Passport
 * Ghana - Paper Passport
 * Iran - Paper Passport (beta)
 * Iraq - Paper Passport (beta)
@@ -898,7 +903,7 @@ We’ve added 61 new documents:
 ### Changes to BlinkID(Combined) Recognizer
 
 * We’ve renamed the Swaziland country to Eswatini in results and `ClassInfo` structure
-* Improved result validation 
+* Improved result validation
     * `FieldIdentificationFailed` processing status is used to indicate if unexpected fields are present on the document. Those fields are then deleted from the result
 * We are filling out COUNTRY and REGION fields in ClassInfo, without the field TYPE of document, when using BarcodeID mode for scanning documents where the Front side is not supported, and back side results are extracted from AAMVA compliant barcodes
     * This applies only if `ClassInfo` isn’t already prepopulated in some other way and when you’re not in `FullRecognition` mode
@@ -912,7 +917,7 @@ We’ve added 61 new documents:
 * We’ve added anonymization support for new documents:
     * Document number on Germany paper bio-data page Passport
     * Document number on South Korea Identity Card
-    * Personal identification number on South Korea driving licence 
+    * Personal identification number on South Korea driving licence
     * Personal identification number on South Korea paper bio-data page Passport
 
 ### Platform-related SDK changes

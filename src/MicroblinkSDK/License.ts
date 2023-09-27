@@ -19,6 +19,7 @@ export interface LicenseUnlockResult
     readonly isTrial                      : boolean;
     readonly licenseId                    : string;
     readonly licensee                     : string;
+    readonly applicationId                : string;
     readonly packageName                  : string;
     readonly sdkName                      : string;
     readonly sdkVersion                   : string;
@@ -53,7 +54,7 @@ function toBaltazarRequest( unlockResult: LicenseUnlockResult ): BaltazarRequest
 {
     return {
         licenseId  : unlockResult.licenseId,
-        licensee   : unlockResult.licensee,
+        licensee   : unlockResult.applicationId,
         packageName: unlockResult.packageName,
         platform   : "Browser",
         sdkName    : unlockResult.sdkName,
