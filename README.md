@@ -516,7 +516,7 @@ If you need to change configuration of your recognizer while it's being used, yo
 
 1. Call its `currentSettings` method to obtain its current configuration
 2. Update it as you need it
-3. Create a new `Recogizer` of the same type
+3. Create a new `Recognizer` of the same type
 4. Call `updateSettings` on it with your modified configuration
 5. Replace the original `Recognizer` within the `RecognizerRunner` by calling its `reconfigureRecognizers` method
 
