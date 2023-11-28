@@ -1,5 +1,31 @@
 # Release notes
 
+## v6.3.0
+
+### New features
+
+- Changes to the `BlinkIdSingleSideRecognizer` and `BlinkIdMultiSideRecognizer`:
+  - add new fields inside `StringResult`:
+    - `arabicLocation` - location coordinates of the arabic text or `undefined` if arabic text is empty
+    - `cyrillicLocation` - location coordinates of the cyrillic text or `undefined` if cyrillic text is empty
+    - `latinLocation` - location coordinates of the latin text or `undefined` if latin text is empty
+    - `arabicSide` - document side of the arabic text or `undefined` if arabic text is empty
+    - `cyrillicSide` - document side of the cyrillic text or `undefined` if cyrillic text is empty
+    - `latinSide` - document side of the latin text or `undefined` if latin text is empty
+  - new results in `Recognizer.Result`:
+    - `faceImageLocation`
+    - `faceImageSide`
+- Add new `Country` enum value - `SCHENGEN_AREA`
+- And new `Type` enum value - `IMMIGRANT_VISA`
+
+### Bugfixes
+
+- Improved scanning success rate and stability when using `BlinkIdMultiSideRecognizer`
+
+### Minor breaking changes
+
+- renamed and reordeded elements in the `DetectionStatus` enum
+
 ## 6.2.1
 
 - fixed "payload corrupted" error when using online license key

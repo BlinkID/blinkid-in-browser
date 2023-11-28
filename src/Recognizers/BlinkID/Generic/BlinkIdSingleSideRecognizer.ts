@@ -28,6 +28,8 @@ import { MrzResult } from "../MRTD/MrtdStructures";
 
 import { Recognizer, RecognizerResult, RecognizerSettings, WasmSDK } from "../../../MicroblinkSDK/DataStructures";
 import { ClassAnonymizationSettings } from "./ClassAnonymizationSettings";
+import { Rectangle } from "../../../MicroblinkSDK/Geometry";
+import { DocumentSide } from "../../../MicroblinkSDK/DocumentSide";
 
 // required for the final SDK
 export * from "./AddressDetailedInfo";
@@ -301,6 +303,16 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult {
      * The face image
      */
     readonly faceImage: ImageResult;
+
+    /**
+     * The location of the face image on the document.
+     */
+    readonly faceImageLocation: Rectangle | undefined;
+
+    /**
+     * The side of the document in which the face image is located.
+     */
+    readonly faceImageSide: DocumentSide | undefined;
 
     /**
      * The first name of the document owner.

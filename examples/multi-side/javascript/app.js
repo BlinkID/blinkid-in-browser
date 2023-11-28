@@ -34,11 +34,11 @@ function main()
   }
 
   // 1. It's possible to obtain a free trial license key on microblink.com
-  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWKIMWx9fBEQbioIxV0E3Q2QRS/u7eE2nwdO1xnR4eDR5mlnfdQY5pGchfVC57ivh2XD4lhMgzJHC8A+t6eREL7ACjcOQEoOp25kUl/rzZFzMOHFFBbtGrcBNEWD+JrfpCGSZS/3OMpdsT8LDFOYfRLolTfnyd1Q59vLn1iQJ9DUcgdk0GYNf3AzYGErKds0N23SdNUpzIB6M6yQV5pmdC2kQBU1RqWnK4WcHclvNDldWbm3/d3CyS6D0gnm+zECTCgBwx2sdqJM22ifqA9Gp0gIMcmJRRkIhkvWJMBB6G49GPqiSJD0heui/Vbg6D2nc=";
+  let licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLNs5YWow6miHbByJQ6vHS6bAlDg4ZlNECXJARuVZUjrDBD5pFcKiUxIRwyRGrryzv0phVZQ9d6uaBd6J4zcoeQafv7dDT1Et8dbBmc5rik8/6bLQ2b0RrogtUtmeh6EQ95igTsX6jrwsUlDVXUljZkMiYTd5dGwGTOJgGDmW7+mX5pHdL8u5HBfen+L5ewUWvJIKGeQwxKWmgUAtEFGEZ7rSlKI7+hvntHguVjm6uSSUNeNc918KbgltUefmK5bc7hpx12HvIChzdvEZ/5Stn3IvS71LQ/DgxQWFZvZAp0YmQO0kqLJ/OmaXHmt3EZw=";
 
   if (window.location.hostname === "blinkid.github.io")
   {
-    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaHjq5BjCzhSOrdN6EJ5zfxEtkr0eR0oWg42o6mB/oNIGzmiOzOnedn0K7cQ/vF65CNvLSnUa8ucL+whAOj0QExfG2TYiZ3+ljKng/GLw6DahLvJCnMeaG0z5LtdpCUnBxpyxAnx4Uf2ipBVDbHTIqmULWfoN5Np/WbxDoRtlrpcHV+5Str4+5sgHUZLGrIPOphJHL2AqnairBpOCwdorfNzRdzo2xaX5M3q7n+9pm9uWSD8nuIOMDxUoFNJPn+9puaE5ZyRVBiawBJto0UGt39b+PKOOYAsexZLSFuYyrbt3Lss4gHPXB/extLSYkdkQ==";
+    licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaD1oHnS8aTtV3YaNcV9V5cqFCcOF9+BSY7mopMtRTsDtUY0BDQNHm3BtgOGAC+qECep/3p3tITnskPWAHikme5tFF9gFPLDtp5CD3w+ZBfmgk05Iyyo5BuI1Px8fjx+5d7/IkWKqub1D004saMC8ZzseMC0zDsvSHl6GbLcJ2OFYnUQ2RJfXzogZyDbAqEjYzhPiEtaSXfFcU6f5O3KczRXLfwkBVAjKRBhIF/njv/oHvQYqFNpyHed8PHfwtuBjEjgTXrIaFnilQ5q1nrCdcPLfEjq8eiJ47t6SuEANF71G6Hz87M1aXYiixWcPFuBQ==";
   }
 
   // 2. Create instance of SDK load settings with your license key
@@ -319,22 +319,22 @@ function setupMessage(displayable)
 {
   switch (displayable.detectionStatus) {
 
-    case BlinkIDSDK.DetectionStatus.Fail:
+    case BlinkIDSDK.DetectionStatus.Failed:
       updateScanFeedback("Scanning...");
       break;
     case BlinkIDSDK.DetectionStatus.Success:
     case BlinkIDSDK.DetectionStatus.FallbackSuccess:
       updateScanFeedback("Detection successful");
       break;
-    case BlinkIDSDK.DetectionStatus.CameraAtAngle:
+    case BlinkIDSDK.DetectionStatus.CameraAngleTooSteep:
       updateScanFeedback("Adjust the angle");
       break;
-    case BlinkIDSDK.DetectionStatus.CameraTooHigh:
+    case BlinkIDSDK.DetectionStatus.CameraTooFar:
       updateScanFeedback("Move document closer");
       break;
-    case BlinkIDSDK.DetectionStatus.CameraTooNear:
-    case BlinkIDSDK.DetectionStatus.DocumentTooCloseToEdge:
-    case BlinkIDSDK.DetectionStatus.Partial:
+    case BlinkIDSDK.DetectionStatus.CameraTooClose:
+    case BlinkIDSDK.DetectionStatus.DocumentTooCloseToCameraEdge:
+    case BlinkIDSDK.DetectionStatus.DocumentPartiallyVisible:
       updateScanFeedback("Move document farther");
       break;
     default:
