@@ -771,7 +771,7 @@
 ├─ @microblink/blinkid-in-browser-sdk@6.3.0
 │  ├─ licenses: Custom: https://travis-ci.org/BlinkID/blinkid-in-browser.svg
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
-│  ├─ path: /opt/jenkins/jenkinsData/E3/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
+│  ├─ path: /Users/ivan/Dev/core-webassembly-sdks.worktrees/stable/SDKs/BlinkID/blinkid-in-browser
 │  └─ licenseFile: README.md
 ├─ @nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.2
 │  ├─ licenses: MIT
@@ -1559,6 +1559,16 @@
 │  ├─ url: http://blog.izs.me/
 │  ├─ path: node_modules/fs.realpath
 │  └─ licenseFile: node_modules/fs.realpath/LICENSE
+├─ fsevents@2.1.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/fsevents/fsevents
+│  ├─ path: node_modules/rollup/node_modules/fsevents
+│  └─ licenseFile: node_modules/rollup/node_modules/fsevents/LICENSE
+├─ fsevents@2.3.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/fsevents/fsevents
+│  ├─ path: node_modules/fsevents
+│  └─ licenseFile: node_modules/fsevents/LICENSE
 ├─ function-bind@1.1.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/Raynos/function-bind
@@ -2234,6 +2244,14 @@
 │  ├─ url: https://sindresorhus.com
 │  ├─ path: node_modules/p-locate
 │  └─ licenseFile: node_modules/p-locate/license
+├─ p-throttle@5.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/sindresorhus/p-throttle
+│  ├─ publisher: Sindre Sorhus
+│  ├─ email: sindresorhus@gmail.com
+│  ├─ url: https://sindresorhus.com
+│  ├─ path: node_modules/p-throttle
+│  └─ licenseFile: node_modules/p-throttle/license
 ├─ p-try@2.2.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/sindresorhus/p-try
