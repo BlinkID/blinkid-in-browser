@@ -2,6 +2,9 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
+import { DocumentSide } from "../../../MicroblinkSDK/DocumentSide";
+import { Rectangle } from "../../../MicroblinkSDK/Geometry";
+
 /**
  * Smart date result structure.
  */
@@ -24,4 +27,12 @@ export interface StringResult
     readonly arabic?: string;
     readonly cyrillic?: string;
     readonly latin?: string;
+
+    readonly arabicLocation: Rectangle | undefined;
+    readonly cyrillicLocation: Rectangle | undefined;
+    readonly latinLocation: Rectangle | undefined;
+
+    readonly arabicSide: DocumentSide | undefined;
+    readonly cyrillicSide: DocumentSide | undefined;
+    readonly latinSide: DocumentSide | undefined;
 }

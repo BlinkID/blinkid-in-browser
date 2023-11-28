@@ -51,22 +51,22 @@ export interface MetadataCallbacks
  */
 export enum DetectionStatus
 {
-    /** Detection failed, form not detected */
-    Fail = 0,
-    /** Object was successfully detected */
+    /** Detection has failed. */
+    Failed,
+    /** Document has been detected. */
     Success,
-    /** Object detected, but the camera is too far above it */
-    CameraTooHigh,
-    /** Fallback detection of an object was successful */
-    FallbackSuccess,
-    /** Object is detected, but parts of it are not in image */
-    Partial,
-    /** Object detected, but camera is at too big angle */
-    CameraAtAngle,
-    /** Object detected, but the camera is too near to it */
-    CameraTooNear,
-    /** Document detected, but document is too close to the edge of the frame */
-    DocumentTooCloseToEdge
+    /** Document has been detected but the camera is too far from the document. */
+    CameraTooFar,
+    /** Document has been detected but the camera is too close to the document. */
+    CameraTooClose,
+    /** Document has been detected but the camera’s angle is too steep. */
+    CameraAngleTooSteep,
+    /** Document has been detected but the document is too close to the camera edge. */
+    DocumentTooCloseToCameraEdge,
+    /** Only part of the document is visible. */
+    DocumentPartiallyVisible,
+    /** Fallback detection was successful (PhotoPay specific). */
+    FallbackSuccess
 }
 
 /**

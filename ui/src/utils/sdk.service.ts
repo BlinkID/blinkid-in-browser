@@ -669,7 +669,7 @@ export class SdkService {
 
         const detectionStatus = quad.detectionStatus;
         switch (detectionStatus) {
-          case BlinkIDSDK.DetectionStatus.Fail:
+          case BlinkIDSDK.DetectionStatus.Failed:
             eventCallback({ status: RecognitionStatus.DetectionStatusSuccess });
             break;
 
@@ -677,7 +677,7 @@ export class SdkService {
             eventCallback({ status: RecognitionStatus.DetectionStatusSuccess });
             break;
 
-          case BlinkIDSDK.DetectionStatus.CameraTooHigh:
+          case BlinkIDSDK.DetectionStatus.CameraTooFar:
             eventCallback({ status: RecognitionStatus.DetectionStatusCameraTooHigh });
             break;
 
@@ -685,19 +685,19 @@ export class SdkService {
             eventCallback({ status: RecognitionStatus.DetectionStatusFallbackSuccess });
             break;
 
-          case BlinkIDSDK.DetectionStatus.Partial:
+          case BlinkIDSDK.DetectionStatus.DocumentPartiallyVisible:
             eventCallback({ status: RecognitionStatus.DetectionStatusPartial });
             break;
 
-          case BlinkIDSDK.DetectionStatus.CameraAtAngle:
+          case BlinkIDSDK.DetectionStatus.CameraAngleTooSteep:
             eventCallback({ status: RecognitionStatus.DetectionStatusCameraAtAngle });
             break;
 
-          case BlinkIDSDK.DetectionStatus.CameraTooNear:
+          case BlinkIDSDK.DetectionStatus.CameraTooClose:
             eventCallback({ status: RecognitionStatus.DetectionStatusCameraTooNear });
             break;
 
-          case BlinkIDSDK.DetectionStatus.DocumentTooCloseToEdge:
+          case BlinkIDSDK.DetectionStatus.DocumentTooCloseToCameraEdge:
             eventCallback({ status: RecognitionStatus.DetectionStatusDocumentTooCloseToEdge });
             break;
 

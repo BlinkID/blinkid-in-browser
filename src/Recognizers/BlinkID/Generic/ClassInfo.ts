@@ -282,7 +282,8 @@ export enum Country
     YUGOSLAVIA = 252,
     ZAMBIA = 253,
     ZIMBABWE = 254,
-    COUNT = 255
+    SCHENGEN_AREA = 255,
+    COUNT = 256
 }
 
 export enum Region
@@ -475,5 +476,6 @@ export enum DocumentType
     REFUGEE_PASSPORT = 56,
     SPECIAL_ID = 57,
     UNIFORMED_SERVICES_ID = 58,
-    COUNT = 59
+    IMMIGRANT_VISA = 59,
+    COUNT = 60
 }

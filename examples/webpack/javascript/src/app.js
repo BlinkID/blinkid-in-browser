@@ -311,22 +311,22 @@ function setupMessage( displayable )
 {
     switch ( displayable.detectionStatus )
     {
-        case BlinkIDSDK.DetectionStatus.Fail:
+        case BlinkIDSDK.DetectionStatus.Failed:
             updateScanFeedback( "Scanning..." );
             break;
         case BlinkIDSDK.DetectionStatus.Success:
         case BlinkIDSDK.DetectionStatus.FallbackSuccess:
             updateScanFeedback( "Detection successful" );
             break;
-        case BlinkIDSDK.DetectionStatus.CameraAtAngle:
+        case BlinkIDSDK.DetectionStatus.CameraAngleTooSteep:
             updateScanFeedback( "Adjust the angle" );
             break;
-        case BlinkIDSDK.DetectionStatus.CameraTooHigh:
+        case BlinkIDSDK.DetectionStatus.CameraTooFar:
             updateScanFeedback( "Move document closer" );
             break;
-        case BlinkIDSDK.DetectionStatus.CameraTooNear:
-        case BlinkIDSDK.DetectionStatus.DocumentTooCloseToEdge:
-        case BlinkIDSDK.DetectionStatus.Partial:
+        case BlinkIDSDK.DetectionStatus.CameraTooClose:
+        case BlinkIDSDK.DetectionStatus.DocumentTooCloseToCameraEdge:
+        case BlinkIDSDK.DetectionStatus.DocumentPartiallyVisible:
             updateScanFeedback( "Move document farther" );
             break;
         default:
