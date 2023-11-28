@@ -31,3 +31,13 @@ export interface Quadrilateral
     /** Bottom-right point of the quadrilateral */
     bottomRight: Point
 }
+
+export interface Rectangle
+{
+    /** Top-left point of the rectangle */
+    topLeft: Point
+
+    /** Bottom-right point of the rectangle */
+    bottomRight: Point
+}
+
