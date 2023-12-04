@@ -1,5 +1,9 @@
 # Release notes
 
+## v6.3.1
+
+- Reintroduce missing lightweight build
+
 ## v6.3.0
 
 ### New features
