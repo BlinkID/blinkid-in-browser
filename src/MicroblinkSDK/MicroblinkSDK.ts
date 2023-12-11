@@ -13,7 +13,9 @@ import * as ErrorTypes from "./ErrorTypes";
 
 export * from "./CameraUtils";
 export * from "./DataStructures";
+export * from "./DocumentSide";
 export * from "./DeviceUtils";
+export * from "./DocumentSide";
 export * from "./ErrorTypes";
 export * from "./FrameCapture";
 export * from "./License";
