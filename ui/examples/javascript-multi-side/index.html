@@ -6,7 +6,7 @@
         <title>Example: BlinkID UI: scan both documents sides</title>
 
         <!-- Import UI component which includes WASM library -->
-        <script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@v6.3.1/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+        <script type="module" src="/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
 
         <style type="text/css">
             html,
@@ -51,57 +51,59 @@
     </head>
     <body>
         <!-- It's possible to obtain a free trial license key on microblink.com -->
-        <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLCs7YRsJuEnG7ZzTAyxGa0Ty+uCU/cfrWRghZAGKVluPqH15zaXYhNeYSByIaWSGS7jkbMKukcFqg+MH5/wlhvAe1IKh4kNtOoUNhItKk5TErp8QEyY/MpDYdYcMFlqS/yPN7iBs1BIkAwoXm1NJd4ggkm2YC3q+NxCyABRLOY8k+76RLNezwd007k+p0Oq3dW2oQVbLfXlcnKnVVTBE7C+6IG5eHd6fvCiIY9T7TgellGMXiL6QBZ/wuuQozpPeiIY63CIN0PhSFgfhGPFixwdXouk4EldtjZ5He4s7yo3yLdAMgzr7Sznt/3KGF78=" recognizers="BlinkIdMultiSideRecognizer"></blinkid-in-browser>
+        <blinkid-in-browser
+            license-key="sRwAAAYhMjk2OC0xNDEtMTM4LTEwLTk0Lm5ncm9rLWZyZWUuYXBwUbyY0/JckAq4PbmjDISYpwwj3+CD3OfJ9IIuSC8gIv1JBiGG8e8c88W+NhT+9rHwaNZS/2GuK6EY0vND6TsHkFjfi+L3B9Dzjd90L5RYLp73xpW+ZUq5tbI1UnVUDHTAYI3Yl4iCQJRncceh/nL+2vRqMVDbq6AZsOdCOATdncZhEZtPcYVbUS1boE6UCHI9qP4hYt8PdI0abi54U1KfxTyvcZIkKOmeyC+IXwLSTi6PnzSC1tD0aG/b4SsNCsP/Qll+3OUuOmnRp4Ff9h3biuK7xzHuPpA++wa56c2zrI8sDisUBjjaaQKCJR7QoiViJDvsPmapLiiPBhc="
+            recognizers="BlinkIdMultiSideRecognizer"
+        ></blinkid-in-browser>
 
         <script type="text/javascript">
+            var parcelRequire;
 
-var parcelRequire;
+            function run()
+            {
+                // Important: if attributes or properties are changed, whole component is rerendered
+                const blinkId = document.querySelector( "blinkid-in-browser" );
 
-function run()
-{
-  // Important: if attributes or properties are changed, whole component is rerendered
-  const blinkId = document.querySelector("blinkid-in-browser");
+                if ( window.location.hostname === "blinkid.github.io" )
+                {
+                    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaGyKtLE1z9s26m2Tiph83zrJ8BmmOXovSgjP0SWiVwR2PnaZ8CncDvZE7+geZiiRfZAiRr2ax3LPsNGZFDEMmk07M5Y85MaIS4pZh/meDRrdmOm7a4egXPAdCJ+eMdeIQtPSrAsOG+H6nwMroDVJGRRxevaPbloWKGVUTuBzjpfZN4rmu3V1xCI5U4FGtEvQXXMLR3sumfqK4Mrl6AaoSZYY+nU/knOFP4pKy6hAwvsnIlKJiRjv/WkIn0D21ar1Eijc+Y3U0B93IUvAc1TSjlhnGTiig9F6OFp1y0XgpaovwTGNT+edsIf9NE2IMwqAS0lZCLz7Q=";
+                }
 
-  if (window.location.hostname === "blinkid.github.io")
-  {
-    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaDJoPnjXr2opyN5Mb1EyjvYFz3eFwFfj4woE19cY14mFd3j7Xl/ZSerS/0al9jbddLiK0zkbChd8N7d+p9rfDf/mUMbkzRtQ47pwm/KvNpN1S5pzIF12Ffa0d4yEAOoSG0FPlNmNCl/wpzRKQy91HXEv/sNdh5PiPTCdQKx6z4iU0douqIsLFmTxbnR8n+dZfRHia/DbXNiw7GfG9nQhfm7z/VzNGnPMJfIMVjEIHZiSjlT7tmM0hvY6EbKeGxXdPNQxSo8T5I5jiAMqQ8TKrgZn5vzf9ee4fDbDXFf80Gz46b1veVk9cPOCg45AW32Q==";
-  }
+                blinkId.engineLocation = window.location.origin + "/resources/";
+                blinkId.workerLocation = window.location.origin + "/resources/BlinkIDWasmSDK.worker.min.js";
 
-  blinkId.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
-  blinkId.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
+                blinkId.addEventListener
+                (
+                    "fatalError",
+                    ev => console.log( "fatalError", ev.detail )
+                );
 
-  blinkId.addEventListener(
+                blinkId.addEventListener
+                (
+                    "ready",
+                    ev => console.log( "ready", ev.detail )
+                );
 
-    "fatalError",
-    (ev) => console.log("fatalError", ev.detail)
-  );
+                blinkId.addEventListener
+                (
+                    "scanError",
+                    ev => console.log( "scanError", ev.detail )
+                );
 
-  blinkId.addEventListener(
+                blinkId.addEventListener
+                (
+                    "scanSuccess",
+                    ev => console.log( "scanSuccess", ev.detail )
+                );
 
-    "ready",
-    (ev) => console.log("ready", ev.detail)
-  );
+                blinkId.addEventListener
+                (
+                    "feedback",
+                    ev => console.log( "feedback", ev.detail )
+                );
+            }
 
-  blinkId.addEventListener(
-
-    "scanError",
-    (ev) => console.log("scanError", ev.detail)
-  );
-
-  blinkId.addEventListener(
-
-    "scanSuccess",
-    (ev) => console.log("scanSuccess", ev.detail)
-  );
-
-  blinkId.addEventListener(
-
-    "feedback",
-    (ev) => console.log("feedback", ev.detail)
-  );
-}
-
-window.addEventListener("DOMContentLoaded", (ev) => run());
-</script>
+            window.addEventListener( "DOMContentLoaded", ev => run() );
+        </script>
     </body>
 </html>
