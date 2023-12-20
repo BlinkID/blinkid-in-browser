@@ -412,7 +412,15 @@ export enum Region
     NORTHWEST_TERRITORIES = 121,
     NUNAVUT = 122,
     PRINCE_EDWARD_ISLAND = 123,
-    COUNT = 124
+    DISTRITO_FEDERAL = 124,
+    MARANHAO = 125,
+    MATO_GROSSO = 126,
+    MINAS_GERAIS = 127,
+    PARA = 128,
+    PARANA = 129,
+    PERNAMBUCO = 130,
+    SANTA_CATARINA = 131,
+    COUNT = 132
 }
 
 export enum DocumentType
@@ -477,5 +485,7 @@ export enum DocumentType
     SPECIAL_ID = 57,
     UNIFORMED_SERVICES_ID = 58,
     IMMIGRANT_VISA = 59,
-    COUNT = 60
+    CONSULAR_VOTER_ID = 60,
+    TWIC_CARD = 61,
+    COUNT = 62
 }

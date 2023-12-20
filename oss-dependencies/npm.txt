@@ -768,10 +768,10 @@
 │  ├─ email: justin@ridgewell.name
 │  ├─ path: node_modules/@jridgewell/trace-mapping
 │  └─ licenseFile: node_modules/@jridgewell/trace-mapping/LICENSE
-├─ @microblink/blinkid-in-browser-sdk@6.3.2
+├─ @microblink/blinkid-in-browser-sdk@6.4.0
 │  ├─ licenses: Custom: https://travis-ci.org/BlinkID/blinkid-in-browser.svg
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
-│  ├─ path: /Users/ivan/Dev/core-webassembly-sdks/SDKs/BlinkID/blinkid-in-browser
+│  ├─ path: /opt/jenkins/android-arm64-huawei-p30-pro/root/E0/sdk-blinkid-in-browser/blinkid-in-browser
 │  └─ licenseFile: README.md
 ├─ @nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.2
 │  ├─ licenses: MIT
@@ -825,7 +825,7 @@
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/json-schema
 │  └─ licenseFile: node_modules/@types/json-schema/LICENSE
-├─ @types/node@20.10.4
+├─ @types/node@20.10.5
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/node
@@ -1100,7 +1100,7 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/callsites
 │  └─ licenseFile: node_modules/callsites/license
-├─ caniuse-lite@1.0.30001568
+├─ caniuse-lite@1.0.30001570
 │  ├─ licenses: CC-BY-4.0
 │  ├─ repository: https://github.com/browserslist/caniuse-lite
 │  ├─ publisher: Ben Briggs
@@ -1309,7 +1309,7 @@
 │  ├─ repository: https://github.com/eslint/doctrine
 │  ├─ path: node_modules/doctrine
 │  └─ licenseFile: node_modules/doctrine/LICENSE
-├─ electron-to-chromium@1.4.609
+├─ electron-to-chromium@1.4.615
 │  ├─ licenses: ISC
 │  ├─ repository: https://github.com/kilian/electron-to-chromium
 │  ├─ publisher: Kilian Valkhof
@@ -1460,7 +1460,7 @@
 │  ├─ url: http://www.hiddentao.com/
 │  ├─ path: node_modules/fast-levenshtein
 │  └─ licenseFile: node_modules/fast-levenshtein/LICENSE.md
-├─ fastq@1.15.0
+├─ fastq@1.16.0
 │  ├─ licenses: ISC
 │  ├─ repository: https://github.com/mcollina/fastq
 │  ├─ publisher: Matteo Collina
@@ -1559,16 +1559,6 @@
 │  ├─ url: http://blog.izs.me/
 │  ├─ path: node_modules/fs.realpath
 │  └─ licenseFile: node_modules/fs.realpath/LICENSE
-├─ fsevents@2.1.3
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/fsevents/fsevents
-│  ├─ path: node_modules/rollup/node_modules/fsevents
-│  └─ licenseFile: node_modules/rollup/node_modules/fsevents/LICENSE
-├─ fsevents@2.3.3
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/fsevents/fsevents
-│  ├─ path: node_modules/fsevents
-│  └─ licenseFile: node_modules/fsevents/LICENSE
 ├─ function-bind@1.1.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/Raynos/function-bind
@@ -2417,7 +2407,7 @@
 │  ├─ url: https://mathiasbynens.be/
 │  ├─ path: node_modules/regenerate
 │  └─ licenseFile: node_modules/regenerate/LICENSE-MIT.txt
-├─ regenerator-runtime@0.14.0
+├─ regenerator-runtime@0.14.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/facebook/regenerator/tree/main/packages/runtime
 │  ├─ publisher: Ben Newman
