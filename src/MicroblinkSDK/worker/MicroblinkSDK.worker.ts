@@ -82,7 +82,7 @@ export default class MicroblinkWorker
                     this.processDeleteRecognizerRunner( msg as Messages.DeleteRecognizerRunner );
                     break;
                 case Messages.ProcessImage.action:
-                    void this.processImage( msg as Messages.ProcessImage );
+                    this.processImage( msg as Messages.ProcessImage );
                     break;
                 case Messages.ResetRecognizers.action:
                     this.resetRecognizers( msg as Messages.ResetRecognizers );
@@ -420,7 +420,11 @@ export default class MicroblinkWorker
             locateFile: ( path: string ) =>
             {
                 return Utils.getSafePath( engineLocation, path );
-            }
+            },
+            // don't automatically terminate WASM runtime after last native function is executed (e.g. async ping
+            // after recognition is over) We need to manually call `mbWasmModule.exitRuntime()` when we are completely
+            // done with all native processing
+            noExitRuntime: true,
         };
 
         if ( msg.registerLoadCallback )

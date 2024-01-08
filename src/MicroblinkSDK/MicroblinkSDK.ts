@@ -13,7 +13,6 @@ import * as ErrorTypes from "./ErrorTypes";
 
 export * from "./CameraUtils";
 export * from "./DataStructures";
-export * from "./DocumentSide";
 export * from "./DeviceUtils";
 export * from "./DocumentSide";
 export * from "./ErrorTypes";
@@ -27,11 +26,15 @@ export * from "./WasmLoadUtils";
 
 // taken from https://stackoverflow.com/a/2117523/213057
 /* eslint-disable */
-function uuidv4(): string
-{
-    return ( ( [1e7] as any )+-1e3+-4e3+-8e3+-1e11 ).replace( /[018]/g, ( c: any ) =>
-        ( c ^ crypto.getRandomValues( new Uint8Array( 1 ) )[0] & 15 >> c / 4 ).toString( 16 )
-    );
+function uuidv4(): string {
+  return (([1e7] as any) + -1e3 + -4e3 + -8e3 + -1e11).replace(
+    /[018]/g,
+    (c: any) =>
+      (
+        c ^
+        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      ).toString(16)
+  );
 }
 /* eslint-enable */
 
@@ -49,7 +52,7 @@ function getUserID(): string
     }
     catch ( error )
     {
-        // local storage is disabled, generate new user ID every time
+    // local storage is disabled, generate new user ID every time
         return uuidv4();
     }
 }
@@ -64,69 +67,68 @@ function getUserID(): string
                   @typescript-eslint/no-unsafe-assignment,
                   @typescript-eslint/no-unsafe-member-access,
                   @typescript-eslint/no-unsafe-call */
-export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promise< any >
+export async function loadWasmModule(
+    loadSettings: WasmSDKLoadSettings
+): Promise<any>
 {
-    return new Promise< any >
-    (
-        ( resolve, reject ) =>
+    return new Promise<any>( ( resolve, reject ) =>
+    {
+        if ( !loadSettings || typeof loadSettings !== "object" )
         {
-            if ( !loadSettings || typeof loadSettings !== "object" )
-            {
-                reject( new SDKError( ErrorTypes.sdkErrors.wasmSettingsMissing ) );
-                return;
-            }
-            if ( typeof loadSettings.licenseKey !== "string" )
-            {
-                reject( new SDKError( ErrorTypes.sdkErrors.licenseKeyMissing ) );
-                return;
-            }
-            if ( !loadSettings.wasmModuleName )
-            {
-                reject( new SDKError( ErrorTypes.sdkErrors.wasmModuleNameMissing ) );
-                return;
-            }
-            if ( typeof loadSettings.engineLocation !== "string" )
-            {
-                reject( new SDKError( ErrorTypes.sdkErrors.engineLocationInvalid ) );
-                return;
-            }
-            if ( typeof loadSettings.workerLocation !== "string" )
-            {
-                reject( new SDKError( ErrorTypes.sdkErrors.workerLocationInvalid ) );
-                return;
-            }
-            // obtain user ID from local storage
-            const userId = getUserID();
-
-
-            try
-            {
-                const workerPath = `/resources/${ loadSettings.wasmModuleName }.worker.min.js`;
-                const defaultWorkerLocation = window.location.origin + workerPath;
-                const workerLocation = loadSettings.workerLocation || defaultWorkerLocation;
-
-                if ( loadSettings.allowHelloMessage )
-                {
-                    console.log( "Worker location is:", workerLocation );
-                }
-
-                const worker = new Worker( workerLocation );
-
-                WasmSDKWorker.createWasmWorker( worker, loadSettings, userId ).then
-                (
-                    wasmSDK =>
-                    {
-                        resolve( wasmSDK );
-                    },
-                    reject
-                );
-            }
-            catch ( initError )
-            {
-                reject( initError );
-            }
+            reject( new SDKError( ErrorTypes.sdkErrors.wasmSettingsMissing ) );
+            return;
         }
-    );
+        if ( typeof loadSettings.licenseKey !== "string" )
+        {
+            reject( new SDKError( ErrorTypes.sdkErrors.licenseKeyMissing ) );
+            return;
+        }
+        if ( !loadSettings.wasmModuleName )
+        {
+            reject( new SDKError( ErrorTypes.sdkErrors.wasmModuleNameMissing ) );
+            return;
+        }
+        if ( typeof loadSettings.engineLocation !== "string" )
+        {
+            reject( new SDKError( ErrorTypes.sdkErrors.engineLocationInvalid ) );
+            return;
+        }
+        if ( typeof loadSettings.workerLocation !== "string" )
+        {
+            reject( new SDKError( ErrorTypes.sdkErrors.workerLocationInvalid ) );
+            return;
+        }
+        // obtain user ID from local storage
+        const userId = getUserID();
+
+
+        try
+        {
+            const workerPath = `/resources/${loadSettings.wasmModuleName}.worker.min.js`;
+            const defaultWorkerLocation = window.location.origin + workerPath;
+            const workerLocation =
+        loadSettings.workerLocation || defaultWorkerLocation;
+
+            if ( loadSettings.allowHelloMessage )
+            {
+                console.log( "Worker location is:", workerLocation );
+            }
+
+            const worker = new Worker( workerLocation );
+
+            WasmSDKWorker.createWasmWorker( worker, loadSettings, userId ).then(
+                ( wasmSDK ) =>
+                {
+                    resolve( wasmSDK );
+                },
+                reject
+            );
+        }
+        catch ( initError )
+        {
+            reject( initError );
+        }
+    } );
 }
 /* eslint-enable @typescript-eslint/no-explicit-any,
                  @typescript-eslint/no-unsafe-assignment,
@@ -143,13 +145,12 @@ export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promi
  *        See README.md for more information.
  * @param metadataCallbacks
  */
-export async function createRecognizerRunner
-(
-    wasmSDK:                WasmSDK,
-    recognizers:            Array< Recognizer >,
-    allowMultipleResults  = false,
-    metadataCallbacks:      MetadataCallbacks = {}
-): Promise< RecognizerRunner >
+export async function createRecognizerRunner(
+    wasmSDK: WasmSDK,
+    recognizers: Array<Recognizer>,
+    allowMultipleResults = false,
+    metadataCallbacks: MetadataCallbacks = {}
+): Promise<RecognizerRunner>
 {
     if ( typeof wasmSDK !== "object" )
     {
@@ -159,5 +160,9 @@ export async function createRecognizerRunner
     {
         throw new SDKError( ErrorTypes.sdkErrors.recognizersMissing );
     }
-    return wasmSDK.mbWasmModule.createRecognizerRunner( recognizers, allowMultipleResults, metadataCallbacks );
+    return wasmSDK.mbWasmModule.createRecognizerRunner(
+        recognizers,
+        allowMultipleResults,
+        metadataCallbacks
+    );
 }

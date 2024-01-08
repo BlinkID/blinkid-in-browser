@@ -1,8 +1,79 @@
 # Release notes
 
+## v6.4.0
+
+### New features
+
+-   Added new result member `cardRotation` to `ImageAnalysisResult` structure
+
+-   New `CardOrientation` status - `NotAvailable`
+
+-   New `Region` enum values:
+    -   DISTRITO_FEDERAL
+    -   MARANHAO
+    -   MATO_GROSSO
+    -   MINAS_GERAIS
+    -   PARA
+    -   PARANA
+    -   PERNAMBUCO
+    -   SANTA_CATARINA
+
+-   New `Type` enum values:
+    -   CONSULAR_VOTER_ID
+    -   TWIC_CARD
+
+### Added support for 8 new documents
+-   Bolivia - Paper Passport
+-   Brazil - Alien ID
+-   Brazil - Distrito Federal - Identity Card
+-   Brazil - Minas Gerais - Identity Card
+-   Cameroon - Polycarbonate Passport
+-   Costa Rica - Paper Passport
+-   UK - Proof of Age Card
+-   USA - Twic Card
+
+### Added support for 17 new documents in BETA
+-   Australia - Australian Capital Territory - Identity Card
+-   Australia - Queensland - Proof of Age Card
+-   Australia - Tasmania - Identity Card
+-   Australia - Western Australia - Identity Card
+-   Bahrain - Driver’s License
+-   Bahrain - Paper Passport
+-   Brazil - Maranhao - Identity Card
+-   Brazil - Mato Grosso - Identity Card
+-   Brazil - Para - Identity Card
+-   Brazil - Parana - Identity Card
+-   Brazil - Pernambuco - Identity Card
+-   Brazil - Santa Catarina - Identity Card
+-   Cameroon - Paper Passport
+-   Mexico - Quintana Roo, Benito Juarez - Driver’s License
+-   Mexico - Quintana Roo -Driver’s License
+-   Switzerland - Polycarbonate Passport
+-   UAE - Polycarbonate Passport
+
+### Added support for 14 new versions of already supported documents
+-   Brazil - Driver’s License
+-   Luxembourg - Identity Card
+-   North Macedonia - Identity Card
+-   Portugal - Driver’s License
+-   Slovakia - Identity Card
+-   Switzerland - Identity Card
+-   Switzerland - Driver’s License
+-   Turkey - Polycarbonate Passport
+-   Ukraine - Driver’s License
+-   USA - Arizona - Driver’s License
+-   USA - Arizona - Identity Card
+-   USA - Nebraska - Driver’s License
+-   USA - Pennsylvania - Identity Card
+-   USA - Virginia - Driver’s License
+
+### Added support for 2 new versions of already supported documents in BETA
+-   Iceland - Paper Passport
+-   Mexico - Consular ID
+
 ## v6.3.2
 
-- Export missing `DocumentSide`
+-   Export missing `DocumentSide`
 
 ## v6.3.1
 
