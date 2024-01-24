@@ -41,8 +41,6 @@
 
  - [mb-api-process-status](../mb-api-process-status)
  - [mb-component](../mb-component)
- - [mb-device-selection](../mb-device-selection)
- - [mb-device-selection-quit](../mb-device-selection/mb-device-selection-quit)
  - [mb-help](../mb-help)
 
 ### Graph
@@ -50,8 +48,6 @@
 graph TD;
   mb-api-process-status --> mb-modal
   mb-component --> mb-modal
-  mb-device-selection --> mb-modal
-  mb-device-selection-quit --> mb-modal
   mb-help --> mb-modal
   style mb-modal fill:#f9f,stroke:#333,stroke-width:4px
 ```

@@ -5,8 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { D2DOptions } from "./utils/d2d.service";
-import { CameraEntry, CameraExperience, CameraExperienceState, CameraExperienceTimeoutDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, RecognitionEvent, SDKError } from "./utils/data-structures";
+import { CameraEntry, CameraExperience, CameraExperienceState, CameraExperienceTimeoutDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
 import { MbHelpCallbacks } from "./components/shared/mb-help/mb-help.model";
 import { SdkService } from "./utils/sdk.service";
@@ -36,10 +35,6 @@ export namespace Components {
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
         "cameraId": string | null;
-        /**
-          * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical  limitations, without the need to restart the existing process, such as form filling. In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements.  There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers. For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md  where you can also find more information about this feature.
-         */
-        "d2dOptions": D2DOptions;
         /**
           * Set to 'false' if component should not enable drag and drop functionality.  Default value is 'true'.
          */
@@ -419,10 +414,6 @@ export namespace Components {
         /**
           * See description in public component.
          */
-        "d2dOptions": D2DOptions;
-        /**
-          * See description in public component.
-         */
         "enableDrag": boolean;
         /**
           * See description in public component.
@@ -577,29 +568,6 @@ export namespace Components {
         "workerLocation": string;
     }
     interface MbContainer {
-    }
-    interface MbDeviceSelection {
-        "closeModal": () => Promise<void>;
-        "d2dOptions": D2DOptions;
-    }
-    interface MbDeviceSelectionConnection {
-        "variant": string;
-    }
-    interface MbDeviceSelectionHandoff {
-        "urlFactory": D2DOptions['urlFactory'];
-    }
-    interface MbDeviceSelectionIntro {
-        "d2dOptions": D2DOptions;
-    }
-    interface MbDeviceSelectionMobile {
-        "d2dOptions": D2DOptions;
-    }
-    interface MbDeviceSelectionQuit {
-        "confirmLabel": string;
-        "denyLabel": string;
-        "description": string;
-        "modalLabel": string;
-        "visible": boolean;
     }
     interface MbFeedback {
         /**
@@ -824,42 +792,6 @@ declare global {
         prototype: HTMLMbContainerElement;
         new (): HTMLMbContainerElement;
     };
-    interface HTMLMbDeviceSelectionElement extends Components.MbDeviceSelection, HTMLStencilElement {
-    }
-    var HTMLMbDeviceSelectionElement: {
-        prototype: HTMLMbDeviceSelectionElement;
-        new (): HTMLMbDeviceSelectionElement;
-    };
-    interface HTMLMbDeviceSelectionConnectionElement extends Components.MbDeviceSelectionConnection, HTMLStencilElement {
-    }
-    var HTMLMbDeviceSelectionConnectionElement: {
-        prototype: HTMLMbDeviceSelectionConnectionElement;
-        new (): HTMLMbDeviceSelectionConnectionElement;
-    };
-    interface HTMLMbDeviceSelectionHandoffElement extends Components.MbDeviceSelectionHandoff, HTMLStencilElement {
-    }
-    var HTMLMbDeviceSelectionHandoffElement: {
-        prototype: HTMLMbDeviceSelectionHandoffElement;
-        new (): HTMLMbDeviceSelectionHandoffElement;
-    };
-    interface HTMLMbDeviceSelectionIntroElement extends Components.MbDeviceSelectionIntro, HTMLStencilElement {
-    }
-    var HTMLMbDeviceSelectionIntroElement: {
-        prototype: HTMLMbDeviceSelectionIntroElement;
-        new (): HTMLMbDeviceSelectionIntroElement;
-    };
-    interface HTMLMbDeviceSelectionMobileElement extends Components.MbDeviceSelectionMobile, HTMLStencilElement {
-    }
-    var HTMLMbDeviceSelectionMobileElement: {
-        prototype: HTMLMbDeviceSelectionMobileElement;
-        new (): HTMLMbDeviceSelectionMobileElement;
-    };
-    interface HTMLMbDeviceSelectionQuitElement extends Components.MbDeviceSelectionQuit, HTMLStencilElement {
-    }
-    var HTMLMbDeviceSelectionQuitElement: {
-        prototype: HTMLMbDeviceSelectionQuitElement;
-        new (): HTMLMbDeviceSelectionQuitElement;
-    };
     interface HTMLMbFeedbackElement extends Components.MbFeedback, HTMLStencilElement {
     }
     var HTMLMbFeedbackElement: {
@@ -931,12 +863,6 @@ declare global {
         "mb-completed": HTMLMbCompletedElement;
         "mb-component": HTMLMbComponentElement;
         "mb-container": HTMLMbContainerElement;
-        "mb-device-selection": HTMLMbDeviceSelectionElement;
-        "mb-device-selection-connection": HTMLMbDeviceSelectionConnectionElement;
-        "mb-device-selection-handoff": HTMLMbDeviceSelectionHandoffElement;
-        "mb-device-selection-intro": HTMLMbDeviceSelectionIntroElement;
-        "mb-device-selection-mobile": HTMLMbDeviceSelectionMobileElement;
-        "mb-device-selection-quit": HTMLMbDeviceSelectionQuitElement;
         "mb-feedback": HTMLMbFeedbackElement;
         "mb-help": HTMLMbHelpElement;
         "mb-image-box": HTMLMbImageBoxElement;
@@ -975,10 +901,6 @@ declare namespace LocalJSX {
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
         "cameraId"?: string | null;
-        /**
-          * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical  limitations, without the need to restart the existing process, such as form filling. In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements.  There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers. For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md  where you can also find more information about this feature.
-         */
-        "d2dOptions"?: D2DOptions;
         /**
           * Set to 'false' if component should not enable drag and drop functionality.  Default value is 'true'.
          */
@@ -1363,10 +1285,6 @@ declare namespace LocalJSX {
         /**
           * See description in public component.
          */
-        "d2dOptions"?: D2DOptions;
-        /**
-          * See description in public component.
-         */
         "enableDrag"?: boolean;
         /**
           * See description in public component.
@@ -1543,39 +1461,6 @@ declare namespace LocalJSX {
     }
     interface MbContainer {
     }
-    interface MbDeviceSelection {
-        "d2dOptions"?: D2DOptions;
-        /**
-          * Close event
-         */
-        "onClose"?: (event: CustomEvent<void>) => void;
-        "onDone"?: (event: CustomEvent<RecognitionEvent>) => void;
-        "onInit"?: (event: CustomEvent<void>) => void;
-    }
-    interface MbDeviceSelectionConnection {
-        "onClose"?: (event: CustomEvent<void>) => void;
-        "variant"?: string;
-    }
-    interface MbDeviceSelectionHandoff {
-        "urlFactory"?: D2DOptions['urlFactory'];
-    }
-    interface MbDeviceSelectionIntro {
-        "d2dOptions"?: D2DOptions;
-        "onDone"?: (event: CustomEvent<RecognitionEvent>) => void;
-    }
-    interface MbDeviceSelectionMobile {
-        "d2dOptions"?: D2DOptions;
-        "onInit"?: (event: CustomEvent<void>) => void;
-    }
-    interface MbDeviceSelectionQuit {
-        "confirmLabel"?: string;
-        "denyLabel"?: string;
-        "description"?: string;
-        "modalLabel"?: string;
-        "onCancel"?: (event: CustomEvent<void>) => void;
-        "onConfirm"?: (event: CustomEvent<void>) => void;
-        "visible"?: boolean;
-    }
     interface MbFeedback {
         /**
           * Set to 'true' if component should be visible.
@@ -1732,12 +1617,6 @@ declare namespace LocalJSX {
         "mb-completed": MbCompleted;
         "mb-component": MbComponent;
         "mb-container": MbContainer;
-        "mb-device-selection": MbDeviceSelection;
-        "mb-device-selection-connection": MbDeviceSelectionConnection;
-        "mb-device-selection-handoff": MbDeviceSelectionHandoff;
-        "mb-device-selection-intro": MbDeviceSelectionIntro;
-        "mb-device-selection-mobile": MbDeviceSelectionMobile;
-        "mb-device-selection-quit": MbDeviceSelectionQuit;
         "mb-feedback": MbFeedback;
         "mb-help": MbHelp;
         "mb-image-box": MbImageBox;
@@ -1764,12 +1643,6 @@ declare module "@stencil/core" {
             "mb-completed": LocalJSX.MbCompleted & JSXBase.HTMLAttributes<HTMLMbCompletedElement>;
             "mb-component": LocalJSX.MbComponent & JSXBase.HTMLAttributes<HTMLMbComponentElement>;
             "mb-container": LocalJSX.MbContainer & JSXBase.HTMLAttributes<HTMLMbContainerElement>;
-            "mb-device-selection": LocalJSX.MbDeviceSelection & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionElement>;
-            "mb-device-selection-connection": LocalJSX.MbDeviceSelectionConnection & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionConnectionElement>;
-            "mb-device-selection-handoff": LocalJSX.MbDeviceSelectionHandoff & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionHandoffElement>;
-            "mb-device-selection-intro": LocalJSX.MbDeviceSelectionIntro & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionIntroElement>;
-            "mb-device-selection-mobile": LocalJSX.MbDeviceSelectionMobile & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionMobileElement>;
-            "mb-device-selection-quit": LocalJSX.MbDeviceSelectionQuit & JSXBase.HTMLAttributes<HTMLMbDeviceSelectionQuitElement>;
             "mb-feedback": LocalJSX.MbFeedback & JSXBase.HTMLAttributes<HTMLMbFeedbackElement>;
             "mb-help": LocalJSX.MbHelp & JSXBase.HTMLAttributes<HTMLMbHelpElement>;
             "mb-image-box": LocalJSX.MbImageBox & JSXBase.HTMLAttributes<HTMLMbImageBoxElement>;

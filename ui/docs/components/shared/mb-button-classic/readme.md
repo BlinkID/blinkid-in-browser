@@ -28,20 +28,12 @@
 ### Used by
 
  - [mb-component](../mb-component)
- - [mb-device-selection-connection](../mb-device-selection/mb-device-selection-connection)
- - [mb-device-selection-intro](../mb-device-selection/mb-device-selection-intro)
- - [mb-device-selection-mobile](../mb-device-selection/mb-device-selection-mobile)
- - [mb-device-selection-quit](../mb-device-selection/mb-device-selection-quit)
  - [mb-help](../mb-help)
 
 ### Graph
 ```mermaid
 graph TD;
   mb-component --> mb-button-classic
-  mb-device-selection-connection --> mb-button-classic
-  mb-device-selection-intro --> mb-button-classic
-  mb-device-selection-mobile --> mb-button-classic
-  mb-device-selection-quit --> mb-button-classic
   mb-help --> mb-button-classic
   style mb-button-classic fill:#f9f,stroke:#333,stroke-width:4px
 ```

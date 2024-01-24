@@ -45,8 +45,6 @@ import * as BlinkIDSDK from '../../../../../es/blinkid-sdk';
 
 import { TranslationService } from '../../../utils/translation.service';
 
-import D2DStore, { D2DScreens, D2DOptions, D2DSettings, setupD2DTranslations } from '../../../utils/d2d.service';
-
 import * as DeviceHelpers from '../../../utils/device.helpers';
 import * as GenericHelpers from '../../../utils/generic.helpers';
 
@@ -72,11 +70,8 @@ export class MbComponent {
     draganddrop: null,
     processing: null,
     modal: null,
-    deviceselection: null,
-    deviceselectionmobile: null
   }
 
-  private deviceselectionref!: HTMLMbDeviceSelectionElement;
   private cameraExperience!: HTMLMbCameraExperienceElement;
   private dragAndDropZone!: HTMLDivElement;
   private errorMessage!: HTMLParagraphElement;
@@ -114,11 +109,6 @@ export class MbComponent {
    * Host element as variable for manipulation (CSS in this case)
    */
   @Element() hostEl: HTMLElement;
-
-  /**
-   * See description in public component.
-   */
-  @Prop() d2dOptions: D2DOptions = null;
 
   /**
    * See description in public component.
@@ -376,14 +366,6 @@ export class MbComponent {
    */
   @Event() setIsCameraActive: EventEmitter<boolean>;
 
-  private checkPeerId() {
-    const peerId = this.d2dOptions instanceof D2DSettings ? this.d2dOptions.peerIdExtractor() : null;
-
-    if (peerId) {
-      this.showOverlay('deviceselectionmobile');
-    }
-  }
-
   componentDidLoad() {
     // Set `exportparts` attribute on root `mb-component` element to enable ::part() CSS customization
     GenericHelpers.setWebComponentParts(this.hostEl);
@@ -394,7 +376,6 @@ export class MbComponent {
     this.hostEl.setAttribute('exportparts', parts.concat(exportedParts).join(', '));
 
     this.init();
-    this.checkPeerId();
   }
 
   componentDidUpdate() {
@@ -412,9 +393,6 @@ export class MbComponent {
         this.abortScan();
         this.handleSetIsCameraActive(false);
         this.clearIsCameraActive = true;
-      }
-      if (this.overlays.deviceselection.visible) {
-        this.deviceselectionref.closeModal();
       }
     }
   }
@@ -534,10 +512,6 @@ export class MbComponent {
       return;
     }
 
-    if (this.d2dOptions instanceof D2DSettings) {
-      setupD2DTranslations(this.translationService);
-    }
-
     const internetIsAvailable = navigator.onLine;
 
     if (!internetIsAvailable) {
@@ -633,8 +607,6 @@ export class MbComponent {
     this.blocked = false;
     this.block.emit(false);
 
-    D2DStore.set('isSlaveReady', true);
-
     this.showScreen('action');
 
     if (this.enableDrag) {
@@ -679,18 +651,6 @@ export class MbComponent {
 
     this.cameraExperience.type = this.sdkService.getDesiredCameraExperience(this.recognizers, this.recognizerOptions);
     return true;
-  }
-
-  private async openDeviceModal() {
-    const isDesktop = DeviceHelpers.isDesktop();
-
-    if (isDesktop && this.d2dOptions instanceof D2DSettings) {
-      setupD2DTranslations(this.translationService);
-      this.showOverlay('deviceselection');
-      D2DStore.set('modalVisible', true);
-      return;
-    }
-    this.startScanFromCamera();
   }
 
   private async startScanFromCamera() {
@@ -854,18 +814,6 @@ export class MbComponent {
                   state: 'FEEDBACK_OK',
                   message: ''
                 });
-
-                const { connection } = D2DStore.state;
-
-                if (connection?.open) {
-                  const stringifiedResult = JSON.stringify(recognitionEvent)
-                  connection.send(stringifiedResult);
-
-                  this.showOverlay('deviceselectionmobile');
-                  D2DStore.set('slaveScreen', D2DScreens.finished);
-
-                  return;
-                }
 
                 this.showOverlay('');
               });
@@ -1424,7 +1372,6 @@ export class MbComponent {
     window.setTimeout(() => {
       this.cameraExperience.setState(CameraExperienceState.Default, false, true);
       this.cameraExperience.apiState = '';
-      this.checkPeerId();
     }, 500);
 
     this.showOverlay('');
@@ -1592,7 +1539,7 @@ export class MbComponent {
                 ref={el => this.scanFromCameraButton = el as HTMLMbButtonElement}
                 visible={true}
                 disabled={false}
-                clickHandler={() => this.openDeviceModal()}
+                clickHandler={() => this.startScanFromCamera()}
                 imageSrcDefault={this.iconCameraDefault}
                 imageSrcActive={this.iconCameraActive}
                 buttonTitle={this.translationService.i('action-alt-camera') as string}
@@ -1746,35 +1693,6 @@ export class MbComponent {
             </div>
           </mb-modal>
         </mb-overlay>
-
-        {this.d2dOptions instanceof D2DSettings ? (
-          <mb-overlay
-            id="mb-overlay-device-selection"
-            visible={false}
-            ref={el => this.overlays.deviceselection = el as HTMLMbOverlayElement}
-          >
-            <mb-device-selection
-            ref={el => this.deviceselectionref = el}
-            d2dOptions={this.d2dOptions}
-            onInit={this.startScanFromCamera.bind(this)}
-            onClose={() => this.showOverlay('')}
-            onDone={(event: CustomEvent<RecognitionEvent>) => {
-              this.scanSuccess.emit(event.detail.data?.result);
-            }} />
-          </mb-overlay>
-        ) : null}
-        {this.d2dOptions instanceof D2DSettings ? (
-          <mb-overlay
-            id="mb-overlay-device-selection-mobile"
-            visible={false}
-            ref={el => this.overlays.deviceselectionmobile = el as HTMLMbOverlayElement}
-          >
-            <mb-device-selection-mobile
-              d2dOptions={this.d2dOptions}
-              onInit={this.startScanFromCamera.bind(this)}
-            />
-          </mb-overlay>
-        ) : null}
       </Host>
     );
   }
