@@ -26,8 +26,6 @@ import {
 
 import { SdkService } from '../../utils/sdk.service';
 
-import { D2DOptions, D2DSettings } from '../../utils/d2d.service';
-
 import { TranslationService } from '../../utils/translation.service';
 import * as GenericHelpers from '../../utils/generic.helpers';
 
@@ -38,17 +36,6 @@ import * as GenericHelpers from '../../utils/generic.helpers';
 })
 export class BlinkidInBrowser implements MicroblinkUI {
   private blocked: boolean = false;
-
-  /**
-   * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical 
-   * limitations, without the need to restart the existing process, such as form filling.
-   * In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements. 
-   * There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary
-   * device browsers.
-   * For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md 
-   * where you can also find more information about this feature.
-   */
-  @Prop() d2dOptions: D2DOptions = null;
 
   /**
    * Write a hello message to the browser console when license check is successfully performed.
@@ -553,8 +540,6 @@ export class BlinkidInBrowser implements MicroblinkUI {
     this.finalTranslations = this.translations ? this.translations : rawTranslations;
     this.translationService = new TranslationService(this.finalTranslations || {});
 
-    this.d2dSettings = this.d2dOptions ? new D2DSettings(this.d2dOptions) : null;
-
     this.sdkService = new SdkService();
   }
 
@@ -564,7 +549,6 @@ export class BlinkidInBrowser implements MicroblinkUI {
         <mb-container>
           <mb-component dir={ this.hostEl.getAttribute('dir') }
                         ref={ el => this.mbComponentEl = el as HTMLMbComponentElement }
-                        d2dOptions={ this.d2dSettings }
                         allowHelloMessage={ this.allowHelloMessage }
                         recognitionPauseTimeout={ this.recognitionPauseTimeout }
                         cameraExperienceStateDurations={ this.cameraExperienceStateDurations }
@@ -620,5 +604,4 @@ export class BlinkidInBrowser implements MicroblinkUI {
   private feedbackEl!: HTMLMbFeedbackElement;
   private mbComponentEl!: HTMLMbComponentElement;
 
-  private d2dSettings: D2DSettings;
 }

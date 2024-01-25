@@ -165,6 +165,7 @@ export class SdkService {
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
       configuration.recognizerOptions,
+      eventCallback
     );
 
     const recognizerRunner = await this.createRecognizerRunner(
@@ -304,7 +305,8 @@ export class SdkService {
 
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
-      configuration.recognizerOptions
+      configuration.recognizerOptions,
+      eventCallback
     );
 
     const recognizerRunner = await this.createRecognizerRunner(
@@ -436,7 +438,8 @@ export class SdkService {
 
     const recognizers = await this.createRecognizers(
       configuration.recognizers,
-      configuration.recognizerOptions
+      configuration.recognizerOptions,
+      eventCallback
     );
 
     const recognizerRunner = await this.createRecognizerRunner(
@@ -611,7 +614,8 @@ export class SdkService {
 
   private async createRecognizers(
     recognizers: Array<string>,
-    recognizerOptions?: any,
+    recognizerOptions: any,
+    eventCallback: (ev: RecognitionEvent) => void
   ): Promise<Array<RecognizerInstance>> {
     const pureRecognizers = [];
 
@@ -623,6 +627,16 @@ export class SdkService {
     if (recognizerOptions && Object.keys(recognizerOptions).length > 0) {
       for (const recognizer of pureRecognizers) {
         const settings = await recognizer.currentSettings();
+
+        settings.barcodeScanningStartedCallback = () =>
+          eventCallback({ status: RecognitionStatus.BarcodeScanningStarted });
+        settings.classifierCallback = (supported: boolean) => {
+          eventCallback({
+            status: RecognitionStatus.DocumentClassified,
+            data: supported,
+          });
+        };
+
         let updated = false;
 
         if (
@@ -707,29 +721,14 @@ export class SdkService {
       }
     }
 
-    const blinkIdSingleSide = recognizers.find(el => el.recognizer.recognizerName === 'BlinkIdSingleSideRecognizer');
-    const blinkIdMultiSide = recognizers.find(el => el.recognizer.recognizerName === 'BlinkIdMultiSideRecognizer');
-
-    if (blinkIdSingleSide || blinkIdMultiSide) {
-      for (const el of recognizers) {
-        if (
-          el.recognizer.recognizerName === 'BlinkIdSingleSideRecognizer' ||
-          el.recognizer.recognizerName === 'BlinkIdMultiSideRecognizer'
-        ) {
-          const settings = await el.recognizer.currentSettings() as BlinkIDSDK.BlinkIdSingleSideRecognizerSettings;
-          settings.barcodeScanningStartedCallback = () => eventCallback({ status: RecognitionStatus.BarcodeScanningStarted });
-          settings.classifierCallback = (supported: boolean) => {
-            eventCallback({ status: RecognitionStatus.DocumentClassified, data: supported });
-          }
-          await el.recognizer.updateSettings(settings);
-        }
-      }
-    }
+    const blinkIdMultiSide = recognizers.find(
+      (el) => el.recognizer.recognizerName === "BlinkIdMultiSideRecognizer"
+    );
 
     if (blinkIdMultiSide) {
-      metadataCallbacks.onFirstSideResult = () => eventCallback({ status: RecognitionStatus.OnFirstSideResult });
+      metadataCallbacks.onFirstSideResult = () =>
+        eventCallback({ status: RecognitionStatus.OnFirstSideResult });
     }
-
     const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
       this.sdk,
       recognizers.map((el: RecognizerInstance) =>  el.recognizer),

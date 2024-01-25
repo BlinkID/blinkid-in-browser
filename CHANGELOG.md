@@ -1,5 +1,20 @@
 # Release notes
 
+## v6.5.0
+
+### New features
+
+-   Improved the document side detection for US driver's licenses which reduces the possibility of capturing the wrong side of the document
+
+### Breaking changes
+
+-   It's now mandatory to scan the barcode when scanning the back side of US driver's licences using the BlinkID Multi Side Recognizer
+
+### Bugfixes
+
+-   Fixed a bug where settings weren't updated correctly when set via the UI component
+-   Fixed data matching issue in Guatamala Passport
+
 ## v6.4.0
 
 ### New features

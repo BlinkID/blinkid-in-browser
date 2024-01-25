@@ -61,7 +61,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-compilation-targets
 │  └─ licenseFile: node_modules/@babel/helper-compilation-targets/LICENSE
-├─ @babel/helper-create-class-features-plugin@7.23.6
+├─ @babel/helper-create-class-features-plugin@7.23.7
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -199,7 +199,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-wrap-function
 │  └─ licenseFile: node_modules/@babel/helper-wrap-function/LICENSE
-├─ @babel/helpers@7.23.6
+├─ @babel/helpers@7.23.8
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -436,7 +436,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/plugin-transform-block-scoping
 │  └─ licenseFile: node_modules/@babel/plugin-transform-block-scoping/LICENSE
-├─ @babel/plugin-transform-classes@7.23.5
+├─ @babel/plugin-transform-classes@7.23.8
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -658,7 +658,7 @@
 │  ├─ url: https://ofcr.se/
 │  ├─ path: node_modules/@babel/regjsgen
 │  └─ licenseFile: node_modules/@babel/regjsgen/LICENSE-MIT.txt
-├─ @babel/runtime@7.23.6
+├─ @babel/runtime@7.23.8
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -672,7 +672,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/template
 │  └─ licenseFile: node_modules/@babel/template/LICENSE
-├─ @babel/traverse@7.23.6
+├─ @babel/traverse@7.23.7
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -709,7 +709,7 @@
 │  ├─ repository: https://github.com/eslint/eslint
 │  ├─ path: node_modules/@eslint/js
 │  └─ licenseFile: node_modules/@eslint/js/LICENSE
-├─ @humanwhocodes/config-array@0.11.13
+├─ @humanwhocodes/config-array@0.11.14
 │  ├─ licenses: Apache-2.0
 │  ├─ repository: https://github.com/humanwhocodes/config-array
 │  ├─ publisher: Nicholas C. Zakas
@@ -721,7 +721,7 @@
 │  ├─ publisher: Nicholas C. Zaks
 │  ├─ path: node_modules/@humanwhocodes/module-importer
 │  └─ licenseFile: node_modules/@humanwhocodes/module-importer/LICENSE
-├─ @humanwhocodes/object-schema@2.0.1
+├─ @humanwhocodes/object-schema@2.0.2
 │  ├─ licenses: BSD-3-Clause
 │  ├─ repository: https://github.com/humanwhocodes/object-schema
 │  ├─ publisher: Nicholas C. Zakas
@@ -761,14 +761,14 @@
 │  ├─ publisher: Rich Harris
 │  ├─ path: node_modules/@jridgewell/sourcemap-codec
 │  └─ licenseFile: node_modules/@jridgewell/sourcemap-codec/LICENSE
-├─ @jridgewell/trace-mapping@0.3.20
+├─ @jridgewell/trace-mapping@0.3.22
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/jridgewell/trace-mapping
 │  ├─ publisher: Justin Ridgewell
 │  ├─ email: justin@ridgewell.name
 │  ├─ path: node_modules/@jridgewell/trace-mapping
 │  └─ licenseFile: node_modules/@jridgewell/trace-mapping/LICENSE
-├─ @microblink/blinkid-in-browser-sdk@6.4.0
+├─ @microblink/blinkid-in-browser-sdk@6.5.0
 │  ├─ licenses: Custom: https://travis-ci.org/BlinkID/blinkid-in-browser.svg
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
 │  ├─ path: /opt/jenkins/android-arm64-huawei-p30-pro/root/E0/sdk-blinkid-in-browser/blinkid-in-browser
@@ -825,7 +825,7 @@
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/json-schema
 │  └─ licenseFile: node_modules/@types/json-schema/LICENSE
-├─ @types/node@20.10.5
+├─ @types/node@20.11.6
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/node
@@ -885,7 +885,7 @@
 │  ├─ repository: https://github.com/acornjs/acorn-jsx
 │  ├─ path: node_modules/acorn-jsx
 │  └─ licenseFile: node_modules/acorn-jsx/LICENSE
-├─ acorn@8.11.2
+├─ acorn@8.11.3
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/acornjs/acorn
 │  ├─ path: node_modules/acorn
@@ -1100,7 +1100,7 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/callsites
 │  └─ licenseFile: node_modules/callsites/license
-├─ caniuse-lite@1.0.30001570
+├─ caniuse-lite@1.0.30001579
 │  ├─ licenses: CC-BY-4.0
 │  ├─ repository: https://github.com/browserslist/caniuse-lite
 │  ├─ publisher: Ben Briggs
@@ -1217,7 +1217,7 @@
 │  ├─ url: https://github.com/jonschlinkert
 │  ├─ path: node_modules/copy-descriptor
 │  └─ licenseFile: node_modules/copy-descriptor/LICENSE
-├─ core-js-compat@3.34.0
+├─ core-js-compat@3.35.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/zloirock/core-js
 │  ├─ publisher: Denis Pushkarev
@@ -1309,7 +1309,7 @@
 │  ├─ repository: https://github.com/eslint/doctrine
 │  ├─ path: node_modules/doctrine
 │  └─ licenseFile: node_modules/doctrine/LICENSE
-├─ electron-to-chromium@1.4.615
+├─ electron-to-chromium@1.4.643
 │  ├─ licenses: ISC
 │  ├─ repository: https://github.com/kilian/electron-to-chromium
 │  ├─ publisher: Kilian Valkhof
@@ -2731,7 +2731,7 @@
 │  ├─ email: ljharb@gmail.com
 │  ├─ path: node_modules/supports-preserve-symlinks-flag
 │  └─ licenseFile: node_modules/supports-preserve-symlinks-flag/LICENSE
-├─ terser@5.26.0
+├─ terser@5.27.0
 │  ├─ licenses: BSD-2-Clause
 │  ├─ repository: https://github.com/terser/terser
 │  ├─ publisher: Mihai Bazon
