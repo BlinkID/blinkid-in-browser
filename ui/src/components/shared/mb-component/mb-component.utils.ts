@@ -4,7 +4,7 @@
 
 import * as BlinkIDSDK from '../../../../../es/blinkid-sdk';
 
-function getSDKWasmType(wasmType: string): BlinkIDSDK.WasmType | null {
+export function getSDKWasmType(wasmType: string): BlinkIDSDK.WasmType | null {
   switch (wasmType) {
     case 'BASIC':
       return BlinkIDSDK.WasmType.Basic;
@@ -17,4 +17,15 @@ function getSDKWasmType(wasmType: string): BlinkIDSDK.WasmType | null {
   }
 }
 
-export { getSDKWasmType }
+export function getSDKWasmFlavor(wasmFlavor: string): BlinkIDSDK.WasmFlavor | null {
+  switch (wasmFlavor) {
+    case 'Full':
+      return BlinkIDSDK.WasmFlavor.Full;
+    case 'Lightweight':
+      return BlinkIDSDK.WasmFlavor.Lightweight;
+    case 'LighweightWithFixedMemory':
+      return BlinkIDSDK.WasmFlavor.LightweightWithFixedMemory;
+    default:
+      return null;
+  }
+}

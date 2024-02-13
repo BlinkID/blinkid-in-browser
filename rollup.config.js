@@ -2,6 +2,7 @@ import babel from '@rollup/plugin-babel'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import typescript from 'rollup-plugin-typescript2'
 import { terser } from 'rollup-plugin-terser'
+import commonjs from 'rollup-plugin-commonjs';
 
 const bannerMsg = `/*! ****************************************************************************
 Copyright (c) Microblink. All rights reserved.
@@ -31,8 +32,9 @@ const config = {
         plugins: [
             nodeResolve(),
             typescript({ tsconfigOverride: { compilerOptions: { declaration: false } } }),
+            commonjs(),
             babel({ babelHelpers: 'bundled' }),
-            terser(terserConfig)
+            terser(terserConfig),
         ]
     },
     cjs: {

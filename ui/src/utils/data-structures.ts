@@ -73,6 +73,7 @@ export interface SdkSettings {
   engineLocation:     string;
   workerLocation:     string;
   wasmType?:          BlinkIDSDK.WasmType;
+  wasmFlavor?:        BlinkIDSDK.WasmFlavor;
 }
 
 /**

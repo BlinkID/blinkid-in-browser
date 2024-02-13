@@ -40,12 +40,12 @@ export class BlinkidInBrowser implements MicroblinkUI {
   private blocked: boolean = false;
 
   /**
-   * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical 
+   * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical
    * limitations, without the need to restart the existing process, such as form filling.
-   * In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements. 
+   * In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements.
    * There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary
    * device browsers.
-   * For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md 
+   * For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md
    * where you can also find more information about this feature.
    */
   @Prop() d2dOptions: D2DOptions = null;
@@ -106,6 +106,18 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
    */
    @Prop() wasmType: string = '';
+
+
+   /**
+    * Defines the flavor of the WebAssembly build that will be loaded. If omitted, SDK will determine the best possible
+    * WebAssembly build which should be loaded based on the browser support.
+    *
+    * Available WebAssembly flavors:
+    * `"Full"`,
+    * `"Lightweight"`,
+    * `"LighweightWithFixedMemory"`
+    */
+   @Prop() wasmFlavor: string = '';
 
   /**
    * List of recognizers which should be used.
@@ -387,17 +399,17 @@ export class BlinkidInBrowser implements MicroblinkUI {
 
   /**
    * Dictates if the Help Screens Floating-Action-Button (Fab) is offered.
-   * (in the bottom right corner of the Camera Experience). 
-   * 
+   * (in the bottom right corner of the Camera Experience).
+   *
    * Default value is 'true'.
    */
   @Prop() allowHelpScreensFab: boolean = true;
 
   /**
    * Dictates if the Help Screens Onboarding is active.
-   * 
+   *
    * Onboarding is a process of opening the Help Screens initial guides when the Camera Experience is being started.
-   * 
+   *
    * Default value is 'true'.
    */
   @Prop() allowHelpScreensOnboarding: boolean = true;
@@ -405,17 +417,17 @@ export class BlinkidInBrowser implements MicroblinkUI {
   /**
    * Dictates if the Help Screens Onboarding process is being started on every Camera Experience start,
    * or just on the first one.
-   * 
+   *
    * Default value is 'false' - onboarding ran only once.
    */
   @Prop() allowHelpScreensOnboardingPerpetuity: boolean = false;
 
   /**
    * Miliseconds timeout on which the "Need Help?" tooltip is turned on.
-   * 
+   *
    * First timeout is started each time the Camera Experience starts and is being reset every time
    * the Help Screens are consumed.
-   * 
+   *
    * Default value is 15000 - 15 seconds.
    */
   @Prop() helpScreensTooltipPauseTimeout: number = 15000;
@@ -572,6 +584,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         workerLocation={ this.workerLocation }
                         licenseKey={ this.licenseKey }
                         wasmType={ this.wasmType }
+                        wasmFlavor={ this.wasmFlavor }
                         recognizers={ this.finalRecognizers }
                         recognizerOptions={ this.recognizerOptions }
                         recognitionTimeout={ this.recognitionTimeout }

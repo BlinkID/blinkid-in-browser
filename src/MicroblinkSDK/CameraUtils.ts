@@ -268,13 +268,11 @@ export async function selectCamera(
  * @param camera                Camera device which should be binded with the video element.
  * @param videoFeed             HTMLVideoElement to which camera device should be binded.
  * @param preferredCameraType   Enum representing whether to use front facing or back facing camera.
- * @param shouldMaxResolution   Mitigation for iOS
  */
 export async function bindCameraToVideoFeed(
     camera:                 SelectedCamera,
     videoFeed:              HTMLVideoElement,
     preferredCameraType:    PreferredCameraType = PreferredCameraType.BackFacingCamera,
-    shouldMaxResolution = false
 ): Promise< boolean >
 {
     const constraints: MediaStreamConstraints =
@@ -323,47 +321,5 @@ export async function bindCameraToVideoFeed(
         cameraFlipped = true;
     }
 
-    if ( shouldMaxResolution )
-    {
-        const tracks       = stream.getVideoTracks();
-        const track        = tracks[ 0 ];
-        const capabilities = track.getCapabilities();
-
-        void track.applyConstraints
-        (
-            {
-                width: capabilities.width?.max,
-                height: capabilities.height?.max
-            }
-        );
-    }
-
     return cameraFlipped;
-}
-
-export function getiOSVersion()
-{
-    const match = navigator.userAgent.match( /OS (\d+)_(\d+)_?(\d+)?/ );
-    if ( match )
-    {
-        const majorVersion = parseInt( match[1], 10 );
-        const minorVersion = parseInt( match[2], 10 );
-        return [majorVersion, minorVersion] as const;
-    }
-    return null;
-}
-
-// iOS versions 16.3 and higher allow access to all cameras
-export function isCameraFocusProblematic()
-{
-    const iosVersion = getiOSVersion();
-
-    // iOS version equal or higher to 16.3
-    if ( iosVersion && iosVersion[0]>= 16 && iosVersion[1]>= 3 )
-    {
-        return true;
-    }
-
-    // not iOS, devices with iOS version 16.2 or lower
-    return false;
 }

@@ -8,23 +8,63 @@ import * as WasmLoadUtils from "../WasmLoadUtils";
 import * as License from "../License";
 import * as ErrorTypes from "../ErrorTypes";
 
-import
-{
+import {
     MetadataCallbacks,
     DisplayablePoints,
-    DisplayableQuad
+    DisplayableQuad,
 } from "../MetadataCallbacks";
 
 import { convertEmscriptenStatusToProgress } from "../LoadProgressUtils";
 import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
-import { setupModule, supportsThreads, waitForThreadWorkers } from "../PThreadHelper";
+import {
+    setupModule,
+    supportsThreads,
+    waitForThreadWorkers,
+} from "../PThreadHelper";
 import { WasmType } from "../WasmType";
 import { SDKError } from "../SDKError";
 import { CapturedFrame } from "../FrameCapture";
+import { isMobile } from "is-mobile";
+import { WasmFlavor } from "../WasmFlavor";
 
-interface MessageWithParameters extends Messages.RequestMessage
+interface MessageWithParameters extends Messages.RequestMessage {
+    readonly params: Array<Messages.WrappedParameter>;
+}
+
+export type WasmBundle = {
+    wasmType: WasmType;
+    wasmFlavor: WasmFlavor;
+};
+
+/**
+ * This function returns the path to the resources variant
+ * based on the user's device
+ */
+export function getWasmFlavor(): WasmFlavor
 {
-    readonly params: Array< Messages.WrappedParameter >
+    // Mobile devices are more resource constrained so we don't ship highly intensive
+    // deblurring models. Additionally it's not required as they have better cameras
+    if ( isMobile() )
+    {
+        if ( WasmLoadUtils.isIOSUserAgent() )
+        {
+            // iOS devices will often block memory allocation, we allocate a lot upfront
+            return WasmFlavor.LighweightWithFixedMemory;
+        }
+        else
+        {
+            // Android devices are more lenient, and 32 bit browsers won't allow large allocations.
+            // We ship a version with linear memory growth
+            return WasmFlavor.Lightweight;
+        }
+    }
+    else
+    {
+        // Desktop browsers don't have issues with memory probing, so we ship a
+        // regular version with memory growth.
+        // As laptop cameras are often worse, we ship a deblurring model.
+        return WasmFlavor.Full;
+    }
 }
 
 export default class MicroblinkWorker
@@ -37,7 +77,7 @@ export default class MicroblinkWorker
 
     private nativeRecognizerRunner: any = null;
 
-    private objects: { [ key: number ] : any } = {};
+    private objects: { [key: number]: any } = {};
 
     private nextObjectHandle = 0;
 
@@ -58,7 +98,7 @@ export default class MicroblinkWorker
         this.context.onmessage = ( event: MessageEvent ) =>
         {
             const msg = event.data;
-            switch( msg.action )
+            switch ( msg.action )
             {
                 case Messages.InitMessage.action:
                     void this.processInitMessage( msg as Messages.InitMessage );
@@ -67,19 +107,29 @@ export default class MicroblinkWorker
                     this.processInvokeFunction( msg as Messages.InvokeFunction );
                     break;
                 case Messages.CreateNewRecognizer.action:
-                    this.processCreateNewRecognizer( msg as Messages.CreateNewRecognizer );
+                    this.processCreateNewRecognizer(
+                        msg as Messages.CreateNewRecognizer
+                    );
                     break;
                 case Messages.InvokeObjectMethod.action:
-                    this.processInvokeObject( msg as Messages.InvokeObjectMethod );
+                    this.processInvokeObject(
+                        msg as Messages.InvokeObjectMethod
+                    );
                     break;
                 case Messages.CreateRecognizerRunner.action:
-                    void this.processCreateRecognizerRunner( msg as Messages.CreateRecognizerRunner );
+                    void this.processCreateRecognizerRunner(
+                        msg as Messages.CreateRecognizerRunner
+                    );
                     break;
                 case Messages.ReconfigureRecognizerRunner.action:
-                    this.processReconfigureRecognizerRunner( msg as Messages.ReconfigureRecognizerRunner );
+                    this.processReconfigureRecognizerRunner(
+                        msg as Messages.ReconfigureRecognizerRunner
+                    );
                     break;
                 case Messages.DeleteRecognizerRunner.action:
-                    this.processDeleteRecognizerRunner( msg as Messages.DeleteRecognizerRunner );
+                    this.processDeleteRecognizerRunner(
+                        msg as Messages.DeleteRecognizerRunner
+                    );
                     break;
                 case Messages.ProcessImage.action:
                     void this.processImage( msg as Messages.ProcessImage );
@@ -91,21 +141,32 @@ export default class MicroblinkWorker
                     this.setDetectionOnly( msg as Messages.SetDetectionOnly );
                     break;
                 case Messages.SetCameraPreviewMirrored.action:
-                    this.setCameraPreviewMirrored( msg as Messages.SetCameraPreviewMirrored );
+                    this.setCameraPreviewMirrored(
+                        msg as Messages.SetCameraPreviewMirrored
+                    );
                     break;
                 case Messages.RegisterMetadataCallbacks.action:
-                    this.registerMetadataCallbacks( msg as Messages.RegisterMetadataCallbacks );
+                    this.registerMetadataCallbacks(
+                        msg as Messages.RegisterMetadataCallbacks
+                    );
                     break;
                 case Messages.SetClearTimeoutCallback.action:
-                    this.registerClearTimeoutCallback( msg as Messages.SetClearTimeoutCallback );
+                    this.registerClearTimeoutCallback(
+                        msg as Messages.SetClearTimeoutCallback
+                    );
                     break;
                 case Messages.GetProductIntegrationInfo.action:
-                    this.processGetProductIntegrationInfo( msg as Messages.GetProductIntegrationInfo );
+                    this.processGetProductIntegrationInfo(
+                        msg as Messages.GetProductIntegrationInfo
+                    );
                     break;
                 default:
                     throw new SDKError( {
-                        code: ErrorTypes.ErrorCodes.WORKER_MESSAGE_ACTION_UNKNOWN,
-                        message: "Unknown message action: " + JSON.stringify( msg.action )
+                        code: ErrorTypes.ErrorCodes
+                            .WORKER_MESSAGE_ACTION_UNKNOWN,
+                        message:
+                            "Unknown message action: " +
+                            JSON.stringify( msg.action ),
                     } );
             }
         };
@@ -120,28 +181,36 @@ export default class MicroblinkWorker
         return handle;
     }
 
-    private notifyError( originalMessage: Messages.RequestMessage, error: SDKError | string )
+    private notifyError(
+        originalMessage: Messages.RequestMessage,
+        error: SDKError | string
+    )
     {
-        this.context.postMessage
-        (
-            new Messages.StatusMessage
-            (
-                originalMessage.messageID,
-                false,
-                error
-            )
+        this.context.postMessage(
+            new Messages.StatusMessage( originalMessage.messageID, false, error )
         );
     }
 
     private notifySuccess( originalMessage: Messages.RequestMessage )
     {
-        this.context.postMessage( new Messages.StatusMessage( originalMessage.messageID, true, null ) );
+        this.context.postMessage(
+            new Messages.StatusMessage( originalMessage.messageID, true, null )
+        );
     }
 
-    private notifyInitSuccess( originalMessage: Messages.RequestMessage, showOverlay: boolean, wasmType: WasmType )
+    private notifyInitSuccess(
+        originalMessage: Messages.RequestMessage,
+        showOverlay: boolean,
+        wasmType: WasmType
+    )
     {
         this.context.postMessage(
-            new Messages.InitSuccessMessage( originalMessage.messageID, true, showOverlay, wasmType )
+            new Messages.InitSuccessMessage(
+                originalMessage.messageID,
+                true,
+                showOverlay,
+                wasmType
+            )
         );
     }
 
@@ -150,23 +219,26 @@ export default class MicroblinkWorker
                       @typescript-eslint/no-unsafe-member-access,
                       @typescript-eslint/no-unsafe-argument,
                       @typescript-eslint/no-unsafe-return */
-    private unwrapParameters( msgWithParams: MessageWithParameters ): Array< any >
+    private unwrapParameters( msgWithParams: MessageWithParameters ): Array<any>
     {
-        const params: Array< any > = [];
+        const params: Array<any> = [];
         for ( const wrappedParam of msgWithParams.params )
         {
             let unwrappedParam = wrappedParam.parameter;
             if ( wrappedParam.type === Messages.ParameterType.Recognizer )
             {
-                unwrappedParam = this.objects[ unwrappedParam ];
+                unwrappedParam = this.objects[unwrappedParam];
                 if ( unwrappedParam === undefined )
                 {
-                    this.notifyError( msgWithParams, new SDKError(
-                        ErrorTypes.workerErrors.handleUndefined
-                    ) );
+                    this.notifyError(
+                        msgWithParams,
+                        new SDKError( ErrorTypes.workerErrors.handleUndefined )
+                    );
                 }
             }
-            else if ( wrappedParam.type === Messages.ParameterType.RecognizerSettings )
+            else if (
+                wrappedParam.type === Messages.ParameterType.RecognizerSettings
+            )
             {
                 // restore removed functions
                 unwrappedParam = this.restoreFunctions( unwrappedParam );
@@ -181,22 +253,20 @@ export default class MicroblinkWorker
         const keys = Object.keys( settings );
         for ( const key of keys )
         {
-            const data = settings[ key ];
-            if
-            (
-                typeof data        === "object" &&
-                       data        !== null     &&
-                       "parameter" in  data     &&
-                       "type"      in  data     &&
-                       data.type   === Messages.ParameterType.Callback
+            const data = settings[key];
+            if (
+                typeof data === "object" &&
+                data !== null &&
+                "parameter" in data &&
+                "type" in data &&
+                data.type === Messages.ParameterType.Callback
             )
             {
-                settings[ key ] = ( ...args: any[] ): void =>
+                settings[key] = ( ...args: any[] ): void =>
                 {
-                    const msg = new Messages.InvokeCallbackMessage
-                    (
+                    const msg = new Messages.InvokeCallbackMessage(
                         Messages.MetadataCallback.recognizerCallback,
-                        [ data.parameter ].concat( args )
+                        [data.parameter].concat( args )
                     );
                     // TODO: scan for transferrables and transfer them, instead of copying
                     this.context.postMessage( msg );
@@ -215,16 +285,16 @@ export default class MicroblinkWorker
                       @typescript-eslint/no-unsafe-assignment,
                       @typescript-eslint/no-unsafe-argument,
                       @typescript-eslint/no-unsafe-member-access */
-    private scanForTransferrables( object: any ): Array< Transferable >
+    private scanForTransferrables( object: any ): Array<Transferable>
     {
         if ( typeof object === "object" )
         {
             const keys = Object.keys( object );
-            const transferrables: Array< Transferable > = [];
+            const transferrables: Array<Transferable> = [];
 
             for ( const key of keys )
             {
-                const data = object[ key ];
+                const data = object[key];
                 if ( data instanceof ImageData )
                 {
                     transferrables.push( data.data.buffer );
@@ -268,14 +338,10 @@ export default class MicroblinkWorker
             // otherwise, use half the delay
             heartBeatDelay /= 2;
         }
-        this.inFlightHeartBeatTimeoutId = setTimeout
-        (
-            () =>
-            {
-                void this.obtainNewServerPermission( true );
-            },
-            heartBeatDelay * 1000
-        );
+        this.inFlightHeartBeatTimeoutId = setTimeout( () =>
+        {
+            void this.obtainNewServerPermission( true );
+        }, heartBeatDelay * 1000 );
 
     }
 
@@ -292,16 +358,19 @@ export default class MicroblinkWorker
     /* eslint-disable @typescript-eslint/no-unsafe-member-access,
                       @typescript-eslint/no-unsafe-call
     */
-    private async obtainNewServerPermission
-    (
+    private async obtainNewServerPermission(
         attemptOnNetworkError: boolean
-    ): Promise< License.ServerPermissionSubmitResultStatus >
+    ): Promise<License.ServerPermissionSubmitResultStatus>
     {
         if ( this.wasmModule )
         {
-            const activeTokenInfo = this.wasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
-            const unlockResult = await License.obtainNewServerPermission( activeTokenInfo, this.wasmModule );
-            switch( unlockResult.status )
+            const activeTokenInfo =
+                this.wasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
+            const unlockResult = await License.obtainNewServerPermission(
+                activeTokenInfo,
+                this.wasmModule
+            );
+            switch ( unlockResult.status )
             {
                 case License.ServerPermissionSubmitResultStatus.Ok:
                 case License.ServerPermissionSubmitResultStatus.RemoteLock:
@@ -309,40 +378,43 @@ export default class MicroblinkWorker
                     this.registerHeartBeat( unlockResult.lease );
                     break;
                 case License.ServerPermissionSubmitResultStatus.NetworkError:
-                case License.ServerPermissionSubmitResultStatus.PayloadSignatureVerificationFailed:
-                case License.ServerPermissionSubmitResultStatus.PayloadCorrupted:
+                case License.ServerPermissionSubmitResultStatus
+                    .PayloadSignatureVerificationFailed:
+                case License.ServerPermissionSubmitResultStatus
+                    .PayloadCorrupted:
                     if ( attemptOnNetworkError )
                     {
-                        console.warn
-                        (
+                        console.warn(
                             "Problem with obtaining server permission. Will attempt in 10 seconds " +
-                            License.ServerPermissionSubmitResultStatus[ unlockResult.status ]
+                            License.ServerPermissionSubmitResultStatus[
+                                unlockResult.status
+                            ]
                         );
                         // try again in 10 seconds
-                        this.inFlightHeartBeatTimeoutId = setTimeout
-                        (
-                            () =>
-                            {
-                                void this.obtainNewServerPermission( false );
-                            },
-                            10 * 1000
-                        );
+                        this.inFlightHeartBeatTimeoutId = setTimeout( () =>
+                        {
+                            void this.obtainNewServerPermission( false );
+                        }, 10 * 1000 );
                     }
                     else
                     {
-                        console.error
-                        (
+                        console.error(
                             "Problem with obtaining server permission. " +
-                            License.ServerPermissionSubmitResultStatus[ unlockResult.status ]
+                            License.ServerPermissionSubmitResultStatus[
+                                unlockResult.status
+                            ]
                         );
                     }
                     break;
-                case License.ServerPermissionSubmitResultStatus.IncorrectTokenState: // should never happen
-                case License.ServerPermissionSubmitResultStatus.PermissionExpired: // should never happen
-                    console.error
-                    (
+                case License.ServerPermissionSubmitResultStatus
+                    .IncorrectTokenState: // should never happen
+                case License.ServerPermissionSubmitResultStatus
+                    .PermissionExpired: // should never happen
+                    console.error(
                         "Internal error: " +
-                        License.ServerPermissionSubmitResultStatus[ unlockResult.status ]
+                        License.ServerPermissionSubmitResultStatus[
+                            unlockResult.status
+                        ]
                     );
                     break;
             }
@@ -350,8 +422,11 @@ export default class MicroblinkWorker
         }
         else
         {
-            console.error( "Internal inconsistency! Wasm module not initialized where it's expected to be!" );
-            return License.ServerPermissionSubmitResultStatus.IncorrectTokenState;
+            console.error(
+                "Internal inconsistency! Wasm module not initialized where it's expected to be!"
+            );
+            return License.ServerPermissionSubmitResultStatus
+                .IncorrectTokenState;
         }
     }
 
@@ -359,7 +434,8 @@ export default class MicroblinkWorker
     {
         if ( this.lease )
         {
-            const tokenInfo = this.wasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
+            const tokenInfo =
+                this.wasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
 
             if ( tokenInfo.unlockResult === License.LicenseTokenState.Valid )
             {
@@ -384,20 +460,36 @@ export default class MicroblinkWorker
 
     // message process functions
 
-    private async calculateWasmType( msg: Messages.InitMessage ): Promise< WasmType >
+    private async calculateWasmBunle(
+        msg: Messages.InitMessage
+    ): Promise<WasmBundle>
     {
-        if ( msg.wasmType !== null )
-        {
-            return msg.wasmType;
-        }
+        const wasmFlavor = msg.wasmFlavor ?? getWasmFlavor();
+        const wasmType = msg.wasmType ?? ( await WasmLoadUtils.detectWasmType() );
 
-        return await WasmLoadUtils.detectWasmType();
+        return {
+            wasmType,
+            wasmFlavor,
+        };
     }
 
-    private calculateEngineLocationPrefix( msg: Messages.InitMessage, wasmType: WasmType ): string
+    private calculateEngineLocationPrefix(
+        msg: Messages.InitMessage,
+        wasmBundle: WasmBundle
+    ): string
     {
-        const engineLocation = msg.engineLocation === "" ? self.location.origin : msg.engineLocation;
-        const engineLocationPrefix = Utils.getSafePath( engineLocation, WasmLoadUtils.wasmFolder( wasmType ) );
+        const engineLocation =
+            msg.engineLocation === ""
+                ? self.location.origin
+                : msg.engineLocation;
+
+        console.log( "Engine location is:", engineLocation );
+
+        const engineLocationPrefix = Utils.getSafePath(
+            engineLocation,
+            WasmLoadUtils.wasmFolder( wasmBundle )
+        );
+
         if ( msg.allowHelloMessage )
         {
             console.log( "Engine location prefix is:", engineLocationPrefix );
@@ -411,31 +503,31 @@ export default class MicroblinkWorker
                       @typescript-eslint/no-unsafe-member-access */
     private async processInitMessage( msg: Messages.InitMessage )
     {
-        const wasmType       = await this.calculateWasmType( msg );
-        const engineLocation =       this.calculateEngineLocationPrefix( msg, wasmType );
+        const wasmBundle = await this.calculateWasmBunle( msg );
+        const engineLocation = this.calculateEngineLocationPrefix(
+            msg,
+            wasmBundle
+        );
 
         // See https://emscripten.org/docs/api_reference/module.html
-        let module =
-        {
+        let module = {
             locateFile: ( path: string ) =>
             {
                 return Utils.getSafePath( engineLocation, path );
-            }
+            },
         };
 
         if ( msg.registerLoadCallback )
         {
-            module = Object.assign
-            (
-                module,
+            module = Object.assign( module, {
+                setStatus: ( text: string ) =>
                 {
-                    setStatus: ( text: string ) =>
-                    {
-                        const msg = new Messages.LoadProgressMessage( convertEmscriptenStatusToProgress( text ) );
-                        this.context.postMessage( msg );
-                    }
-                }
-            );
+                    const msg = new Messages.LoadProgressMessage(
+                        convertEmscriptenStatusToProgress( text )
+                    );
+                    this.context.postMessage( msg );
+                },
+            } );
         }
 
         try
@@ -443,18 +535,19 @@ export default class MicroblinkWorker
             const jsName = msg.wasmModuleName + ".js";
             const jsPath = Utils.getSafePath( engineLocation, jsName );
 
-            if ( supportsThreads( wasmType ) )
+            if ( supportsThreads( wasmBundle.wasmType ) )
             {
                 module = setupModule( module, msg.numberOfWorkers, jsPath );
             }
 
             importScripts( jsPath );
-            const loaderFunc = ( self as { [key: string]: any } )[ msg.wasmModuleName ];
-            loaderFunc( module ).then
-            (
+            const loaderFunc = ( self as { [key: string]: any } )[
+                msg.wasmModuleName
+            ];
+            loaderFunc( module ).then(
                 async ( mbWasmModule: any ) =>
                 {
-                    if ( supportsThreads( wasmType ) )
+                    if ( supportsThreads( wasmBundle.wasmType ) )
                     {
                         // threads have been launched, but browser still hasn't managed to process worker creation
                         // requests. Since license unlocking may require multiple threads to perform license key
@@ -462,12 +555,13 @@ export default class MicroblinkWorker
                         // wait for browser threads to become available
                         if ( msg.allowHelloMessage )
                         {
-                            console.log( "Waiting for thread workers to boot..." );
+                            console.log(
+                                "Waiting for thread workers to boot..."
+                            );
                         }
                         await waitForThreadWorkers( mbWasmModule );
                     }
-                    const licenseResult = await License.unlockWasmSDK
-                    (
+                    const licenseResult = await License.unlockWasmSDK(
                         msg.licenseKey,
                         msg.allowHelloMessage,
                         msg.userId,
@@ -484,7 +578,11 @@ export default class MicroblinkWorker
                         {
                             this.unregisterHeartBeat();
                         }
-                        this.notifyInitSuccess( msg, !!licenseResult.showOverlay, wasmType );
+                        this.notifyInitSuccess(
+                            msg,
+                            !!licenseResult.showOverlay,
+                            wasmBundle.wasmType
+                        );
                     }
                     else
                     {
@@ -494,20 +592,23 @@ export default class MicroblinkWorker
                 ( error: any ) =>
                 {
                     // Failed to load WASM in web worker due to error
-                    this.notifyError( msg, new SDKError(
-                        ErrorTypes.workerErrors.wasmLoadFailure,
-                        error
-                    ) );
+                    this.notifyError(
+                        msg,
+                        new SDKError(
+                            ErrorTypes.workerErrors.wasmLoadFailure,
+                            error
+                        )
+                    );
                 }
             );
         }
-        catch( error )
+        catch ( error )
         {
             // Failed to load WASM in web worker due to error
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.wasmLoadFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.wasmLoadFailure, error )
+            );
         }
     }
     /* eslint-enable @typescript-eslint/no-explicit-any,
@@ -522,9 +623,10 @@ export default class MicroblinkWorker
     {
         if ( this.wasmModule === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.wasmInitMissing
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.wasmInitMissing )
+            );
             return;
         }
 
@@ -533,11 +635,9 @@ export default class MicroblinkWorker
 
         try
         {
-            const invocationResult = this.wasmModule[ funcName ]( ...params );
-            this.context.postMessage
-            (
-                new Messages.InvokeResultMessage
-                (
+            const invocationResult = this.wasmModule[funcName]( ...params );
+            this.context.postMessage(
+                new Messages.InvokeResultMessage(
                     msg.messageID,
                     invocationResult
                 )
@@ -545,26 +645,24 @@ export default class MicroblinkWorker
         }
         catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.functionInvokeFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError(
+                    ErrorTypes.workerErrors.functionInvokeFailure,
+                    error
+                )
+            );
         }
     }
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment,
-                     @typescript-eslint/no-unsafe-call,
-                     @typescript-eslint/no-unsafe-member-access */
 
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment,
-                      @typescript-eslint/no-unsafe-call,
-                      @typescript-eslint/no-unsafe-member-access */
     private processCreateNewRecognizer( msg: Messages.CreateNewRecognizer )
     {
         if ( this.wasmModule === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.wasmInitMissing
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.wasmInitMissing )
+            );
             return;
         }
 
@@ -573,57 +671,54 @@ export default class MicroblinkWorker
 
         try
         {
-            const createdObject = new this.wasmModule[ className ]( ...params );
+            const createdObject = new this.wasmModule[className]( ...params );
             const newHandle = this.getNextObjectHandle();
-            this.objects[ newHandle ] = createdObject;
+            this.objects[newHandle] = createdObject;
 
-            this.context.postMessage
-            (
+            this.context.postMessage(
                 new Messages.ObjectCreatedMessage( msg.messageID, newHandle )
             );
         }
         catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.recognizerCreationFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError(
+                    ErrorTypes.workerErrors.recognizerCreationFailure,
+                    error
+                )
+            );
         }
     }
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment,
-                      @typescript-eslint/no-unsafe-call,
-                      @typescript-eslint/no-unsafe-member-access */
 
-    /* eslint-disable @typescript-eslint/no-unsafe-assignment,
-                      @typescript-eslint/no-explicit-any,
-                      @typescript-eslint/no-unsafe-return */
-    private getRecognizers( recognizerHandles: Array< number > ): Array< any >
+    private getRecognizers( recognizerHandles: Array<number> ): Array<any>
     {
-        const recognizers = [];
+        const recognizers = [] as Array<any>;
         for ( const handle of recognizerHandles )
         {
-            const recognizer = this.objects[ handle ];
+            const recognizer = this.objects[handle];
             recognizers.push( recognizer );
         }
         return recognizers;
     }
-    /* eslint-enable @typescript-eslint/no-unsafe-assignment,
-                     @typescript-eslint/no-explicit-any,
-                     @typescript-eslint/no-unsafe-return */
 
-    private async processCreateRecognizerRunner( msg: Messages.CreateRecognizerRunner )
+    private async processCreateRecognizerRunner(
+        msg: Messages.CreateRecognizerRunner
+    )
     {
         if ( this.wasmModule === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.wasmInitMissing
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.wasmInitMissing )
+            );
         }
         else if ( this.nativeRecognizerRunner !== null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.runnerExists
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.runnerExists )
+            );
         }
         else
         {
@@ -632,23 +727,28 @@ export default class MicroblinkWorker
             {
                 if ( this.willSoonExpire() )
                 {
-                    const serverPermissionResult = await this.obtainNewServerPermission( false );
-                    if ( serverPermissionResult !== License.ServerPermissionSubmitResultStatus.Ok )
+                    const serverPermissionResult =
+                        await this.obtainNewServerPermission( false );
+                    if (
+                        serverPermissionResult !==
+                        License.ServerPermissionSubmitResultStatus.Ok
+                    )
                     {
-                        const resultStatus = License.ServerPermissionSubmitResultStatus[ serverPermissionResult ];
-                        this.notifyError
-                        (
+                        const resultStatus =
+                            License.ServerPermissionSubmitResultStatus[
+                                serverPermissionResult
+                            ];
+                        this.notifyError(
                             msg,
                             new SDKError(
                                 {
-                                    code: ErrorTypes.ErrorCodes.WORKER_LICENSE_UNLOCK_ERROR,
-                                    message:
-                                    `Cannot initialize recognizers because of invalid server permission:
+                                    code: ErrorTypes.ErrorCodes
+                                        .WORKER_LICENSE_UNLOCK_ERROR,
+                                    message: `Cannot initialize recognizers because of invalid server permission:
                                     ${resultStatus}`,
                                 },
                                 {
-                                    type:
-                                    License.LicenseErrorType[
+                                    type: License.LicenseErrorType[
                                         resultStatus as keyof typeof License.LicenseErrorType
                                     ],
                                 }
@@ -663,12 +763,12 @@ export default class MicroblinkWorker
                 /* eslint-disable @typescript-eslint/no-unsafe-assignment,
                                   @typescript-eslint/no-unsafe-member-access,
                                   @typescript-eslint/no-unsafe-call */
-                this.nativeRecognizerRunner = new this.wasmModule.RecognizerRunner
-                (
-                    recognizers,
-                    msg.allowMultipleResults,
-                    this.metadataCallbacks
-                );
+                this.nativeRecognizerRunner =
+                    new this.wasmModule.RecognizerRunner(
+                        recognizers,
+                        msg.allowMultipleResults,
+                        this.metadataCallbacks
+                    );
                 /* eslint-enable @typescript-eslint/no-unsafe-assignment,
                                  @typescript-eslint/no-unsafe-member-access,
                                  @typescript-eslint/no-unsafe-call */
@@ -677,27 +777,34 @@ export default class MicroblinkWorker
             }
             catch ( error )
             {
-                this.notifyError( msg, new SDKError(
-                    ErrorTypes.workerErrors.runnerCreationFailure,
-                    error
-                ) );
+                this.notifyError(
+                    msg,
+                    new SDKError(
+                        ErrorTypes.workerErrors.runnerCreationFailure,
+                        error
+                    )
+                );
             }
         }
     }
 
-    private processReconfigureRecognizerRunner( msg: Messages.ReconfigureRecognizerRunner )
+    private processReconfigureRecognizerRunner(
+        msg: Messages.ReconfigureRecognizerRunner
+    )
     {
         if ( this.wasmModule === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.wasmInitMissing
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.wasmInitMissing )
+            );
         }
         else if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.runnerMissing
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.runnerMissing )
+            );
         }
         else
         {
@@ -708,8 +815,7 @@ export default class MicroblinkWorker
                 /* eslint-disable @typescript-eslint/no-unsafe-assignment,
                                   @typescript-eslint/no-unsafe-member-access,
                                   @typescript-eslint/no-unsafe-call */
-                this.nativeRecognizerRunner.reconfigureRecognizers
-                (
+                this.nativeRecognizerRunner.reconfigureRecognizers(
                     recognizers,
                     msg.allowMultipleResults
                 );
@@ -719,23 +825,29 @@ export default class MicroblinkWorker
 
                 this.notifySuccess( msg );
             }
-            catch( error )
+            catch ( error )
             {
-                this.notifyError( msg, new SDKError(
-                    ErrorTypes.workerErrors.runnerReconfigureFailure,
-                    error
-                ) );
+                this.notifyError(
+                    msg,
+                    new SDKError(
+                        ErrorTypes.workerErrors.runnerReconfigureFailure,
+                        error
+                    )
+                );
             }
         }
     }
 
-    private processDeleteRecognizerRunner( msg: Messages.DeleteRecognizerRunner )
+    private processDeleteRecognizerRunner(
+        msg: Messages.DeleteRecognizerRunner
+    )
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.runnerDeleted
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.runnerDeleted )
+            );
             return;
         }
 
@@ -749,12 +861,12 @@ export default class MicroblinkWorker
             /* eslint-enable @typescript-eslint/no-unsafe-call,
                              @typescript-eslint/no-unsafe-member-access */
         }
-        catch( error )
+        catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.runnerDeleteFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.runnerDeleteFailure, error )
+            );
         }
     }
 
@@ -775,17 +887,17 @@ export default class MicroblinkWorker
         const keys = Object.keys( result );
         for ( const key of keys )
         {
-            const data: any = result[ key ];
+            const data: any = result[key];
             if ( typeof data === "function" )
             {
                 const wrappedFunction: Messages.WrappedParameter = {
                     parameter: {
                         recognizerHandle: objectHandle,
-                        callbackName: key
+                        callbackName: key,
                     } as Messages.CallbackAddress,
-                    type: Messages.ParameterType.Callback
+                    type: Messages.ParameterType.Callback,
                 };
-                result[ key ] = wrappedFunction;
+                result[key] = wrappedFunction;
             }
         }
 
@@ -800,31 +912,38 @@ export default class MicroblinkWorker
             const methodName = msg.methodName;
             const params = this.unwrapParameters( msg );
 
-            const object = this.objects[ objectHandle ]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+            const object = this.objects[objectHandle]; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
             if ( object === undefined )
             {
-                this.notifyError( msg, new SDKError( {
-                    message: "Cannot find object with handle: " + objectHandle.toString(),
-                    code: ErrorTypes.ErrorCodes.WORKER_HANDLE_UNDEFINED
-                } ) );
+                this.notifyError(
+                    msg,
+                    new SDKError( {
+                        message:
+                            "Cannot find object with handle: " +
+                            objectHandle.toString(),
+                        code: ErrorTypes.ErrorCodes.WORKER_HANDLE_UNDEFINED,
+                    } )
+                );
             }
             else
             {
                 /* eslint-disable @typescript-eslint/no-unsafe-assignment,
                                   @typescript-eslint/no-unsafe-member-access,
                                   @typescript-eslint/no-unsafe-call */
-                const result = this.wrapFunctions( object[ methodName ]( ...params ), objectHandle );
+                const result = this.wrapFunctions(
+                    object[methodName]( ...params ),
+                    objectHandle
+                );
                 /* eslint-enable @typescript-eslint/no-unsafe-assignment,
                                 @typescript-eslint/no-unsafe-member-access,
                                 @typescript-eslint/no-unsafe-call */
                 const transferrables = this.scanForTransferrables( result );
                 if ( methodName === "delete" )
                 {
-                    delete this.objects[ objectHandle ];
+                    delete this.objects[objectHandle];
                 }
 
-                this.context.postMessage
-                (
+                this.context.postMessage(
                     new Messages.InvokeResultMessage( msg.messageID, result ),
                     transferrables
                 );
@@ -832,10 +951,10 @@ export default class MicroblinkWorker
         }
         catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.objectInvokeFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.objectInvokeFailure, error )
+            );
         }
     }
 
@@ -843,9 +962,10 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure )
+            );
             return;
         }
 
@@ -855,22 +975,25 @@ export default class MicroblinkWorker
             /* eslint-disable @typescript-eslint/no-unsafe-call,
                               @typescript-eslint/no-unsafe-member-access,
                               @typescript-eslint/no-unsafe-assignment */
-            const result: number = this.nativeRecognizerRunner.processImage( image );
+            const result: number =
+                this.nativeRecognizerRunner.processImage( image );
             /* eslint-enable @typescript-eslint/no-unsafe-call,
                              @typescript-eslint/no-unsafe-member-access,
                              @typescript-eslint/no-unsafe-assignment */
 
             // deref the image
-            this.context.postMessage( new Messages.ImageProcessResultMessage( msg.messageID, result ),
-                [image.imageData.data.buffer] );
+            this.context.postMessage(
+                new Messages.ImageProcessResultMessage( msg.messageID, result ),
+                [image.imageData.data.buffer]
+            );
             image = null;
         }
-        catch( error )
+        catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure, error )
+            );
         }
     }
 
@@ -878,9 +1001,10 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure )
+            );
             return;
         }
 
@@ -895,10 +1019,10 @@ export default class MicroblinkWorker
         }
         catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure, error )
+            );
         }
     }
 
@@ -906,9 +1030,10 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure )
+            );
             return;
         }
 
@@ -916,17 +1041,19 @@ export default class MicroblinkWorker
         {
             /* eslint-disable @typescript-eslint/no-unsafe-call,
                               @typescript-eslint/no-unsafe-member-access */
-            this.nativeRecognizerRunner.setDetectionOnlyMode( msg.detectionOnlyMode );
+            this.nativeRecognizerRunner.setDetectionOnlyMode(
+                msg.detectionOnlyMode
+            );
             this.notifySuccess( msg );
             /* eslint-enable @typescript-eslint/no-unsafe-call,
                              @typescript-eslint/no-unsafe-member-access */
         }
         catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure, error )
+            );
         }
     }
 
@@ -934,9 +1061,10 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure )
+            );
             return;
         }
 
@@ -944,28 +1072,35 @@ export default class MicroblinkWorker
         {
             /* eslint-disable @typescript-eslint/no-unsafe-call,
                               @typescript-eslint/no-unsafe-member-access */
-            this.nativeRecognizerRunner.setCameraPreviewMirrored( msg.cameraPreviewMirrored );
+            this.nativeRecognizerRunner.setCameraPreviewMirrored(
+                msg.cameraPreviewMirrored
+            );
             this.notifySuccess( msg );
             /* eslint-enable @typescript-eslint/no-unsafe-call,
                              @typescript-eslint/no-unsafe-member-access */
         }
         catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure, error )
+            );
         }
     }
 
-    private setupMetadataCallbacks( registeredMetadataCallbacks: Messages.RegisteredMetadataCallbacks )
+    private setupMetadataCallbacks(
+        registeredMetadataCallbacks: Messages.RegisteredMetadataCallbacks
+    )
     {
         // setup local callbacks
         if ( registeredMetadataCallbacks.onDebugText )
         {
             this.metadataCallbacks.onDebugText = ( debugText: string ) =>
             {
-                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onDebugText, [ debugText ] );
+                const msg = new Messages.InvokeCallbackMessage(
+                    Messages.MetadataCallback.onDebugText,
+                    [debugText]
+                );
                 this.context.postMessage( msg );
             };
         }
@@ -978,7 +1113,10 @@ export default class MicroblinkWorker
         {
             this.metadataCallbacks.onDetectionFailed = () =>
             {
-                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onDetectionFailed, [] );
+                const msg = new Messages.InvokeCallbackMessage(
+                    Messages.MetadataCallback.onDetectionFailed,
+                    []
+                );
                 this.context.postMessage( msg );
             };
         }
@@ -989,10 +1127,16 @@ export default class MicroblinkWorker
 
         if ( registeredMetadataCallbacks.onPointsDetection )
         {
-            this.metadataCallbacks.onPointsDetection = ( pointSet: DisplayablePoints ) =>
+            this.metadataCallbacks.onPointsDetection = (
+                pointSet: DisplayablePoints
+            ) =>
             {
-                const onPointsDetection = Messages.MetadataCallback.onPointsDetection;
-                const msg = new Messages.InvokeCallbackMessage( onPointsDetection, [ pointSet ] );
+                const onPointsDetection =
+                    Messages.MetadataCallback.onPointsDetection;
+                const msg = new Messages.InvokeCallbackMessage(
+                    onPointsDetection,
+                    [pointSet]
+                );
                 this.context.postMessage( msg );
             };
         }
@@ -1003,9 +1147,14 @@ export default class MicroblinkWorker
 
         if ( registeredMetadataCallbacks.onQuadDetection )
         {
-            this.metadataCallbacks.onQuadDetection = ( quad: DisplayableQuad ) =>
+            this.metadataCallbacks.onQuadDetection = (
+                quad: DisplayableQuad
+            ) =>
             {
-                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onQuadDetection, [ quad ] );
+                const msg = new Messages.InvokeCallbackMessage(
+                    Messages.MetadataCallback.onQuadDetection,
+                    [quad]
+                );
                 this.context.postMessage( msg );
             };
         }
@@ -1018,7 +1167,10 @@ export default class MicroblinkWorker
         {
             this.metadataCallbacks.onFirstSideResult = () =>
             {
-                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onFirstSideResult, [] );
+                const msg = new Messages.InvokeCallbackMessage(
+                    Messages.MetadataCallback.onFirstSideResult,
+                    []
+                );
                 this.context.postMessage( msg );
             };
         }
@@ -1031,7 +1183,10 @@ export default class MicroblinkWorker
         {
             this.metadataCallbacks.onGlare = ( hasGlare: boolean ) =>
             {
-                const msg = new Messages.InvokeCallbackMessage( Messages.MetadataCallback.onGlare, [ hasGlare ] );
+                const msg = new Messages.InvokeCallbackMessage(
+                    Messages.MetadataCallback.onGlare,
+                    [hasGlare]
+                );
                 this.context.postMessage( msg );
             };
         }
@@ -1045,9 +1200,10 @@ export default class MicroblinkWorker
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure )
+            );
             return;
         }
 
@@ -1061,22 +1217,25 @@ export default class MicroblinkWorker
             /* eslint-enable @typescript-eslint/no-unsafe-call,
                              @typescript-eslint/no-unsafe-member-access */
         }
-        catch( error )
+        catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure, error )
+            );
         }
     }
 
-    private registerClearTimeoutCallback( msg: Messages.SetClearTimeoutCallback )
+    private registerClearTimeoutCallback(
+        msg: Messages.SetClearTimeoutCallback
+    )
     {
         if ( this.nativeRecognizerRunner === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure )
+            );
             return;
         }
 
@@ -1085,10 +1244,14 @@ export default class MicroblinkWorker
             this.clearTimeoutCallback = {
                 onClearTimeout: () =>
                 {
-                    const clearTimeoutCallback = Messages.MetadataCallback.clearTimeoutCallback;
-                    const msg = new Messages.InvokeCallbackMessage( clearTimeoutCallback, [] );
+                    const clearTimeoutCallback =
+                        Messages.MetadataCallback.clearTimeoutCallback;
+                    const msg = new Messages.InvokeCallbackMessage(
+                        clearTimeoutCallback,
+                        []
+                    );
                     this.context.postMessage( msg );
-                }
+                },
             };
         }
         else
@@ -1100,27 +1263,32 @@ export default class MicroblinkWorker
         {
             /* eslint-disable @typescript-eslint/no-unsafe-call,
                               @typescript-eslint/no-unsafe-member-access */
-            this.nativeRecognizerRunner.setClearTimeoutCallback( this.clearTimeoutCallback );
+            this.nativeRecognizerRunner.setClearTimeoutCallback(
+                this.clearTimeoutCallback
+            );
             this.notifySuccess( msg );
             /* eslint-enable @typescript-eslint/no-unsafe-call,
                              @typescript-eslint/no-unsafe-member-access */
         }
-        catch( error )
+        catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.imageProcessFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.imageProcessFailure, error )
+            );
         }
     }
 
-    private processGetProductIntegrationInfo( msg: Messages.GetProductIntegrationInfo )
+    private processGetProductIntegrationInfo(
+        msg: Messages.GetProductIntegrationInfo
+    )
     {
         if ( this.wasmModule === null )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.wasmInitMissing
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.wasmInitMissing )
+            );
             return;
         }
 
@@ -1128,32 +1296,35 @@ export default class MicroblinkWorker
         {
             /* eslint-disable @typescript-eslint/no-unsafe-call,
                               @typescript-eslint/no-unsafe-member-access */
-            const activeLicenseTokenInfo = this.wasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
+            const activeLicenseTokenInfo =
+                this.wasmModule.getActiveLicenseTokenInfo() as License.LicenseUnlockResult;
             /* eslint-enable @typescript-eslint/no-unsafe-call,
                              @typescript-eslint/no-unsafe-member-access */
 
             const result = {
-                userId        : msg.userId,
-                licenseId     : activeLicenseTokenInfo.licenseId,
-                licensee      : activeLicenseTokenInfo.licensee,
-                productName   : activeLicenseTokenInfo.sdkName,
+                userId: msg.userId,
+                licenseId: activeLicenseTokenInfo.licenseId,
+                licensee: activeLicenseTokenInfo.licensee,
+                productName: activeLicenseTokenInfo.sdkName,
                 productVersion: activeLicenseTokenInfo.sdkVersion,
-                platform      : "Browser",
-                device        : self.navigator.userAgent,
-                packageName   : activeLicenseTokenInfo.packageName
+                platform: "Browser",
+                device: self.navigator.userAgent,
+                packageName: activeLicenseTokenInfo.packageName,
             };
 
-            this.context.postMessage
-            (
-                new Messages.ProductIntegrationResultMessage( msg.messageID, result )
+            this.context.postMessage(
+                new Messages.ProductIntegrationResultMessage(
+                    msg.messageID,
+                    result
+                )
             );
         }
         catch ( error )
         {
-            this.notifyError( msg, new SDKError(
-                ErrorTypes.workerErrors.objectInvokeFailure,
-                error
-            ) );
+            this.notifyError(
+                msg,
+                new SDKError( ErrorTypes.workerErrors.objectInvokeFailure, error )
+            );
         }
     }
 }
