@@ -1,5 +1,38 @@
 # Release notes
 
+## v6.3.3
+
+### Device-specific optimized builds
+
+This release contains multiple builds tailored for different devices' memory management capabilities.
+
+These builds are:
+#### Full
+Regular build that has dynamic memory allocation and deblurring models. This build is loaded automatically on desktop devices. 
+
+#### Lightweight
+Build with dynamic memory allocation and no deblurring models. This build is loaded on Android devices. Deblurring models are not necessary due to better quality cameras compared to front-facing laptop cameras.
+
+#### Lightweight with fixed memory
+Same as lightweight, but without dynamic memory allocation. This build is loaded on iOS devices which have issues working with dynamic memory allocation.
+
+These builds each contain further subsets present so far: basic, advanced with SIMD and advanced with multithreading making a total of 9 possible builds.
+
+These builds can be overriden by using a new property on the settings objects `WasmSDKLoadSettings.wasmFlavor`:
+
+```ts
+enum WasmFlavor {
+    Full,
+    Lightweight,
+    LighweightWithFixedMemory
+}
+```
+
+These can also be set on the UI component via the `wasmFlavor` prop with the values `Full`, `Lightweight` or  `LighweightWithFixedMemory`.
+
+### Other fixes:
+- fixed an issue where certain iOS devices would display a zoomed in preview.
+
 ## v6.3.2
 
 - Export missing `DocumentSide`

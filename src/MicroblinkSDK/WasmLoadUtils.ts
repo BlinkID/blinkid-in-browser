@@ -2,9 +2,25 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import * as WasmFeatureDetect from "wasm-feature-detect";
-import { WasmType } from "./WasmType";
+import {
+    bulkMemory,
+    mutableGlobals,
+    referenceTypes,
+    saturatedFloatToInt,
+    signExtensions,
+    simd,
+    threads,
+} from "wasm-feature-detect";
 
+import { WasmType } from "./WasmType";
+import { WasmBundle } from "./worker/MicroblinkSDK.worker";
+import { WasmFlavor } from "./WasmFlavor";
+
+export function isIOSUserAgent()
+{
+    const pattern = /iOS|iPhone|iPad|iPod/i; // 'i' flag for case-insensitive matching
+    return pattern.test( navigator.userAgent );
+}
 /* eslint-disable max-len */
 /**
  * Safari 16 shipped with WASM threads support, but it didn't ship with nested
@@ -14,7 +30,7 @@ import { WasmType } from "./WasmType";
 /* eslint-enable max-len */
 export default async function checkThreadsSupport(): Promise<boolean>
 {
-    const supportsWasmThreads = await WasmFeatureDetect.threads();
+    const supportsWasmThreads = await threads();
     if ( !supportsWasmThreads ) return false;
 
     if ( !( "importScripts" in self ) )
@@ -22,7 +38,48 @@ export default async function checkThreadsSupport(): Promise<boolean>
         throw Error( "Not implemented" );
     }
 
+    // Safari has issues with shared memory
+    // https://github.com/emscripten-core/emscripten/issues/19374
+    if ( isIOSUserAgent() )
+    {
+        return false;
+    }
+
     return "Worker" in self;
+}
+
+export async function detectWasmFeatures(): Promise<WasmType>
+{
+    const basicSet = [
+        mutableGlobals(),
+        referenceTypes(),
+        bulkMemory(),
+        saturatedFloatToInt(),
+        signExtensions(),
+    ];
+
+    const supportsBasic = ( await Promise.all( basicSet ) ).every( Boolean );
+
+    if ( !supportsBasic )
+    {
+        throw new Error( "Browser doesn't meet minimum requirements!" );
+    }
+
+    const supportsAdvanced = await simd();
+
+    if ( !supportsAdvanced )
+    {
+        return WasmType.Basic;
+    }
+
+    const supportsAdvancedThreads = await checkThreadsSupport();
+
+    if ( !supportsAdvancedThreads )
+    {
+        return WasmType.Advanced;
+    }
+
+    return WasmType.AdvancedWithThreads;
 }
 
 export async function detectWasmType(): Promise<WasmType>
@@ -30,7 +87,7 @@ export async function detectWasmType(): Promise<WasmType>
     // determine if all features required for advanced WASM are available
     // currently, advanced wasm requires SIMD
 
-    const haveSIMD = await WasmFeatureDetect.simd();
+    const haveSIMD = await simd();
 
     const threadsSupported = await checkThreadsSupport();
 
@@ -51,15 +108,36 @@ export async function detectWasmType(): Promise<WasmType>
     }
 }
 
-export function wasmFolder( wasmType: WasmType ): string
+export function wasmFolder( wasmBundle: WasmBundle ): string
 {
-    switch ( wasmType )
+    let flavorDir = "";
+    let typeDir = "";
+
+    if ( wasmBundle.wasmFlavor === WasmFlavor.Full )
     {
-        case WasmType.AdvancedWithThreads:
-            return "advanced-threads";
-        case WasmType.Advanced:
-            return "advanced";
-        case WasmType.Basic:
-            return "basic";
+        flavorDir = "full";
     }
+    else if ( wasmBundle.wasmFlavor === WasmFlavor.Lightweight )
+    {
+        flavorDir = "lightweight";
+    }
+    else
+    {
+        flavorDir = "lightweight-fixed";
+    }
+
+    if ( wasmBundle.wasmType === WasmType.AdvancedWithThreads )
+    {
+        typeDir = "advanced-threads";
+    }
+    else if ( wasmBundle.wasmType === WasmType.Advanced )
+    {
+        typeDir = "advanced";
+    }
+    else
+    {
+        typeDir = "basic";
+    }
+
+    return `${flavorDir}/${typeDir}`;
 }

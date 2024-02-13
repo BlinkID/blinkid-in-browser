@@ -74,6 +74,10 @@ export class SdkService {
       loadSettings.wasmType = sdkSettings.wasmType;
     }
 
+    if (sdkSettings.wasmFlavor) {
+      loadSettings.wasmFlavor = sdkSettings.wasmFlavor;
+    }
+
     return new Promise((resolve) => {
       BlinkIDSDK.loadWasmModule(loadSettings)
         .then((sdk: BlinkIDSDK.WasmSDK) => {

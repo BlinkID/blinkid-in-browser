@@ -5,6 +5,7 @@
 import { SDKError } from "./SDKError";
 import { defaultWasmModuleName } from "../defaultWasmModule";
 import { WasmType } from "./WasmType";
+import { WasmFlavor } from "./WasmFlavor";
 import * as ErrorTypes from "./ErrorTypes";
 
 /**
@@ -16,6 +17,7 @@ export type LoadProgressCallback = ( loadPercentage: number ) => void;
 export type OptionalLoadProgressCallback = LoadProgressCallback | null;
 
 export { WasmType };
+export { WasmFlavor };
 
 /**
  * Settings object for function loadWasmModule.
@@ -70,6 +72,8 @@ export class WasmSDKLoadSettings
      */
     wasmType: WasmType | null = null;
 
+    wasmFlavor?:  WasmFlavor;
+
     /**
      * Defines the number of workers that will be used for multi-threaded processing of the images. If not set, the
      * number of worker used will match the number of detected CPU cores on a device.
@@ -87,7 +91,6 @@ export class WasmSDKLoadSettings
      * The default value is null.
      */
     loadProgressCallback: OptionalLoadProgressCallback = null;
-
 
     /**
      * Name of the file containing the WebAssembly module.

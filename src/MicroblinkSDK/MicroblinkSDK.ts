@@ -7,7 +7,6 @@ import { Recognizer, RecognizerRunner, WasmSDK } from "./DataStructures";
 import { MetadataCallbacks } from "./MetadataCallbacks";
 import { WasmSDKLoadSettings } from "./WasmLoadSettings";
 
-
 import { SDKError } from "./SDKError";
 import * as ErrorTypes from "./ErrorTypes";
 
@@ -97,7 +96,6 @@ export async function loadWasmModule( loadSettings: WasmSDKLoadSettings ): Promi
             }
             // obtain user ID from local storage
             const userId = getUserID();
-
 
             try
             {

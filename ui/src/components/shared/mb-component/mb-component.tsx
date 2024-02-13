@@ -143,7 +143,12 @@ export class MbComponent {
   /**
    * See description in public component.
    */
-   @Prop({ mutable: true }) wasmType: string | null;
+  @Prop({ mutable: true }) wasmType: string | null;
+
+     /**
+   * See description in public component.
+   */
+  @Prop({ mutable: true }) wasmFlavor: string | null;
 
   /**
    * See description in public component.
@@ -570,7 +575,8 @@ export class MbComponent {
       allowHelloMessage: this.allowHelloMessage,
       engineLocation: this.engineLocation,
       workerLocation: this.workerLocation,
-      wasmType: Utils.getSDKWasmType(this.wasmType)
+      wasmType: Utils.getSDKWasmType(this.wasmType),
+      wasmFlavor: Utils.getSDKWasmFlavor(this.wasmFlavor),
     });
 
     this.cameraExperience.showOverlay = this.sdkService.showOverlay;

@@ -7,7 +7,7 @@
 
         <!-- Import UI component which includes WASM library -->
         <!-- Keep in mind that the jsDelivr CDN is used for demonstration, it's not intended to be used in production! -->
-        <script type="module" src="/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+        <script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@v6.3.3/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
 
         <style type="text/css">
             html,
@@ -52,78 +52,76 @@
     </head>
     <body>
         <!-- It's possible to obtain a free trial license key on microblink.com -->
-        <blinkid-in-browser
-            license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWL2s4YTcLY/Qk7rK5nBvAy0JPinlCk9Q9IVV6JZWwNXs3ItUzqGd1j1ZcGo8TVoCErOlM5GMBm5L5qJ7y/z8bUU+FeQ2YKMUsRv+MrzzWyVLnyNOIvc1tnT0zNgFw8UOHozhXKJqDEHXlrn1TpLkbrnvRovyrdRKnO7EFF7wbNolCBm5s9l6jBVOQ8/ry+GMkm1op7wGZMoCe671Z+PHic0eq3gqfu8BZko8DA8tk4nyOaMsL4ynRWVLM8s3cQu/pA5A+kqckO6Yr3YKNCobdhJi78spI+waCO1rKNBxpLwgp0Fuc/EsGQSZAfbGTJKo="
-            recognizers="BlinkIdSingleSideRecognizer"
-        ></blinkid-in-browser>
+        <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLLM/YQSfjKMtw2BjVIsyjsXYuyco4lLtWiVMVI27gtRoe87DpPviT1J6lw1wHgNUJ/HgHnGZOfoThWGltNS4oHezgdz7UZOTCP2xNl6KgCy7HjPThVUFoYkbdQ1jluTOh9oszC7Qq+2EEerY+Sgf+/iV8Wm2KneWmqlk5YoVD62oYiPjTDjbZbJjoy/F/q0XbxTmDQ0iM5b9PU0wTZ29AeClnL1VZwJbuH9X0EXdZly6nLWRY5VK/TTTJm/2dPVf4dw/PMfkjQrYU1VVjdviqb2CdoN5MUfHeGOfW7SHXvBlHcUQYwAjKbP6gXKLpcA=" recognizers="BlinkIdSingleSideRecognizer"></blinkid-in-browser>
 
         <script type="text/javascript">
-            var parcelRequire;
 
-            function extractPeerIdFromURL() {
-                const params = new URLSearchParams(location.search);
-                const peerId = params.get("peerId");
+var parcelRequire;
 
-                return peerId;
-            }
+function extractPeerIdFromURL() {
+  const params = new URLSearchParams(location.search);
+  const peerId = params.get("peerId");
 
-            function generatePeerUrl(peerId) {
-                return window.location.href + `?peerId=${peerId}`;
-            }
-            
-            function run()
-            {
-                // Important: if attributes or properties are changed, whole component is rerendered
-                const blinkId = document.querySelector( "blinkid-in-browser" );
+  return peerId;
+}
 
-                if ( window.location.hostname === "blinkid.github.io" )
-                {
-                    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRmaGyKtLE1z9s26m2Tiph83zrJ8BmmOXovSgjP0SWiVwR2PnaZ8CncDvZE7+geZiiRfZAiRr2ax3LPsNGZFDEMmk07M5Y85MaIS4pZh/meDRrdmOm7a4egXPAdCJ+eMdeIQtPSrAsOG+H6nwMroDVJGRRxevaPbloWKGVUTuBzjpfZN4rmu3V1xCI5U4FGtEvQXXMLR3sumfqK4Mrl6AaoSZYY+nU/knOFP4pKy6hAwvsnIlKJiRjv/WkIn0D21ar1Eijc+Y3U0B93IUvAc1TSjlhnGTiig9F6OFp1y0XgpaovwTGNT+edsIf9NE2IMwqAS0lZCLz7Q=";
-                }
+function generatePeerUrl(peerId) {
+  return window.location.href + `?peerId=${peerId}`;
+}
 
-                blinkId.engineLocation = window.location.origin + "/resources/";
-                blinkId.workerLocation = window.location.origin + "/resources/BlinkIDWasmSDK.worker.min.js";
+function run()
+{
+  // Important: if attributes or properties are changed, whole component is rerendered
+  const blinkId = document.querySelector("blinkid-in-browser");
 
-                blinkId.d2dOptions = {
-                    secure: true,
-                    host: "0.peerjs.com",
-                    port: 443,
-                    urlFactory: generatePeerUrl,
-                    peerIdExtractor: extractPeerIdFromURL,
-                };
+  if (window.location.hostname === "blinkid.github.io")
+  {
+    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaDvofnsk/gGN+GbZ2XHmraebdHkWSSzf/GGyERjVZgp31K5DwUIYJrlVAqroeWtEsZTpOa+cv4o9NSUDgWu6P7TWCsXwpgxc7nxsu9Qt34z5B9WOTvWj/hQZp7JpP/0WBM+nis3mnmJ90dtq/MkIshE2ExopF+UlVimcLJ50uK/0DTEWMUGVNdI2ucW1Tp9/LSi2AT9XwUNAsZlcrlMtZ+fVc9aQOaRLQuYQBMWQ8QNSFepoyItBKeoFvJdENglAiGAW/kzQTeGxxlaozp5pjv/AZFt8n4lrl9nV2GQyR/umX/tgJwWX0GltErwkWV+A==";
+  }
 
-                blinkId.addEventListener
-                (
-                    "fatalError",
-                    ev => console.log( "fatalError", ev.detail )
-                );
+  blinkId.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
+  blinkId.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
 
-                blinkId.addEventListener
-                (
-                    "ready",
-                    ev => console.log( "ready", ev.detail )
-                );
+  blinkId.d2dOptions = {
+    secure: true,
+    host: "0.peerjs.com",
+    port: 443,
+    urlFactory: generatePeerUrl,
+    peerIdExtractor: extractPeerIdFromURL
+  };
 
-                blinkId.addEventListener
-                (
-                    "scanError",
-                    ev => console.log( "scanError", ev.detail )
-                );
+  blinkId.addEventListener(
 
-                blinkId.addEventListener
-                (
-                    "scanSuccess",
-                    ev => console.log( "scanSuccess", ev.detail )
-                );
+    "fatalError",
+    (ev) => console.log("fatalError", ev.detail)
+  );
 
-                blinkId.addEventListener
-                (
-                    "feedback",
-                    ev => console.log( "feedback", ev.detail )
-                );
-            }
+  blinkId.addEventListener(
 
-            window.addEventListener( "DOMContentLoaded", ev => run() );
-        </script>
+    "ready",
+    (ev) => console.log("ready", ev.detail)
+  );
+
+  blinkId.addEventListener(
+
+    "scanError",
+    (ev) => console.log("scanError", ev.detail)
+  );
+
+  blinkId.addEventListener(
+
+    "scanSuccess",
+    (ev) => console.log("scanSuccess", ev.detail)
+  );
+
+  blinkId.addEventListener(
+
+    "feedback",
+    (ev) => console.log("feedback", ev.detail)
+  );
+}
+
+window.addEventListener("DOMContentLoaded", (ev) => run());
+</script>
     </body>
 </html>

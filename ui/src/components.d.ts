@@ -17,7 +17,7 @@ export namespace Components {
          */
         "allowHelloMessage": boolean;
         /**
-          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).   Default value is 'true'.
+          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).  Default value is 'true'.
          */
         "allowHelpScreensFab": boolean;
         /**
@@ -37,7 +37,7 @@ export namespace Components {
          */
         "cameraId": string | null;
         /**
-          * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical  limitations, without the need to restart the existing process, such as form filling. In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements.  There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers. For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md  where you can also find more information about this feature.
+          * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical limitations, without the need to restart the existing process, such as form filling. In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements. There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers. For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md where you can also find more information about this feature.
          */
         "d2dOptions": D2DOptions;
         /**
@@ -183,6 +183,10 @@ export namespace Components {
           * Set custom translations for UI component. List of available translation keys can be found in `src/utils/translation.service.ts` file.
          */
         "translations": { [key: string]: string };
+        /**
+          * Defines the flavor of the WebAssembly build that will be loaded. If omitted, SDK will determine the best possible WebAssembly build which should be loaded based on the browser support.  Available WebAssembly flavors: `"Full"`, `"Lightweight"`, `"LighweightWithFixedMemory"`
+         */
+        "wasmFlavor": string;
         /**
           * Defines the type of the WebAssembly build that will be loaded. If omitted, SDK will determine the best possible WebAssembly build which should be loaded based on the browser support.  Available WebAssembly builds:  - 'BASIC' - 'ADVANCED' - 'ADVANCED_WITH_THREADS'  For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
          */
@@ -567,6 +571,10 @@ export namespace Components {
           * Instance of TranslationService passed from root component.
          */
         "translationService": TranslationService;
+        /**
+          * See description in public component.
+         */
+        "wasmFlavor": string | null;
         /**
           * See description in public component.
          */
@@ -956,7 +964,7 @@ declare namespace LocalJSX {
          */
         "allowHelloMessage"?: boolean;
         /**
-          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).   Default value is 'true'.
+          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).  Default value is 'true'.
          */
         "allowHelpScreensFab"?: boolean;
         /**
@@ -976,7 +984,7 @@ declare namespace LocalJSX {
          */
         "cameraId"?: string | null;
         /**
-          * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical  limitations, without the need to restart the existing process, such as form filling. In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements.  There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers. For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md  where you can also find more information about this feature.
+          * Configure device-to-device (D2D) feature that provides extraction functionality when an initial device has technical limitations, without the need to restart the existing process, such as form filling. In that case, the scanning process can be moved to another auxiliary device that has the necessary requirements. There, the scanning will take place, and the extracted results will be sent directly between the initial and auxiliary device browsers. For a list and description of available D2D configuration options, please refer to our documentation at ui/README.md where you can also find more information about this feature.
          */
         "d2dOptions"?: D2DOptions;
         /**
@@ -1127,6 +1135,10 @@ declare namespace LocalJSX {
           * Set custom translations for UI component. List of available translation keys can be found in `src/utils/translation.service.ts` file.
          */
         "translations"?: { [key: string]: string };
+        /**
+          * Defines the flavor of the WebAssembly build that will be loaded. If omitted, SDK will determine the best possible WebAssembly build which should be loaded based on the browser support.  Available WebAssembly flavors: `"Full"`, `"Lightweight"`, `"LighweightWithFixedMemory"`
+         */
+        "wasmFlavor"?: string;
         /**
           * Defines the type of the WebAssembly build that will be loaded. If omitted, SDK will determine the best possible WebAssembly build which should be loaded based on the browser support.  Available WebAssembly builds:  - 'BASIC' - 'ADVANCED' - 'ADVANCED_WITH_THREADS'  For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
          */
@@ -1532,6 +1544,10 @@ declare namespace LocalJSX {
           * Instance of TranslationService passed from root component.
          */
         "translationService"?: TranslationService;
+        /**
+          * See description in public component.
+         */
+        "wasmFlavor"?: string | null;
         /**
           * See description in public component.
          */
