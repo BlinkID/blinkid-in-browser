@@ -41,7 +41,7 @@ import {
   SdkService
 } from '../../../utils/sdk.service';
 
-import * as BlinkIDSDK from '../../../../../es/blinkid-sdk';
+import { BlinkIDVariant, sdkErrors, ErrorCodes, LicenseErrorType } from '@microblink/blinkid-in-browser-sdk';
 
 import { TranslationService } from '../../../utils/translation.service';
 
@@ -133,7 +133,10 @@ export class MbComponent {
   /**
    * See description in public component.
    */
-   @Prop({ mutable: true }) wasmType: string | null;
+  @Prop({ mutable: true }) wasmType: string | null;
+
+
+  @Prop() blinkIdVariant?: BlinkIDVariant;
 
   /**
    * See description in public component.
@@ -544,7 +547,8 @@ export class MbComponent {
       allowHelloMessage: this.allowHelloMessage,
       engineLocation: this.engineLocation,
       workerLocation: this.workerLocation,
-      wasmType: Utils.getSDKWasmType(this.wasmType)
+      wasmType: Utils.getSDKWasmType(this.wasmType),
+      blinkIdVariant: this.blinkIdVariant,
     });
 
     this.cameraExperience.showOverlay = this.sdkService.showOverlay;
@@ -632,7 +636,7 @@ export class MbComponent {
 
   private async checkInputProperties(): Promise<boolean> {
     if (!this.licenseKey) {
-      this.setFatalError(new SDKError(BlinkIDSDK.sdkErrors.licenseKeyMissing));
+      this.setFatalError(new SDKError(sdkErrors.licenseKeyMissing));
       return false;
     }
 
@@ -1166,7 +1170,7 @@ export class MbComponent {
       return;
     }
 
-    if (error?.code === BlinkIDSDK.ErrorCodes.LICENSE_UNLOCK_ERROR) {
+    if (error?.code === ErrorCodes.LICENSE_UNLOCK_ERROR) {
       this.setFatalError(new SDKError(ErrorTypes.componentErrors.licenseError, error));
       this.showLicenseInfoModal(error);
     }
@@ -1332,11 +1336,11 @@ export class MbComponent {
 
     if (error.details) {
       switch (error.details?.code) {
-        case BlinkIDSDK.ErrorCodes.LICENSE_UNLOCK_ERROR:
+        case ErrorCodes.LICENSE_UNLOCK_ERROR:
           const licenseErrorType = error.details?.type;
 
           switch (licenseErrorType) {
-            case BlinkIDSDK.LicenseErrorType.NetworkError:
+            case LicenseErrorType.NetworkError:
               this.errorMessage.innerText = this.translationService.i('network-error').toString();
               break;
 

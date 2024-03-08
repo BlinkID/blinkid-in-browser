@@ -31,8 +31,40 @@
         padding: 20px;
       }
 
+      @font-face {
+        font-family: "Satoshi";
+        src: url("./fonts/Satoshi-Regular.woff2") format("woff2"),
+          url("./fonts/Satoshi-Regular.woff") format("woff"),
+          url("./fonts/Satoshi-Regular.ttf") format("truetype");
+        font-weight: 400;
+        font-display: swap;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: "Satoshi";
+        src: url("./fonts/Satoshi-Medium.woff2") format("woff2"),
+          url("./fonts/Satoshi-Medium.woff") format("woff"),
+          url("./fonts/Satoshi-Medium.ttf") format("truetype");
+        font-weight: 500;
+        font-display: swap;
+        font-style: normal;
+      }
+
+      @font-face {
+        font-family: "Satoshi";
+        src: url("./fonts/Satoshi-Bold.woff2") format("woff2"),
+          url("./fonts/Satoshi-Bold.woff") format("woff"),
+          url("./fonts/Satoshi-Bold.ttf") format("truetype");
+        font-weight: 700;
+        font-display: swap;
+        font-style: normal;
+      }
+
       blinkid-in-browser {
         max-width: 400px;
+
+        --mb-font-family: 'Satoshi';
 
         /* Customization of UI - see variables in src/components/shared/styles/_globals.scss */
         /*
@@ -48,31 +80,72 @@
     </style>
   </head>
   <body>
-    <blinkid-in-browser engine-location="http://localhost:3333/resources" license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWL8s+YSA2B9oQznSbfAqE/A6ZAwhsWgAinu6YSB84jE1QhJlyWcVthuSqU/FB0yMZJ+7M09vUYu2gvVGB5cu48u97eAPxQZjA7JSDVKyAPHU9iOF+IObbcb45D0yxpt/Zih5YHVzJQV8vTqe4hNxFNFcakEEhTmc8JBcHAD0gLh/Ud2Ope2Tamjt7CXcqb/STTugs7Lo+IDoGFTXorvOAP7V993puCEC4bKX7g3P1QUiF8/OGvfBaCS9jxXS1Iob4fQVxbzhU+BN9c/T7jdo+TsS5lmFAUAR9tiiRD1gnlO0znNaFPa9br8OMdM+tayc=" recognizers="BlinkIdRecognizer"></blinkid-in-browser>
+    <!-- Add attribute 'hide-loading-and-error-ui="true"' to hide component during loading and to hide possible error messages -->
+    <!-- First way of setting recognizers is to define them as HTML attribute -->
+    <!--
+      Change default icons via HTML attribute:
+      <blinkid-in-browser icon-camera="https://lh3.googleusercontent.com/proxy/GzpbA9MhjkACfucnJ4KunNfMzKv10e6cy418zEjQYdKB7Xbzwh7IYjio0X0CBLdWrd7nw5ZHvkCXS4cQ2YaZ5JGjGTMLPmQO5dH4xaJODXoriGpdbjwAkO8ismEoSaRe1Q"></blinkid-in-browser>
+
+      ---
+
+      Set translations via HTML attribute:
+
+      <blinkid-in-browser translations='{ "action-message": "Do something else" }'></blinkid-in-browser>
+
+      Note the single quotes!
+    -->
+    <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLxM/YeD1Jcfn1SN6ep4fodTM2buiWeAS5IZunP0EoJGX1A0G8T+uI3/gAsSSyogojZvAaAcKZxK4Py6hiwCl/GWbywlBz50pib4C3RxYfrYxG01jEjK8yCRKanc/sYTXtQLQuW0eyGOXavOtQWPloGyR6uL1LaoZYdDGKYgvBlEGJ/ZzQt0sycw2qGz9GWu6UzbwaVGzJJv7lhV9Y2Bga2wqCWO6YQ2BJ5M8pJP3NYw4Ti36r16qC9wd/HGfvj8pqSKjeLBVbAaKo5efvur1ZJhVjD3BODz+fq9eVv2p1B+1ZMyo0OfqeABVCmbN8dA=" recognizers="BlinkIdMultiSideRecognizer" scan-from-camera="true" scan-from-image="true"></blinkid-in-browser>
 
     <script type="text/javascript">
 
-const blinkId = document.querySelector('blinkid-in-browser');
+var parcelRequire;
+// Important: if attributes or properties are changed, whole component is rerendered
+const blinkId = document.querySelector("blinkid-in-browser");
 
-blinkId.addEventListener('fatalError', (ev) => {
-  console.log('fatalError', ev.detail);
+blinkId.engineLocation = window.location.origin + "/resources";
+blinkId.workerLocation =
+window.location.origin + `/resources/BlinkIDWasmSDK.worker.min.js`;
+
+// Second way of setting recognizers is to set property "recognizers"
+//blinkId.recognizers = ['BlinkIdSingleSideRecognizer'];
+
+// Set desired recognizer options
+/*blinkId.recognizerOptions = {
+  'BlinkIdSingleSideRecognizer': {
+    'returnFullDocumentImage': true,
+    'anonymizationMode': 2
+  }
+};*/
+
+// Second way of changing translations, see src/utils/translations.ts for possible translation keys
+/*blinkId.translations = {
+  'action-message': 'Do something'
+};*/
+
+blinkId.addEventListener("fatalError", (ev) => {
+  console.log("fatalError", ev.detail);
 });
 
-blinkId.addEventListener('ready', (ev) => {
-  console.log('ready', ev.detail);
+blinkId.addEventListener("ready", (ev) => {
+  console.log("ready", ev.detail);
 });
 
-blinkId.addEventListener('scanError', (ev) => {
-  console.log('scanError', ev.detail);
+blinkId.addEventListener("scanError", (ev) => {
+  console.log("scanError", ev.detail);
 });
 
-blinkId.addEventListener('scanSuccess', (ev) => {
-  console.log('scanSuccess', ev.detail);
+blinkId.addEventListener("scanSuccess", (ev) => {
+  console.log("scanSuccess", ev.detail);
 });
 
-blinkId.addEventListener('feedback', (ev) => {
-  console.log('feedback', ev.detail);
+blinkId.addEventListener("feedback", (ev) => {
+  console.log("feedback", ev.detail);
 });
+
+// DEVELOPMENT HELPERS
+window.setAttribute = (attribute, value) => {
+  blinkId.setAttribute(attribute, value);
+};
 </script>
   </body>
 </html>

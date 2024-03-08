@@ -5,6 +5,7 @@
 import { SDKError } from "./SDKError";
 import { defaultWasmModuleName } from "../defaultWasmModule";
 import { WasmType } from "./WasmType";
+import type { BlinkIDVariant } from "./BlinkIdVariant";
 import * as ErrorTypes from "./ErrorTypes";
 
 /**
@@ -71,6 +72,21 @@ export class WasmSDKLoadSettings
     wasmType: WasmType | null = null;
 
     /**
+     * Overrides the BlinkID build that will be loaded.
+     *
+     * The `lightweight` variant is smaller but doesn't support barcode deblurring. This variant is loaded by default on
+     * mobile devices. The `full` version is loaded by default on desktop devices.
+     */
+    blinkIdVariant?: BlinkIDVariant;
+
+    /**
+     * Defines the initial memory size that will be allocated for the WebAssembly module, in megabytes.
+     *
+     * If not set, the memory resolves to 700MB for iOS and 200 MB for other platforms.
+     */
+    initialMemory?: number;
+
+    /**
      * Defines the number of workers that will be used for multi-threaded processing of the images. If not set, the
      * number of worker used will match the number of detected CPU cores on a device.
      *
@@ -87,7 +103,6 @@ export class WasmSDKLoadSettings
      * The default value is null.
      */
     loadProgressCallback: OptionalLoadProgressCallback = null;
-
 
     /**
      * Name of the file containing the WebAssembly module.

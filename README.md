@@ -744,7 +744,7 @@ It's hard to pinpoint exact hardware specifications for successful data extracti
 
 * Browsers supported by BlinkID can run on older devices, where extraction can take much longer to execute, e.g. around 30 or even 40 seconds.
 
-## <a name="embedded"> SDK and *WebView*/*WKWebView*/*SFSafariViewController*
+## <a name="embedded"> SDK and *WebView*/*WKWebView*/*SFSafariViewController*</a>
 
 ### Android and *WebView*
 

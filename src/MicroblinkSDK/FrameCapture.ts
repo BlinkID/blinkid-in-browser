@@ -36,7 +36,7 @@ export class CapturedFrame
             width: imageData.width,
             height: imageData.height,
             colorSpace: imageData.colorSpace,
-        } satisfies ImageData;
+        } as ImageData;
 
         this.imageData = fakeImageData;
         this.orientation = orientation;

@@ -1,5 +1,39 @@
 # Release notes
 
+## v6.5.1
+
+### Lightweight builds
+
+This release contains multiple builds tailored for different devices' capabilities.
+
+These builds are:
+#### Full
+Regular build that has barcode deblurring models. This build is loaded automatically on desktop devices. 
+
+#### Lightweight
+Build without deblurring models. This build is loaded automatically on mobile devices. Deblurring models are usually not necessary due to better quality cameras compared to front-facing laptop cameras.
+
+These builds each contain previous build variants present so far: basic, advanced with SIMD and advanced with multithreading making a total of 6 possible builds.
+
+These builds can be overriden by using a new property on the settings objects `WasmSDKLoadSettings.blinkIdVariant`:
+
+```ts
+export type BlinkIDVariant = "full" | "lightweight";
+```
+
+These can also be set on the UI component via the `blinkIdVariant` prop.
+
+### Dynamic webassembly memory management
+
+Depending on the device used, the SDK will allocate different amounts of memory on startup.
+This is primarily used as a mitigation mechanism for iOS's memory management, which often blocks webassembly memory growth.
+
+Although it's not reccommended, this can be overriden using `WasmSDKLoadSettings.initialMemory`.
+
+### Other fixes:
+- Fixed an issue where certain iOS devices would display a zoomed in preview.
+- Improved scanning of Bolivia IDs by addressing cases where the expiration date is covered by a signature, allowing the completion of the scanning process.
+
 ## v6.5.0
 
 ### New features

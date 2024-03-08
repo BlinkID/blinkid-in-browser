@@ -4,7 +4,6 @@
 
 import {
     bindCameraToVideoFeed,
-    isCameraFocusProblematic,
     PreferredCameraType,
     selectCamera,
     SelectedCamera,
@@ -23,8 +22,8 @@ const TARGET_FPS = 15;
 
 const throttle = pThrottle( {
     limit: 1,
-    interval: Math.round( 1 / TARGET_FPS * 1000 ),
-    strict: true
+    interval: Math.round( ( 1 / TARGET_FPS ) * 1000 ),
+    strict: true,
 } );
 
 /**
@@ -69,7 +68,8 @@ export class VideoRecognizer
 
     private currentTimeoutCount = 0;
 
-    private videoRecognitionMode: VideoRecognitionMode = VideoRecognitionMode.Recognition;
+    private videoRecognitionMode: VideoRecognitionMode =
+        VideoRecognitionMode.Recognition;
 
     private onScanningDone: OnScanningDone | null = null;
 
@@ -77,7 +77,9 @@ export class VideoRecognizer
 
     private isProblematicFocus = false;
 
-    declare private frameCallback: HTMLVideoElement["requestVideoFrameCallback"] | typeof requestAnimationFrame;
+    private declare frameCallback:
+        | HTMLVideoElement["requestVideoFrameCallback"]
+        | typeof requestAnimationFrame;
 
     /**
      * **Use only if provided factory functions are not well-suited for your use
@@ -112,11 +114,13 @@ export class VideoRecognizer
         this.recognizerRunner = recognizerRunner;
         this.cameraFlipped = cameraFlipped;
         this.deviceId = deviceId;
-        this.isProblematicFocus = isCameraFocusProblematic();
 
         if ( "requestVideoFrameCallback" in HTMLVideoElement.prototype )
         {
-            this.frameCallback = this.videoElement.requestVideoFrameCallback.bind( this.videoElement );
+            this.frameCallback =
+                this.videoElement.requestVideoFrameCallback.bind(
+                    this.videoElement
+                );
         }
         else
         {
@@ -138,7 +142,6 @@ export class VideoRecognizer
         let scaleX = 1;
         let scaleY = 1;
 
-
         if ( this.isProblematicFocus )
         {
             scaleY = 1.5;
@@ -154,7 +157,6 @@ export class VideoRecognizer
         {
             scaleX = -scaleX;
         }
-
 
         this.videoElement.style.transform = `scale(${scaleX}, ${scaleY})`;
 
@@ -194,23 +196,29 @@ export class VideoRecognizer
             throw new SDKError( videoRecognizerErrors.mediaDevicesUnsupported );
         }
 
-        const selectedCamera = await selectCamera( cameraId, preferredCameraType );
+        const selectedCamera = await selectCamera(
+            cameraId,
+            preferredCameraType
+        );
 
         if ( !selectedCamera )
         {
             throw new SDKError( videoRecognizerErrors.cameraMissing );
         }
 
-        const shouldMaxResolution = isCameraFocusProblematic();
 
         const cameraFlipped = await bindCameraToVideoFeed(
             selectedCamera,
             cameraFeed,
             preferredCameraType,
-            shouldMaxResolution
         );
 
-        return new VideoRecognizer( cameraFeed, recognizerRunner, cameraFlipped, selectedCamera.deviceId );
+        return new VideoRecognizer(
+            cameraFeed,
+            recognizerRunner,
+            cameraFlipped,
+            selectedCamera.deviceId
+        );
     }
 
     /**
@@ -229,7 +237,10 @@ export class VideoRecognizer
         recognizerRunner: RecognizerRunner
     )
     {
-        const videoRecognizer = new VideoRecognizer( videoElement, recognizerRunner );
+        const videoRecognizer = new VideoRecognizer(
+            videoElement,
+            recognizerRunner
+        );
 
         videoElement.src = videoPath;
         videoElement.currentTime = 0;
@@ -256,10 +267,13 @@ export class VideoRecognizer
     /**
      * Sets the video recognition mode to be used.
      */
-    setVideoRecognitionMode = async ( videoRecognitionMode: VideoRecognitionMode ) =>
+    setVideoRecognitionMode = async (
+        videoRecognitionMode: VideoRecognitionMode
+    ) =>
     {
         this.videoRecognitionMode = videoRecognitionMode;
-        const isDetectionMode = this.videoRecognitionMode === VideoRecognitionMode.DetectionTest;
+        const isDetectionMode =
+            this.videoRecognitionMode === VideoRecognitionMode.DetectionTest;
         await this.recognizerRunner.setDetectionOnlyMode( isDetectionMode );
     };
 
@@ -286,7 +300,10 @@ export class VideoRecognizer
      * @param recognitionTimeoutMs Amount of time in ms that the recognizer will
      * stay in the `Uncertain` state before resolving.
      */
-    startRecognition = async ( onScanningDone: OnScanningDone, recognitionTimeoutMs = 20000 ) =>
+    startRecognition = async (
+        onScanningDone: OnScanningDone,
+        recognitionTimeoutMs = 20000
+    ) =>
     {
         try
         {
@@ -294,7 +311,9 @@ export class VideoRecognizer
         }
         catch ( error )
         {
-            throw new Error( ErrorMessages.VIDEO_RECOGNIZER_PLAY_REQUEST_INTERRUPTED );
+            throw new Error(
+                ErrorMessages.VIDEO_RECOGNIZER_PLAY_REQUEST_INTERRUPTED
+            );
         }
 
         // Following 2 lines might not be needed. Just in case left here.
@@ -323,7 +342,9 @@ export class VideoRecognizer
             }
             catch ( error )
             {
-                throw new SDKError( videoRecognizerErrors.recognizersResetFailure );
+                throw new SDKError(
+                    videoRecognizerErrors.recognizersResetFailure
+                );
             }
         }
 
@@ -333,7 +354,9 @@ export class VideoRecognizer
         }
         catch ( error )
         {
-            throw new Error( ErrorMessages.VIDEO_RECOGNIZER_PLAY_REQUEST_INTERRUPTED );
+            throw new Error(
+                ErrorMessages.VIDEO_RECOGNIZER_PLAY_REQUEST_INTERRUPTED
+            );
         }
 
         try
@@ -385,7 +408,11 @@ export class VideoRecognizer
     pauseVideoFeed = () =>
     {
         // fix for https://developer.chrome.com/blog/play-request-was-interrupted/
-        if ( this.videoElement.readyState > this.videoElement.HAVE_CURRENT_DATA && !this.videoElement.paused )
+        if (
+            this.videoElement.readyState >
+                this.videoElement.HAVE_CURRENT_DATA &&
+            !this.videoElement.paused
+        )
         {
             this.videoElement.pause();
             this.pauseRecognition();
@@ -456,7 +483,6 @@ export class VideoRecognizer
             camera,
             this.videoElement,
             PreferredCameraType.BackFacingCamera,
-            this.isProblematicFocus
         );
 
         await this.resumeRecognition( true );
@@ -471,7 +497,6 @@ export class VideoRecognizer
         // promisify `requestVideoFrameCallback` so that we know when it triggers
         return new Promise<void>( ( resolve ) =>
         {
-
             this.frameCallback( () =>
             {
                 void this.recognitionLoop().then( () => resolve() );
@@ -510,12 +535,17 @@ export class VideoRecognizer
         to the `RecognizerRunner`. The main thread and the worker thread should be
         treated as blocked.
         */
-        const cameraFrame = captureFrame( this.videoElement, this.isProblematicFocus );
+        const cameraFrame = captureFrame(
+            this.videoElement,
+            this.isProblematicFocus
+        );
 
         // queue everything below in a macrotask
-        await new Promise( f => setTimeout( f, 0 ) );
+        await new Promise( ( f ) => setTimeout( f, 0 ) );
 
-        const processResult = await this.recognizerRunner.processImage( cameraFrame );
+        const processResult = await this.recognizerRunner.processImage(
+            cameraFrame
+        );
         // End processing
 
         // Test mode resets recognizers on every tick and never times out
@@ -605,7 +635,9 @@ export class VideoRecognizer
             this.videoElement.srcObject instanceof MediaStream
         )
         {
-            this.videoElement.srcObject.getTracks().forEach( ( track ) => track.stop() );
+            this.videoElement.srcObject
+                .getTracks()
+                .forEach( ( track ) => track.stop() );
             this.videoElement.srcObject = null;
         }
     };

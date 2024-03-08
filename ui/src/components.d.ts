@@ -5,6 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { BlinkIDVariant } from "@microblink/blinkid-in-browser-sdk";
 import { CameraEntry, CameraExperience, CameraExperienceState, CameraExperienceTimeoutDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
 import { MbHelpCallbacks } from "./components/shared/mb-help/mb-help.model";
@@ -27,6 +28,10 @@ export namespace Components {
           * Dictates if the Help Screens Onboarding process is being started on every Camera Experience start, or just on the first one.  Default value is 'false' - onboarding ran only once.
          */
         "allowHelpScreensOnboardingPerpetuity": boolean;
+        /**
+          * Overrides the BlinkID build that will be loaded.  The `lightweight` variant is smaller but doesn't support barcode deblurring. This variant is loaded by default on mobile devices. The `full` version is loaded by default on desktop devices.
+         */
+        "blinkIdVariant"?: BlinkIDVariant;
         /**
           * Configure camera experience state timeout durations
          */
@@ -403,6 +408,7 @@ export namespace Components {
           * See description in public component.
          */
         "allowHelpScreensOnboardingPerpetuity": boolean;
+        "blinkIdVariant"?: BlinkIDVariant;
         /**
           * See description in public component.
          */
@@ -731,6 +737,38 @@ export namespace Components {
         "textAlign"?: 'text-center' | 'text-left' | 'text-right';
     }
 }
+export interface BlinkidInBrowserCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLBlinkidInBrowserElement;
+}
+export interface MbApiProcessStatusCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMbApiProcessStatusElement;
+}
+export interface MbCameraExperienceCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMbCameraExperienceElement;
+}
+export interface MbCameraSelectionCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMbCameraSelectionElement;
+}
+export interface MbCameraToolbarCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMbCameraToolbarElement;
+}
+export interface MbComponentCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMbComponentElement;
+}
+export interface MbImageBoxCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMbImageBoxElement;
+}
+export interface MbModalCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLMbModalElement;
+}
 declare global {
     interface HTMLBlinkidInBrowserElement extends Components.BlinkidInBrowser, HTMLStencilElement {
     }
@@ -894,6 +932,10 @@ declare namespace LocalJSX {
          */
         "allowHelpScreensOnboardingPerpetuity"?: boolean;
         /**
+          * Overrides the BlinkID build that will be loaded.  The `lightweight` variant is smaller but doesn't support barcode deblurring. This variant is loaded by default on mobile devices. The `full` version is loaded by default on desktop devices.
+         */
+        "blinkIdVariant"?: BlinkIDVariant;
+        /**
           * Configure camera experience state timeout durations
          */
         "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
@@ -968,35 +1010,35 @@ declare namespace LocalJSX {
         /**
           * Event which is emitted when camera scan is started, i.e. when user clicks on _scan from camera_ button.
          */
-        "onCameraScanStarted"?: (event: CustomEvent<null>) => void;
+        "onCameraScanStarted"?: (event: BlinkidInBrowserCustomEvent<null>) => void;
         /**
           * Event which is emitted during initialization of UI component.  Each event contains `code` property which has deatils about fatal errror.
          */
-        "onFatalError"?: (event: CustomEvent<SDKError>) => void;
+        "onFatalError"?: (event: BlinkidInBrowserCustomEvent<SDKError>) => void;
         /**
           * Event which is emitted during positive or negative user feedback. If attribute/property `hideFeedback` is set to `false`, UI component will display the feedback.
          */
-        "onFeedback"?: (event: CustomEvent<FeedbackMessage>) => void;
+        "onFeedback"?: (event: BlinkidInBrowserCustomEvent<FeedbackMessage>) => void;
         /**
           * Event which is emitted when image scan is started, i.e. when user clicks on _scan from gallery button.
          */
-        "onImageScanStarted"?: (event: CustomEvent<null>) => void;
+        "onImageScanStarted"?: (event: BlinkidInBrowserCustomEvent<null>) => void;
         /**
           * Event which is emitted when UI component is successfully initialized and ready for use.
          */
-        "onReady"?: (event: CustomEvent<EventReady>) => void;
+        "onReady"?: (event: BlinkidInBrowserCustomEvent<EventReady>) => void;
         /**
           * Event which is emitted when scan is aborted, i.e. when user clicks on close from the gallery toolbar, or presses escape key.
          */
-        "onScanAborted"?: (event: CustomEvent<null>) => void;
+        "onScanAborted"?: (event: BlinkidInBrowserCustomEvent<null>) => void;
         /**
           * Event which is emitted during or immediately after scan error.
          */
-        "onScanError"?: (event: CustomEvent<EventScanError>) => void;
+        "onScanError"?: (event: BlinkidInBrowserCustomEvent<EventScanError>) => void;
         /**
           * Event which is emitted after successful scan. This event contains recognition results.
          */
-        "onScanSuccess"?: (event: CustomEvent<EventScanSuccess>) => void;
+        "onScanSuccess"?: (event: BlinkidInBrowserCustomEvent<EventScanSuccess>) => void;
         /**
           * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdSingleSideRecognizer - BlinkIdMultiSideRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdSingleSideRecognizer"></blinkid-in-browser>`
          */
@@ -1062,11 +1104,11 @@ declare namespace LocalJSX {
         /**
           * Emitted when user clicks on 'x' button.
          */
-        "onCloseFromStart"?: (event: CustomEvent<void>) => void;
+        "onCloseFromStart"?: (event: MbApiProcessStatusCustomEvent<void>) => void;
         /**
           * Emitted when user clicks on 'Retry' button.
          */
-        "onCloseTryAgain"?: (event: CustomEvent<void>) => void;
+        "onCloseTryAgain"?: (event: MbApiProcessStatusCustomEvent<void>) => void;
         /**
           * State value of API processing received from parent element ('loading' or 'success').
          */
@@ -1171,19 +1213,19 @@ declare namespace LocalJSX {
         /**
           * Emitted when user selects a different camera device.
          */
-        "onChangeCameraDevice"?: (event: CustomEvent<CameraEntry>) => void;
+        "onChangeCameraDevice"?: (event: MbCameraExperienceCustomEvent<CameraEntry>) => void;
         /**
           * Emitted when user clicks on 'X' button.
          */
-        "onClose"?: (event: CustomEvent<void>) => void;
+        "onClose"?: (event: MbCameraExperienceCustomEvent<void>) => void;
         /**
           * Emitted when user clicks on Flip button.
          */
-        "onFlipCameraAction"?: (event: CustomEvent<void>) => void;
+        "onFlipCameraAction"?: (event: MbCameraExperienceCustomEvent<void>) => void;
         /**
           * Emitted when camera stream becomes active.
          */
-        "onSetIsCameraActive"?: (event: CustomEvent<boolean>) => void;
+        "onSetIsCameraActive"?: (event: MbCameraExperienceCustomEvent<boolean>) => void;
         /**
           * Show camera feedback message on camera for Barcode scanning
          */
@@ -1210,11 +1252,11 @@ declare namespace LocalJSX {
         /**
           * Emitted when user selects a different camera device.
          */
-        "onChangeCameraDevice"?: (event: CustomEvent<CameraEntry>) => void;
+        "onChangeCameraDevice"?: (event: MbCameraSelectionCustomEvent<CameraEntry>) => void;
         /**
           * Emitted when camera stream becomes active.
          */
-        "onSetIsCameraActive"?: (event: CustomEvent<boolean>) => void;
+        "onSetIsCameraActive"?: (event: MbCameraSelectionCustomEvent<boolean>) => void;
     }
     interface MbCameraToolbar {
         /**
@@ -1229,19 +1271,19 @@ declare namespace LocalJSX {
         /**
           * Emitted when user selects a different camera device.
          */
-        "onChangeCameraDevice"?: (event: CustomEvent<CameraEntry>) => void;
+        "onChangeCameraDevice"?: (event: MbCameraToolbarCustomEvent<CameraEntry>) => void;
         /**
           * Event which is triggered when close button is clicked.
          */
-        "onCloseEvent"?: (event: CustomEvent<void>) => void;
+        "onCloseEvent"?: (event: MbCameraToolbarCustomEvent<void>) => void;
         /**
           * Event which is triggered when flip camera button is clicked.
          */
-        "onFlipEvent"?: (event: CustomEvent<void>) => void;
+        "onFlipEvent"?: (event: MbCameraToolbarCustomEvent<void>) => void;
         /**
           * Emitted when camera stream becomes active.
          */
-        "onSetIsCameraActive"?: (event: CustomEvent<boolean>) => void;
+        "onSetIsCameraActive"?: (event: MbCameraToolbarCustomEvent<boolean>) => void;
         /**
           * Set to `true` if close button should be displayed.
          */
@@ -1274,6 +1316,7 @@ declare namespace LocalJSX {
           * See description in public component.
          */
         "allowHelpScreensOnboardingPerpetuity"?: boolean;
+        "blinkIdVariant"?: BlinkIDVariant;
         /**
           * See description in public component.
          */
@@ -1357,43 +1400,43 @@ declare namespace LocalJSX {
         /**
           * Event containing boolean which used to check whether component is blocked.
          */
-        "onBlock"?: (event: CustomEvent<boolean>) => void;
+        "onBlock"?: (event: MbComponentCustomEvent<boolean>) => void;
         /**
           * See event 'cameraScanStarted' in public component.
          */
-        "onCameraScanStarted"?: (event: CustomEvent<null>) => void;
+        "onCameraScanStarted"?: (event: MbComponentCustomEvent<null>) => void;
         /**
           * See event 'fatalError' in public component.
          */
-        "onFatalError"?: (event: CustomEvent<SDKError>) => void;
+        "onFatalError"?: (event: MbComponentCustomEvent<SDKError>) => void;
         /**
           * Event containing FeedbackMessage which can be passed to MbFeedback component.
          */
-        "onFeedback"?: (event: CustomEvent<FeedbackMessage>) => void;
+        "onFeedback"?: (event: MbComponentCustomEvent<FeedbackMessage>) => void;
         /**
           * See event 'imageScanStarted' in public component.
          */
-        "onImageScanStarted"?: (event: CustomEvent<null>) => void;
+        "onImageScanStarted"?: (event: MbComponentCustomEvent<null>) => void;
         /**
           * See event 'ready' in public component.
          */
-        "onReady"?: (event: CustomEvent<EventReady>) => void;
+        "onReady"?: (event: MbComponentCustomEvent<EventReady>) => void;
         /**
           * See event 'scanAborted' in public component.
          */
-        "onScanAborted"?: (event: CustomEvent<null>) => void;
+        "onScanAborted"?: (event: MbComponentCustomEvent<null>) => void;
         /**
           * See event 'scanError' in public component.
          */
-        "onScanError"?: (event: CustomEvent<EventScanError>) => void;
+        "onScanError"?: (event: MbComponentCustomEvent<EventScanError>) => void;
         /**
           * See event 'scanSuccess' in public component.
          */
-        "onScanSuccess"?: (event: CustomEvent<EventScanSuccess>) => void;
+        "onScanSuccess"?: (event: MbComponentCustomEvent<EventScanSuccess>) => void;
         /**
           * Emitted when camera stream becomes active.
          */
-        "onSetIsCameraActive"?: (event: CustomEvent<boolean>) => void;
+        "onSetIsCameraActive"?: (event: MbComponentCustomEvent<boolean>) => void;
         /**
           * See description in public component.
          */
@@ -1505,7 +1548,7 @@ declare namespace LocalJSX {
         /**
           * Event which is triggered when selected image file is changed.
          */
-        "onImageChange"?: (event: CustomEvent<FileList>) => void;
+        "onImageChange"?: (event: MbImageBoxCustomEvent<FileList>) => void;
     }
     interface MbModal {
         /**
@@ -1539,11 +1582,11 @@ declare namespace LocalJSX {
         /**
           * Emitted when user clicks on 'Back Arrow' button.
          */
-        "onBack"?: (event: CustomEvent<void>) => void;
+        "onBack"?: (event: MbModalCustomEvent<void>) => void;
         /**
           * Emitted when user clicks on 'X' button.
          */
-        "onClose"?: (event: CustomEvent<void>) => void;
+        "onClose"?: (event: MbModalCustomEvent<void>) => void;
         /**
           * Whether to show back arrow or not
          */
