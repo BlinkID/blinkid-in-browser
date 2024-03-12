@@ -79,7 +79,7 @@ function defaultResultEventHandler(
 function wrapParameters( params: Array< any > ): Array< Messages.WrappedParameter >
 {
     // convert params
-    const wrappedPrameters = [];
+    const wrappedPrameters = [] as Array< Messages.WrappedParameter >;
     for ( let param of params )
     {
         let paramType = Messages.ParameterType.Any;

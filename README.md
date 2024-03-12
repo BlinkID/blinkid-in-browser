@@ -27,36 +27,52 @@ Please keep in mind that BlinkID In-browser SDK is meant to be used natively in 
 
 ## Table of contents
 
-* [Components of SDK](#components-of-sdk)
-* [Integration instructions](#integration)
-    * [Obtaining a license key](#obtainingalicensekey)
-    * [Installation](#installation)
-    * [Performing your first scan](#firstScan)
-    * [Recognizing still images](#stillImagesRecognition)
-    * [Configuration of SDK](#sdkConfiguration)
-    * [Deployment guidelines](#deploymentGuidelines)
-* [The `Recognizer` concept, `RecognizerRunner` and `VideoRecognizer`](#availableRecognizers)
-    * [The `Recognizer` concept](#recognizerConcept)
-    * [`RecognizerRunner`](#recognizerRunner)
-    * [Performing recognition of video streams using `VideoRecognizer`](#videoRecognizer)
-    * [Custom UX with `VideoRecognizer`](#customUXWithVideoRecognizer)
-* [Handling processing events with `MetadataCallbacks`](#metadataCallbacks)
-* [List of available recognizers](#recognizerList)
-    * [ID barcode recognizer](#idBarcodeRecognizer)
-    * [BlinkID Single-side recognizer](#blinkidSingleSideRecognizer)
-    * [BlinkID Multi-side recognizer](#blinkidMultiSideRecognizer)
-* [Recognizer settings](#recognizerSettings)
-* [Technical requirements](#technicalRequirements)
-* [Supported browsers](#webassembly-support)
-* [Camera devices](#camera-devices)
-* [Device support](#device-support)
-* [Troubleshooting](#troubleshoot)
-    * [Integration problems](#integrationProblems)
-    * [SDK problems](#sdkProblems)
-        * [Licensing problems](#licensingProblems)
-        * [Other problems](#otherProblems)
-* [FAQ and known issues](#faq)
-* [Additional info](#info)
+- [BlinkID In-browser SDK](#blinkid-in-browser-sdk)
+  - [Table of contents](#table-of-contents)
+  - [ Components of SDK](#-components-of-sdk)
+  - [ Integration instructions](#-integration-instructions)
+    - [ Obtaining a license key](#-obtaining-a-license-key)
+    - [ Installation](#-installation)
+      - [WASM Resources](#wasm-resources)
+      - [Versions and backward compatibility](#versions-and-backward-compatibility)
+    - [ Performing your first scan](#-performing-your-first-scan)
+    - [ Recognizing still images](#-recognizing-still-images)
+    - [ Configuration of SDK](#-configuration-of-sdk)
+    - [ Deployment guidelines](#-deployment-guidelines)
+      - [HTTPS](#https)
+      - [Deployment of WASM files](#deployment-of-wasm-files)
+        - [Server Configuration](#server-configuration)
+        - [ Location of WASM and related support files](#-location-of-wasm-and-related-support-files)
+      - [Setting up multiple licenses](#setting-up-multiple-licenses)
+        - [Multiple apps](#multiple-apps)
+        - [Single app](#single-app)
+  - [ The `Recognizer` concept, `RecognizerRunner` and `VideoRecognizer`](#-the-recognizer-concept-recognizerrunner-and-videorecognizer)
+    - [ The `Recognizer` concept](#-the-recognizer-concept)
+    - [ `RecognizerRunner`](#-recognizerrunner)
+    - [ Performing recognition of video streams using `VideoRecognizer`](#-performing-recognition-of-video-streams-using-videorecognizer)
+      - [Recognizing a video file](#recognizing-a-video-file)
+    - [ Custom UX with `VideoRecognizer`](#-custom-ux-with-videorecognizer)
+  - [ Handling processing events with `MetadataCallbacks`](#-handling-processing-events-with-metadatacallbacks)
+  - [ List of available recognizers](#-list-of-available-recognizers)
+    - [ ID barcode recognizer](#-id-barcode-recognizer)
+    - [ BlinkID Single-side recognizer](#-blinkid-single-side-recognizer)
+    - [ BlinkID Multi-side recognizer](#-blinkid-multi-side-recognizer)
+  - [ Recognizer settings](#-recognizer-settings)
+  - [ Technical requirements](#-technical-requirements)
+  - [ Supported browsers](#-supported-browsers)
+  - [ Camera devices](#-camera-devices)
+  - [ Device support](#-device-support)
+  - [ SDK and *WebView*/*WKWebView*/*SFSafariViewController*](#-sdk-and-webviewwkwebviewsfsafariviewcontroller)
+    - [Android and *WebView*](#android-and-webview)
+    - [iOS, *WKWebView* and *SFSafariViewController*](#ios-wkwebview-and-sfsafariviewcontroller)
+    - [Conclusion](#conclusion)
+  - [ Troubleshooting](#-troubleshooting)
+    - [ Integration problems](#-integration-problems)
+    - [ SDK problems](#-sdk-problems)
+      - [ Licensing problems](#-licensing-problems)
+      - [ Other problems](#-other-problems)
+  - [ FAQ and known issues](#-faq-and-known-issues)
+  - [ Additional info](#-additional-info)
 
 ## <a name="components-of-sdk"></a> Components of SDK
 
@@ -144,7 +160,7 @@ import * as BlinkIDSDK from "./es/blinkid-sdk.js";
 
 #### WASM Resources
 
-After adding BlinkID SDK to your project, make sure to include all files from its `resources` folder in your distribution. Those files contain a compiled WebAssembly module and support JS code.
+After adding BlinkID SDK to your project, make sure to include all files from its `resources` folder in your distribution. Those files contain compiled WebAssembly modules and support JS code.
 
 Do not add those files to the main app bundle, but rather place them on a publicly available location so that the SDK can load them at an appropriate time. For example, place the resources in `my-angular-app/src/assets/` folder if using `ng new` or in `my-react-app/public/` folder if using `create-react-app`.
 
@@ -377,7 +393,7 @@ Otherwise, the browser will block access to a web camera and remote scripts due 
 
 #### Deployment of WASM files
 
-WASM wrapper contain three different builds:
+The SDK contains multiple builds tailored for different devices' capabilities.
 
 - `Basic`
 
@@ -395,7 +411,23 @@ WASM wrapper contain three different builds:
 
   - Keep in mind that this WASM bundle requires that all resources are on the same origin. So, for example, it's not possible to load WASM files from some CDN. This limitation exists due to browser security rules.
 
-_Files: resources/{basic,advanced,advanced-threads}/BlinkIDWasmSDK.{data,js,wasm}_
+Additionally, there's two different BlinkID variants:
+
+- **Full**
+  - Regular build that has barcode deblurring models. This build is loaded automatically on desktop devices. 
+
+- **Lightweight**
+  - Build without deblurring models. This build is loaded automatically on mobile devices. Deblurring models are usually not necessary due to better quality cameras compared to front-facing laptop cameras.
+
+These builds each contain previous build variants present so far: basic, advanced with SIMD and advanced with multithreading making a total of 6 possible builds.
+
+These builds can be overridden by using a new property on the settings objects `WasmSDKLoadSettings.blinkIdVariant`:
+
+
+```ts
+export type BlinkIDVariant = "full" | "lightweight";
+```
+
 
 ##### Server Configuration
 
@@ -744,7 +776,7 @@ It's hard to pinpoint exact hardware specifications for successful data extracti
 
 * Browsers supported by BlinkID can run on older devices, where extraction can take much longer to execute, e.g. around 30 or even 40 seconds.
 
-## <a name="embedded"> SDK and *WebView*/*WKWebView*/*SFSafariViewController*
+## <a name="embedded"> SDK and *WebView*/*WKWebView*/*SFSafariViewController*</a>
 
 ### Android and *WebView*
 

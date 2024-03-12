@@ -69,6 +69,7 @@ export class SdkService {
     loadSettings.allowHelloMessage = sdkSettings.allowHelloMessage;
     loadSettings.engineLocation = sdkSettings.engineLocation;
     loadSettings.workerLocation = sdkSettings.workerLocation;
+    loadSettings.blinkIdVariant = sdkSettings.blinkIdVariant;
 
     if (sdkSettings.wasmType) {
       loadSettings.wasmType = sdkSettings.wasmType;

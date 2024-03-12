@@ -12,9 +12,10 @@ import {
     threads,
 } from "wasm-feature-detect";
 
+import { BlinkIDResource } from "./BlinkIdVariant";
 import { WasmType } from "./WasmType";
 
-function isIOSUserAgent()
+export function isIOSUserAgent()
 {
     const pattern = /iOS|iPhone|iPad|iPod/i; // 'i' flag for case-insensitive matching
     return pattern.test( navigator.userAgent );
@@ -80,7 +81,6 @@ export async function detectWasmFeatures(): Promise<WasmType>
     return WasmType.AdvancedWithThreads;
 }
 
-
 export async function detectWasmType(): Promise<WasmType>
 {
     // determine if all features required for advanced WASM are available
@@ -107,15 +107,22 @@ export async function detectWasmType(): Promise<WasmType>
     }
 }
 
-export function wasmFolder( wasmType: WasmType ): string
+export function wasmFolder( blinkIDResource: BlinkIDResource ): string
 {
-    switch ( wasmType )
+    let typeDir = "";
+
+    if ( blinkIDResource.wasmType === WasmType.AdvancedWithThreads )
     {
-        case WasmType.AdvancedWithThreads:
-            return "advanced-threads";
-        case WasmType.Advanced:
-            return "advanced";
-        case WasmType.Basic:
-            return "basic";
+        typeDir = "advanced-threads";
     }
+    else if ( blinkIDResource.wasmType === WasmType.Advanced )
+    {
+        typeDir = "advanced";
+    }
+    else
+    {
+        typeDir = "basic";
+    }
+
+    return `${blinkIDResource.blinkIDVariant}/${typeDir}`;
 }
