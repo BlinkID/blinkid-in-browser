@@ -768,7 +768,7 @@
 │  ├─ email: justin@ridgewell.name
 │  ├─ path: node_modules/@jridgewell/trace-mapping
 │  └─ licenseFile: node_modules/@jridgewell/trace-mapping/LICENSE
-├─ @microblink/blinkid-in-browser-sdk@6.5.1
+├─ @microblink/blinkid-in-browser-sdk@6.5.2
 │  ├─ licenses: Custom: https://travis-ci.org/BlinkID/blinkid-in-browser.svg
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
 │  ├─ path: /opt/jenkins/android-arm64-huawei-p30-pro/root/E0/sdk-blinkid-in-browser/blinkid-in-browser
