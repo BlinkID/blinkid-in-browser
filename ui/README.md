@@ -6,20 +6,20 @@ One of the main goals of UI component is to simplify integration of BlinkID in w
 
 ## Table of contents
 
-* [Installation](#installation)
-    * [Installation via CDN](#installation-cdn)
-    * [Installation via NPM](#installation-npm)
-    * [WASM resources](#installation-wasm-resources)
-* [Usage](#usage)
-    * [Minimal example](#usage-minimal)
-    * [Advanced example](#usage-advanced)
-    * [Examples and API documentation](#usage-examples-and-api-documentation)
-* [Customization](#customization)
-    * [UI customization](#customization-ui)
-    * [UI customization with `::part()` pseudo-element](#customization-ui-css-part)
-    * [Custom icons](#customization-icons)
-    * [Localization](#customization-localization)
-        * [RTL support](#customization-rtl-support)
+- [Installation](#installation)
+  - [Installation via CDN](#installation-cdn)
+  - [Installation via NPM](#installation-npm)
+  - [WASM resources](#installation-wasm-resources)
+- [Usage](#usage)
+  - [Minimal example](#usage-minimal)
+  - [Advanced example](#usage-advanced)
+  - [Examples and API documentation](#usage-examples-and-api-documentation)
+- [Customization](#customization)
+  - [UI customization](#customization-ui)
+  - [UI customization with `::part()` pseudo-element](#customization-ui-css-part)
+  - [Custom icons](#customization-icons)
+  - [Localization](#customization-localization)
+    - [RTL support](#customization-rtl-support)
 
 ## <a name="installation"></a> Installation
 
@@ -34,15 +34,24 @@ However, **we strongly advise** that you host the JavaScript bundles on your inf
 ```html
 <!-- Load custom element via `<script>` tag with fallback for older browsers -->
 <!-- IMPORTANT: change "X.Y.Z" to the version number you wish to use! -->
-<script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@X.Y.Z/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
-<script nomodule src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@X.Y.Z/ui/dist/blinkid-in-browser.js"></script>
+<script
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@X.Y.Z/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"
+></script>
+<script
+  nomodule
+  src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@X.Y.Z/ui/dist/blinkid-in-browser.js"
+></script>
 
 <!-- Custom element is now available and location of WASM engine must be provided -->
 <!-- IMPORTANT: location of the engine must be an absolute path. See section "WASM resources" for more information about this property. -->
-<blinkid-in-browser license-key="..." engine-location="http://localhost/resources/"></blinkid-in-browser>
+<blinkid-in-browser
+  license-key="..."
+  engine-location="http://localhost/resources/"
+></blinkid-in-browser>
 ```
 
-*Keep in mind that the jsDelivr CDN is used for demonstration, it's not intended to be used in production!*
+_Keep in mind that the jsDelivr CDN is used for demonstration, it's not intended to be used in production!_
 
 ### <a name="installation-npm"></a> Installation via NPM
 
@@ -80,10 +89,10 @@ If you're not using NPM, it's possible to download WASM resources from public CD
 
 For example, all versions of BlinkID In-browser SDK are available on the jsDelivr CDN:
 
-* Visit `https://cdn.jsdelivr.net/npm/browse/@microblink/blinkid-in-browser-sdk@X.Y.Z/resources/` (change "X.Y.Z" to the version number you wish to use).
-* Download the whole folder.
-* Save everything in the local `resources` folder which is available through HTTP/S.
-* Point the engine to that location with `engine-location` attribute or `engineLocation` property on the UI component.
+- Visit `https://cdn.jsdelivr.net/npm/browse/@microblink/blinkid-in-browser-sdk@X.Y.Z/resources/` (change "X.Y.Z" to the version number you wish to use).
+- Download the whole folder.
+- Save everything in the local `resources` folder which is available through HTTP/S.
+- Point the engine to that location with `engine-location` attribute or `engineLocation` property on the UI component.
 
 ### <a name="installation-angular"> Integration with Angular
 
@@ -114,58 +123,67 @@ defineCustomElements();
 5. Here's one possible way to use `<blinkid-in-browser>` custom web component inside Angular:
 
 ```typescript
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from "@angular/core";
 
 // Import typings for the UI component
-import '@microblink/blinkid-in-browser-sdk/ui';
+import "@microblink/blinkid-in-browser-sdk/ui";
 
 // Import typings for custom events
 import {
   EventReady,
   EventScanError,
   EventScanSuccess,
-  SDKError
-} from '@microblink/blinkid-in-browser-sdk/ui/dist/types/utils/data-structures';
+  SDKError,
+} from "@microblink/blinkid-in-browser-sdk/ui/dist/types/utils/data-structures";
 
 @Component({
-  selector: 'my-component',
-  template: '<blinkid-in-browser #el></blinkid-in-browser>',
-  styleUrls: ['./my-component.component.scss']
+  selector: "my-component",
+  template: "<blinkid-in-browser #el></blinkid-in-browser>",
+  styleUrls: ["./my-component.component.scss"],
 })
 export class MyComponent implements AfterViewInit {
   // Reference to the `blinkid-in-browser` custom web component
-  @ViewChild('el') el!: ElementRef<HTMLBlinkidInBrowserElement>;
+  @ViewChild("el") el!: ElementRef<HTMLBlinkidInBrowserElement>;
 
   constructor() {}
 
   ngAfterViewInit(): void {
-    this.el.nativeElement.licenseKey = '<PLACE-YOUR-LICENSE-KEY-HERE>';
-    this.el.nativeElement.recognizers = [ 'BlinkIdSingleSideRecognizer' ];
+    this.el.nativeElement.licenseKey = "<PLACE-YOUR-LICENSE-KEY-HERE>";
+    this.el.nativeElement.recognizers = ["BlinkIdSingleSideRecognizer"];
 
     // Engine location depends on the actual location of WebAssembly resources
-    this.el.nativeElement.engineLocation = window.location.origin + '/blinkid-resources/';
-    this.el.nativeElement.workerLocation = window.location.origin + `/resources/blinkid.worker.min.js`;
+    this.el.nativeElement.engineLocation =
+      window.location.origin + "/blinkid-resources/";
+    this.el.nativeElement.workerLocation =
+      window.location.origin + `/resources/blinkid.worker.min.js`;
 
-    this.el.nativeElement.addEventListener('ready', (ev: CustomEventInit<EventReady>) => {
-      console.log('ready', ev.details);
-    });
+    this.el.nativeElement.addEventListener(
+      "ready",
+      (ev: CustomEventInit<EventReady>) => {
+        console.log("ready", ev.details);
+      }
+    );
 
-    this.el.nativeElement.addEventListener('scanSuccess', (ev: CustomEventInit<EventScanSuccess>) => {
-      console.log('scanSuccess', ev.details);
-    });
+    this.el.nativeElement.addEventListener(
+      "scanSuccess",
+      (ev: CustomEventInit<EventScanSuccess>) => {
+        console.log("scanSuccess", ev.details);
+      }
+    );
 
-    this.el.nativeElement.addEventListener('scanError', (ev: CustomEventInit<EventScanError>) => {
-      console.log('scanError', ev.details);
-    });
+    this.el.nativeElement.addEventListener(
+      "scanError",
+      (ev: CustomEventInit<EventScanError>) => {
+        console.log("scanError", ev.details);
+      }
+    );
 
-    this.el.nativeElement.addEventListener('fatalError', (ev: CustomEventInit<SDKError>) => {
-      console.log('fatalError', ev.details);
-    });
+    this.el.nativeElement.addEventListener(
+      "fatalError",
+      (ev: CustomEventInit<SDKError>) => {
+        console.log("fatalError", ev.details);
+      }
+    );
   }
 }
 ```
@@ -197,12 +215,12 @@ $ npm install --save-dev shx
 3. Here's one possible way to use `<blinkid-in-browser>` custom web component inside React:
 
 ```jsx
-import React from 'react';
+import React from "react";
 
 import {
   applyPolyfills,
-  defineCustomElements
-} from '@microblink/blinkid-in-browser-sdk/ui/loader';
+  defineCustomElements,
+} from "@microblink/blinkid-in-browser-sdk/ui/loader";
 
 function App() {
   // Reference to the `<blinkid-in-browser>` custom web component
@@ -211,35 +229,34 @@ function App() {
   React.useEffect(() => {
     applyPolyfills().then(() => {
       defineCustomElements().then(() => {
-        el.current.licenseKey = '<PLACE-YOUR-LICENSE-KEY-HERE>';
-        el.current.recognizers = [ 'BlinkIdSingleSideRecognizer' ];
+        el.current.licenseKey = "<PLACE-YOUR-LICENSE-KEY-HERE>";
+        el.current.recognizers = ["BlinkIdSingleSideRecognizer"];
 
         // Engine location depends on the actual location of WebAssembly resources
-        el.current.engineLocation = window.location.origin + '/resources';
-        el.current.engineLocation = window.location.origin + `/resources/blinkid.worker.min.js`;
+        el.current.engineLocation = window.location.origin + "/resources";
+        el.current.engineLocation =
+          window.location.origin + `/resources/blinkid.worker.min.js`;
 
-        el.current.addEventListener('ready', (ev) => {
-          console.log('ready', ev.details);
+        el.current.addEventListener("ready", (ev) => {
+          console.log("ready", ev.details);
         });
 
-        el.current.addEventListener('scanSuccess', (ev) => {
-          console.log('scanSuccess', ev.details);
+        el.current.addEventListener("scanSuccess", (ev) => {
+          console.log("scanSuccess", ev.details);
         });
 
-        el.current.addEventListener('scanError', (ev) => {
-          console.log('scanError', ev.details);
+        el.current.addEventListener("scanError", (ev) => {
+          console.log("scanError", ev.details);
         });
 
-        el.current.addEventListener('fatalError', (ev) => {
-          console.log('fatalError', ev.details);
+        el.current.addEventListener("fatalError", (ev) => {
+          console.log("fatalError", ev.details);
         });
       });
     });
   }, []);
 
-  return (
-    <blinkid-in-browser ref={el}></blinkid-in-browser>
-  );
+  return <blinkid-in-browser ref={el}></blinkid-in-browser>;
 }
 
 export default App;
@@ -251,31 +268,31 @@ BlinkID UI component acts as any other HTML element. It has custom attributes, p
 
 Required parameters are license key, engine location and one or more recognizers.
 
-* **License key**
-    * To use this SDK, a valid license key is required. Please check the main README file of this repository for more information.
-* **Engine location**
-    * This SDK uses WASM engine in the background for image processing. Please check the [WASM resources](#installation-wasm-resources) section for more information.
-* **Recognizer**
-    * The `Recognizer` is the basic unit of processing within the BlinkID SDK. Its main purpose is to process the image and extract meaningful information from it.
-    * Please check the main README file of this repository for a list of available recognizers.
+- **License key**
+  - To use this SDK, a valid license key is required. Please check the main README file of this repository for more information.
+- **Engine location**
+  - This SDK uses WASM engine in the background for image processing. Please check the [WASM resources](#installation-wasm-resources) section for more information.
+- **Recognizer**
+  - The `Recognizer` is the basic unit of processing within the BlinkID SDK. Its main purpose is to process the image and extract meaningful information from it.
+  - Please check the main README file of this repository for a list of available recognizers.
 
 ### <a name="usage-minimal"></a> Minimal example
 
 ```html
 <blinkid-in-browser
-    engine-location="http://localhost/resources"
-    license-key="<PLACE-YOUR-LICENSE-KEY-HERE>"
-    recognizers="BlinkIdSingleSideRecognizer"
+  engine-location="http://localhost/resources"
+  license-key="<PLACE-YOUR-LICENSE-KEY-HERE>"
+  recognizers="BlinkIdSingleSideRecognizer"
 ></blinkid-in-browser>
 
 <script>
-    // Register listener for successful scan event to obtain results
-    const el = document.querySelector('blinkid-in-browser');
+  // Register listener for successful scan event to obtain results
+  const el = document.querySelector("blinkid-in-browser");
 
-    el.addEventListener('scanSuccess', ev => {
-        // Since UI component uses custom events, data is placed in `detail` property
-        console.log('Results', ev.detail);
-    });
+  el.addEventListener("scanSuccess", (ev) => {
+    // Since UI component uses custom events, data is placed in `detail` property
+    console.log("Results", ev.detail);
+  });
 </script>
 ```
 
@@ -286,75 +303,75 @@ Required parameters are license key, engine location and one or more recognizers
 <blinkid-in-browser></blinkid-in-browser>
 
 <script>
-    const el = document.querySelector('blinkid-in-browser');
+  const el = document.querySelector("blinkid-in-browser");
 
-    /**
-     * Mandatory properties
-     */
+  /**
+   * Mandatory properties
+   */
 
-    // Absolute path to location of WASM resource files
-    el.engineLocation = 'http://localhost/resources';
-    el.workerLocation = 'http://localhost/resources/blinkid.worker.min.js';
+  // Absolute path to location of WASM resource files
+  el.engineLocation = "http://localhost/resources";
+  el.workerLocation = "http://localhost/resources/blinkid.worker.min.js";
 
-    // License key
-    el.licenseKey = '<PLACE-YOUR-LICENSE-KEY-HERE>';
+  // License key
+  el.licenseKey = "<PLACE-YOUR-LICENSE-KEY-HERE>";
 
-    // Recognizers - logic which should be used to extract data
-    el.recognizers = ['BlinkIdSingleSideRecognizer'];
+  // Recognizers - logic which should be used to extract data
+  el.recognizers = ["BlinkIdSingleSideRecognizer"];
 
-    /**
-     * Optional properties
-     *
-     * See docs/components/blinkid-in-browser/readme.md for more information.
-     */
-    el.allowHelloMessage     = true;
-    el.recognizerOptions     = undefined;
-    el.enableDrag            = true;
-    el.hideFeedback          = false;
-    el.hideLoadingAndErrorUi = false;
-    el.scanFromCamera        = true;
-    el.scanFromImage         = true;
-    el.cameraId              = null;
-    el.translations          = undefined;
-    el.iconCameraDefault     = undefined;
-    el.iconCameraActive      = undefined;
-    el.iconGalleryDefault    = undefined;
-    el.iconGalleryActive     = undefined;
-    el.iconInvalidFormat     = undefined;
-    el.iconSpinner           = undefined;
+  /**
+   * Optional properties
+   *
+   * See docs/components/blinkid-in-browser/readme.md for more information.
+   */
+  el.allowHelloMessage = true;
+  el.recognizerOptions = undefined;
+  el.enableDrag = true;
+  el.hideFeedback = false;
+  el.hideLoadingAndErrorUi = false;
+  el.scanFromCamera = true;
+  el.scanFromImage = true;
+  el.cameraId = null;
+  el.translations = undefined;
+  el.iconCameraDefault = undefined;
+  el.iconCameraActive = undefined;
+  el.iconGalleryDefault = undefined;
+  el.iconGalleryActive = undefined;
+  el.iconInvalidFormat = undefined;
+  el.iconSpinner = undefined;
 
-    el.translations = {
-        'action-message': 'Alternative CTA'
-    }
+  el.translations = {
+    "action-message": "Alternative CTA",
+  };
 
-    /**
-     * Events
-     */
+  /**
+   * Events
+   */
 
-    // Event emitted when UI component cannot initialize
-    el.addEventListener('fatalError', ev => {
-        console.log('fatalError', ev.detail);
-    });
+  // Event emitted when UI component cannot initialize
+  el.addEventListener("fatalError", (ev) => {
+    console.log("fatalError", ev.detail);
+  });
 
-    // Event emitted when UI component is ready to use
-    el.addEventListener('ready', ev => {
-        console.log('ready', ev.detail);
-    });
+  // Event emitted when UI component is ready to use
+  el.addEventListener("ready", (ev) => {
+    console.log("ready", ev.detail);
+  });
 
-    // Event emitted in case of error during scan action
-    el.addEventListener('scanError', ev => {
-        console.log('scanError', ev.detail);
-    });
+  // Event emitted in case of error during scan action
+  el.addEventListener("scanError", (ev) => {
+    console.log("scanError", ev.detail);
+  });
 
-    // Event emitted when scan is successful
-    el.addEventListener('scanSuccess', ev => {
-        console.log('scanSuccess', ev.detail);
-    });
+  // Event emitted when scan is successful
+  el.addEventListener("scanSuccess", (ev) => {
+    console.log("scanSuccess", ev.detail);
+  });
 
-    // Event emitted when UI component wants to display a feedback message to the user
-    el.addEventListener('feedback', ev => {
-        console.log('feedback', ev.detail);
-    });
+  // Event emitted when UI component wants to display a feedback message to the user
+  el.addEventListener("feedback", (ev) => {
+    console.log("feedback", ev.detail);
+  });
 </script>
 ```
 
@@ -382,10 +399,10 @@ All CSS variables are defined in [\_globals.scss](src/components/shared/styles/_
  * instance of UI component.
  */
 blinkid-in-browser {
-    --mb-font-family:           inherit;
-    --mb-component-background:  #FFF;
-    --mb-component-font-color:  #000;
-    --mb-component-font-size:   14px;
+  --mb-font-family: inherit;
+  --mb-component-background: #fff;
+  --mb-component-font-color: #000;
+  --mb-component-font-size: 14px;
 }
 ```
 
@@ -398,12 +415,12 @@ Right now, the only way to see available parts is to explore the DOM and look fo
 ```css
 /* Change the background color of every overlay element */
 blinkid-in-browser::part(mb-overlay) {
-    background-color: green;
+  background-color: green;
 }
 
 /* Change the background color of a specific overlay element */
 blinkid-in-browser::part(mb-overlay-camera-experience) {
-    background-color: yellow;
+  background-color: yellow;
 }
 ```
 
@@ -412,11 +429,11 @@ blinkid-in-browser::part(mb-overlay-camera-experience) {
 It's possible to change the default icons used by the UI component during configuration.
 
 ```javascript
-const el = document.querySelector('blinkid-in-browser');
+const el = document.querySelector("blinkid-in-browser");
 
 // Value provided to this property will be used for setting the `src` attribute
 // of <img> element.
-el.iconSpinner = '/images/icon-spinner.gif';
+el.iconSpinner = "/images/icon-spinner.gif";
 ```
 
 For a full list of customizable icons, see [`<blinkid-in-browser>` API documentation](docs/components/blinkid-in-browser/readme.md).
@@ -426,15 +443,15 @@ For a full list of customizable icons, see [`<blinkid-in-browser>` API documenta
 It's possible to override the default messages defined in the [translation.service.ts](src/utils/translation.service.ts) file.
 
 ```javascript
-const el = document.querySelector('blinkid-in-browser');
+const el = document.querySelector("blinkid-in-browser");
 
 el.translations = {
-    'action-message': 'Alternative CTA',
+  "action-message": "Alternative CTA",
 
-    // During the camera scan action, messages can be split in multiple lines by
-    // providing array of strings instead of a plain string.
-    'camera-feedback-scan-front': ['Place the front side', 'of a document']
-}
+  // During the camera scan action, messages can be split in multiple lines by
+  // providing array of strings instead of a plain string.
+  "camera-feedback-scan-front": ["Place the front side", "of a document"],
+};
 ```
 
 #### <a name="customization-rtl-support"></a> RTL support

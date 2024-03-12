@@ -7,6 +7,7 @@ import { WasmSDKLoadSettings } from "../WasmLoadSettings";
 import { WasmType } from "../WasmType";
 import { SDKError } from "../SDKError";
 import { ProductIntegrationInfo } from "../DataStructures";
+import { BlinkIDVariant } from "../BlinkIdVariant";
 
 let nextMessageID = 0;
 
@@ -63,7 +64,11 @@ export class InitMessage extends BaseRequestMessage
 
     readonly wasmType: WasmType | null;
 
+    readonly blinkIDVariant?: BlinkIDVariant;
+
     readonly numberOfWorkers: number | null;
+
+    readonly initialMemory?: number;
 
     constructor( wasmLoadSettings: WasmSDKLoadSettings, userId: string )
     {
@@ -75,6 +80,8 @@ export class InitMessage extends BaseRequestMessage
         this.allowHelloMessage = wasmLoadSettings.allowHelloMessage;
         this.engineLocation = wasmLoadSettings.engineLocation;
         this.wasmType = wasmLoadSettings.wasmType;
+        this.initialMemory = wasmLoadSettings.initialMemory;
+        this.blinkIDVariant = wasmLoadSettings.blinkIdVariant;
         this.numberOfWorkers = wasmLoadSettings.numberOfWorkers;
     }
 }

@@ -1,54 +1,54 @@
 {
-    "root": true,
-    "env": {
-        "browser": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module",
-        "project": ["./tsconfig.json"]
-    },
-    "plugins": [ "@typescript-eslint" ],
-    "rules": {
-        "brace-style": ["error", "allman", { "allowSingleLine": true }],
-        "eol-last": ["error", "always"],
-        "eqeqeq": ["error", "always"],
-        "indent": ["error", 4, { "SwitchCase": 1 }],
-        "linebreak-style": ["error", "unix"],
-        "lines-between-class-members": ["error", "always"],
-        "max-len": ["error", { "code": 120 }],
-        "new-cap": "error",
-        "no-irregular-whitespace": ["off"],
-        "no-multiple-empty-lines": "error",
-        "no-nested-ternary": "error",
-        "no-trailing-spaces": "error",
-        "no-unexpected-multiline": ["off"],
-        "object-curly-spacing": ["error", "always"],
-        "object-property-newline": "error",
-        "one-var": ["error", "never"],
-        "quotes": ["error", "double"],
-        "semi": ["error", "always"],
-        "space-before-blocks": ["error", "always"],
-        "space-in-parens": ["error", "always"],
-        "spaced-comment": ["error", "always", {
-            "block": { "balanced": true },
-            "exceptions": []
-        }],
-        "@typescript-eslint/no-empty-interface": ["error", { "allowSingleExtends": true }],
-        "@typescript-eslint/no-explicit-any": ["error"],
-        "@typescript-eslint/no-floating-promises": ["error"],
-        "@typescript-eslint/no-non-null-assertion": ["error"],
-        "@typescript-eslint/no-unsafe-assignment": ["error"],
-        "@typescript-eslint/no-unsafe-call": ["error"],
-        "@typescript-eslint/no-unsafe-member-access": ["error"],
-        "@typescript-eslint/no-unsafe-return": ["error"],
-        "@typescript-eslint/no-unused-vars": ["error"],
-        "@typescript-eslint/restrict-template-expressions": ["error"]
-    }
+  "root": true,
+  "env": {
+      "browser": true
+  },
+  "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "project": ["./tsconfig.json"]
+  },
+  "plugins": [ "@typescript-eslint" ],
+  "rules": {
+      "brace-style": ["error", "allman", { "allowSingleLine": true }],
+      "eol-last": ["error", "always"],
+      "eqeqeq": ["error", "always"],
+      "indent": ["error", 4, { "SwitchCase": 1 }],
+      "linebreak-style": ["error", "unix"],
+      "lines-between-class-members": ["error", "always"],
+      "max-len": ["error", { "code": 120 }],
+      "new-cap": "error",
+      "no-irregular-whitespace": ["off"],
+      "no-multiple-empty-lines": "error",
+      "no-nested-ternary": "error",
+      "no-trailing-spaces": "error",
+      "no-unexpected-multiline": ["off"],
+      "object-curly-spacing": ["error", "always"],
+      "object-property-newline": "error",
+      "one-var": ["error", "never"],
+      "quotes": ["error", "double"],
+      "semi": ["error", "always"],
+      "space-before-blocks": ["error", "always"],
+      "space-in-parens": ["error", "always"],
+      "spaced-comment": ["error", "always", {
+          "block": { "balanced": true },
+          "exceptions": []
+      }],
+      "@typescript-eslint/no-empty-interface": ["error", { "allowSingleExtends": true }],
+      "@typescript-eslint/no-explicit-any": ["error"],
+      "@typescript-eslint/no-floating-promises": ["error"],
+      "@typescript-eslint/no-non-null-assertion": ["error"],
+      "@typescript-eslint/no-unsafe-assignment": ["error"],
+      "@typescript-eslint/no-unsafe-call": ["error"],
+      "@typescript-eslint/no-unsafe-member-access": ["error"],
+      "@typescript-eslint/no-unsafe-return": ["error"],
+      "@typescript-eslint/no-unused-vars": ["error"],
+      "@typescript-eslint/restrict-template-expressions": ["error"]
+  }
 }

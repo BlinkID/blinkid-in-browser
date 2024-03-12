@@ -2,6 +2,7 @@ import babel from '@rollup/plugin-babel'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import typescript from 'rollup-plugin-typescript2'
 import { terser } from 'rollup-plugin-terser'
+import commonjs from 'rollup-plugin-commonjs';
 
 const bannerMsg = `/*! ****************************************************************************
 Copyright (c) Microblink. All rights reserved.
@@ -23,6 +24,7 @@ const terserConfig = {
 
 const config = {
     worker: {
+        preserveSymlinks: true,
         input: 'src/worker.ts',
         output: {
             file: 'resources/BlinkIDWasmSDK.worker.min.js',
@@ -30,12 +32,14 @@ const config = {
         },
         plugins: [
             nodeResolve(),
-            typescript({ tsconfigOverride: { compilerOptions: { declaration: false } } }),
+            typescript({ tsconfigOverride: { compilerOptions: { declaration: false, types: [] } } }),
+            commonjs(),
             babel({ babelHelpers: 'bundled' }),
             terser(terserConfig)
         ]
     },
     cjs: {
+        preserveSymlinks: true,
         input: 'src/index.ts',
         output: {
             file: 'lib/blinkid-sdk.js',
@@ -46,10 +50,11 @@ const config = {
         plugins: [
             nodeResolve(),
             typescript({ useTsconfigDeclarationDir: true }),
-            babel({ babelHelpers: 'bundled' })
+            babel({ babelHelpers: 'bundled' }),
         ]
     },
     es: {
+        preserveSymlinks: true,
         input: 'src/index.ts',
         output: {
             file: 'es/blinkid-sdk.js',
@@ -61,10 +66,11 @@ const config = {
         plugins: [
             nodeResolve(),
             typescript({ tsconfigOverride: { compilerOptions: { declaration: false, sourceMap: true } } }),
-            babel({ babelHelpers: 'bundled' })
+            babel({ babelHelpers: 'bundled' }),
         ]
     },
     esModule: {
+        preserveSymlinks: true,
         input: 'src/index.ts',
         output: {
             file: 'es/blinkid-sdk.mjs',
@@ -76,10 +82,11 @@ const config = {
             nodeResolve(),
             typescript({ tsconfigOverride: { compilerOptions: { declaration: false } } }),
             babel({ babelHelpers: 'bundled' }),
-            terser(terserConfig)
+            terser(terserConfig),
         ]
     },
     umdDev: {
+        preserveSymlinks: true,
         input: 'src/index.ts',
         output: {
             file: 'dist/blinkid-sdk.js',
@@ -92,10 +99,11 @@ const config = {
         plugins: [
             nodeResolve(),
             typescript({ tsconfigOverride: { compilerOptions: { declaration: false, sourceMap: true } } }),
-            babel({ babelHelpers: 'bundled' })
+            babel({ babelHelpers: 'bundled' }),
         ]
     },
     umdProd: {
+        preserveSymlinks: true,
         input: 'src/index.ts',
         output: {
             file: 'dist/blinkid-sdk.min.js',
@@ -108,7 +116,7 @@ const config = {
             nodeResolve(),
             typescript({ tsconfigOverride: { compilerOptions: { declaration: false } } }),
             babel({ babelHelpers: 'bundled' }),
-            terser(terserConfig)
+            terser(terserConfig),
         ]
     }
 }

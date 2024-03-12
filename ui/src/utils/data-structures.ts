@@ -23,6 +23,7 @@ export interface MicroblinkUI {
   recognizerOptions:     { [key: string]: any };
   recognitionTimeout?:   number;
   recognitionPauseTimeout?: number;
+  blinkIdVariant?:       BlinkIDSDK.BlinkIDVariant;
   thoroughScanFromImage: boolean;
 
   // Functional properties
@@ -73,6 +74,7 @@ export interface SdkSettings {
   engineLocation:     string;
   workerLocation:     string;
   wasmType?:          BlinkIDSDK.WasmType;
+  blinkIdVariant?:    BlinkIDSDK.BlinkIDVariant;
 }
 
 /**

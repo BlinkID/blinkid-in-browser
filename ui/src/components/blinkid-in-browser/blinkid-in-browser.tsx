@@ -13,6 +13,8 @@ import {
   Method
 } from '@stencil/core';
 
+import { BlinkIDVariant } from '@microblink/blinkid-in-browser-sdk';
+
 import {
   EventReady,
   EventScanError,
@@ -93,6 +95,14 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
    */
    @Prop() wasmType: string = '';
+
+   /**
+   * Overrides the BlinkID build that will be loaded.
+   *
+   * The `lightweight` variant is smaller but doesn't support barcode deblurring. This variant is loaded by default on
+   * mobile devices. The `full` version is loaded by default on desktop devices.
+   */
+    @Prop() blinkIdVariant?: BlinkIDVariant;
 
   /**
    * List of recognizers which should be used.
@@ -556,6 +566,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         workerLocation={ this.workerLocation }
                         licenseKey={ this.licenseKey }
                         wasmType={ this.wasmType }
+                        blinkIdVariant={ this.blinkIdVariant }
                         recognizers={ this.finalRecognizers }
                         recognizerOptions={ this.recognizerOptions }
                         recognitionTimeout={ this.recognitionTimeout }

@@ -7,10 +7,10 @@ import { Recognizer, RecognizerRunner, WasmSDK } from "./DataStructures";
 import { MetadataCallbacks } from "./MetadataCallbacks";
 import { WasmSDKLoadSettings } from "./WasmLoadSettings";
 
-
 import { SDKError } from "./SDKError";
 import * as ErrorTypes from "./ErrorTypes";
 
+export * from "./BlinkIdVariant";
 export * from "./CameraUtils";
 export * from "./DataStructures";
 export * from "./DeviceUtils";
@@ -57,7 +57,6 @@ function getUserID(): string
     }
 }
 
-
 /**
  * Asynchronously loads and compiles the WebAssembly module.
  * @param loadSettings Object defining the settings for loading the WebAssembly module.
@@ -100,7 +99,6 @@ export async function loadWasmModule(
         }
         // obtain user ID from local storage
         const userId = getUserID();
-
 
         try
         {
