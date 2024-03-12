@@ -1,3 +1,9 @@
+# Release notes
+
+## v6.5.2
+
+Fixed issue with improper packaging.
+
 ## v6.5.1
 
 ### Lightweight builds
