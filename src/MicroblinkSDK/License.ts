@@ -14,18 +14,18 @@ export enum LicenseTokenState
 
 export interface LicenseUnlockResult
 {
-    readonly allowRemoveDemoOverlay       : boolean;
-    readonly allowRemoveProductionOverlay : boolean;
-    readonly isTrial                      : boolean;
-    readonly licenseId                    : string;
-    readonly licensee                     : string;
-    readonly applicationId                : string;
-    readonly packageName                  : string;
-    readonly sdkName                      : string;
-    readonly sdkVersion                   : string;
-    readonly unlockResult                 : LicenseTokenState;
-    readonly userId                       : string;
-    readonly licenseError                 : string;
+    readonly allowRemoveDemoOverlay         : boolean;
+    readonly allowRemoveProductionOverlay   : boolean;
+    readonly isTrial                        : boolean;
+    readonly licenseId                      : string;
+    readonly licensee                       : string;
+    readonly applicationIds                 : Array< string >;
+    readonly packageName                    : string;
+    readonly sdkName                        : string;
+    readonly sdkVersion                     : string;
+    readonly unlockResult                   : LicenseTokenState;
+    readonly userId                         : string;
+    readonly licenseError                   : string;
 }
 
 export enum LicenseErrorType {
@@ -38,27 +38,29 @@ export enum LicenseErrorType {
     IncorrectTokenState                   = "INCORRECT_TOKEN_STATE"
 }
 
-const baltazar = "https://baltazar.microblink.com/api/v1/status/check";
+const baltazar = "https://baltazar.microblink.com/api/v2/status/check";
 
 interface BaltazarRequest
 {
-    readonly licenseId  : string;
-    readonly licensee   : string;
-    readonly packageName: string;
-    readonly platform   : string;
-    readonly sdkName    : string;
-    readonly sdkVersion : string;
+    readonly licenseId     : string;
+    readonly licensee      : string;
+    readonly applicationIds: Array< string >;
+    readonly packageName   : string;
+    readonly platform      : string;
+    readonly sdkName       : string;
+    readonly sdkVersion    : string;
 }
 
 function toBaltazarRequest( unlockResult: LicenseUnlockResult ): BaltazarRequest
 {
     return {
-        licenseId  : unlockResult.licenseId,
-        licensee   : unlockResult.applicationId,
-        packageName: unlockResult.packageName,
-        platform   : "Browser",
-        sdkName    : unlockResult.sdkName,
-        sdkVersion : unlockResult.sdkVersion
+        licenseId     : unlockResult.licenseId,
+        licensee      : unlockResult.licensee,
+        applicationIds: unlockResult.applicationIds,
+        packageName   : unlockResult.packageName,
+        platform      : "Browser",
+        sdkName       : unlockResult.sdkName,
+        sdkVersion    : unlockResult.sdkVersion
     };
 }
 
