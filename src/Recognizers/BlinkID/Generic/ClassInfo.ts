@@ -420,7 +420,13 @@ export enum Region
     PARANA = 129,
     PERNAMBUCO = 130,
     SANTA_CATARINA = 131,
-    COUNT = 132
+    ANDHRA_PRADESH = 132,
+    CEARA = 133,
+    GOIAS = 134,
+    GUERRERO_ACAPULCO_DE_JUAREZ = 135,
+    HARYANA = 136,
+    SERGIPE = 137,
+    COUNT = 138
 }
 
 export enum DocumentType
@@ -487,5 +493,10 @@ export enum DocumentType
     IMMIGRANT_VISA = 59,
     CONSULAR_VOTER_ID = 60,
     TWIC_CARD = 61,
-    COUNT = 62
+    EXIT_ENTRY_PERMIT = 62,
+    MAINLAND_TRAVEL_PERMIT_TAIWAN = 63,
+    NBI_CLEARANCE = 64,
+    PROOF_OF_REGISTRATION = 65,
+    TEMPORARY_PROTECTION_PERMIT = 66,
+    COUNT = 67
 }

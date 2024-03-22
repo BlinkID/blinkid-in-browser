@@ -1,5 +1,107 @@
 # Release notes
 
+## v6.6.0
+
+### Document Updates
+
+#### New Documents Support:
+- Australia - Polycarbonate Passport
+- Indonesia - Polycarbonate Passport
+- Mexico - Consular Voter ID
+- Moldova - Polycarbonate Passport
+- Pakistan - Proof Of Registration
+- Panama - Polycarbonate Passport
+- USA - West Virginia - ID Card
+
+
+#### New Beta Documents Support:
+- Brazil - Ceara - ID Card
+- Brazil - Goias - ID Card
+- Brazil - Sergipe - ID Card
+- China - Exit Entry Permit
+- China - Mainland Travel Permit Taiwan
+- Colombia - Temporary Protection Permit
+- India - DL
+- India - Andhra Pradesh - DL
+- India - Haryana - DL
+- European Union - Health Insurance Card
+
+
+#### New Document Versions for Supported Documents:
+- Australia - Queensland - DL
+- Australia - Victoria - DL
+- Australia - Western Australia - DL
+- Bolivia - Minor's ID
+- Brazil - Alien ID
+- Estonia - DL
+- Finland - Alien ID
+- Guatemala - Paper Passport
+- India - Paper Passport - New side type
+- Malta - DL
+- Mexico - Guanajuato - DL 
+- Mexico - San Luis Potosi - DL
+- New Zealand - Polycarbonate Passport
+- Paraguay - ID Card
+- Slovenia - Residence Permit
+- USA - Green Card
+- USA - Work Permit
+- USA - Arizona - ID Card
+- USA - Colorado - DL
+- USA - Colorado - ID Card
+- USA - District of Columbia - DL
+- USA - District of Columbia - ID Card
+- USA - Idaho - DL
+- USA - Idaho - ID Card
+- USA - Missouri - ID Card
+- USA - Nebraska - ID Card
+- USA - Nevada - ID Card
+- USA - New York - ID Card
+- USA - North Dakota - DL
+- USA - Oklahoma - ID Card
+- USA - Pennsylvania - ID Card
+- USA - Utah - ID Card
+- USA - Virginia - DL
+- USA - Virginia - ID Card
+- USA - West Virginia - DL
+- USA - Wisconsin - DL
+- USA - Wisconsin - ID Card
+
+
+#### New Document Versions for Beta Supported Documents:
+- Australia - Queensland - Proof of Age Card
+- Brazil - ID Card
+- Ireland - Residence Permit
+- Mexico - Consular ID
+- Mexico - Residence Permit
+- Mexico - Nayarit - DL
+- USA - North Dakota - ID Card
+
+
+#### Out of Beta:
+
+- Croatia - Residence Permit
+- Moldova - Paper Passport
+
+### Platform Updates
+
+- Expanded geographic support with new `Region` enum values:
+  - `ANDHRA_PRADESH`
+  - `CEARA`
+  - `GOIAS`
+  - `GUERRERO_ACAPULCO_DE_JUAREZ`
+  - `HARYANA`
+  - `SERGIPE`   
+
+- Document recognition enhanced with new `Type` enum values:
+  - `EXIT_ENTRY_PERMIT`
+  - `MAINLAND_TRAVEL_PERMIT_TAIWAN`
+  - `NBI_CLEARANCE`
+  - `PROOF_OF_REGISTRATION`
+  - `TEMPORARY_PROTECTION_PERMIT`
+
+- Data extraction improvements:
+  - Added `Sponsor` and `BloodType` result fields to `BlinkIdMultiSideRecognizer.Result`, `BlinkIdSingleSideRecognizer.Result` and `VizResult`
+
 ## v6.5.2
 
 Fixed issue with improper packaging.
