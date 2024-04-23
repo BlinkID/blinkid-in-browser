@@ -55,6 +55,9 @@ export enum ErrorCodes {
     VIDEO_RECOGNIZER_FEED_PAUSED               = "VIDEO_RECOGNIZER_FEED_PAUSED",
     VIDEO_RECOGNIZER_RECOGNIZERS_RESET_FAILURE = "VIDEO_RECOGNIZER_RECOGNIZERS_RESET_FAILURE",
     VIDEO_RECOGNIZER_FEED_MISSING              = "VIDEO_RECOGNIZER_FEED_MISSING",
+
+    INVALID_PING_PROXY_URL                     = "INVALID_PROXY_URL",
+    PING_PROXY_PERMISSION_NOT_GRANTED          = "PING_PROXY_PERMISSION_NOT_GRANTED",
 }
 
 export enum ErrorMessages {
@@ -105,6 +108,9 @@ export enum ErrorMessages {
     VIDEO_RECOGNIZER_FEED_PAUSED               = "Cannot resume recognition while video feed is paused! Use recognize or startRecognition",
     VIDEO_RECOGNIZER_RECOGNIZERS_RESET_FAILURE = "Could not reset recognizers!",
     VIDEO_RECOGNIZER_FEED_MISSING              = "Missing video feed!",
+
+    INVALID_PING_PROXY_URL                     = "Provided ping proxy URL is not a valid secure URL in format 'https://{host}:{port?}'.",
+    PING_PROXY_PERMISSION_NOT_GRANTED          = "Allow ping proxy permission not found in license.",
 }
 
 export const videoRecognizerErrors = {
@@ -288,5 +294,16 @@ export const workerErrors = {
     integrationInfoFailure: {
         message: ErrorMessages.WORKER_INTEGRATION_INFO_FAILURE,
         code: ErrorCodes.WORKER_INTEGRATION_INFO_FAILURE,
+    },
+};
+
+export const pingProxyErrors = {
+    invalidProxyUrl: {
+        message: ErrorMessages.INVALID_PING_PROXY_URL,
+        code: ErrorCodes.INVALID_PING_PROXY_URL,
+    },
+    permissionNotGranted: {
+        message: ErrorMessages.PING_PROXY_PERMISSION_NOT_GRANTED,
+        code: ErrorCodes.PING_PROXY_PERMISSION_NOT_GRANTED,
     },
 };

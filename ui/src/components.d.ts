@@ -109,6 +109,10 @@ export namespace Components {
          */
         "licenseKey": string;
         /**
+          * URL to the ping proxy service. Ping proxy is a server which is hosted on you own infrastructure and forwards ping messages from SDK to the Microblink servers. That way web application which has integrated this SDK will only directly communicate with your own servers. In order to use this service, you need a `ALLOW PING PROXY` permission in your license.
+         */
+        "pingProxyUrl": string | null;
+        /**
           * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdSingleSideRecognizer - BlinkIdMultiSideRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdSingleSideRecognizer"></blinkid-in-browser>`
          */
         "rawRecognizers": string;
@@ -489,6 +493,10 @@ export namespace Components {
           * See description in public component.
          */
         "licenseKey": string;
+        /**
+          * See description in public component.
+         */
+        "pingProxyUrl": string | null;
         /**
           * See description in public component.
          */
@@ -1040,6 +1048,10 @@ declare namespace LocalJSX {
          */
         "onScanSuccess"?: (event: BlinkidInBrowserCustomEvent<EventScanSuccess>) => void;
         /**
+          * URL to the ping proxy service. Ping proxy is a server which is hosted on you own infrastructure and forwards ping messages from SDK to the Microblink servers. That way web application which has integrated this SDK will only directly communicate with your own servers. In order to use this service, you need a `ALLOW PING PROXY` permission in your license.
+         */
+        "pingProxyUrl"?: string | null;
+        /**
           * List of recognizers which should be used.  Available recognizers for BlinkID:  - IdBarcodeRecognizer - BlinkIdSingleSideRecognizer - BlinkIdMultiSideRecognizer    - cannot be used in combination with other recognizers    - when defined, scan from image is not available  Recognizers can be defined by setting HTML attribute "recognizers", for example:  `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdSingleSideRecognizer"></blinkid-in-browser>`
          */
         "rawRecognizers"?: string;
@@ -1437,6 +1449,10 @@ declare namespace LocalJSX {
           * Emitted when camera stream becomes active.
          */
         "onSetIsCameraActive"?: (event: MbComponentCustomEvent<boolean>) => void;
+        /**
+          * See description in public component.
+         */
+        "pingProxyUrl"?: string | null;
         /**
           * See description in public component.
          */

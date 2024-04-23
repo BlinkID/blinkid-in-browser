@@ -1,10 +1,10 @@
-
 /**
  * Copyright (c) Microblink Ltd. All rights reserved.
-*
-*/
+ *
+ */
 import { DocumentType } from "./ClassInfo";
 import { Country, Region } from "./ClassInfo";
+import { DocumentNumberAnonymizationSettings } from "./DocumentNumberAnonymizationSettings";
 import { FieldType } from "./FieldType";
 
 export class ClassAnonymizationSettings
@@ -34,4 +34,10 @@ export class ClassAnonymizationSettings
      * Fields to be anonymized.
      */
     fields: Array<FieldType> = new Array<FieldType>();
+
+    /**
+     * Anonymization settings for a document number.
+     */
+    documentNumberAnonymizationSettings: DocumentNumberAnonymizationSettings | null =
+        null;
 }

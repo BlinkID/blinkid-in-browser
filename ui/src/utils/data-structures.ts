@@ -149,28 +149,28 @@ export const AvailableRecognizers: { [key: string]: string } = {
   BlinkIdMultiSideRecognizer:           'createBlinkIdMultiSideRecognizer',
 }
 
-export interface VideoRecognitionConfiguration {
-  recognizers: Array<string>,
-  recognizerOptions?: any,
-  recognitionTimeout?: number,
-  successFrame: boolean,
-  cameraFeed: HTMLVideoElement,
-  cameraId: string | null
+interface BaseRecognitionConfiguration {
+  recognizers: Array<string>;
+  recognizerOptions?: any;
+  pingProxyUrl: string | null;
 }
 
-export interface ImageRecognitionConfiguration {
-  recognizers: Array<string>,
-  recognizerOptions?: any,
-  thoroughScan?: boolean,
-  file: File
+export interface VideoRecognitionConfiguration extends BaseRecognitionConfiguration {
+  recognitionTimeout?: number;
+  successFrame: boolean;
+  cameraFeed: HTMLVideoElement;
+  cameraId: string | null;
 }
 
-export interface MultiSideImageRecognitionConfiguration {
-  recognizers: Array<string>,
-  recognizerOptions?: any,
-  thoroughScan?: boolean,
-  firstFile: File,
-  secondFile: File
+export interface ImageRecognitionConfiguration extends BaseRecognitionConfiguration {
+  thoroughScan?: boolean;
+  file: File;
+}
+
+export interface MultiSideImageRecognitionConfiguration extends BaseRecognitionConfiguration {
+  thoroughScan?: boolean;
+  firstFile: File;
+  secondFile: File;
 }
 
 export enum ImageRecognitionType {

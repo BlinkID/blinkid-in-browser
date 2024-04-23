@@ -174,6 +174,10 @@ export class SdkService {
       eventCallback
     );
 
+    if (configuration.pingProxyUrl) {
+      await recognizerRunner.setPingProxyUrl(configuration.pingProxyUrl);
+    }
+
     try {
       this.videoRecognizer = await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
         configuration.cameraFeed,
@@ -315,6 +319,10 @@ export class SdkService {
       eventCallback
     );
 
+    if (configuration.pingProxyUrl) {
+      await recognizerRunner.setPingProxyUrl(configuration.pingProxyUrl);
+    }
+
     const handleTerminate = async () => {
       this.eventEmitter$.removeEventListener('terminate', handleTerminate);
 
@@ -447,6 +455,10 @@ export class SdkService {
       recognizers,
       eventCallback
     );
+
+    if (configuration.pingProxyUrl) {
+      await recognizerRunner.setPingProxyUrl(configuration.pingProxyUrl);
+    }
 
     const handleTerminate = async () => {
       this.eventEmitter$.removeEventListener('terminate', handleTerminate);

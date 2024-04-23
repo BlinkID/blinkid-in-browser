@@ -418,6 +418,14 @@ export class BlinkidInBrowser implements MicroblinkUI {
   @Prop() helpScreensTooltipPauseTimeout: number = 15000;
 
   /**
+   * URL to the ping proxy service. Ping proxy is a server which is hosted on you own infrastructure
+   * and forwards ping messages from SDK to the Microblink servers. That way web application which has
+   * integrated this SDK will only directly communicate with your own servers.
+   * In order to use this service, you need a `ALLOW PING PROXY` permission in your license.
+   */
+  @Prop() pingProxyUrl: string | null = null;
+
+  /**
    * Event which is emitted during initialization of UI component.
    *
    * Each event contains `code` property which has deatils about fatal errror.
@@ -592,6 +600,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
                         translationService={ this.translationService }
                         cameraId={ this.cameraId }
                         allowHelpScreens={ true }
+                        pingProxyUrl={ this.pingProxyUrl }
                         allowHelpScreensFab={ this.allowHelpScreensFab }
                         allowHelpScreensOnboarding={ this.allowHelpScreensOnboarding }
                         allowHelpScreensOnboardingPerpetuity={ this.allowHelpScreensOnboardingPerpetuity }

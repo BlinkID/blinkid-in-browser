@@ -22,7 +22,7 @@ import {
     waitForThreadWorkers,
 } from "../PThreadHelper";
 import { WasmType } from "../WasmType";
-import { SDKError } from "../SDKError";
+import { SDKError, SerializableSDKError } from "../SDKError";
 import { isMobile } from "is-mobile";
 import { BlinkIDResource, BlinkIDVariant } from "../BlinkIdVariant";
 
@@ -160,6 +160,11 @@ export default class MicroblinkWorker
                         msg as Messages.GetProductIntegrationInfo,
                     );
                     break;
+                case Messages.SetPingProxyUrl.action:
+                    this.setPingProxyUrl(
+                        msg as Messages.SetPingProxyUrl
+                    );
+                    break;
                 default:
                     throw new SDKError( {
                         code: ErrorTypes.ErrorCodes
@@ -183,7 +188,7 @@ export default class MicroblinkWorker
 
     private notifyError(
         originalMessage: Messages.RequestMessage,
-        error: SDKError | string,
+        error: SerializableSDKError | string,
     )
     {
         this.context.postMessage(
@@ -232,7 +237,7 @@ export default class MicroblinkWorker
                 {
                     this.notifyError(
                         msgWithParams,
-                        new SDKError( ErrorTypes.workerErrors.handleUndefined ),
+                        new SerializableSDKError( ErrorTypes.workerErrors.handleUndefined ),
                     );
                 }
             }
@@ -612,7 +617,10 @@ export default class MicroblinkWorker
                     }
                     else
                     {
-                        this.notifyError( msg, licenseResult.error );
+                        this.notifyError(
+                            msg,
+                            new SerializableSDKError( licenseResult.error, licenseResult.error.details )
+                        );
                     }
                 },
                 ( error: any ) =>
@@ -620,7 +628,7 @@ export default class MicroblinkWorker
                     // Failed to load WASM in web worker due to error
                     this.notifyError(
                         msg,
-                        new SDKError(
+                        new SerializableSDKError(
                             ErrorTypes.workerErrors.wasmLoadFailure,
                             error,
                         ),
@@ -633,7 +641,7 @@ export default class MicroblinkWorker
             // Failed to load WASM in web worker due to error
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.wasmLoadFailure, error ),
+                new SerializableSDKError( ErrorTypes.workerErrors.wasmLoadFailure, error ),
             );
         }
     }
@@ -651,7 +659,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.wasmInitMissing ),
+                new SerializableSDKError( ErrorTypes.workerErrors.wasmInitMissing ),
             );
             return;
         }
@@ -673,7 +681,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.functionInvokeFailure,
                     error,
                 ),
@@ -687,7 +695,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.wasmInitMissing ),
+                new SerializableSDKError( ErrorTypes.workerErrors.wasmInitMissing ),
             );
             return;
         }
@@ -709,7 +717,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.recognizerCreationFailure,
                     error,
                 ),
@@ -736,14 +744,14 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.wasmInitMissing ),
+                new SerializableSDKError( ErrorTypes.workerErrors.wasmInitMissing ),
             );
         }
         else if ( this.nativeRecognizerRunner !== null )
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.runnerExists ),
+                new SerializableSDKError( ErrorTypes.workerErrors.runnerExists ),
             );
         }
         else
@@ -766,7 +774,7 @@ export default class MicroblinkWorker
                             ];
                         this.notifyError(
                             msg,
-                            new SDKError(
+                            new SerializableSDKError(
                                 {
                                     code: ErrorTypes.ErrorCodes
                                         .WORKER_LICENSE_UNLOCK_ERROR,
@@ -805,7 +813,7 @@ export default class MicroblinkWorker
             {
                 this.notifyError(
                     msg,
-                    new SDKError(
+                    new SerializableSDKError(
                         ErrorTypes.workerErrors.runnerCreationFailure,
                         error,
                     ),
@@ -822,14 +830,14 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.wasmInitMissing ),
+                new SerializableSDKError( ErrorTypes.workerErrors.wasmInitMissing ),
             );
         }
         else if ( this.nativeRecognizerRunner === null )
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.runnerMissing ),
+                new SerializableSDKError( ErrorTypes.workerErrors.runnerMissing ),
             );
         }
         else
@@ -855,7 +863,7 @@ export default class MicroblinkWorker
             {
                 this.notifyError(
                     msg,
-                    new SDKError(
+                    new SerializableSDKError(
                         ErrorTypes.workerErrors.runnerReconfigureFailure,
                         error,
                     ),
@@ -872,7 +880,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.runnerDeleted ),
+                new SerializableSDKError( ErrorTypes.workerErrors.runnerDeleted ),
             );
             return;
         }
@@ -891,7 +899,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.runnerDeleteFailure,
                     error,
                 ),
@@ -946,7 +954,7 @@ export default class MicroblinkWorker
             {
                 this.notifyError(
                     msg,
-                    new SDKError( {
+                    new SerializableSDKError( {
                         message:
                             "Cannot find object with handle: " +
                             objectHandle.toString(),
@@ -982,7 +990,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.objectInvokeFailure,
                     error,
                 ),
@@ -996,7 +1004,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.imageProcessFailure ),
+                new SerializableSDKError( ErrorTypes.workerErrors.imageProcessFailure ),
             );
             return;
         }
@@ -1024,7 +1032,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.imageProcessFailure,
                     error,
                 ),
@@ -1038,7 +1046,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.imageProcessFailure ),
+                new SerializableSDKError( ErrorTypes.workerErrors.imageProcessFailure ),
             );
             return;
         }
@@ -1056,11 +1064,57 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.imageProcessFailure,
                     error,
                 ),
             );
+        }
+    }
+
+    private setPingProxyUrl( msg: Messages.SetPingProxyUrl )
+    {
+        console.log( "Setting ping proxy url...", msg );
+        if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError(
+                msg,
+                new SerializableSDKError( ErrorTypes.workerErrors.runnerMissing ),
+            );
+            return;
+        }
+
+        try
+        {
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access */
+            this.nativeRecognizerRunner.setPingProxyUrl(
+                msg.pingProxyUrl,
+            );
+            this.notifySuccess( msg );
+        }
+        catch ( error: any )
+        {
+            if ( "cause" in error && error.cause === "PERMISSION_NOT_GRANTED" )
+            {
+                this.notifyError(
+                    msg,
+                    new SerializableSDKError(
+                        ErrorTypes.pingProxyErrors.permissionNotGranted,
+                        error,
+                    ),
+                );
+            }
+            else
+            {
+                this.notifyError(
+                    msg,
+                    new SerializableSDKError(
+                        ErrorTypes.workerErrors.runnerMissing,
+                        error,
+                    ),
+                );
+            }
         }
     }
 
@@ -1070,7 +1124,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.imageProcessFailure ),
+                new SerializableSDKError( ErrorTypes.workerErrors.imageProcessFailure ),
             );
             return;
         }
@@ -1090,7 +1144,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.imageProcessFailure,
                     error,
                 ),
@@ -1104,7 +1158,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.imageProcessFailure ),
+                new SerializableSDKError( ErrorTypes.workerErrors.imageProcessFailure ),
             );
             return;
         }
@@ -1124,7 +1178,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.imageProcessFailure,
                     error,
                 ),
@@ -1246,7 +1300,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.imageProcessFailure ),
+                new SerializableSDKError( ErrorTypes.workerErrors.imageProcessFailure ),
             );
             return;
         }
@@ -1265,7 +1319,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.imageProcessFailure,
                     error,
                 ),
@@ -1281,7 +1335,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.imageProcessFailure ),
+                new SerializableSDKError( ErrorTypes.workerErrors.imageProcessFailure ),
             );
             return;
         }
@@ -1321,7 +1375,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.imageProcessFailure,
                     error,
                 ),
@@ -1337,7 +1391,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError( ErrorTypes.workerErrors.wasmInitMissing ),
+                new SerializableSDKError( ErrorTypes.workerErrors.wasmInitMissing ),
             );
             return;
         }
@@ -1373,7 +1427,7 @@ export default class MicroblinkWorker
         {
             this.notifyError(
                 msg,
-                new SDKError(
+                new SerializableSDKError(
                     ErrorTypes.workerErrors.objectInvokeFailure,
                     error,
                 ),

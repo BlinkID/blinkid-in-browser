@@ -25,7 +25,9 @@ import { MetadataCallbacks, DisplayablePoints, DisplayableQuad } from "../Metada
 import { WasmSDKLoadSettings, OptionalLoadProgressCallback } from "../WasmLoadSettings";
 import { WasmType } from "../WasmType";
 import { nativeJsonizationEnabled } from "../../defaultWasmModule";
-import { SDKError } from "../SDKError";
+import { SDKError, SerializableSDKError } from "../SDKError";
+import { isValidURL } from "../Utils";
+import * as ErrorTypes from "../ErrorTypes";
 
 
 // ============================================ /
@@ -51,14 +53,21 @@ function defaultEventHandler(
         }
         else
         {
-            reject( resultMsg.error );
+            if ( typeof resultMsg.error === "string" || resultMsg.error === null )
+            {
+                reject( resultMsg.error );
+            }
+            else
+            {
+                reject( new SDKError( resultMsg.error ) );
+            }
         }
     };
 }
 
 function defaultResultEventHandler(
     successResolver: EventHandler,
-    reject: ( reason: SDKError | string | null ) => void
+    reject: ( reason: SerializableSDKError | string | null ) => void
 ): EventHandler
 {
     return ( msg: Messages.ResponseMessage ) =>
@@ -70,7 +79,14 @@ function defaultResultEventHandler(
         }
         else
         {
-            reject( resultMsg.error );
+            if ( typeof resultMsg.error === "string" || resultMsg.error === null )
+            {
+                reject( resultMsg.error );
+            }
+            else
+            {
+                reject( new SDKError( resultMsg.error ) );
+            }
         }
     };
 }
@@ -464,6 +480,24 @@ class RemoteRecognizerRunner implements RecognizerRunner
         );
     }
 
+    setPingProxyUrl( url: string ): Promise< void >
+    {
+        if ( !isValidURL( url ) )
+        {
+            throw new SDKError( ErrorTypes.pingProxyErrors.invalidProxyUrl );
+        }
+
+        return new Promise< void >
+        (
+            ( resolve, reject ) =>
+            {
+                const msg = new Messages.SetPingProxyUrl( url );
+                const handler = defaultEventHandler( resolve, reject );
+                this.wasmSDKWorker.postMessage( msg, handler );
+            }
+        );
+    }
+
     setClearTimeoutCallback( clearTimeoutCallback: ClearTimeoutCallback | null ): Promise< void >
     {
         return new Promise< void >
@@ -478,7 +512,7 @@ class RemoteRecognizerRunner implements RecognizerRunner
         );
     }
 
-    setCameraPreviewMirrored( mirrored: boolean ): Promise< void >
+    setCameraPreviewMirrored( mirrored: boolean ): Promise< void >
     {
         return new Promise< void >
         (

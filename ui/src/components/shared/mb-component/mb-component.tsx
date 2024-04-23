@@ -320,6 +320,11 @@ export class MbComponent {
   @Prop() helpScreensTooltipPauseTimeout: number = 15000;
 
   /**
+   * See description in public component.
+   */
+  @Prop() pingProxyUrl: string | null = null;
+
+  /**
    * Event containing boolean which used to check whether component is blocked.
    */
   @Event() block: EventEmitter<boolean>;
@@ -659,6 +664,7 @@ export class MbComponent {
 
   private async startScanFromCamera() {
     const configuration: VideoRecognitionConfiguration = {
+      pingProxyUrl: this.pingProxyUrl,
       recognizers: this.recognizers,
       successFrame: this.includeSuccessFrame,
       cameraFeed: this.videoElement,
@@ -934,6 +940,7 @@ export class MbComponent {
 
   private async startScanFromImage(file?: File) {
     const configuration: ImageRecognitionConfiguration = {
+      pingProxyUrl: this.pingProxyUrl,
       recognizers: this.recognizers,
       file: file || this.scanFromImageInput.files[0]
     };
@@ -1034,6 +1041,7 @@ export class MbComponent {
 
   private async startScanFromImageMultiSide(firstFile?: File, secondFile?: File) {
     const configuration: MultiSideImageRecognitionConfiguration = {
+      pingProxyUrl: this.pingProxyUrl,
       recognizers: this.recognizers,
       firstFile: firstFile || this.galleryImageFirstFile,
       secondFile: secondFile || this.galleryImageSecondFile
@@ -1170,7 +1178,11 @@ export class MbComponent {
       return;
     }
 
-    if (error?.code === ErrorCodes.LICENSE_UNLOCK_ERROR) {
+    if (error?.code === ErrorCodes.INVALID_PING_PROXY_URL) {
+      this.setFatalError(new SDKError(ErrorTypes.componentErrors.pingProxyErrors.invalidProxyUrl, error));
+    } else if (error?.code === ErrorCodes.PING_PROXY_PERMISSION_NOT_GRANTED) {
+      this.setFatalError(new SDKError(ErrorTypes.componentErrors.pingProxyErrors.permissionNotGranted, error));
+    } else if (error?.code === ErrorCodes.LICENSE_UNLOCK_ERROR) {
       this.setFatalError(new SDKError(ErrorTypes.componentErrors.licenseError, error));
       this.showLicenseInfoModal(error);
     }

@@ -40,6 +40,11 @@ export interface ImageAnalysisResult
     readonly barcodeDetectionStatus: ImageAnalysisDetectionStatus;
 
     /**
+     * RealID detection status determined from the scanned image.
+     */
+    readonly realIDDetectionStatus: ImageAnalysisDetectionStatus;
+
+    /**
      * Rotation of the card detected on the scanned image.
      */
     readonly cardRotation: CardRotation | undefined;
