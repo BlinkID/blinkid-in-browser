@@ -75,6 +75,12 @@ export interface VIZResult
     /** The driver license detailed info. */
     readonly driverLicenseDetailedInfo: DriverLicenseDetailedInfo;
 
+    /** Sponsor for a document owner. */
+    readonly sponsor: StringResult;
+
+    /** Blood type on a document owner. */
+    readonly bloodType: StringResult;
+
     /* Whether the result is empty */
     readonly empty: boolean;
 }

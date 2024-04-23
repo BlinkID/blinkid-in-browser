@@ -199,6 +199,16 @@ export interface RecognizerRunner extends WasmNativeObject
      * @param mirrored Whether or not metadatacallbacks should adjust coordinates for mirrored image.
      */
     setCameraPreviewMirrored( mirrored: boolean ): Promise< void >;
+
+    /**
+     * Sets a url to the ping proxy service. Ping proxy is a server which is hosted on you own infrastructure
+     * and forwards ping messages from SDK to the Microblink servers. That way web application which has
+     * integrated this SDK will only directly communicate with your own servers.
+     * In order to use this service, you need a `ALLOW PING PROXY` permission in your license. If permission is
+     * not presented in the license, this method will throw an error.
+     * @param url Url of a server where ping proxy is hosted.
+     */
+    setPingProxyUrl( url: string ): Promise< void >;
 }
 
 /**

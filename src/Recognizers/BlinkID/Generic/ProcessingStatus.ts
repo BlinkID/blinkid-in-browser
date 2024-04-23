@@ -73,6 +73,10 @@ export enum ProcessingStatus
     /** If front side recognition has not completed successfully, the back side is not scanned. */
     NotScanned,
 
+    /** The barcode was not found on the image. This processing status can only occur if document has mandatory
+        barcode.  */
+    BarcodeDetectionFailed,
+
     /** Number of possible processing statuses. */
     Count
 }

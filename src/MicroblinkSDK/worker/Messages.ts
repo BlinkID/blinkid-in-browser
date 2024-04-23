@@ -5,7 +5,7 @@
 import { CapturedFrame } from "../FrameCapture";
 import { WasmSDKLoadSettings } from "../WasmLoadSettings";
 import { WasmType } from "../WasmType";
-import { SDKError } from "../SDKError";
+import { SerializableSDKError } from "../SDKError";
 import { ProductIntegrationInfo } from "../DataStructures";
 import { BlinkIDVariant } from "../BlinkIdVariant";
 
@@ -318,6 +318,19 @@ export class GetProductIntegrationInfo extends BaseRequestMessage
     }
 }
 
+export class SetPingProxyUrl extends BaseRequestMessage
+{
+    static readonly action: string = "setPingProxyUrl";
+
+    readonly pingProxyUrl: string;
+
+    constructor( pingProxyUrl: string )
+    {
+        super( SetPingProxyUrl.action );
+        this.pingProxyUrl = pingProxyUrl;
+    }
+}
+
 // ===================================== /
 // Response messages
 // ===================================== /
@@ -333,9 +346,9 @@ export class StatusMessage implements ResponseMessage
 
     readonly success: boolean = true;
 
-    readonly error: SDKError | string | null = null;
+    readonly error: SerializableSDKError | string | null = null;
 
-    constructor( msgID: number, success: boolean, error: SDKError | string | null )
+    constructor( msgID: number, success: boolean, error: SerializableSDKError | string | null )
     {
         this.messageID = msgID;
         this.success = success;

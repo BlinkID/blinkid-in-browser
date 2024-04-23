@@ -41,6 +41,8 @@ export * from "./ImageAnalysisResult";
 export * from "./GenericResultStructures";
 export * from "./ProcessingStatus";
 export * from "./RecognitionMode";
+export * from "./FieldType";
+export * from "./DocumentNumberAnonymizationSettings";
 export * from "./RecognitionModeFilter";
 export * from "./VIZResult";
 
@@ -403,6 +405,16 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult {
      * The image of the signature
      */
     readonly signatureImage: ImageResult;
+
+     /**
+      * Sponsor of a document owner.
+      */
+     readonly sponsor: StringResult;
+
+    /**
+     * Blood type on a document owner.
+     */
+    readonly bloodType: StringResult;
 }
 
 /**

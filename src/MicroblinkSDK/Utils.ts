@@ -39,3 +39,15 @@ export function getSafePath( path: string, fileName: string ): string
         return path + "/" + fileName;
     }
 }
+
+/**
+ * Checks if provided string is valid secure URL without subpaths.
+ * @param url URL to check.
+ * @returns Boolean indicating if provided URL is valid.
+ */
+export function isValidURL( url: string ): boolean
+{
+    // eslint-disable-next-line no-useless-escape
+    const regex = /^https:\/\/[^\/]+(?::\d+)?\/?$/;
+    return regex.test( url );
+}

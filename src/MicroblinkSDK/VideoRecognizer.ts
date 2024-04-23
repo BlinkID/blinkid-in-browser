@@ -75,8 +75,6 @@ export class VideoRecognizer
 
     private cameraFlipped = false;
 
-    private isProblematicFocus = false;
-
     private declare frameCallback:
         | HTMLVideoElement["requestVideoFrameCallback"]
         | typeof requestAnimationFrame;
@@ -139,29 +137,10 @@ export class VideoRecognizer
 
     private handleFlippingVideo = async () =>
     {
-        let scaleX = 1;
-        let scaleY = 1;
+        this.videoElement.style.transform = `scaleX(${this.cameraFlipped ? -1 : 1})`;
 
-        if ( this.isProblematicFocus )
-        {
-            scaleY = 1.5;
-            scaleX = 1.5;
-        }
-        else
-        {
-            scaleY = 1;
-            scaleX = 1;
-        }
-
-        if ( this.cameraFlipped )
-        {
-            scaleX = -scaleX;
-        }
-
-        this.videoElement.style.transform = `scale(${scaleX}, ${scaleY})`;
-
-        // evaluate negative scale as true, positive as false
-        await this.recognizerRunner.setCameraPreviewMirrored( scaleX < 0 );
+        // needs to be set on the recognizerRunner as well to provide correct quads
+        await this.recognizerRunner.setCameraPreviewMirrored( this.cameraFlipped );
     };
 
     /**
@@ -537,7 +516,6 @@ export class VideoRecognizer
         */
         const cameraFrame = captureFrame(
             this.videoElement,
-            this.isProblematicFocus
         );
 
         // queue everything below in a macrotask
