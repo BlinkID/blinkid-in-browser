@@ -5,11 +5,6 @@
 ### New Features
 - **Real ID symbol detection on US driver's license**
   - BlinkID can now identify Real ID symbols from US driver’s licenses, providing feedback on their presence or absence. This ensures customers can quickly determine if a Real ID symbol is available on a scanned US driver’s license to be compliant with Real ID regulations.
-- **UX Improvements**
-  - Extended duration for UI messages 
-	- UI messages now remain visible for a longer time after scanning, improving user experience. Users can now review post-scanning messages at a comfortable pace, leading to a smoother process.
-  - Success indicator for front side capture
-  	- BlinkID now displays a clear success indicator after scanning the front side of a document. This visual cue enhances user confidence by providing immediate feedback during the scanning process. 
 - **Partial anonymization of the "Document Number"**
   - To ensure user privacy and security, BlinkID now offers the option of partially anonymizing the document number from the scanned document.
 - **Mandatory Barcode Presence on US documents**
