@@ -67,7 +67,13 @@
     &:hover,
     &:active,
     &:focus {
-      background-color: rgba(map-get(map-get(map-get($base-colors, text-secondary), onlight), foreground), 0.3);
+      background-color: rgba(
+        map-get(
+          map-get(map-get($base-colors, text-secondary), onlight),
+          foreground
+        ),
+        0.3
+      );
     }
 
     &.active,
@@ -93,7 +99,7 @@
 
   .list {
     position: absolute;
-    top: calc(var(--mb-font-size) * 1.5 + #{ $padding-unit-small * 2 * 2 });
+    top: calc(var(--mb-font-size) * 1.5 + #{$padding-unit-small * 2 * 2});
     left: calc(50% - var(--mb-toolbar-selection-width) / 2);
 
     width: var(--mb-toolbar-selection-width);
@@ -139,7 +145,10 @@
       li {
         display: block;
         &.active {
-          color: map-get(map-get(map-get($base-colors, primary-blue), onlight), background);
+          color: map-get(
+            map-get(map-get($base-colors, primary-blue), onlight),
+            background
+          );
         }
       }
 
@@ -158,7 +167,13 @@
 
         &:hover,
         &:focus {
-          background-color: rgba(map-get(map-get(map-get($base-colors, fill-quaternary), onlight), foreground), 0.08);
+          background-color: rgba(
+            map-get(
+              map-get(map-get($base-colors, fill-quaternary), onlight),
+              foreground
+            ),
+            0.08
+          );
         }
       }
     }

@@ -1,43 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-        <title>Example: BlinkID UI: scan both documents sides</title>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
+    <title>Example: BlinkID UI: scan both documents sides</title>
 
-        <!-- Import UI component which includes WASM library -->
-        <script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.7.0/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
+    <!-- Import UI component which includes WASM library -->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@microblink/blinkid-in-browser-sdk@6.7.1/ui/dist/blinkid-in-browser/blinkid-in-browser.esm.js"></script>
 
-        <style type="text/css">
-            html,
-            body {
-                margin: 0;
-                padding: 0;
+    <style type="text/css">
+      html,
+      body {
+        margin: 0;
+        padding: 0;
 
-                width: 100%;
-                height: 100%;
-            }
+        width: 100%;
+        height: 100%;
+      }
 
-            html {
-                font-family: "Avenir Next", sans-serif;
-            }
+      html {
+        font-family: "Avenir Next", sans-serif;
+      }
 
-            body {
-                background-color: #fff;
-                box-sizing: border-box;
+      body {
+        background-color: #fff;
+        box-sizing: border-box;
 
-                display: flex;
-                justify-content: center;
-                align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-                padding: 20px;
-            }
+        padding: 20px;
+      }
 
-            blinkid-in-browser {
-              max-width: 400px;
+      blinkid-in-browser {
+        max-width: 400px;
 
-              /* Customization of UI - see variables in src/components/shared/styles/_globals.scss */
-              /*
+        /* Customization of UI - see variables in src/components/shared/styles/_globals.scss */
+        /*
               --mb-component-background: red;
               --mb-component-action-label: none;
               --mb-component-border-width: 0;
@@ -46,62 +46,52 @@
               --mb-component-button-size: 48px;
               --mb-component-button-border-radius: 24px;
               */
-            }
-        </style>
-    </head>
-    <body>
-        <!-- It's possible to obtain a free trial license key on microblink.com -->
-        <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLWMazxUSGuQicEz7Vw7mSL6E5X1Jh7Cp3Vw7TdkdPLr1SsXDMh2WDsl1e3frPK9/EEplN71kLxAzGuJIGivfFk3TqApdPAtqVZxbhLIcu5SY8YvFF5pALHgYKDZFvR0TNKhi/QO5Slm/bh1weZCnWAomGSWSlsDhcsWDo6ip04SfDCpszjQ/8YIgFhne+BklLev2UUL6S76lqaCDbjrU7LYC5y1u8RUIhDZ5rMUOsPWFPdSerEf2S85nq7wSdYo5VswYWWdjDUguLFMlPyKbbZmJGWeVfEfboUDG14Ro7yaIiJvsVcGjTVDVgqpOXO0=" recognizers="BlinkIdMultiSideRecognizer"></blinkid-in-browser>
+      }
+    </style>
+  </head>
+  <body>
+    <!-- It's possible to obtain a free trial license key on microblink.com -->
+    <blinkid-in-browser license-key="sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLQMczx7qOR4GsxaylXINMLfnIgM0Uz8zeEkQf9q1ccZuyfSNNS1ENCflf022P9bh0XN0gvgFLenLiQgMHZXg9xxAqEE0wzjxt6H8luQkFrPb28qQfiUgpsVo40Zt1hMugZzJmSHa5b4FYaI3wMXHE1i5sXbSJZKtuFkm46eD67CG0aE1xrYWq+Pyf71K+IcxTSa6YQqzKyKKOOJF0KITGK8CpH+qfLJfY9HsEC42Keq8ehkM4K13E4mgslwAQ/EHqvUCCIR3fmoSzcUFxEg+LLeAeu50TYej9B3t/wXA6vJRVz1xjJCgWidmDBdLHXA=" recognizers="BlinkIdMultiSideRecognizer"></blinkid-in-browser>
 
-        <script type="text/javascript">
+    <script type="text/javascript">
 
 var parcelRequire;
 
-function run()
-{
+function run() {
   // Important: if attributes or properties are changed, whole component is rerendered
   const blinkId = document.querySelector("blinkid-in-browser");
 
-  if (window.location.hostname === "blinkid.github.io")
-  {
-    blinkId.licenseKey = "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaCbqJJ4VXyL3/BcRFo+Ntso9l+QAC4KymijDrYvAKJkrmWzO5va1HOq9+k7hlh+1d8EXqp3lz41+YzGE6aeO8uZE6SRxZS+gnVtZB/UH58HmlJacV5uaO59aiZJd3h40/GkvBXTLRpsGb2a54OkwPOavHGpYbEJEiv4Im1w3pbH5CtS+tNQxRxlbMR8qY0g8jdHroJuHj66C6/Pkrfu591o58N3tyr2L0hNUVe0zuoxBCk68eqjCVdJNFdh5Ww8zuQvSuynDJGxxq6aQ5mqedaQXI0FwSI+UDRkukJOlMLSjminXAhl2ObaRShyZ/uIg==";
+  if (window.location.hostname === "blinkid.github.io") {
+    blinkId.licenseKey =
+    "sRwAAAYRYmxpbmtpZC5naXRodWIuaW+qBF9hPYYlTvZbRuaCDqRJqpI8hBlR6AIxuapAiFuDa2HEx3uyslG5NNC0IGxjqRpO5e3ZMC83oiR2kDKGzEw3vaUNt+XEwsstT8gTETwUyjjGV5zydXUkUJrykcgZTlvVgfrh1cKnq3eNhxU06enYxyMW6OJtqxAH+5O2DSBaOXN05+bjViUWCi3409VSQv3JEHFxtbM7IRt/P7q4pqZMEyQyL9nEz8DBxZLG8OMe+XrjVAoYvhHeom4cJTIfWwRAByfkx54T9Sc2U1JjPMPswcnZ81fOu2HZXpvUqnWZGzFjZhtHoUQWUfmx0NWB1wwTlzr4J0I1JxxLlg==";
   }
 
   blinkId.engineLocation = "https://blinkid.github.io/blinkid-in-browser/resources";
-  blinkId.workerLocation = "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
+  blinkId.workerLocation =
+  "https://blinkid.github.io/blinkid-in-browser/resources/BlinkIDWasmSDK.worker.min.js";
 
-  blinkId.addEventListener(
-
-    "fatalError",
-    (ev) => console.log("fatalError", ev.detail)
+  blinkId.addEventListener("fatalError", (ev) =>
+  console.log("fatalError", ev.detail)
   );
 
-  blinkId.addEventListener(
-
-    "ready",
-    (ev) => console.log("ready", ev.detail)
+  blinkId.addEventListener("ready", (ev) =>
+  console.log("ready", ev.detail)
   );
 
-  blinkId.addEventListener(
-
-    "scanError",
-    (ev) => console.log("scanError", ev.detail)
+  blinkId.addEventListener("scanError", (ev) =>
+  console.log("scanError", ev.detail)
   );
 
-  blinkId.addEventListener(
-
-    "scanSuccess",
-    (ev) => console.log("scanSuccess", ev.detail)
+  blinkId.addEventListener("scanSuccess", (ev) =>
+  console.log("scanSuccess", ev.detail)
   );
 
-  blinkId.addEventListener(
-
-    "feedback",
-    (ev) => console.log("feedback", ev.detail)
+  blinkId.addEventListener("feedback", (ev) =>
+  console.log("feedback", ev.detail)
   );
 }
 
 window.addEventListener("DOMContentLoaded", (ev) => run());
 </script>
-    </body>
+  </body>
 </html>

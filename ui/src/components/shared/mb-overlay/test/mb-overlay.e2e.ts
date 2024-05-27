@@ -2,14 +2,14 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import { newE2EPage } from '@stencil/core/testing';
+import { newE2EPage } from "@stencil/core/testing";
 
-describe('mb-overlay', () => {
-  it('renders', async () => {
+describe("mb-overlay", () => {
+  it("renders", async () => {
     const page = await newE2EPage();
-    await page.setContent('<mb-overlay></mb-overlay>');
+    await page.setContent("<mb-overlay></mb-overlay>");
 
-    const element = await page.find('mb-overlay');
-    expect(element).toHaveClass('hydrated');
+    const element = await page.find("mb-overlay");
+    expect(element).toHaveClass("hydrated");
   });
 });

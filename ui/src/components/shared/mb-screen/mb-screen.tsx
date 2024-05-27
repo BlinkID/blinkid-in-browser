@@ -2,23 +2,19 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import {
-  Component,
-  Element,
-  Host,
-  h,
-  Prop
-} from '@stencil/core';
+import { Component, Element, Host, h, Prop } from "@stencil/core";
 
-import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
+import {
+  setWebComponentParts,
+  classNames,
+} from "../../../utils/generic.helpers";
 
 @Component({
-  tag: 'mb-screen',
-  styleUrl: 'mb-screen.scss',
+  tag: "mb-screen",
+  styleUrl: "mb-screen.scss",
   shadow: true,
 })
 export class MbScreen {
-
   /**
    * Set to 'true' if screen should be visible.
    */
@@ -35,7 +31,7 @@ export class MbScreen {
 
   render() {
     return (
-      <Host class={ classNames({ visible: this.visible }) }>
+      <Host class={classNames({ visible: this.visible })}>
         <slot></slot>
       </Host>
     );

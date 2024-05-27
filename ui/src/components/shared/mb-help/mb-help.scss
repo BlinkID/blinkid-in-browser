@@ -13,23 +13,41 @@ $mb-help-modal-backdrop-color: var(--mb-help-modal-backdrop-color);
 $mb-help-lobby-button-width: 36px;
 $mb-help-lobby-button-height: 36px;
 $mb-help-lobby-button-tooltop-offset: 5px;
-$mb-help-lobby-button-background-color: var(--mb-help-lobby-button-background-color);
+$mb-help-lobby-button-background-color: var(
+  --mb-help-lobby-button-background-color
+);
 $mb-help-lobby-button-border-color: var(--mb-help-lobby-button-border-color);
 // vars - lobby button hovered
-$mb-help-lobby-button-hovered-background-color: var(--mb-help-lobby-button-hovered-background-color);
-$mb-help-lobby-button-hovered-border-color: var(--mb-help-lobby-button-hovered-border-color);
+$mb-help-lobby-button-hovered-background-color: var(
+  --mb-help-lobby-button-hovered-background-color
+);
+$mb-help-lobby-button-hovered-border-color: var(
+  --mb-help-lobby-button-hovered-border-color
+);
 // vars - lobby button focused
-$mb-help-lobby-button-focused-background-color: var(--mb-help-lobby-button-focused-background-color);
-$mb-help-lobby-button-focused-border-color: var(--mb-help-lobby-button-focused-border-color);
+$mb-help-lobby-button-focused-background-color: var(
+  --mb-help-lobby-button-focused-background-color
+);
+$mb-help-lobby-button-focused-border-color: var(
+  --mb-help-lobby-button-focused-border-color
+);
 // vars - lobby button icon
 $mb-help-lobby-button-icon-width: auto;
 $mb-help-lobby-button-icon-height: 18px;
 // vars - progress tracker
-$mb-help-progress-tracker-dot-active-color: var(--mb-help-progress-tracker-dot-active-color);
-$mb-help-progress-tracker-dot-inactive-color: var(--mb-help-progress-tracker-dot-inactive-color);
+$mb-help-progress-tracker-dot-active-color: var(
+  --mb-help-progress-tracker-dot-active-color
+);
+$mb-help-progress-tracker-dot-inactive-color: var(
+  --mb-help-progress-tracker-dot-inactive-color
+);
 // vars - tooltip
-$mb-help-lobby-button-tooltip-background-color: var(--mb-help-lobby-button-tooltip-background-color);
-$mb-help-lobby-button-tooltip-font-color: var(--mb-help-lobby-button-tooltip-font-color);
+$mb-help-lobby-button-tooltip-background-color: var(
+  --mb-help-lobby-button-tooltip-background-color
+);
+$mb-help-lobby-button-tooltip-font-color: var(
+  --mb-help-lobby-button-tooltip-font-color
+);
 // $mb-help-color-success: var(--mb-help-color-success); // used in Svgs
 // $mb-help-color-danger: var(--mb-help-color-danger); // used in Svgs
 // $mb-help-lobby-button-icon-color: var(--mb-help-lobby-button-icon-color); // used in Svgs
@@ -63,7 +81,9 @@ $mb-help-lobby-button-tooltip-font-color: var(--mb-help-lobby-button-tooltip-fon
   mb-tooltip-advanced::part(tooltip) {
     left: -46px;
     right: calc(50% - 19px);
-    bottom: calc($mb-help-lobby-button-height + $mb-help-lobby-button-tooltop-offset);
+    bottom: calc(
+      $mb-help-lobby-button-height + $mb-help-lobby-button-tooltop-offset
+    );
     width: auto;
   }
 }
@@ -135,7 +155,7 @@ mb-modal::part(mb-modal-inner) {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
-  
+
   color: $mb-help-font-color-primary;
 
   margin-bottom: 8px;

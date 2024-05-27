@@ -1,15 +1,15 @@
 {
-    "compilerOptions": {
-        "target": "ES2021",
-        "module": "es6",
-        "moduleResolution": "node",
-        "declaration": true,
-        "declarationDir": "./types",
-        "forceConsistentCasingInFileNames": true,
-        "noImplicitReturns": true,
-        "strict": true,
-        "noUnusedLocals": true,
-        "types": []
-    },
-    "include": ["./src/**/*"]
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "es6",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "./types",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "strict": true,
+    // "noUnusedLocals": true,
+    "types": []
+  },
+  "include": ["./src/**/*"]
 }

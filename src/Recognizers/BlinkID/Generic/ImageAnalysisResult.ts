@@ -5,9 +5,14 @@
 export interface ImageAnalysisResult
 {
     /**
-     * Whether the image is blurred.
+     * Indicates if blur was detected on the scanned image.
      */
-    readonly blurred: boolean;
+    readonly blurDetected: boolean;
+
+    /**
+     * Indicates if glare was detected on the scanned image.
+     */
+    readonly glareDetected: boolean;
 
     /**
      * Orientation of the card detected on the scanned image.

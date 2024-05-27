@@ -5,10 +5,7 @@
     "declaration": false,
     "experimentalDecorators": true,
     "emitDeclarationOnly": false,
-    "lib": [
-      "dom",
-      "ES2021"
-    ],
+    "lib": ["dom", "ES2021"],
     "moduleResolution": "node",
     "module": "esnext",
     "target": "ES2021",
@@ -17,10 +14,7 @@
     "jsx": "react",
     "jsxFactory": "h"
   },
-  "include": [
-    "./src/**/*",
-    "./types/jsx.d.ts"
-  ],
+  "include": ["./src/**/*", "./types/jsx.d.ts"],
   "exclude": [
     "./src/components/shared/**/test",
     "./src/components/**/test",

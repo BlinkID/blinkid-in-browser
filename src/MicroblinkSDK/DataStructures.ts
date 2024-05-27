@@ -4,7 +4,6 @@
 
 import { CapturedFrame } from "./FrameCapture";
 import { MetadataCallbacks } from "./MetadataCallbacks";
-import { ClearTimeoutCallback } from "./ClearTimeoutCallback";
 import { WasmType } from "./WasmType";
 
 // ============================================ /
@@ -143,6 +142,11 @@ export interface Recognizer extends WasmNativeObject
 export interface RecognizerRunner extends WasmNativeObject
 {
     /**
+     * Array of recognizer objects that are currently associated with the RecognizerRunner.
+     */
+    recognizers: Array< Recognizer >;
+
+    /**
      * Starts the recognition of the given image using recognizer objects currently associated
      * with the RecognizerRunner.
      * @param image Image to be processed.
@@ -185,11 +189,6 @@ export interface RecognizerRunner extends WasmNativeObject
      * @param detectionOnly Should recognizers perform only object detection.
      */
     setDetectionOnlyMode( detectionOnly: boolean ): Promise< void >;
-
-    /**
-     * Sets or removes the ClearTimeoutCallback.
-     */
-    setClearTimeoutCallback( clearTimeoutCallback: ClearTimeoutCallback | null ): Promise< void >;
 
     /**
      * Sets whether camera preview displaying the image being recognized is being mirrored horizontally.

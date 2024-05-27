@@ -2,30 +2,25 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import {
-  Component,
-  Host,
-  h,
-  Prop
-} from "@stencil/core";
+import { Component, Host, h, Prop } from "@stencil/core";
 
 @Component({
-  tag: 'mb-progress-tracker',
-  styleUrl: 'mb-progress-tracker.scss',
-  shadow: true
+  tag: "mb-progress-tracker",
+  styleUrl: "mb-progress-tracker.scss",
+  shadow: true,
 })
 export class MbProgressTracker {
   /**
    * Steps count.
-   * 
+   *
    * Default is 3.
    */
   @Prop() size: number = 3;
   /**
    * Current step.
-   * 
+   *
    * Steps start from 1 up to the size number.
-   * 
+   *
    * Default is 1.
    */
   @Prop() current: number = 1;
@@ -36,9 +31,11 @@ export class MbProgressTracker {
     return (
       <Host>
         <div class="mb-progress-tracker">
-          { steps.map(step => (
-            <div class={ `dot ${currentCorrected === step ? 'active' : 'inactive' }` }></div>
-          )) }
+          {steps.map((step) => (
+            <div
+              class={`dot ${currentCorrected === step ? "active" : "inactive"}`}
+            ></div>
+          ))}
         </div>
       </Host>
     );

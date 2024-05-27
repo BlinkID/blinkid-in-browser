@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { BlinkIDVariant } from "@microblink/blinkid-in-browser-sdk";
-import { CameraEntry, CameraExperience, CameraExperienceState, CameraExperienceTimeoutDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
+import { CameraEntry, CameraExperience, CameraExperienceState, CameraExperienceStateDurations, EventReady, EventScanError, EventScanSuccess, FeedbackMessage, ProductIntegrationInfo, SDKError } from "./utils/data-structures";
 import { TranslationService } from "./utils/translation.service";
 import { MbHelpCallbacks } from "./components/shared/mb-help/mb-help.model";
 import { SdkService } from "./utils/sdk.service";
@@ -17,7 +17,7 @@ export namespace Components {
          */
         "allowHelloMessage": boolean;
         /**
-          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).   Default value is 'true'.
+          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).  Default value is 'true'.
          */
         "allowHelpScreensFab": boolean;
         /**
@@ -35,7 +35,7 @@ export namespace Components {
         /**
           * Configure camera experience state timeout durations
          */
-        "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
+        "cameraExperienceStateDurations": CameraExperienceStateDurations;
         /**
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
@@ -51,11 +51,11 @@ export namespace Components {
         /**
           * Define whether to use 'FULLSCREEN' or 'INLINE' gallery dropdown type.  If 'FULLSCREEN' is used, when a user drags an image over the UI component, an overlay will pop up and cover the whole screen.  If 'INLINE' is used, there is no fullscreen overlay, but rather the overlay is restricted to the size of the UI component.  Default value is 'INLINE'.
          */
-        "galleryDropType": 'FULLSCREEN' | 'INLINE';
+        "galleryDropType": "FULLSCREEN" | "INLINE";
         /**
           * Define whether to use 'FULLSCREEN' or 'INLINE' gallery overlay type.  If 'FULLSCREEN' is used, when a user selects an image from which data should be extracted, an overlay will pop up and cover the whole screen.  On the other hand, if 'INLINE' is used, there is no overlay but rather a 'Processing' message inside the UI component.  Default value is 'INLINE'.
          */
-        "galleryOverlayType": 'FULLSCREEN' | 'INLINE';
+        "galleryOverlayType": "FULLSCREEN" | "INLINE";
         /**
           * Get information about product integration.
          */
@@ -147,11 +147,11 @@ export namespace Components {
         /**
           * Show message alongside UI component.  Possible values for `state` are 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK'.
          */
-        "setUiMessage": (state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK', message: string) => Promise<void>;
+        "setUiMessage": (state: "FEEDBACK_ERROR" | "FEEDBACK_INFO" | "FEEDBACK_OK", message: string) => Promise<void>;
         /**
           * Control UI state of camera overlay.  Possible values are 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS'.  In case of state `ERROR` and if `showModalWindows` is set to `true`, modal window with error message will be displayed. Otherwise, UI will close.
          */
-        "setUiState": (state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') => Promise<void>;
+        "setUiState": (state: "ERROR" | "LOADING" | "NONE" | "SUCCESS") => Promise<void>;
         /**
           * Set to 'true' if text labels should be displayed below action buttons.  Default value is 'false'.
          */
@@ -200,7 +200,7 @@ export namespace Components {
         /**
           * State value of API processing received from parent element ('loading' or 'success').
          */
-        "state": 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS';
+        "state": "ERROR" | "LOADING" | "NONE" | "SUCCESS";
         /**
           * Instance of TranslationService passed from parent component.
          */
@@ -288,7 +288,7 @@ export namespace Components {
         /**
           * Configure camera experience state timeout durations
          */
-        "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
+        "cameraExperienceStateDurations": CameraExperienceStateDurations;
         /**
           * Camera horizontal state passed from root component.  Horizontal camera image can be mirrored
          */
@@ -416,7 +416,7 @@ export namespace Components {
         /**
           * See description in public component.
          */
-        "cameraExperienceStateDurations": CameraExperienceTimeoutDurations;
+        "cameraExperienceStateDurations": CameraExperienceStateDurations;
         /**
           * Camera device ID passed from root component.
          */
@@ -432,11 +432,11 @@ export namespace Components {
         /**
           * See description in public component.
          */
-        "galleryDropType": 'FULLSCREEN' | 'INLINE';
+        "galleryDropType": "FULLSCREEN" | "INLINE";
         /**
           * See description in public component.
          */
-        "galleryOverlayType": 'FULLSCREEN' | 'INLINE';
+        "galleryOverlayType": "FULLSCREEN" | "INLINE";
         /**
           * See description in public component.
          */
@@ -532,7 +532,7 @@ export namespace Components {
         /**
           * Method is exposed outside which allow us to control UI state from parent component.  In case of state `ERROR` and if `showModalWindows` is set to `true`, modal window with error message will be displayed.
          */
-        "setUiState": (state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') => Promise<void>;
+        "setUiState": (state: "ERROR" | "LOADING" | "NONE" | "SUCCESS") => Promise<void>;
         /**
           * See description in public component.
          */
@@ -728,21 +728,30 @@ export namespace Components {
         "size": string;
     }
     interface MbTooltip {
-        "arrowPosition"?: 'arrow-left' | 'arrow-right' | 'arrow-up' | 'arrow-down' | 'arrow-none';
+        "arrowPosition"?: | "arrow-left"
+    | "arrow-right"
+    | "arrow-up"
+    | "arrow-down"
+    | "arrow-none";
         "containerWidth"?: string;
         "message": string;
         "show": boolean;
         "showInfoIcon"?: boolean;
         "showWarningIcon"?: boolean;
-        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
+        "textAlign"?: "text-center" | "text-left" | "text-right";
     }
     interface MbTooltipAdvanced {
-        "arrowPosition"?: 'arrow-left' | 'arrow-right'
-    | 'arrow-up' | 'arrow-up-left' | 'arrow-up-right'
-    | 'arrow-down' | 'arrow-down-left' | 'arrow-down-right';
+        "arrowPosition"?: | "arrow-left"
+    | "arrow-right"
+    | "arrow-up"
+    | "arrow-up-left"
+    | "arrow-up-right"
+    | "arrow-down"
+    | "arrow-down-left"
+    | "arrow-down-right";
         "message": string;
         "show": boolean;
-        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
+        "textAlign"?: "text-center" | "text-left" | "text-right";
     }
 }
 export interface BlinkidInBrowserCustomEvent<T> extends CustomEvent<T> {
@@ -928,7 +937,7 @@ declare namespace LocalJSX {
          */
         "allowHelloMessage"?: boolean;
         /**
-          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).   Default value is 'true'.
+          * Dictates if the Help Screens Floating-Action-Button (Fab) is offered. (in the bottom right corner of the Camera Experience).  Default value is 'true'.
          */
         "allowHelpScreensFab"?: boolean;
         /**
@@ -946,7 +955,7 @@ declare namespace LocalJSX {
         /**
           * Configure camera experience state timeout durations
          */
-        "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
+        "cameraExperienceStateDurations"?: CameraExperienceStateDurations;
         /**
           * Camera device ID passed from root component.  Client can choose which camera to turn on if array of cameras exists.
          */
@@ -962,11 +971,11 @@ declare namespace LocalJSX {
         /**
           * Define whether to use 'FULLSCREEN' or 'INLINE' gallery dropdown type.  If 'FULLSCREEN' is used, when a user drags an image over the UI component, an overlay will pop up and cover the whole screen.  If 'INLINE' is used, there is no fullscreen overlay, but rather the overlay is restricted to the size of the UI component.  Default value is 'INLINE'.
          */
-        "galleryDropType"?: 'FULLSCREEN' | 'INLINE';
+        "galleryDropType"?: "FULLSCREEN" | "INLINE";
         /**
           * Define whether to use 'FULLSCREEN' or 'INLINE' gallery overlay type.  If 'FULLSCREEN' is used, when a user selects an image from which data should be extracted, an overlay will pop up and cover the whole screen.  On the other hand, if 'INLINE' is used, there is no overlay but rather a 'Processing' message inside the UI component.  Default value is 'INLINE'.
          */
-        "galleryOverlayType"?: 'FULLSCREEN' | 'INLINE';
+        "galleryOverlayType"?: "FULLSCREEN" | "INLINE";
         /**
           * Miliseconds timeout on which the "Need Help?" tooltip is turned on.  First timeout is started each time the Camera Experience starts and is being reset every time the Help Screens are consumed.  Default value is 15000 - 15 seconds.
          */
@@ -1124,7 +1133,7 @@ declare namespace LocalJSX {
         /**
           * State value of API processing received from parent element ('loading' or 'success').
          */
-        "state"?: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS';
+        "state"?: "ERROR" | "LOADING" | "NONE" | "SUCCESS";
         /**
           * Instance of TranslationService passed from parent component.
          */
@@ -1212,7 +1221,7 @@ declare namespace LocalJSX {
         /**
           * Configure camera experience state timeout durations
          */
-        "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
+        "cameraExperienceStateDurations"?: CameraExperienceStateDurations;
         /**
           * Camera horizontal state passed from root component.  Horizontal camera image can be mirrored
          */
@@ -1332,7 +1341,7 @@ declare namespace LocalJSX {
         /**
           * See description in public component.
          */
-        "cameraExperienceStateDurations"?: CameraExperienceTimeoutDurations;
+        "cameraExperienceStateDurations"?: CameraExperienceStateDurations;
         /**
           * Camera device ID passed from root component.
          */
@@ -1348,11 +1357,11 @@ declare namespace LocalJSX {
         /**
           * See description in public component.
          */
-        "galleryDropType"?: 'FULLSCREEN' | 'INLINE';
+        "galleryDropType"?: "FULLSCREEN" | "INLINE";
         /**
           * See description in public component.
          */
-        "galleryOverlayType"?: 'FULLSCREEN' | 'INLINE';
+        "galleryOverlayType"?: "FULLSCREEN" | "INLINE";
         /**
           * See description in public component.
          */
@@ -1649,21 +1658,30 @@ declare namespace LocalJSX {
         "size"?: string;
     }
     interface MbTooltip {
-        "arrowPosition"?: 'arrow-left' | 'arrow-right' | 'arrow-up' | 'arrow-down' | 'arrow-none';
+        "arrowPosition"?: | "arrow-left"
+    | "arrow-right"
+    | "arrow-up"
+    | "arrow-down"
+    | "arrow-none";
         "containerWidth"?: string;
         "message"?: string;
         "show"?: boolean;
         "showInfoIcon"?: boolean;
         "showWarningIcon"?: boolean;
-        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
+        "textAlign"?: "text-center" | "text-left" | "text-right";
     }
     interface MbTooltipAdvanced {
-        "arrowPosition"?: 'arrow-left' | 'arrow-right'
-    | 'arrow-up' | 'arrow-up-left' | 'arrow-up-right'
-    | 'arrow-down' | 'arrow-down-left' | 'arrow-down-right';
+        "arrowPosition"?: | "arrow-left"
+    | "arrow-right"
+    | "arrow-up"
+    | "arrow-up-left"
+    | "arrow-up-right"
+    | "arrow-down"
+    | "arrow-down-left"
+    | "arrow-down-right";
         "message"?: string;
         "show"?: boolean;
-        "textAlign"?: 'text-center' | 'text-left' | 'text-right';
+        "textAlign"?: "text-center" | "text-left" | "text-right";
     }
     interface IntrinsicElements {
         "blinkid-in-browser": BlinkidInBrowser;

@@ -15,16 +15,24 @@ import { RecognizerResultState, RecognizerRunner } from "./DataStructures";
 
 import { ErrorMessages, videoRecognizerErrors } from "./ErrorTypes";
 
+import {
+    BlinkIdMultiSideRecognizerResult
+} from "../Recognizers/BlinkID/Generic/BlinkIdMultiSideRecognizer";
+import { BlinkIdSingleSideRecognizerResult } from "../Recognizers/BlinkID/Generic/BlinkIdSingleSideRecognizer";
 import { captureFrame } from "./FrameCapture";
 import { SDKError } from "./SDKError";
 
+export type BlinkIDResult = BlinkIdSingleSideRecognizerResult | BlinkIdMultiSideRecognizerResult;
+
 const TARGET_FPS = 15;
+
 
 const throttle = pThrottle( {
     limit: 1,
     interval: Math.round( ( 1 / TARGET_FPS ) * 1000 ),
     strict: true,
 } );
+
 
 /**
  * Indicates mode of recognition in `VideoRecognizer`.
@@ -45,6 +53,8 @@ export enum VideoRecognitionMode {
  * the scanning was cancelled or timeout has been reached.
  */
 export type OnScanningDone = ( recognitionState: RecognizerResultState ) => void;
+
+export type OnFrameProcessed = ( result: BlinkIDResult, frame: ImageData ) => void;
 
 /**
  * A wrapper around `RecognizerRunner` that can use it to perform recognition of
@@ -72,6 +82,8 @@ export class VideoRecognizer
         VideoRecognitionMode.Recognition;
 
     private onScanningDone: OnScanningDone | null = null;
+
+    private onFrameProcessed: OnFrameProcessed | null = null;
 
     private cameraFlipped = false;
 
@@ -230,6 +242,15 @@ export class VideoRecognizer
         };
         return videoRecognizer;
     }
+
+    /**
+     * Sets the callback that will be invoked when frame is processed
+     * @param onFrameProcessed Callback that will be invoked when frame is processed
+     */
+    setOnFrameProcessed = ( onFrameProcessed: OnFrameProcessed | null ) =>
+    {
+        this.onFrameProcessed = onFrameProcessed;
+    };
 
     flipCamera = async () =>
     {
@@ -524,6 +545,16 @@ export class VideoRecognizer
         const processResult = await this.recognizerRunner.processImage(
             cameraFrame
         );
+
+        // assumption: only one recognizer is used
+        const currentFrameResult = await this.recognizerRunner.recognizers[0].getResult() as BlinkIDResult;
+
+        // Trigger onFrameProcessed callback
+        if ( typeof this.onFrameProcessed === "function" )
+        {
+            this.onFrameProcessed( currentFrameResult, cameraFrame.imageData );
+        }
+
         // End processing
 
         // Test mode resets recognizers on every tick and never times out
@@ -538,6 +569,7 @@ export class VideoRecognizer
             void this.throttledQueueFrame();
             return;
         }
+
 
         // regular flow
         switch ( processResult )

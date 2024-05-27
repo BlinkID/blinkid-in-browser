@@ -2,23 +2,19 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import {
-  Component,
-  Element,
-  Host,
-  h,
-  Prop,
-} from '@stencil/core';
+import { Component, Element, Host, h, Prop } from "@stencil/core";
 
-import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
+import {
+  setWebComponentParts,
+  classNames,
+} from "../../../utils/generic.helpers";
 
 @Component({
-  tag: 'mb-button',
-  styleUrl: 'mb-button.scss',
+  tag: "mb-button",
+  styleUrl: "mb-button.scss",
   shadow: true,
 })
 export class MbButton {
-
   /** Function to call on click */
   @Prop() clickHandler!: (ev: UIEvent) => void;
 
@@ -50,14 +46,14 @@ export class MbButton {
   /**
    * Passed description text for image element from parent component.
    */
-  @Prop() imageAlt: string = '';
+  @Prop() imageAlt: string = "";
 
   /**
    * Set to string which should be displayed below the icon.
    *
    * If omitted, nothing will show.
    */
-  @Prop() label: string = '';
+  @Prop() label: string = "";
 
   @Prop() buttonTitle!: string;
 
@@ -78,7 +74,11 @@ export class MbButton {
           selected: this.selected,
         })}
       >
-        <button onClick={this.clickHandler} title={this.buttonTitle} disabled={this.disabled}>
+        <button
+          onClick={this.clickHandler}
+          title={this.buttonTitle}
+          disabled={this.disabled}
+        >
           <img class="icon-default" src={this.imageSrcDefault} alt="" />
           <img class="icon-active" src={this.imageSrcActive} alt="" />
         </button>

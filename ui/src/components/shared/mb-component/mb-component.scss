@@ -103,14 +103,13 @@
 
   .image-upload-row {
     display: flex;
-    gap:  $padding-unit-small;
+    gap: $padding-unit-small;
   }
 
   .multi-side-image-upload {
     width: 100%;
     padding: $padding-unit-medium 0;
-    overflow: hidden;;
-
+    overflow: hidden;
 
     &:not(.visible) {
       display: none;
@@ -125,10 +124,10 @@
     mb-image-box {
       flex: 1;
       /* Grays/Black & White/White */
-      background: #FFFFFF;
+      background: #ffffff;
       /* Grays/Brand/300 */
 
-      border: 1px solid #D1D5DB;
+      border: 1px solid #d1d5db;
       /* Shadows/base */
 
       box-shadow: 0px 1px 2px rgba(31, 41, 55, 0.08);

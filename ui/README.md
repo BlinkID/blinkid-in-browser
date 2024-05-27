@@ -161,28 +161,28 @@ export class MyComponent implements AfterViewInit {
       "ready",
       (ev: CustomEventInit<EventReady>) => {
         console.log("ready", ev.details);
-      }
+      },
     );
 
     this.el.nativeElement.addEventListener(
       "scanSuccess",
       (ev: CustomEventInit<EventScanSuccess>) => {
         console.log("scanSuccess", ev.details);
-      }
+      },
     );
 
     this.el.nativeElement.addEventListener(
       "scanError",
       (ev: CustomEventInit<EventScanError>) => {
         console.log("scanError", ev.details);
-      }
+      },
     );
 
     this.el.nativeElement.addEventListener(
       "fatalError",
       (ev: CustomEventInit<SDKError>) => {
         console.log("fatalError", ev.details);
-      }
+      },
     );
   }
 }

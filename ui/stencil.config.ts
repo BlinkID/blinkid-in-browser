@@ -1,33 +1,37 @@
 /**
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
-import { Config } from '@stencil/core';
-import { postcss } from '@stencil/postcss';
-import { sass } from '@stencil/sass';
+import { Config } from "@stencil/core";
+import { postcss } from "@stencil/postcss";
+import { sass } from "@stencil/sass";
 
-import autoprefixer from 'autoprefixer';
+import autoprefixer from "autoprefixer";
 
 export const config: Config = {
-  namespace: 'blinkid-in-browser',
-  taskQueue: 'async',
+  namespace: "blinkid-in-browser",
+  taskQueue: "async",
+  extras: {
+    // fix for loading in Vite
+    experimentalImportInjection: true,
+  },
   outputTargets: [
     {
-      type: 'dist',
-      esmLoaderPath: '../loader'
+      type: "dist",
+      esmLoaderPath: "../loader",
     },
     {
-      type: 'docs-readme',
-      dir: 'docs',
-      strict: true
-    }
+      type: "docs-readme",
+      dir: "docs",
+      strict: true,
+    },
   ],
   plugins: [
     sass({
       // Add path to global SCSS files which should be included in every stylesheet
-      injectGlobalPaths: []
+      injectGlobalPaths: [],
     }),
     postcss({
-      plugins: [autoprefixer()]
-    })
-  ]
+      plugins: [autoprefixer()],
+    }),
+  ],
 };

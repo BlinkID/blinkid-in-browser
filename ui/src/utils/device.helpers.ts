@@ -9,7 +9,7 @@ export function hasVideoDevices(): Promise<boolean> {
     if (
       !window.navigator ||
       !window.navigator.mediaDevices ||
-      typeof window.navigator.mediaDevices.enumerateDevices !== 'function'
+      typeof window.navigator.mediaDevices.enumerateDevices !== "function"
     ) {
       resolve(false);
       return;
@@ -19,7 +19,7 @@ export function hasVideoDevices(): Promise<boolean> {
       devices = devices || [];
 
       for (const device of devices) {
-        if (device && device.kind === 'videoinput') {
+        if (device && device.kind === "videoinput") {
           resolve(true);
           return;
         }
@@ -48,5 +48,7 @@ export async function checkMandatoryCapabilites(): Promise<boolean> {
  * Determine whether this is a desktop device based on the screen resolution.
  */
 export function isDesktop(): boolean {
-  return !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+  return !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    navigator.userAgent,
+  );
 }

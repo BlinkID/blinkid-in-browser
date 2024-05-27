@@ -27,12 +27,13 @@
   transform: translate(0, 0);
   transform-origin: center;
 
-  transition: background-color 0.2s ease 0.4s,
-              border-style 0.2s ease 0.4s,
-              border-color 0.2s ease 0.4s,
-              opacity 0.2s ease 0.4s,
-              visibility 0.1s ease 0.5s,
-              z-index 0.7s;
+  transition:
+    background-color 0.2s ease 0.4s,
+    border-style 0.2s ease 0.4s,
+    border-color 0.2s ease 0.4s,
+    opacity 0.2s ease 0.4s,
+    visibility 0.1s ease 0.5s,
+    z-index 0.7s;
 }
 
 :host(.visible) {
@@ -45,7 +46,9 @@
 
   transform: translate(0, 0);
 
-  transition: opacity 0.2s ease, visibility 0.1s ease;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.1s ease;
 }
 
 :host(.non-fullscreen) {

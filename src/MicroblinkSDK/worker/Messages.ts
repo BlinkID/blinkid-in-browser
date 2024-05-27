@@ -249,8 +249,6 @@ export class RegisteredMetadataCallbacks
     onPointsDetection = false;
 
     onFirstSideResult = false;
-
-    onGlare           = false;
 }
 
 export class RegisterMetadataCallbacks extends BaseRequestMessage
@@ -279,18 +277,6 @@ export class SetDetectionOnly extends BaseRequestMessage
     }
 }
 
-export class SetClearTimeoutCallback extends BaseRequestMessage
-{
-    static readonly action: string = "setClearTimeoutCallback";
-
-    readonly callbackNonEmpty: boolean;
-
-    constructor( callbackNonEmpty: boolean )
-    {
-        super( SetClearTimeoutCallback.action );
-        this.callbackNonEmpty = callbackNonEmpty;
-    }
-}
 
 export class SetCameraPreviewMirrored extends BaseRequestMessage
 {
@@ -453,8 +439,6 @@ export enum MetadataCallback
     onQuadDetection,
     onPointsDetection,
     onFirstSideResult,
-    clearTimeoutCallback,
-    onGlare,
     recognizerCallback
 }
 

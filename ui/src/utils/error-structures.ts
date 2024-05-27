@@ -2,7 +2,6 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-
 /* eslint-disable max-len */
 
 /**
@@ -11,21 +10,20 @@
  */
 
 export enum ErrorCodes {
-  BrowserNotSupported           = 'BROWSER_NOT_SUPPORTED',
-  LicenseError                  = 'LICENSE_ERROR',
-  SdkLoadFailed                 = 'SDK_LOAD_FAILED',
-  InternetNotAvailable          = 'INTERNET_NOT_AVAILABLE',
-  InvalidRecognizers            = 'INVALID_RECOGNIZERS',
-  InvalidPingProxyUrl           = 'INVALID_PING_PROXY_URL',
-  PingProxyPermissionNotGranted = 'PING_PROXY_PERMISSION_NOT_GRANTED',
+  BrowserNotSupported = "BROWSER_NOT_SUPPORTED",
+  LicenseError = "LICENSE_ERROR",
+  SdkLoadFailed = "SDK_LOAD_FAILED",
+  InternetNotAvailable = "INTERNET_NOT_AVAILABLE",
+  InvalidRecognizers = "INVALID_RECOGNIZERS",
+  InvalidPingProxyUrl = "INVALID_PING_PROXY_URL",
+  PingProxyPermissionNotGranted = "PING_PROXY_PERMISSION_NOT_GRANTED",
 }
 
-
 export enum ErrorMessages {
-  BrowserNotSupported           = 'Browser is not supported!',
-  LicenseError                  = 'Something is wrong with the license.',
-  SdkLoadFailed                 = 'Failed to load SDK!',
-  InvalidPingProxyUrl           = "Provided ping proxy URL is not a valid secure URL in format 'https://{host}:{port?}'.",
+  BrowserNotSupported = "Browser is not supported!",
+  LicenseError = "Something is wrong with the license.",
+  SdkLoadFailed = "Failed to load SDK!",
+  InvalidPingProxyUrl = "Provided ping proxy URL is not a valid secure URL in format 'https://{host}:{port?}'.",
   PingProxyPermissionNotGranted = "Allow ping proxy permission not found in license.",
 }
 
@@ -50,7 +48,6 @@ export const componentErrors = {
     permissionNotGranted: {
       message: ErrorMessages.PingProxyPermissionNotGranted,
       code: ErrorCodes.PingProxyPermissionNotGranted,
-    }
-  }
-
+    },
+  },
 };

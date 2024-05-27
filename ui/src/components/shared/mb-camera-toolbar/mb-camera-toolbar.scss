@@ -10,7 +10,13 @@
   left: 0;
   right: 0;
 
-  background-color: rgba(map-get(map-get(map-get($base-colors, text-secondary), onlight), foreground), 0.7);
+  background-color: rgba(
+    map-get(
+      map-get(map-get($base-colors, text-secondary), onlight),
+      foreground
+    ),
+    0.7
+  );
   -webkit-backdrop-filter: blur(var(--mb-blur-filter));
   backdrop-filter: blur(var(--mb-blur-filter));
 
@@ -61,7 +67,13 @@ $button-size: 40px;
     }
 
     &:hover {
-      background-color: rgba(map-get(map-get(map-get($base-colors, text-secondary), onlight), foreground), 0.3);
+      background-color: rgba(
+        map-get(
+          map-get(map-get($base-colors, text-secondary), onlight),
+          foreground
+        ),
+        0.3
+      );
       box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
     }
 

@@ -2,11 +2,11 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import { newSpecPage } from '@stencil/core/testing';
-import { MbModal } from '../mb-modal';
+import { newSpecPage } from "@stencil/core/testing";
+import { MbModal } from "../mb-modal";
 
-describe('mb-modal', () => {
-  it('renders', async () => {
+describe("mb-modal", () => {
+  it("renders", async () => {
     const page = await newSpecPage({
       components: [MbModal],
       html: `<mb-modal></mb-modal>`,
