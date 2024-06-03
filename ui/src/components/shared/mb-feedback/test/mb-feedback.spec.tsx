@@ -2,11 +2,11 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import { newSpecPage } from '@stencil/core/testing';
-import { MbFeedback } from '../mb-feedback';
+import { newSpecPage } from "@stencil/core/testing";
+import { MbFeedback } from "../mb-feedback";
 
-describe('mb-feedback', () => {
-  it('renders', async () => {
+describe("mb-feedback", () => {
+  it("renders", async () => {
     const page = await newSpecPage({
       components: [MbFeedback],
       html: `<mb-feedback></mb-feedback>`,

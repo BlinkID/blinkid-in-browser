@@ -12,156 +12,161 @@
  */
 :host {
   /* General properties */
-  --mb-font-family:                             inherit;
-  --mb-font-size:                               max(16px, 1rem);
-  --mb-font-size-desktop:                       max(20px, 1rem);
-  --mb-font-style:                              normal;
-  --mb-font-weight:                             400;
-  --mb-letter-spacing:                          normal;
-  --mb-line-height:                             1.5em;
+  --mb-font-family: inherit;
+  --mb-font-size: max(16px, 1rem);
+  --mb-font-size-desktop: max(20px, 1rem);
+  --mb-font-style: normal;
+  --mb-font-weight: 400;
+  --mb-letter-spacing: normal;
+  --mb-line-height: 1.5em;
 
   /* Component (UI with buttons) */
-  --mb-component-background:                    #F9FAFB;
+  --mb-component-background: #f9fafb;
 
-  --mb-component-width:                         100%;
+  --mb-component-width: 100%;
 
-  --mb-component-font-color:                    #000;
-  --mb-component-font-color-secondary:          #3C3C43B2;
-  --mb-component-font-size:                     14px;
-  --mb-component-text-transform:                none;
+  --mb-component-font-color: #000;
+  --mb-component-font-color-secondary: #3c3c43b2;
+  --mb-component-font-size: 14px;
+  --mb-component-text-transform: none;
 
-  --mb-component-border-color:                  rgba(120, 120, 128, 0.2);
-  --mb-component-border-radius:                 5px;
-  --mb-component-border-style:                  solid;
-  --mb-component-border-width:                  1px;
+  --mb-component-border-color: rgba(120, 120, 128, 0.2);
+  --mb-component-border-radius: 5px;
+  --mb-component-border-style: solid;
+  --mb-component-border-width: 1px;
 
-  --mb-component-box-shadow:                    none;
+  --mb-component-box-shadow: none;
 
-  --mb-component-button-size:                   #{$button-size};
-  --mb-component-button-icon-size:              #{$button-icon-size};
-  --mb-component-button-background:             #FFF;
-  --mb-component-button-hover-background:       #F9FAFB;
-  --mb-component-button-background-selected:    rgba(72, 178, 232, 0.1);
-  --mb-component-button-border-color:           #D1D5DB;
-  --mb-component-button-border-color-selected:  rgba(120, 120, 128, 0.2);
-  --mb-component-button-border-color-focus:     #9CA3AF;
-  --mb-component-button-border-color-hover:     rgba(60, 60, 67, 0.29);
-  --mb-component-button-border-color-disabled:  rgba(116, 116, 128, 0.08);
-  --mb-component-button-border-radius:          50%;
-  --mb-component-button-border-style:           solid;
-  --mb-component-button-border-width:           1px;
+  --mb-component-button-size: #{$button-size};
+  --mb-component-button-icon-size: #{$button-icon-size};
+  --mb-component-button-background: #fff;
+  --mb-component-button-hover-background: #f9fafb;
+  --mb-component-button-background-selected: rgba(72, 178, 232, 0.1);
+  --mb-component-button-border-color: #d1d5db;
+  --mb-component-button-border-color-selected: rgba(120, 120, 128, 0.2);
+  --mb-component-button-border-color-focus: #9ca3af;
+  --mb-component-button-border-color-hover: rgba(60, 60, 67, 0.29);
+  --mb-component-button-border-color-disabled: rgba(116, 116, 128, 0.08);
+  --mb-component-button-border-radius: 50%;
+  --mb-component-button-border-style: solid;
+  --mb-component-button-border-width: 1px;
 
-  --mb-component-button-box-shadow:             0px 1px 4px rgba(0, 0, 0, 0.1);
-  --mb-component-button-box-shadow-disabled:    none;
+  --mb-component-button-box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+  --mb-component-button-box-shadow-disabled: none;
 
-  --mb-component-button-classic-background:                   #0062F2;
-  --mb-component-button-classic-hover-background:             #3A89FD;
-  --mb-component-button-classic-inverted-hover-background:    #F9FAFB;
-  --mb-component-button-classic-focused-border-color:         #142641;
-  --mb-component-button-classic-inverted-text-color:          #374151;
-  --mb-component-button-classic-inverted-border-color:        #9CA3AF;
-  --mb-component-button-classic-font-size:                      14px;
-  --mb-component-button-classic-font-weight:                    700;
-  --mb-component-button-classic-text-color:                     #FFF;
-  --mb-component-button-classic-line-height:                    20px;
-  --mb-component-button-classic-border-radius:                  100px;
+  --mb-component-button-classic-background: #0062f2;
+  --mb-component-button-classic-hover-background: #3a89fd;
+  --mb-component-button-classic-inverted-hover-background: #f9fafb;
+  --mb-component-button-classic-focused-border-color: #142641;
+  --mb-component-button-classic-inverted-text-color: #374151;
+  --mb-component-button-classic-inverted-border-color: #9ca3af;
+  --mb-component-button-classic-font-size: 14px;
+  --mb-component-button-classic-font-weight: 700;
+  --mb-component-button-classic-text-color: #fff;
+  --mb-component-button-classic-line-height: 20px;
+  --mb-component-button-classic-border-radius: 100px;
 
+  --mb-component-image-box-border-color: rgba(120, 120, 128, 0.2);
+  --mb-component-image-box-border-radius: 2px;
+  --mb-component-image-box-border-width: 1px;
 
-  --mb-component-image-box-border-color:        rgba(120, 120, 128, 0.2);
-  --mb-component-image-box-border-radius:       2px;
-  --mb-component-image-box-border-width:        1px;
+  --mb-component-image-box-label-height: #{$padding-unit-large};
+  --mb-component-image-box-label-color: rgba(60, 60, 67, 0.5);
+  --mb-component-image-box-label-font-size: 14px;
+  --mb-component-image-box-label-font-weight: 400;
 
-  --mb-component-image-box-label-height:        #{$padding-unit-large};
-  --mb-component-image-box-label-color:         rgba(60, 60, 67, 0.5);
-  --mb-component-image-box-label-font-size:     14px;
-  --mb-component-image-box-label-font-weight:   400;
+  --mb-component-image-box-cta-height: #{$padding-unit-large +
+    $padding-unit-small};
+  --mb-component-image-box-cta-label-height: #{$padding-unit-large +
+    $padding-unit-small};
+  --mb-component-image-box-cta-color: var(
+    --mb-component-button-classic-background
+  );
+  --mb-component-image-box-cta-color-hover: var(
+    --mb-component-button-classic-hover-background
+  );
+  --mb-component-image-box-cta-font-size: 14px;
+  --mb-component-image-box-cta-font-weight: 500;
 
-  --mb-component-image-box-cta-height:          #{$padding-unit-large + $padding-unit-small};
-  --mb-component-image-box-cta-label-height:    #{$padding-unit-large + $padding-unit-small};
-  --mb-component-image-box-cta-color:           var(--mb-component-button-classic-background);
-  --mb-component-image-box-cta-color-hover:     var(--mb-component-button-classic-hover-background);
-  --mb-component-image-box-cta-font-size:       14px;
-  --mb-component-image-box-cta-font-weight:     500;
-
-  --mb-component-image-box-file-color:          #000;
-  --mb-component-image-box-file-font-weight:    400;
+  --mb-component-image-box-file-color: #000;
+  --mb-component-image-box-file-font-weight: 400;
 
   --mb-component-action-buttons-justify-content: flex-end;
-  --mb-component-action-buttons-gap:            8px;
+  --mb-component-action-buttons-gap: 8px;
 
-  --mb-component-action-label:                  block;
-  --mb-component-action-label-font-size:        14px;
+  --mb-component-action-label: block;
+  --mb-component-action-label-font-size: 14px;
 
   /* Camera scanning UI */
-  --mb-blur-filter:                             27px;
-  --mb-blur-scanning-line:                      4px;
+  --mb-blur-filter: 27px;
+  --mb-blur-scanning-line: 4px;
 
-  --mb-toolbar-color:                                   #FFF;
-  --mb-toolbar-border-color:                            #FFF;
-  --mb-toolbar-border-radius:                             4px;
-  --mb-toolbar-list-border-radius:                        4px;
-  --mb-toolbar-list-item-border-radius:                   2px;
-  --mb-toolbar-list-item-active-text-color:             #0062F2;
-  --mb-toolbar-list-item-active-background-color:       #E7F0FF;
-  --mb-toolbar-selection-width:                           298px;
-  --mb-toolbar-list-background:                         #FFF;
-  --mb-toolbar-list-shadow:                               0px 2px 8px rgba(0, 0, 0, 0.05), 0px 2px 24px rgba(0, 0, 0, 0.1);
-  --mb-toolbar-camera-name-font-weight:                   500;
+  --mb-toolbar-color: #fff;
+  --mb-toolbar-border-color: #fff;
+  --mb-toolbar-border-radius: 4px;
+  --mb-toolbar-list-border-radius: 4px;
+  --mb-toolbar-list-item-border-radius: 2px;
+  --mb-toolbar-list-item-active-text-color: #0062f2;
+  --mb-toolbar-list-item-active-background-color: #e7f0ff;
+  --mb-toolbar-selection-width: 298px;
+  --mb-toolbar-list-background: #fff;
+  --mb-toolbar-list-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05),
+    0px 2px 24px rgba(0, 0, 0, 0.1);
+  --mb-toolbar-camera-name-font-weight: 500;
 
-  --mb-reticle-size:                                      6em;
+  --mb-reticle-size: 6em;
 
   /* User feedback (messages below buttons) */
-  --mb-feedback-font-color-error:               #F43F5E;
-  --mb-feedback-font-color-info:                #6B7280;
-  --mb-feedback-font-size:                      12px;
-  --mb-feedback-font-style:                     normal;
-  --mb-feedback-font-weight:                    400;
-  --mb-feedback-letter-spacing:                 normal;
-  --mb-feedback-line-height:                    16px;
-  --mb-feedback-text-transform:                 none;
+  --mb-feedback-font-color-error: #f43f5e;
+  --mb-feedback-font-color-info: #6b7280;
+  --mb-feedback-font-size: 12px;
+  --mb-feedback-font-style: normal;
+  --mb-feedback-font-weight: 400;
+  --mb-feedback-letter-spacing: normal;
+  --mb-feedback-line-height: 16px;
+  --mb-feedback-text-transform: none;
 
   /* Overlays */
-  --mb-overlay-draganddrop-background:          #DCEAFF;
-  --mb-overlay-draganddrop-background-error:    #FFEAEE;
-  --mb-overlay-draganddrop-border-color:        #3A89FD;
-  --mb-overlay-draganddrop-text-color:          #0062F2;
-  --mb-overlay-draganddrop-text-error-color:    #E11D48;
-  --mb-overlay-draganddrop-border-color-error:  #FF2D55;
-  --mb-overlay-draganddrop-border-style:        dashed;
+  --mb-overlay-draganddrop-background: #dceaff;
+  --mb-overlay-draganddrop-background-error: #ffeaee;
+  --mb-overlay-draganddrop-border-color: #3a89fd;
+  --mb-overlay-draganddrop-text-color: #0062f2;
+  --mb-overlay-draganddrop-text-error-color: #e11d48;
+  --mb-overlay-draganddrop-border-color-error: #ff2d55;
+  --mb-overlay-draganddrop-border-style: dashed;
 
-  --mb-overlay-gallery-experience-background:   rgba(0, 0, 0, 0.6);
-  --mb-overlay-gallery-experience-font-color:   #FFF;
-  --mb-overlay-gallery-experience-font-size:    1em;
-  --mb-overlay-gallery-experience-font-weight:  500;
-  --mb-overlay-gallery-experience-line-height:  1.5em;
+  --mb-overlay-gallery-experience-background: rgba(0, 0, 0, 0.6);
+  --mb-overlay-gallery-experience-font-color: #fff;
+  --mb-overlay-gallery-experience-font-size: 1em;
+  --mb-overlay-gallery-experience-font-weight: 500;
+  --mb-overlay-gallery-experience-line-height: 1.5em;
 
-  --mb-overlay-deviceselection-background:      rgba(17, 24, 39, 0.15);
-
+  --mb-overlay-deviceselection-background: rgba(17, 24, 39, 0.15);
 
   /* Modals */
-  --mb-modal-title-font-size:                   1em;
-  --mb-modal-title-line-height:                 32px;
-  --mb-modal-content-font-size:                 0.875em;
-  --mb-modal-content-line-height:               1.4em;
-  --mb-modal-border-radius:                     8px;
-  --mb-modal-background:                        #FFFFFF;
+  --mb-modal-title-font-size: 1em;
+  --mb-modal-title-line-height: 32px;
+  --mb-modal-content-font-size: 0.875em;
+  --mb-modal-content-line-height: 1.4em;
+  --mb-modal-border-radius: 8px;
+  --mb-modal-background: #ffffff;
 
   /* Help Screens */
-  --mb-help-color-success: #10B981;
-  --mb-help-color-danger: #F43F5E;
+  --mb-help-color-success: #10b981;
+  --mb-help-color-danger: #f43f5e;
   --mb-help-font-color-primary: #142641;
-  --mb-help-font-color-secondary: #4B5563;
+  --mb-help-font-color-secondary: #4b5563;
   --mb-help-modal-background-color: var(--mb-modal-background);
   --mb-help-modal-backdrop-color: rgba(17, 23, 39, 0.5);
   --mb-help-lobby-button-background-color: white;
   --mb-help-lobby-button-border-color: white;
-  --mb-help-lobby-button-hovered-background-color: #F3F4F6;
-  --mb-help-lobby-button-hovered-border-color: #E7F0FF;
-  --mb-help-lobby-button-focused-background-color: #F3F4F6;
-  --mb-help-lobby-button-focused-border-color: #E7F0FF;
-  --mb-help-lobby-button-icon-color: #0062F2;
-  --mb-help-progress-tracker-dot-active-color: #0062F2;
-  --mb-help-progress-tracker-dot-inactive-color: #C6C6C8;
-  --mb-help-lobby-button-tooltip-background-color: #0062F2;
+  --mb-help-lobby-button-hovered-background-color: #f3f4f6;
+  --mb-help-lobby-button-hovered-border-color: #e7f0ff;
+  --mb-help-lobby-button-focused-background-color: #f3f4f6;
+  --mb-help-lobby-button-focused-border-color: #e7f0ff;
+  --mb-help-lobby-button-icon-color: #0062f2;
+  --mb-help-progress-tracker-dot-active-color: #0062f2;
+  --mb-help-progress-tracker-dot-inactive-color: #c6c6c8;
+  --mb-help-lobby-button-tooltip-background-color: #0062f2;
   --mb-help-lobby-button-tooltip-font-color: white;
 }

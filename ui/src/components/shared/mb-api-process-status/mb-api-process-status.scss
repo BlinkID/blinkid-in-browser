@@ -11,7 +11,6 @@
 }
 
 :host {
-
   .message {
     display: block;
 
@@ -31,7 +30,10 @@
     white-space: nowrap;
 
     color: #fff;
-    background-color: map-get(map-get(map-get($base-colors, text-quaternary), onlight), foreground);
+    background-color: map-get(
+      map-get(map-get($base-colors, text-quaternary), onlight),
+      foreground
+    );
 
     -webkit-backdrop-filter: blur(var(--mb-blur-filter));
     backdrop-filter: blur(var(--mb-blur-filter));
@@ -51,7 +53,6 @@
 
     perspective: 600px;
   }
-
 }
 
 :host button.modal-action-button {
@@ -59,7 +60,7 @@
   height: 32px;
   border-radius: 0;
   border: 0;
-  background: #48B2E8;
+  background: #48b2e8;
   color: #ffffff;
   cursor: pointer;
 }

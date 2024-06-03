@@ -9,22 +9,24 @@ import {
   h,
   Method,
   Prop,
-  State
-} from '@stencil/core';
+  State,
+} from "@stencil/core";
 
-import { FeedbackMessage } from '../../../utils/data-structures';
+import { FeedbackMessage } from "../../../utils/data-structures";
 
-import { setWebComponentParts, classNames } from '../../../utils/generic.helpers';
+import {
+  setWebComponentParts,
+  classNames,
+} from "../../../utils/generic.helpers";
 
-import * as Utils from './mb-feedback.utils';
+import * as Utils from "./mb-feedback.utils";
 
 @Component({
-  tag: 'mb-feedback',
-  styleUrl: 'mb-feedback.scss',
+  tag: "mb-feedback",
+  styleUrl: "mb-feedback.scss",
   shadow: true,
 })
 export class MbFeedback {
-
   @State() paragraphClassName: string;
 
   @State() paragraphValue: string;
@@ -54,8 +56,8 @@ export class MbFeedback {
 
   render() {
     return (
-      <Host class={ classNames({ visible: this.visible }) }>
-        <p class={ this.paragraphClassName }>{ this.paragraphValue }</p>
+      <Host class={classNames({ visible: this.visible })}>
+        <p class={this.paragraphClassName}>{this.paragraphValue}</p>
       </Host>
     );
   }

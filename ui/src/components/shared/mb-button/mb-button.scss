@@ -14,8 +14,14 @@ button {
   place-items: center;
   position: relative;
 
-  width: calc(var(--mb-component-button-size) - 2 * var(--mb-component-button-border-width));
-  height: calc(var(--mb-component-button-size) - 2 * var(--mb-component-button-border-width));
+  width: calc(
+    var(--mb-component-button-size) - 2 *
+      var(--mb-component-button-border-width)
+  );
+  height: calc(
+    var(--mb-component-button-size) - 2 *
+      var(--mb-component-button-border-width)
+  );
   padding: 0;
 
   background-color: var(--mb-component-button-background);
@@ -44,7 +50,8 @@ button {
     border-color: var(--mb-component-button-border-color--visible);
   }
 
-  &:hover, &:active {
+  &:hover,
+  &:active {
     border-color: var(--mb-component-button-border-color-hover);
 
     .icon-active {

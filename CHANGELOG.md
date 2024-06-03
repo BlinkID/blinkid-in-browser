@@ -1,127 +1,161 @@
 # Release notes
 
+## 6.7.1
+
+### New Features
+
+#### Improved blur and glare detection
+
+-   `enableBlurFilter` and `enableGlareFilter` properties have been added on BlinkID recognizer settings. These are enabled by default, but users can turn them off if they want to allow blur and glare on captured frames.
+
+-   `blurStrictnessLevel` and `glareStrictnessLevel` properties have been added on BlinkID recognizer settings. These can be configured using the `StrictnessLevel` enum, which can be `Strict`, `Normal` (default) or `Relaxed`.
+
+-   New properties `ImageAnalysisResult`:
+    -   `blurDetected` and `glareDetected`
+
+#### Bug fixes
+
+-   A bug that caused memory leaks when reconfiguring the recognizer runner has been fixed
+-   The barcode scanning step feedback is now properly displayed in the UI component
+-   Improved camera selection algorithm
+
+#### Breaking changes ⚠️
+
+-   `allowBlurFilter` has been renamed to `enableBlurFilter`
+-   The `blurred` property on `ImageAnalysisResult` has been renamed to `blurDetected`
+
 ## 6.7.0
 
 ### New Features
-- **Real ID symbol detection on US driver's license**
-  - BlinkID can now identify Real ID symbols from US driver’s licenses, providing feedback on their presence or absence. This ensures customers can quickly determine if a Real ID symbol is available on a scanned US driver’s license to be compliant with Real ID regulations.
-- **Partial anonymization of the "Document Number"**
-  - To ensure user privacy and security, BlinkID now offers the option of partially anonymizing the document number from the scanned document.
-- **Mandatory Barcode Presence on US documents**
-  - To minimize the cases of capturing the front side of the document as the back frame in the results, BlinkID now requires the presence of a barcode before saving the back frame on US documents. Processing status `BarcodeDetectionFailed` is returned when the mandatory barcode is not present on the back of US documents.
+
+-   **Real ID symbol detection on US driver's license**
+    -   BlinkID can now identify Real ID symbols from US driver’s licenses, providing feedback on their presence or absence. This ensures customers can quickly determine if a Real ID symbol is available on a scanned US driver’s license to be compliant with Real ID regulations.
+-   **UX Improvements**
+    -   Extended duration for UI messages
+    -   UI messages now remain visible for a longer time after scanning, improving user experience. Users can now review post-scanning messages at a comfortable pace, leading to a smoother process.
+    -   Success indicator for front side capture
+        -   BlinkID now displays a clear success indicator after scanning the front side of a document. This visual cue enhances user confidence by providing immediate feedback during the scanning process.
+-   **Partial anonymization of the "Document Number"**
+    -   To ensure user privacy and security, BlinkID now offers the option of partially anonymizing the document number from the scanned document.
+-   **Mandatory Barcode Presence on US documents**
+    -   To minimize the cases of capturing the front side of the document as the back frame in the results, BlinkID now requires the presence of a barcode before saving the back frame on US documents. Processing status `BarcodeDetectionFailed` is returned when the mandatory barcode is not present on the back of US documents.
 
 ### Minor API changes
-- Added `BarcodeDetectionFailed` as a new `ProcessingStatus`
-	- This status is triggered once the barcode was not found on the image. This processing status can only occur if the document has the mandatory barcode.
-- Added new boolean member `realIdDetectionStatus` to the `ImageAnalysisResult`. If `true`, Real ID symbol is present, `false` otherwise.
-- Added new member `documentNumberAnonymizationSettings` to the `ClassAnonymizationSettings` for seamless integration with the document number anonymization feature.
-    
+
+-   Added `BarcodeDetectionFailed` as a new `ProcessingStatus`
+    -   This status is triggered once the barcode was not found on the image. This processing status can only occur if the document has the mandatory barcode.
+-   Added new boolean member `realIdDetectionStatus` to the `ImageAnalysisResult`. If `true`, Real ID symbol is present, `false` otherwise.
+-   Added new member `documentNumberAnonymizationSettings` to the `ClassAnonymizationSettings` for seamless integration with the document number anonymization feature.
+
 #### Bug Fixes
-- Updated internal mapping for Myanmar Passports to display nationality as "Myanmarese" instead of "Burmese" on Myanmar passports. 
-- On Peru ID "Date of Issue" is marked optional, offering customers more flexibility in capturing ID information.
-- Improved "Date of Expiry" handling logic for MRZ in cases where documents with a date of expiry year 1969 were not correctly sanitized.
+
+-   Updated internal mapping for Myanmar Passports to display nationality as "Myanmarese" instead of "Burmese" on Myanmar passports.
+-   On Peru ID "Date of Issue" is marked optional, offering customers more flexibility in capturing ID information.
+-   Improved "Date of Expiry" handling logic for MRZ in cases where documents with a date of expiry year 1969 were not correctly sanitized.
 
 ## 6.6.0
 
 ### Document Updates
 
 #### New Documents Support:
-- Australia - Polycarbonate Passport
-- Indonesia - Polycarbonate Passport
-- Mexico - Consular Voter ID
-- Moldova - Polycarbonate Passport
-- Pakistan - Proof Of Registration
-- Panama - Polycarbonate Passport
-- USA - West Virginia - ID Card
 
+-   Australia - Polycarbonate Passport
+-   Indonesia - Polycarbonate Passport
+-   Mexico - Consular Voter ID
+-   Moldova - Polycarbonate Passport
+-   Pakistan - Proof Of Registration
+-   Panama - Polycarbonate Passport
+-   USA - West Virginia - ID Card
 
 #### New Beta Documents Support:
-- Brazil - Ceara - ID Card
-- Brazil - Goias - ID Card
-- Brazil - Sergipe - ID Card
-- China - Exit Entry Permit
-- China - Mainland Travel Permit Taiwan
-- Colombia - Temporary Protection Permit
-- India - DL
-- India - Andhra Pradesh - DL
-- India - Haryana - DL
-- European Union - Health Insurance Card
 
+-   Brazil - Ceara - ID Card
+-   Brazil - Goias - ID Card
+-   Brazil - Sergipe - ID Card
+-   China - Exit Entry Permit
+-   China - Mainland Travel Permit Taiwan
+-   Colombia - Temporary Protection Permit
+-   India - DL
+-   India - Andhra Pradesh - DL
+-   India - Haryana - DL
+-   European Union - Health Insurance Card
 
 #### New Document Versions for Supported Documents:
-- Australia - Queensland - DL
-- Australia - Victoria - DL
-- Australia - Western Australia - DL
-- Bolivia - Minor's ID
-- Brazil - Alien ID
-- Estonia - DL
-- Finland - Alien ID
-- Guatemala - Paper Passport
-- India - Paper Passport - New side type
-- Malta - DL
-- Mexico - Guanajuato - DL 
-- Mexico - San Luis Potosi - DL
-- New Zealand - Polycarbonate Passport
-- Paraguay - ID Card
-- Slovenia - Residence Permit
-- USA - Green Card
-- USA - Work Permit
-- USA - Arizona - ID Card
-- USA - Colorado - DL
-- USA - Colorado - ID Card
-- USA - District of Columbia - DL
-- USA - District of Columbia - ID Card
-- USA - Idaho - DL
-- USA - Idaho - ID Card
-- USA - Missouri - ID Card
-- USA - Nebraska - ID Card
-- USA - Nevada - ID Card
-- USA - New York - ID Card
-- USA - North Dakota - DL
-- USA - Oklahoma - ID Card
-- USA - Pennsylvania - ID Card
-- USA - Utah - ID Card
-- USA - Virginia - DL
-- USA - Virginia - ID Card
-- USA - West Virginia - DL
-- USA - Wisconsin - DL
-- USA - Wisconsin - ID Card
 
+-   Australia - Queensland - DL
+-   Australia - Victoria - DL
+-   Australia - Western Australia - DL
+-   Bolivia - Minor's ID
+-   Brazil - Alien ID
+-   Estonia - DL
+-   Finland - Alien ID
+-   Guatemala - Paper Passport
+-   India - Paper Passport - New side type
+-   Malta - DL
+-   Mexico - Guanajuato - DL
+-   Mexico - San Luis Potosi - DL
+-   New Zealand - Polycarbonate Passport
+-   Paraguay - ID Card
+-   Slovenia - Residence Permit
+-   USA - Green Card
+-   USA - Work Permit
+-   USA - Arizona - ID Card
+-   USA - Colorado - DL
+-   USA - Colorado - ID Card
+-   USA - District of Columbia - DL
+-   USA - District of Columbia - ID Card
+-   USA - Idaho - DL
+-   USA - Idaho - ID Card
+-   USA - Missouri - ID Card
+-   USA - Nebraska - ID Card
+-   USA - Nevada - ID Card
+-   USA - New York - ID Card
+-   USA - North Dakota - DL
+-   USA - Oklahoma - ID Card
+-   USA - Pennsylvania - ID Card
+-   USA - Utah - ID Card
+-   USA - Virginia - DL
+-   USA - Virginia - ID Card
+-   USA - West Virginia - DL
+-   USA - Wisconsin - DL
+-   USA - Wisconsin - ID Card
 
 #### New Document Versions for Beta Supported Documents:
-- Australia - Queensland - Proof of Age Card
-- Brazil - ID Card
-- Ireland - Residence Permit
-- Mexico - Consular ID
-- Mexico - Residence Permit
-- Mexico - Nayarit - DL
-- USA - North Dakota - ID Card
 
+-   Australia - Queensland - Proof of Age Card
+-   Brazil - ID Card
+-   Ireland - Residence Permit
+-   Mexico - Consular ID
+-   Mexico - Residence Permit
+-   Mexico - Nayarit - DL
+-   USA - North Dakota - ID Card
 
 #### Out of Beta:
 
-- Croatia - Residence Permit
-- Moldova - Paper Passport
+-   Croatia - Residence Permit
+-   Moldova - Paper Passport
 
 ### Platform Updates
 
-- Expanded geographic support with new `Region` enum values:
-  - `ANDHRA_PRADESH`
-  - `CEARA`
-  - `GOIAS`
-  - `GUERRERO_ACAPULCO_DE_JUAREZ`
-  - `HARYANA`
-  - `SERGIPE`   
+-   Expanded geographic support with new `Region` enum values:
 
-- Document recognition enhanced with new `Type` enum values:
-  - `EXIT_ENTRY_PERMIT`
-  - `MAINLAND_TRAVEL_PERMIT_TAIWAN`
-  - `NBI_CLEARANCE`
-  - `PROOF_OF_REGISTRATION`
-  - `TEMPORARY_PROTECTION_PERMIT`
+    -   `ANDHRA_PRADESH`
+    -   `CEARA`
+    -   `GOIAS`
+    -   `GUERRERO_ACAPULCO_DE_JUAREZ`
+    -   `HARYANA`
+    -   `SERGIPE`
 
-- Data extraction improvements:
-  - Added `Sponsor` and `BloodType` result fields to `BlinkIdMultiSideRecognizer.Result`, `BlinkIdSingleSideRecognizer.Result` and `VizResult`
+-   Document recognition enhanced with new `Type` enum values:
+
+    -   `EXIT_ENTRY_PERMIT`
+    -   `MAINLAND_TRAVEL_PERMIT_TAIWAN`
+    -   `NBI_CLEARANCE`
+    -   `PROOF_OF_REGISTRATION`
+    -   `TEMPORARY_PROTECTION_PERMIT`
+
+-   Data extraction improvements:
+    -   Added `Sponsor` and `BloodType` result fields to `BlinkIdMultiSideRecognizer.Result`, `BlinkIdSingleSideRecognizer.Result` and `VizResult`
 
 ## 6.5.2
 
@@ -134,10 +168,13 @@ Fixed issue with improper packaging.
 This release contains multiple builds tailored for different devices' capabilities.
 
 These builds are:
+
 #### Full
-Regular build that has barcode deblurring models. This build is loaded automatically on desktop devices. 
+
+Regular build that has barcode deblurring models. This build is loaded automatically on desktop devices.
 
 #### Lightweight
+
 Build without deblurring models. This build is loaded automatically on mobile devices. Deblurring models are usually not necessary due to better quality cameras compared to front-facing laptop cameras.
 
 These builds each contain previous build variants present so far: basic, advanced with SIMD and advanced with multithreading making a total of 6 possible builds.
@@ -158,9 +195,9 @@ This is primarily used as a mitigation mechanism for iOS's memory management, wh
 Although it's not recommended, this can be overridden using `WasmSDKLoadSettings.initialMemory`.
 
 ### Other fixes:
-- Fixed an issue where certain iOS devices would display a zoomed in preview.
-- Improved scanning of Bolivia IDs by addressing cases where the expiration date is covered by a signature, allowing the completion of the scanning process.
 
+-   Fixed an issue where certain iOS devices would display a zoomed in preview.
+-   Improved scanning of Bolivia IDs by addressing cases where the expiration date is covered by a signature, allowing the completion of the scanning process.
 
 ## 6.5.0
 
@@ -186,6 +223,7 @@ Although it's not recommended, this can be overridden using `WasmSDKLoadSettings
 -   New `CardOrientation` status - `NotAvailable`
 
 -   New `Region` enum values:
+
     -   DISTRITO_FEDERAL
     -   MARANHAO
     -   MATO_GROSSO
@@ -200,6 +238,7 @@ Although it's not recommended, this can be overridden using `WasmSDKLoadSettings
     -   TWIC_CARD
 
 ### Added support for 8 new documents
+
 -   Bolivia - Paper Passport
 -   Brazil - Alien ID
 -   Brazil - Distrito Federal - Identity Card
@@ -210,6 +249,7 @@ Although it's not recommended, this can be overridden using `WasmSDKLoadSettings
 -   USA - Twic Card
 
 ### Added support for 17 new documents in BETA
+
 -   Australia - Australian Capital Territory - Identity Card
 -   Australia - Queensland - Proof of Age Card
 -   Australia - Tasmania - Identity Card
@@ -229,6 +269,7 @@ Although it's not recommended, this can be overridden using `WasmSDKLoadSettings
 -   UAE - Polycarbonate Passport
 
 ### Added support for 14 new versions of already supported documents
+
 -   Brazil - Driver’s License
 -   Luxembourg - Identity Card
 -   North Macedonia - Identity Card
@@ -245,6 +286,7 @@ Although it's not recommended, this can be overridden using `WasmSDKLoadSettings
 -   USA - Virginia - Driver’s License
 
 ### Added support for 2 new versions of already supported documents in BETA
+
 -   Iceland - Paper Passport
 -   Mexico - Consular ID
 

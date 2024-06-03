@@ -38,12 +38,6 @@ export interface MetadataCallbacks
      * Called when first side recognition with the multi-side recognizer completes.
      */
     onFirstSideResult?(): void
-
-    /**
-     * Called when glare detection has completed with result whether glare has been found or not.
-     * @param hasGlare indicates whether glare has been found on the input image or not
-     */
-    onGlare?( hasGlare: boolean ): void;
 }
 
 /**

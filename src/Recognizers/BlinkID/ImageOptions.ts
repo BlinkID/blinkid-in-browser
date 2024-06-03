@@ -77,17 +77,6 @@ export class ExtensionFactors
     }
 }
 
-export interface GlareDetectorOptions
-{
-    /**
-     * Defines whether glare detector will be used during recognition process. By default this
-     * option is set to {@code true} and glare detector is used. If the glare detector is used and
-     * `onGlare` is implemented in {@link MetadataCallbacks} interface,
-     * it will receive glare status. Also when glare is detected OCR will not be performed on
-     * the affected document position to prevent errors in the extracted data.
-     */
-    detectGlare: boolean;
-}
 
 export interface FullDocumentImageOptions
 {

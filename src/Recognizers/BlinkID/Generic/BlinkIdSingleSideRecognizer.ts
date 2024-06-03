@@ -13,6 +13,7 @@ import { ProcessingStatus } from "./ProcessingStatus";
 import { RecognitionMode } from "./RecognitionMode";
 import { RecognitionModeFilter } from "./RecognitionModeFilter";
 import { VIZResult } from "./VIZResult";
+import { StrictnessLevel } from "./StrictnessLevel";
 
 import {
     CameraFrameResult,
@@ -45,6 +46,7 @@ export * from "./FieldType";
 export * from "./DocumentNumberAnonymizationSettings";
 export * from "./RecognitionModeFilter";
 export * from "./VIZResult";
+export * from "./StrictnessLevel";
 
 /**
  * A barcode scanning started callback function.
@@ -64,9 +66,24 @@ export class BlinkIdSingleSideRecognizerSettings
 implements RecognizerSettings, FullDocumentImageOptions, FaceImageOptions, SignatureImageOptions
 {
     /**
-     * Skip processing of the blurred frames.
+     * Skip processing of blurred frames.
      */
-    allowBlurFilter = true;
+    enableBlurFilter = true;
+
+    /**
+     * Skip processing of frames which contain too much glare.
+     */
+    enableGlareFilter = true;
+
+    /**
+     * Strictness level for blur detection.
+     */
+    blurStrictnessLevel = StrictnessLevel.Normal;
+
+    /**
+     * Strictness level for glare detection.
+     */
+    glareStrictnessLevel = StrictnessLevel.Normal;
 
     /**
      * Allow reading of non-standard MRZ (Machine Readable Zone). Only raw MRZ result is returned.

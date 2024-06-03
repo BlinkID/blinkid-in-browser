@@ -6,7 +6,7 @@ export function stringToArray(inputString: string): Array<string> {
     return [];
   }
 
-  return inputString.split(',').map(el => el.trim());
+  return inputString.split(",").map((el) => el.trim());
 }
 
 export function stringToObject(inputString: string): { [key: string]: any } {
@@ -30,10 +30,10 @@ export function hasSupportedImageFiles(files: FileList): boolean {
 }
 
 export function extractFilenameFromPath(path: string): string {
-  return path.split('\\').pop();
+  return path.split("\\").pop();
 }
 
-export function getImageFile(fileList: FileList): File|null {
+export function getImageFile(fileList: FileList): File | null {
   if (fileList === null) {
     return null;
   }
@@ -65,7 +65,7 @@ export function classNames(classes: Record<string, boolean>) {
     }
   });
 
-  return result.join(' ');
+  return result.join(" ");
 }
 
 /**
@@ -73,41 +73,43 @@ export function classNames(classes: Record<string, boolean>) {
  * @returns array of part selectors
  */
 export function getWebComponentParts(root: ShadowRoot): string[] {
-  const nodesWithPart = root.querySelectorAll('[part]');
+  const nodesWithPart = root.querySelectorAll("[part]");
 
   const parts = new Set<string>();
 
   nodesWithPart.forEach((el: Element) => {
-    const partsArray = el.getAttribute('part').split(' ');
-    partsArray.forEach(partName => parts.add(partName))
+    const partsArray = el.getAttribute("part").split(" ");
+    partsArray.forEach((partName) => parts.add(partName));
   });
 
   return [...parts];
 }
 
 export function getWebComponentExportedParts(root: ShadowRoot): string[] {
-  const nodesWithPart = root.querySelectorAll('[exportparts]');
+  const nodesWithPart = root.querySelectorAll("[exportparts]");
 
   const exportedParts = new Set<string>();
 
   nodesWithPart.forEach((el: Element) => {
-    const exportedPartsArray = el.getAttribute('exportparts').split(' ');
-    exportedPartsArray.forEach(partName => exportedParts.add(partName))
+    const exportedPartsArray = el.getAttribute("exportparts").split(" ");
+    exportedPartsArray.forEach((partName) => exportedParts.add(partName));
   });
 
   return [...exportedParts];
 }
 
 export function setWebComponentParts(hostEl: Element): void {
-  const partParts = [
-    hostEl.tagName.toLowerCase(),
-    hostEl.getAttribute('id')
-  ];
-  hostEl.setAttribute('part', partParts.join(' ').trim() );
+  const partParts = [hostEl.tagName.toLowerCase(), hostEl.getAttribute("id")];
+  hostEl.setAttribute("part", partParts.join(" ").trim());
 }
 
 export function uuidv4(): string {
-  return ( ( [1e7] as any )+-1e3+-4e3+-8e3+-1e11 ).replace( /[018]/g, ( c: any ) =>
-    ( c ^ crypto.getRandomValues( new Uint8Array( 1 ) )[0] & 15 >> c / 4 ).toString( 16 )
+  return (([1e7] as any) + -1e3 + -4e3 + -8e3 + -1e11).replace(
+    /[018]/g,
+    (c: any) =>
+      (
+        c ^
+        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      ).toString(16),
   );
 }

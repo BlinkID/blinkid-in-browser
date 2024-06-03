@@ -6,7 +6,7 @@
 
 @import "./_globals-sass";
 
-@mixin animation ($delay, $duration, $animation) {
+@mixin animation($delay, $duration, $animation) {
   -webkit-animation-delay: $delay;
   -webkit-animation-duration: $duration;
   -webkit-animation-name: $animation;
@@ -28,20 +28,32 @@ $rectangle-scanning-line-animation-duration: 2400ms;
 // Animations
 // Process done animation
 @keyframes rectangle-shrink-animation {
-  0% { transform: scale(1); }
-  50% { transform: scale(.95); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 // Scanning line animation
 @keyframes scanning-line-animation {
-  0% { top: -60%; }
-  45% { transform: matrix(1, 0, 0, 1, 0, 0); }
+  0% {
+    top: -60%;
+  }
+  45% {
+    transform: matrix(1, 0, 0, 1, 0, 0);
+  }
   50% {
     top: 120%;
     transform: matrix(1, 0, 0, -1, 0, 0);
   }
-  95% { transform: matrix(1, 0, 0, -1, 0, 0); }
+  95% {
+    transform: matrix(1, 0, 0, -1, 0, 0);
+  }
   100% {
     top: -60%;
     transform: matrix(1, 0, 0, 1, 0, 0);
@@ -57,7 +69,7 @@ $rectangle-scanning-line-animation-duration: 2400ms;
   background-color: transparent;
   background-position: center;
   background-repeat: no-repeat;
-  transition: all .3s ease-in;
+  transition: all 0.3s ease-in;
 
   &__cursor {
     width: 100%;
@@ -95,8 +107,10 @@ $rectangle-scanning-line-animation-duration: 2400ms;
         border-top: 4px solid rgb(255, 255, 255);
         border-left: 4px solid rgb(255, 255, 255);
         border-top-left-radius: 8px;
-        box-shadow: inset 3px 3px 8px -6px rgb(0 0 0 / 20%), -3px -3px 8px -6px rgb(0 0 0 / 20%);
-        transition: border-color .15s linear;
+        box-shadow:
+          inset 3px 3px 8px -6px rgb(0 0 0 / 20%),
+          -3px -3px 8px -6px rgb(0 0 0 / 20%);
+        transition: border-color 0.15s linear;
       }
     }
 
@@ -111,8 +125,10 @@ $rectangle-scanning-line-animation-duration: 2400ms;
         border-top: 4px solid rgb(255, 255, 255);
         border-right: 4px solid rgb(255, 255, 255);
         border-top-right-radius: 8px;
-        box-shadow: inset -3px 3px 8px -6px rgb(0 0 0 / 20%), 3px -3px 8px -6px rgb(0 0 0 / 20%);
-        transition: border-color .15s linear;
+        box-shadow:
+          inset -3px 3px 8px -6px rgb(0 0 0 / 20%),
+          3px -3px 8px -6px rgb(0 0 0 / 20%);
+        transition: border-color 0.15s linear;
       }
     }
 
@@ -127,8 +143,10 @@ $rectangle-scanning-line-animation-duration: 2400ms;
         border-bottom: 4px solid rgb(255, 255, 255);
         border-right: 4px solid rgb(255, 255, 255);
         border-bottom-right-radius: 8px;
-        box-shadow: inset -3px -3px 8px -6px rgb(0 0 0 / 20%), 3px 3px 8px -6px rgb(0 0 0 / 20%);
-        transition: border-color .15s linear;
+        box-shadow:
+          inset -3px -3px 8px -6px rgb(0 0 0 / 20%),
+          3px 3px 8px -6px rgb(0 0 0 / 20%);
+        transition: border-color 0.15s linear;
       }
     }
 
@@ -143,8 +161,10 @@ $rectangle-scanning-line-animation-duration: 2400ms;
         border-bottom: 4px solid rgb(255, 255, 255);
         border-left: 4px solid rgb(255, 255, 255);
         border-bottom-left-radius: 8px;
-        box-shadow: inset 3px -3px 8px -6px rgb(0 0 0 / 20%), -3px 3px 8px -6px rgb(0 0 0 / 20%);
-        transition: border-color .15s linear;
+        box-shadow:
+          inset 3px -3px 8px -6px rgb(0 0 0 / 20%),
+          -3px 3px 8px -6px rgb(0 0 0 / 20%);
+        transition: border-color 0.15s linear;
       }
     }
   }
@@ -167,7 +187,13 @@ $rectangle-scanning-line-animation-duration: 2400ms;
 
   // Front side scanning is over
   &.is-done,
-  &.is-done-all { @include animation(0, $rectangle-shrink-animation-duration, rectangle-shrink-animation); }
+  &.is-done-all {
+    @include animation(
+      0,
+      $rectangle-shrink-animation-duration,
+      rectangle-shrink-animation
+    );
+  }
 }
 
 :host .scanning-line {
@@ -179,12 +205,18 @@ $rectangle-scanning-line-animation-duration: 2400ms;
   left: 0px;
   top: -125px;
 
-  background: radial-gradient(100% 100% at 49.85% 100%, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%);
+  background: radial-gradient(
+    100% 100% at 49.85% 100%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   filter: blur(var(--mb-blur-scanning-line));
 
   &.is-active {
     opacity: 1;
     visibility: visible;
-    animation: scanning-line-animation $rectangle-scanning-line-animation-duration cubic-bezier(.13,.71,1,.82) infinite;
+    animation: scanning-line-animation
+      $rectangle-scanning-line-animation-duration
+      cubic-bezier(0.13, 0.71, 1, 0.82) infinite;
   }
 }

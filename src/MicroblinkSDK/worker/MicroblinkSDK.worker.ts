@@ -15,12 +15,6 @@ import {
 } from "../MetadataCallbacks";
 
 import { convertEmscriptenStatusToProgress } from "../LoadProgressUtils";
-import { ClearTimeoutCallback } from "../ClearTimeoutCallback";
-import {
-    setupModule,
-    supportsThreads,
-    waitForThreadWorkers,
-} from "../PThreadHelper";
 import { WasmType } from "../WasmType";
 import { SDKError, SerializableSDKError } from "../SDKError";
 import { isMobile } from "is-mobile";
@@ -82,8 +76,6 @@ export default class MicroblinkWorker
     private nextObjectHandle = 0;
 
     private metadataCallbacks: MetadataCallbacks = {};
-
-    private clearTimeoutCallback: ClearTimeoutCallback | null = null;
 
     private lease?: number;
 
@@ -148,11 +140,6 @@ export default class MicroblinkWorker
                 case Messages.RegisterMetadataCallbacks.action:
                     this.registerMetadataCallbacks(
                         msg as Messages.RegisterMetadataCallbacks,
-                    );
-                    break;
-                case Messages.SetClearTimeoutCallback.action:
-                    this.registerClearTimeoutCallback(
-                        msg as Messages.SetClearTimeoutCallback,
                     );
                     break;
                 case Messages.GetProductIntegrationInfo.action:
@@ -538,7 +525,7 @@ export default class MicroblinkWorker
         const wasmMemory = new WebAssembly.Memory( {
             initial: mbToWasmPages( initialMemory ),
             maximum: mbToWasmPages( 2048 ),
-            shared: supportsThreads( wasmBundle.wasmType )
+            shared: wasmBundle.wasmType === WasmType.AdvancedWithThreads,
         } );
 
         // initial memory in bytes
@@ -562,12 +549,9 @@ export default class MicroblinkWorker
         {
             const jsName = msg.wasmModuleName + ".js";
             const jsPath = Utils.getSafePath( engineLocation, jsName );
-            const isThreaded = supportsThreads( wasmBundle.wasmType );
 
-            if ( supportsThreads( wasmBundle.wasmType ) )
-            {
-                module = setupModule( module, msg.numberOfWorkers, jsPath );
-            }
+
+            module.mainScriptUrlOrBlob = jsPath;
 
             importScripts( jsPath );
 
@@ -578,20 +562,6 @@ export default class MicroblinkWorker
             loaderFunc( module ).then(
                 async ( mbWasmModule: any ) =>
                 {
-                    if ( isThreaded )
-                    {
-                        // threads have been launched, but browser still hasn't managed to process worker creation
-                        // requests. Since license unlocking may require multiple threads to perform license key
-                        // decryption, without ready workers, a deadlock will occur.
-                        // wait for browser threads to become available
-                        if ( msg.allowHelloMessage )
-                        {
-                            console.log(
-                                "Waiting for thread workers to boot...",
-                            );
-                        }
-                        await waitForThreadWorkers( mbWasmModule );
-                    }
                     const licenseResult = await License.unlockWasmSDK(
                         msg.licenseKey,
                         msg.allowHelloMessage,
@@ -1276,22 +1246,6 @@ export default class MicroblinkWorker
         {
             delete this.metadataCallbacks.onFirstSideResult;
         }
-
-        if ( registeredMetadataCallbacks.onGlare )
-        {
-            this.metadataCallbacks.onGlare = ( hasGlare: boolean ) =>
-            {
-                const msg = new Messages.InvokeCallbackMessage(
-                    Messages.MetadataCallback.onGlare,
-                    [hasGlare],
-                );
-                this.context.postMessage( msg );
-            };
-        }
-        else
-        {
-            delete this.metadataCallbacks.onGlare;
-        }
     }
 
     private registerMetadataCallbacks( msg: Messages.RegisterMetadataCallbacks )
@@ -1327,61 +1281,6 @@ export default class MicroblinkWorker
         }
     }
 
-    private registerClearTimeoutCallback(
-        msg: Messages.SetClearTimeoutCallback,
-    )
-    {
-        if ( this.nativeRecognizerRunner === null )
-        {
-            this.notifyError(
-                msg,
-                new SerializableSDKError( ErrorTypes.workerErrors.imageProcessFailure ),
-            );
-            return;
-        }
-
-        if ( msg.callbackNonEmpty )
-        {
-            this.clearTimeoutCallback = {
-                onClearTimeout: () =>
-                {
-                    const clearTimeoutCallback =
-                        Messages.MetadataCallback.clearTimeoutCallback;
-                    const msg = new Messages.InvokeCallbackMessage(
-                        clearTimeoutCallback,
-                        [],
-                    );
-                    this.context.postMessage( msg );
-                },
-            };
-        }
-        else
-        {
-            this.clearTimeoutCallback = null;
-        }
-
-        try
-        {
-            /* eslint-disable @typescript-eslint/no-unsafe-call,
-                              @typescript-eslint/no-unsafe-member-access */
-            this.nativeRecognizerRunner.setClearTimeoutCallback(
-                this.clearTimeoutCallback,
-            );
-            this.notifySuccess( msg );
-            /* eslint-enable @typescript-eslint/no-unsafe-call,
-                             @typescript-eslint/no-unsafe-member-access */
-        }
-        catch ( error )
-        {
-            this.notifyError(
-                msg,
-                new SerializableSDKError(
-                    ErrorTypes.workerErrors.imageProcessFailure,
-                    error,
-                ),
-            );
-        }
-    }
 
     private processGetProductIntegrationInfo(
         msg: Messages.GetProductIntegrationInfo,

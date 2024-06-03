@@ -2,11 +2,11 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import { newSpecPage } from '@stencil/core/testing';
-import { MbTooltip } from '../mb-tooltip';
+import { newSpecPage } from "@stencil/core/testing";
+import { MbTooltip } from "../mb-tooltip";
 
-describe('mb-tooltip', () => {
-  it('renders', async () => {
+describe("mb-tooltip", () => {
+  it("renders", async () => {
     const page = await newSpecPage({
       components: [MbTooltip],
       html: `<mb-tooltip></mb-tooltip>`,

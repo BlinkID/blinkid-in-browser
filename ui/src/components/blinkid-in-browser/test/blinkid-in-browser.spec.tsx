@@ -2,11 +2,11 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import { newSpecPage } from '@stencil/core/testing';
-import { BlinkidInBrowser } from '../blinkid-in-browser';
+import { newSpecPage } from "@stencil/core/testing";
+import { BlinkidInBrowser } from "../blinkid-in-browser";
 
-describe('blinkid-in-browser', () => {
-  it('renders', async () => {
+describe("blinkid-in-browser", () => {
+  it("renders", async () => {
     const page = await newSpecPage({
       components: [BlinkidInBrowser],
       html: `<blinkid-in-browser></blinkid-in-browser>`,

@@ -2,11 +2,11 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import { newSpecPage } from '@stencil/core/testing';
-import { MbApiProcessStatus } from '../mb-api-process-status';
+import { newSpecPage } from "@stencil/core/testing";
+import { MbApiProcessStatus } from "../mb-api-process-status";
 
-describe('mb-api-process-status', () => {
-  it('renders', async () => {
+describe("mb-api-process-status", () => {
+  it("renders", async () => {
     const page = await newSpecPage({
       components: [MbApiProcessStatus],
       html: `<mb-api-process-status></mb-api-process-status>`,

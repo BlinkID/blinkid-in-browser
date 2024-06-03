@@ -55,10 +55,109 @@ const backCameraKeywords: string[] = [
     "बैक"
 ];
 
+const backDualWideCameraLocalizations: string[] = [
+    "Cameră dublă cu obiectiv superangular spate",
+    "מצלמה כפולה רחבה אחורית",
+    "Артқы қос кең бұрышты камера",
+    "Câmara grande angular dupla traseira",
+    "Πίσω διπλή ευρεία κάμερα",
+    "後置雙廣角鏡頭相機",
+    "Задна двойна широкоъгълна камера",
+    "Càmera dual posterior amb gran angular",
+    "Zadná duálna širokouhlá kamera",
+    "كاميرا خلفية مزدوجة عريضة",
+    "Задняя двойная широкоугольная камера",
+    "Задня здвоєна ширококутна камера",
+    "Cámara amplia posterior doble",
+    "Dwikamera Lebar Belakang",
+    "Tylny dwuobiektywowy aparat szerokokątny",
+    "Dubbel vidvinkelkamera på baksidan",
+    "Back Dual Wide Camera",
+    "Hátsó, kettős, széles látószögű kamera",
+    "후면 듀얼 와이드 카메라",
+    "Double caméra grand angle arrière",
+    "Fotocamera doppia con grandangolo (posteriore)",
+    "Double appareil photo grand angle arrière",
+    "Zadní duální širokoúhlý fotoaparát",
+    "Çift Geniş Kamera Arka Yüzü",
+    "Laajakulmainen kaksoistakakamera",
+    "Rückseitige Dual-Weitwinkelkamera",
+    "बैक ड्युअल वाइड कैमरा",
+    "后置双广角镜头",
+    "Câmera Dupla Grande-Angular Traseira",
+    "後置雙廣角相機",
+    "กล้องคู่ด้านหลังมุมกว้าง",
+    "Kamera Lebar Belakang Ganda",
+    "Dobbelt vidvinkelkamera bak",
+    "Camera kép rộng mặt sau",
+    "Cámara trasera dual con gran angular",
+    "背面デュアル広角カメラ",
+    "Stražnja dvostruka široka kamera"
+];
+
+const backCameraLocalizations: string[] = [
+    "후면 카메라",
+    "後置相機",
+    "Задна камера",
+    "後置鏡頭",
+    "Camera mặt sau",
+    "Hátoldali kamera",
+    "Cámara trasera",
+    "Back Camera",
+    "Kamera på baksidan",
+    "Πίσω κάμερα",
+    "Bagsidekamera",
+    "Zadná kamera",
+    "Fotocamera (posteriore)",
+    "Câmara traseira",
+    "מצלמה אחורית",
+    "Takakamera",
+    "Rückkamera",
+    "Caméra arrière",
+    "Zadní fotoaparát",
+    "Артқы камера",
+    "Tylny aparat",
+    "बैक कैमरा",
+    "Hátsó kamera",
+    "Camera aan achterzijde",
+    "Kamera Belakang",
+    "Câmera Traseira",
+    "Stražnja kamera",
+    "الكاميرا الخلفية",
+    "Càmera posterior",
+    "Fotocamera posteriore",
+    "Càmera del darrere",
+    "กล้องด้านหลัง",
+    "Cameră spate",
+    "Kamera, bagside",
+    "背面カメラ",
+    "Задня камера",
+    "Arka Kamera",
+    "后置相机",
+    "Камера на задней панели",
+    "后置镜头",
+    "Kamera bak",
+    "Задняя камера",
+    "Aparat tylny",
+    "Kamera på baksiden",
+    "Câmera de Trás"
+];
+
 export const isAndroidDevice = () =>
 {
     const u = navigator.userAgent;
     return !!u.match( /Android/i );
+};
+
+export const isIOSDevice = () =>
+{
+    const u = navigator.userAgent;
+    return !!u.match( /iPhone/i );
+};
+
+export const isMobileDevice = () =>
+{
+    return isAndroidDevice() || isIOSDevice();
 };
 
 function isBackCameraLabel( label: string ): boolean
@@ -183,81 +282,159 @@ export async function selectCamera(
         return null;
     }
 
-    // decide from which array the camera will be selected
-    let cameraPool: SelectedCamera[] = ( backCameras.length > 0 ? backCameras : frontCameras );
-    // if there is at least one back facing camera and user prefers back facing camera, use that as a selection pool
-    if ( preferredCameraType === PreferredCameraType.BackFacingCamera && backCameras.length > 0 )
-    {
-        cameraPool = backCameras;
-    }
-    // if there is at least one front facing camera and is preferred by user, use that as a selection pool
-    if ( preferredCameraType === PreferredCameraType.FrontFacingCamera && frontCameras.length > 0 )
-    {
-        cameraPool = frontCameras;
-    }
-    // otherwise use whichever pool is non-empty
-
-    // sort camera pool by label
-    cameraPool = cameraPool.sort( ( camera1, camera2 ) => camera1.label.localeCompare( camera2.label ) );
-
-    // Check if cameras are labeled with resolution information, take the higher-resolution one in that case
-    // Otherwise pick the last camera (Samsung wide on most Android devices)
-    let selectedCameraIndex = cameraPool.length - 1;
-
-    // on iOS 16.3+, select the virtual dual or triple cameras
-    const iosTripleCameraIndex = cameraPool.findIndex( camera => camera.label === "Back Triple Camera" );
-    const iosDualCameraIndex = cameraPool.findIndex( camera => camera.label === "Back Dual Wide Camera" );
-
-    if ( iosDualCameraIndex >= 0 )
-    {
-        selectedCameraIndex = iosDualCameraIndex;
-    }
-
-    if ( iosTripleCameraIndex >= 0 )
-    {
-        selectedCameraIndex = iosTripleCameraIndex;
-    }
-
-    // gets camera resolutions from the device name, if exists
-    const cameraResolutions: number[] = cameraPool.map
-    (
-        camera =>
-        {
-            const regExp = RegExp( /\b([0-9]+)MP?\b/, "i" );
-            const match = regExp.exec( camera.label );
-            if ( match !== null )
-            {
-                return parseInt( match[1], 10 );
-            }
-            else
-            {
-                return NaN;
-            }
-        }
-    );
-
-    // picks camera  based on highest resolution in the name
-    if ( !cameraResolutions.some( cameraResolution => isNaN( cameraResolution ) ) )
-    {
-        selectedCameraIndex = cameraResolutions.lastIndexOf( Math.max( ...cameraResolutions ) );
-    }
-
-    // picks camera based on the provided device id
+    // Picks camera based on the provided device id, if user provided device id up front
     if ( cameraId )
     {
-        let cameraDevice: SelectedCamera;
+        let cameraDevice: SelectedCamera | undefined;
 
-        cameraDevice = frontCameras.filter( device => device.deviceId === cameraId )[0];
+        cameraDevice = frontCameras.find( device => device.deviceId === cameraId );
+
         if ( !cameraDevice )
         {
-            cameraDevice = backCameras.filter( device => device.deviceId === cameraId )[0];
+            cameraDevice = backCameras.find( device => device.deviceId === cameraId );
         }
 
         return cameraDevice || null;
     }
 
-    return cameraPool[ selectedCameraIndex ];
+    let cameraDevice: SelectedCamera | null = null;
+
+    if ( isIOSDevice() && preferredCameraType === PreferredCameraType.BackFacingCamera )
+    {
+        // If device is an iOS and preferred camera is back facing
+        // pick camera which matches the localized 'Back Camera'
+
+        let selectedCamera = backCameras.find
+        ( camera => backDualWideCameraLocalizations.includes( camera.label ) );
+
+        if ( !selectedCamera )
+        {
+            selectedCamera = backCameras.find( camera => backCameraLocalizations.includes( camera.label ) );
+        }
+
+        if ( selectedCamera )
+        {
+            cameraDevice = selectedCamera;
+        }
+    }
+    else if ( isAndroidDevice() && preferredCameraType === PreferredCameraType.BackFacingCamera )
+    {
+        type Candidate = { deviceId: string; score: number };
+        let bestCameraDevice: Candidate = {
+            deviceId: "",
+            score: -1,
+        };
+        const calculateScore = ( hasTorch: boolean, hasSingleShot: boolean ) =>
+        {
+            let score = 0;
+            if ( hasTorch ) score++;
+            if ( hasSingleShot ) score++;
+            return score;
+        };
+
+        for ( const backFacingCamera of backCameras )
+        {
+            const mediaStream = await navigator.mediaDevices.getUserMedia(
+                {
+                    video: {
+                        deviceId: backFacingCamera.deviceId,
+                        width: 1920,
+                        height: 1080,
+                    },
+                }
+            );
+
+            if ( "getCapabilities" in mediaStream.getVideoTracks()[0] )
+            {
+                const capabilities = mediaStream.getVideoTracks()[0].getCapabilities();
+
+                // @ts-expect-error Property will exist on object
+                const hasTorch = Boolean( capabilities.torch );
+
+                // @ts-expect-error Property will exist on object
+                const hasSingleShot = ( capabilities.focusMode as string[] )?.includes( "single-shot" );
+
+                const cameraScore = calculateScore( hasTorch, hasSingleShot );
+
+                if ( cameraScore > bestCameraDevice.score )
+                {
+                    bestCameraDevice = {
+                        deviceId: backFacingCamera.deviceId,
+                        score: cameraScore,
+                    };
+                }
+            }
+
+            closeStreamTracks( mediaStream );
+        }
+
+        cameraDevice = backCameras.find( camera => camera.deviceId === bestCameraDevice.deviceId ) || null;
+    }
+
+    if ( cameraDevice === null )
+    {
+        // Case where camera device is still not found, so we revert back to "old" logic
+
+        // Decide from which array the camera will be selected
+        let cameraPool: SelectedCamera[] = ( backCameras.length > 0 ? backCameras : frontCameras );
+
+        // If there is at least one back facing camera and user prefers back facing camera, use that as a selection pool
+        if ( preferredCameraType === PreferredCameraType.BackFacingCamera && backCameras.length > 0 )
+        {
+            cameraPool = backCameras;
+        }
+
+        // If there is at least one front facing camera and is preferred by user, use that as a selection pool
+        if ( preferredCameraType === PreferredCameraType.FrontFacingCamera && frontCameras.length > 0 )
+        {
+            cameraPool = frontCameras;
+        }
+
+        // Sort camera pool by label
+        cameraPool = cameraPool.sort( ( camera1, camera2 ) => camera1.label.localeCompare( camera2.label ) );
+
+        // Check if cameras are labeled with resolution information, take the higher-resolution one in that case
+        // Otherwise pick the last camera (Samsung wide on most Android devices)
+        let selectedCameraIndex = cameraPool.length - 1;
+
+        // Gets camera resolutions from the device name, if exists
+        const cameraResolutions: number[] = cameraPool.map
+        (
+            camera =>
+            {
+                const regExp = RegExp( /\b([0-9]+)MP?\b/, "i" );
+                const match = regExp.exec( camera.label );
+                if ( match !== null )
+                {
+                    return parseInt( match[1], 10 );
+                }
+                else
+                {
+                    return NaN;
+                }
+            }
+        );
+
+        // Picks camera  based on highest resolution in the name
+        if ( !cameraResolutions.some( cameraResolution => isNaN( cameraResolution ) ) )
+        {
+            selectedCameraIndex = cameraResolutions.lastIndexOf( Math.max( ...cameraResolutions ) );
+        }
+
+        return cameraPool[ selectedCameraIndex ];
+    }
+
+    return cameraDevice;
 }
+
+const closeStreamTracks = ( stream: MediaStream ) =>
+{
+    const tracks = stream.getTracks();
+    for ( const track of tracks )
+    {
+        track.stop();
+    }
+};
 
 /**
  * Bind camera device to video feed (HTMLVideoElement).

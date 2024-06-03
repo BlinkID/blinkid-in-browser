@@ -17,7 +17,6 @@ $breakpoint-width-laptop-1280: 1280px;
 $breakpoint-width-laptop-1440: 1440px;
 $breakpoint-width-desktop: 1920px;
 
-
 /**
  * Camera experiences
  */
@@ -25,113 +24,268 @@ $base-unit: 4px;
 
 $base-colors: (
   // Primary
-  primary-blue: (
-    onlight:    ( name: "primary-blue", background: #0062F2, foreground: #ffffff ),
-    ondark:     ( name: "primary-blue", background: #0062F2, foreground: #ffffff )
-  ),
+  primary-blue:
+    (
+      onlight: (
+        name: "primary-blue",
+        background: #0062f2,
+        foreground: #ffffff,
+      ),
+      ondark: (
+        name: "primary-blue",
+        background: #0062f2,
+        foreground: #ffffff,
+      ),
+    ),
 
   primary-black: (
-    onlight:    ( name: "primary-black", background: #000000, foreground: #ffffff ),
-    ondark:     ( name: "primary-black", background: #000000, foreground: #ffffff )
+    onlight: (
+      name: "primary-black",
+      background: #000000,
+      foreground: #ffffff,
+    ),
+    ondark: (
+      name: "primary-black",
+      background: #000000,
+      foreground: #ffffff,
+    ),
   ),
 
   primary-white: (
-    onlight:    ( name: "primary-white", background: #ffffff, foreground: #000000 ),
-    ondark:     ( name: "primary-white", background: #ffffff, foreground: #000000 )
+    onlight: (
+      name: "primary-white",
+      background: #ffffff,
+      foreground: #000000,
+    ),
+    ondark: (
+      name: "primary-white",
+      background: #ffffff,
+      foreground: #000000,
+    ),
   ),
 
   // Semantic
-  semantic-success: (
-    onlight:    ( name: "semantic-success", background: #00BFA5, foreground: #000000 ),
-    ondark:     ( name: "semantic-success", background: #66D9C9, foreground: #000000 )
-  ),
+  semantic-success:
+    (
+      onlight: (
+        name: "semantic-success",
+        background: #00bfa5,
+        foreground: #000000,
+      ),
+      ondark: (
+        name: "semantic-success",
+        background: #66d9c9,
+        foreground: #000000,
+      ),
+    ),
 
   semantic-error: (
-    onlight:    ( name: "semantic-error", background: #FF2D55, foreground: #ffffff ),
-    ondark:     ( name: "semantic-error", background: #FF617F, foreground: #000000 )
+    onlight: (
+      name: "semantic-error",
+      background: #ff2d55,
+      foreground: #ffffff,
+    ),
+    ondark: (
+      name: "semantic-error",
+      background: #ff617f,
+      foreground: #000000,
+    ),
   ),
 
   semantic-warning: (
-    onlight:    ( name: "semantic-warning", background: #FBC32B, foreground: #000000 ),
-    ondark:     ( name: "semantic-warning", background: #FCD25F, foreground: #000000 )
+    onlight: (
+      name: "semantic-warning",
+      background: #fbc32b,
+      foreground: #000000,
+    ),
+    ondark: (
+      name: "semantic-warning",
+      background: #fcd25f,
+      foreground: #000000,
+    ),
   ),
 
   semantic-info: (
-    onlight:    ( name: "semantic-info", background: #71CEEF, foreground: #000000 ),
-    ondark:     ( name: "semantic-info", background: #97E2FD, foreground: #000000 )
+    onlight: (
+      name: "semantic-info",
+      background: #71ceef,
+      foreground: #000000,
+    ),
+    ondark: (
+      name: "semantic-info",
+      background: #97e2fd,
+      foreground: #000000,
+    ),
   ),
 
   // Text
-  text-primary: (
-    onlight:    ( name: "text-primary", foreground: #000000 ),
-    ondark:     ( name: "text-primary", foreground: #ffffff )
-  ),
+  text-primary:
+    (
+      onlight: (
+        name: "text-primary",
+        foreground: #000000,
+      ),
+      ondark: (
+        name: "text-primary",
+        foreground: #ffffff,
+      ),
+    ),
 
   text-secondary: (
-    onlight:    ( name: "text-secondary", foreground: #6B7280 ),
-    ondark:     ( name: "text-secondary", foreground: #AEAEB5 )
+    onlight: (
+      name: "text-secondary",
+      foreground: #6b7280,
+    ),
+    ondark: (
+      name: "text-secondary",
+      foreground: #aeaeb5,
+    ),
   ),
 
   text-tertiary: (
-    onlight:    ( name: "text-tertiary", foreground: #9B9B9F ),
-    ondark:     ( name: "text-tertiary", foreground: #86868B )
+    onlight: (
+      name: "text-tertiary",
+      foreground: #9b9b9f,
+    ),
+    ondark: (
+      name: "text-tertiary",
+      foreground: #86868b,
+    ),
   ),
 
   text-quaternary: (
-    onlight:    ( name: "text-quaternary", foreground: rgba(#6B7280, 0.3) ),
-    ondark:     ( name: "text-quaternary", foreground: #5E5E61 )
+    onlight: (
+      name: "text-quaternary",
+      foreground: rgba(#6b7280, 0.3),
+    ),
+    ondark: (
+      name: "text-quaternary",
+      foreground: #5e5e61,
+    ),
   ),
 
   // Background
-  background-primary: (
-    onlight:    ( name: "background-primary", foreground: #ffffff ),
-    ondark:     ( name: "background-primary", foreground: #000000 )
-  ),
+  background-primary:
+    (
+      onlight: (
+        name: "background-primary",
+        foreground: #ffffff,
+      ),
+      ondark: (
+        name: "background-primary",
+        foreground: #000000,
+      ),
+    ),
 
   background-secondary: (
-    onlight:    ( name: "background-secondary", foreground: #EFEFF4 ),
-    ondark:     ( name: "background-secondary", foreground: #1C1C1E )
+    onlight: (
+      name: "background-secondary",
+      foreground: #efeff4,
+    ),
+    ondark: (
+      name: "background-secondary",
+      foreground: #1c1c1e,
+    ),
   ),
 
   background-tertiary: (
-    onlight:    ( name: "background-tertiary", foreground: #EDEDED ),
-    ondark:     ( name: "background-tertiary", foreground: #2A2A2A )
+    onlight: (
+      name: "background-tertiary",
+      foreground: #ededed,
+    ),
+    ondark: (
+      name: "background-tertiary",
+      foreground: #2a2a2a,
+    ),
   ),
 
   // Fill
-  fill-primary: (
-    onlight:    ( name: "fill-primary", foreground: rgba(#787880, 0.2) ),
-    ondark:     ( name: "fill-primary", foreground: #404043 )
-  ),
+  fill-primary:
+    (
+      onlight: (
+        name: "fill-primary",
+        foreground: rgba(#787880, 0.2),
+      ),
+      ondark: (
+        name: "fill-primary",
+        foreground: #404043,
+      ),
+    ),
 
   fill-secondary: (
-    onlight:    ( name: "fill-secondary", foreground: #E6E6E7 ),
-    ondark:     ( name: "fill-secondary", foreground: #3D3D3F )
+    onlight: (
+      name: "fill-secondary",
+      foreground: #e6e6e7,
+    ),
+    ondark: (
+      name: "fill-secondary",
+      foreground: #3d3d3f,
+    ),
   ),
 
   fill-tertiary: (
-    onlight:    ( name: "fill-tertiary", foreground: #EBEBEC ),
-    ondark:     ( name: "fill-tertiary", foreground: #353538 )
+    onlight: (
+      name: "fill-tertiary",
+      foreground: #ebebec,
+    ),
+    ondark: (
+      name: "fill-tertiary",
+      foreground: #353538,
+    ),
   ),
 
   fill-quaternary: (
-    onlight:    ( name: "fill-quaternary", foreground: #747480 ),
-    ondark:     ( name: "fill-quaternary", foreground: #303032 )
+    onlight: (
+      name: "fill-quaternary",
+      foreground: #747480,
+    ),
+    ondark: (
+      name: "fill-quaternary",
+      foreground: #303032,
+    ),
   ),
 
   // Separator
-  separator: (
-    onlight:    ( name: "separator", foreground: #C6C6C8 ),
-    ondark:     ( name: "separator", foreground: #38383A )
+  separator:
+    (
+      onlight: (
+        name: "separator",
+        foreground: #c6c6c8,
+      ),
+      ondark: (
+        name: "separator",
+        foreground: #38383a,
+      ),
     )
 );
 
 $base-gutters: (
-  xxs:    (name: "xxs",   value: $base-unit),
-  xs:     (name: "xs",    value: $base-unit * 2),
-  sm:     (name: "sm",    value: $base-unit * 3),
-  md:     (name: "md",    value: $base-unit * 4),
-  lg:     (name: "lg",    value: $base-unit * 5),
-  xl:     (name: "xl",    value: $base-unit * 6),
-  xxl:    (name: "xxs",   value: $base-unit * 7)
+  xxs: (
+    name: "xxs",
+    value: $base-unit,
+  ),
+  xs: (
+    name: "xs",
+    value: $base-unit * 2,
+  ),
+  sm: (
+    name: "sm",
+    value: $base-unit * 3,
+  ),
+  md: (
+    name: "md",
+    value: $base-unit * 4,
+  ),
+  lg: (
+    name: "lg",
+    value: $base-unit * 5,
+  ),
+  xl: (
+    name: "xl",
+    value: $base-unit * 6,
+  ),
+  xxl: (
+    name: "xxs",
+    value: $base-unit * 7,
+  ),
 );

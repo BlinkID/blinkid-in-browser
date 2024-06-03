@@ -2,31 +2,24 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-import {
-  Component,
-  Element,
-  Host,
-  h,
-  Prop
-} from '@stencil/core';
+import { Component, Element, Host, h, Prop } from "@stencil/core";
 
-import { setWebComponentParts } from '../../../utils/generic.helpers';
-import { classNames } from '../../../utils/generic.helpers';
-import { isDesktop } from '../../../utils/device.helpers';
+import { setWebComponentParts } from "../../../utils/generic.helpers";
+import { classNames } from "../../../utils/generic.helpers";
+import { isDesktop } from "../../../utils/device.helpers";
 
 @Component({
-  tag: 'mb-button-classic',
-  styleUrl: 'mb-button-classic.scss',
+  tag: "mb-button-classic",
+  styleUrl: "mb-button-classic.scss",
   shadow: true,
 })
 export class MbButtonClassic {
-
   /**
    * Set to 'true' if button should be inverted style.
    */
   @Prop() inverted: boolean = false;
 
-  @Prop() quit:  boolean;
+  @Prop() quit: boolean;
 
   /**
    * Set to 'true' if button should be disabled, and if click events should not be triggered.
@@ -57,8 +50,18 @@ export class MbButtonClassic {
 
   render() {
     return (
-      <Host class={ classNames( { "inverted": this.inverted, "mobile": !isDesktop(), "quit-mobile": this.quit && !isDesktop() } ) }>
-        <button part="button" disabled={this.disabled} onClick={this.clickHandler}>
+      <Host
+        class={classNames({
+          inverted: this.inverted,
+          mobile: !isDesktop(),
+          "quit-mobile": this.quit && !isDesktop(),
+        })}
+      >
+        <button
+          part="button"
+          disabled={this.disabled}
+          onClick={this.clickHandler}
+        >
           <slot></slot>
         </button>
       </Host>

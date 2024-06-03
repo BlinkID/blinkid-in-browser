@@ -10,10 +10,10 @@ import {
   Host,
   h,
   Prop,
-  Method
-} from '@stencil/core';
+  Method,
+} from "@stencil/core";
 
-import { BlinkIDVariant } from '@microblink/blinkid-in-browser-sdk';
+import { BlinkIDVariant } from "@microblink/blinkid-in-browser-sdk";
 
 import {
   EventReady,
@@ -23,17 +23,17 @@ import {
   MicroblinkUI,
   SDKError,
   ProductIntegrationInfo,
-  CameraExperienceTimeoutDurations
-} from '../../utils/data-structures';
+  CameraExperienceStateDurations,
+} from "../../utils/data-structures";
 
-import { SdkService } from '../../utils/sdk.service';
+import { SdkService } from "../../utils/sdk.service";
 
-import { TranslationService } from '../../utils/translation.service';
-import * as GenericHelpers from '../../utils/generic.helpers';
+import { TranslationService } from "../../utils/translation.service";
+import * as GenericHelpers from "../../utils/generic.helpers";
 
 @Component({
-  tag: 'blinkid-in-browser',
-  styleUrl: 'blinkid-in-browser.scss',
+  tag: "blinkid-in-browser",
+  styleUrl: "blinkid-in-browser.scss",
   shadow: true,
 })
 export class BlinkidInBrowser implements MicroblinkUI {
@@ -61,7 +61,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * Default value is empty string, i.e. "". In case of empty string, value of "window.location.origin" property is
    * going to be used.
    */
-  @Prop() engineLocation: string = '';
+  @Prop() engineLocation: string = "";
 
   /**
    * The absolute location of the Web Worker script file that loads the WebAssembly module.
@@ -73,7 +73,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
    *
    * The default value is an empty string, i.e. "", and in that case, the worker script is loaded from the default location in resources folder.
    */
-  @Prop() workerLocation: string = '';
+  @Prop() workerLocation: string = "";
 
   /**
    * License key which is going to be used to unlock WASM library.
@@ -94,15 +94,15 @@ export class BlinkidInBrowser implements MicroblinkUI {
    *
    * For more information about different WebAssembly builds, check out the `src/MicroblinkSDK/WasmType.ts` file.
    */
-   @Prop() wasmType: string = '';
+  @Prop() wasmType: string = "";
 
-   /**
+  /**
    * Overrides the BlinkID build that will be loaded.
    *
    * The `lightweight` variant is smaller but doesn't support barcode deblurring. This variant is loaded by default on
    * mobile devices. The `full` version is loaded by default on desktop devices.
    */
-    @Prop() blinkIdVariant?: BlinkIDVariant;
+  @Prop() blinkIdVariant?: BlinkIDVariant;
 
   /**
    * List of recognizers which should be used.
@@ -119,7 +119,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
    *
    * `<blinkid-in-browser recognizers="IdBarcodeRecognizer,BlinkIdSingleSideRecognizer"></blinkid-in-browser>`
    */
-  @Prop({ attribute: 'recognizers' }) rawRecognizers: string;
+  @Prop({ attribute: "recognizers" }) rawRecognizers: string;
 
   /**
    * List of recognizers which should be used.
@@ -192,7 +192,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
   /**
    * Configure camera experience state timeout durations
    */
-  @Prop() cameraExperienceStateDurations: CameraExperienceTimeoutDurations = null;
+  @Prop() cameraExperienceStateDurations: CameraExperienceStateDurations = null;
 
   /**
    * Set to 'false' if component should not enable drag and drop functionality.
@@ -255,7 +255,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
    *
    * Default value is 'INLINE'.
    */
-  @Prop() galleryOverlayType: 'FULLSCREEN' | 'INLINE' = 'INLINE';
+  @Prop() galleryOverlayType: "FULLSCREEN" | "INLINE" = "INLINE";
 
   /**
    * Define whether to use 'FULLSCREEN' or 'INLINE' gallery dropdown type.
@@ -268,7 +268,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
    *
    * Default value is 'INLINE'.
    */
-  @Prop() galleryDropType: 'FULLSCREEN' | 'INLINE' = 'INLINE';
+  @Prop() galleryDropType: "FULLSCREEN" | "INLINE" = "INLINE";
 
   /**
    * Set to 'true' if text labels should be displayed below action buttons.
@@ -289,13 +289,13 @@ export class BlinkidInBrowser implements MicroblinkUI {
    *
    * Default value is 'false'.
    */
-   @Prop() showCameraFeedbackBarcodeMessage: boolean = false;
+  @Prop() showCameraFeedbackBarcodeMessage: boolean = false;
 
   /**
    * Set custom translations for UI component. List of available translation keys can be found in
    * `src/utils/translation.service.ts` file.
    */
-  @Prop({ attribute: 'translations' }) rawTranslations: string;
+  @Prop({ attribute: "translations" }) rawTranslations: string;
 
   /**
    * Set custom translations for UI component. List of available translation keys can be found in
@@ -384,17 +384,17 @@ export class BlinkidInBrowser implements MicroblinkUI {
 
   /**
    * Dictates if the Help Screens Floating-Action-Button (Fab) is offered.
-   * (in the bottom right corner of the Camera Experience). 
-   * 
+   * (in the bottom right corner of the Camera Experience).
+   *
    * Default value is 'true'.
    */
   @Prop() allowHelpScreensFab: boolean = true;
 
   /**
    * Dictates if the Help Screens Onboarding is active.
-   * 
+   *
    * Onboarding is a process of opening the Help Screens initial guides when the Camera Experience is being started.
-   * 
+   *
    * Default value is 'true'.
    */
   @Prop() allowHelpScreensOnboarding: boolean = true;
@@ -402,17 +402,17 @@ export class BlinkidInBrowser implements MicroblinkUI {
   /**
    * Dictates if the Help Screens Onboarding process is being started on every Camera Experience start,
    * or just on the first one.
-   * 
+   *
    * Default value is 'false' - onboarding ran only once.
    */
   @Prop() allowHelpScreensOnboardingPerpetuity: boolean = false;
 
   /**
    * Miliseconds timeout on which the "Need Help?" tooltip is turned on.
-   * 
+   *
    * First timeout is started each time the Camera Experience starts and is being reset every time
    * the Help Screens are consumed.
-   * 
+   *
    * Default value is 15000 - 15 seconds.
    */
   @Prop() helpScreensTooltipPauseTimeout: number = 15000;
@@ -480,7 +480,7 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * with error message will be displayed. Otherwise, UI will close.
    */
   @Method()
-  async setUiState(state: 'ERROR' | 'LOADING' | 'NONE' | 'SUCCESS') {
+  async setUiState(state: "ERROR" | "LOADING" | "NONE" | "SUCCESS") {
     this.mbComponentEl.setUiState(state);
   }
 
@@ -519,7 +519,10 @@ export class BlinkidInBrowser implements MicroblinkUI {
    * Possible values for `state` are 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK'.
    */
   @Method()
-  async setUiMessage(state: 'FEEDBACK_ERROR' | 'FEEDBACK_INFO' | 'FEEDBACK_OK', message: string) {
+  async setUiMessage(
+    state: "FEEDBACK_ERROR" | "FEEDBACK_INFO" | "FEEDBACK_OK",
+    message: string,
+  ) {
     this.feedbackEl.show({ state, message });
   }
 
@@ -552,11 +555,17 @@ export class BlinkidInBrowser implements MicroblinkUI {
 
   private init() {
     const rawRecognizers = GenericHelpers.stringToArray(this.rawRecognizers);
-    this.finalRecognizers = this.recognizers ? this.recognizers : rawRecognizers;
+    this.finalRecognizers = this.recognizers
+      ? this.recognizers
+      : rawRecognizers;
 
     const rawTranslations = GenericHelpers.stringToObject(this.rawTranslations);
-    this.finalTranslations = this.translations ? this.translations : rawTranslations;
-    this.translationService = new TranslationService(this.finalTranslations || {});
+    this.finalTranslations = this.translations
+      ? this.translations
+      : rawTranslations;
+    this.translationService = new TranslationService(
+      this.finalTranslations || {},
+    );
 
     this.sdkService = new SdkService();
   }
@@ -565,51 +574,65 @@ export class BlinkidInBrowser implements MicroblinkUI {
     return (
       <Host>
         <mb-container>
-          <mb-component dir={ this.hostEl.getAttribute('dir') }
-                        ref={ el => this.mbComponentEl = el as HTMLMbComponentElement }
-                        allowHelloMessage={ this.allowHelloMessage }
-                        recognitionPauseTimeout={ this.recognitionPauseTimeout }
-                        cameraExperienceStateDurations={ this.cameraExperienceStateDurations }
-                        engineLocation={ this.engineLocation }
-                        workerLocation={ this.workerLocation }
-                        licenseKey={ this.licenseKey }
-                        wasmType={ this.wasmType }
-                        blinkIdVariant={ this.blinkIdVariant }
-                        recognizers={ this.finalRecognizers }
-                        recognizerOptions={ this.recognizerOptions }
-                        recognitionTimeout={ this.recognitionTimeout }
-                        enableDrag={ this.enableDrag }
-                        hideLoadingAndErrorUi={ this.hideLoadingAndErrorUi }
-                        scanFromCamera={ this.scanFromCamera }
-                        scanFromImage={ this.scanFromImage }
-                        thoroughScanFromImage={ this.thoroughScanFromImage }
-                        galleryOverlayType={ this.galleryOverlayType }
-                        galleryDropType={ this.galleryDropType }
-                        showActionLabels={ this.showActionLabels }
-                        showModalWindows={ this.showModalWindows }
-                        showCameraFeedbackBarcodeMessage={this.showCameraFeedbackBarcodeMessage}
-                        iconCameraDefault={ this.iconCameraDefault}
-                        iconCameraActive={ this.iconCameraActive }
-                        iconGalleryDefault={ this.iconGalleryDefault }
-                        iconGalleryActive={ this.iconGalleryActive }
-                        iconInvalidFormat={ this.iconInvalidFormat }
-                        iconSpinnerScreenLoading={ this.iconSpinnerScreenLoading }
-                        iconSpinnerFromGalleryExperience={ this.iconSpinnerFromGalleryExperience }
-                        iconGalleryScanningCompleted={ this.iconGalleryScanningCompleted }
-                        sdkService={ this.sdkService }
-                        translationService={ this.translationService }
-                        cameraId={ this.cameraId }
-                        allowHelpScreens={ true }
-                        pingProxyUrl={ this.pingProxyUrl }
-                        allowHelpScreensFab={ this.allowHelpScreensFab }
-                        allowHelpScreensOnboarding={ this.allowHelpScreensOnboarding }
-                        allowHelpScreensOnboardingPerpetuity={ this.allowHelpScreensOnboardingPerpetuity }
-                        helpScreensTooltipPauseTimeout={ this.helpScreensTooltipPauseTimeout }
-                        onBlock={ (ev: CustomEvent<boolean>) => { this.blocked = ev.detail } }
-                        onFeedback={ (ev: CustomEvent<FeedbackMessage>) => this.feedbackEl.show(ev.detail) }></mb-component>
-          <mb-feedback dir={ this.hostEl.getAttribute('dir') }
-                       visible={ !this.hideFeedback }
-                       ref={ el => this.feedbackEl = el as HTMLMbFeedbackElement }></mb-feedback>
+          <mb-component
+            dir={this.hostEl.getAttribute("dir")}
+            ref={(el) => (this.mbComponentEl = el as HTMLMbComponentElement)}
+            allowHelloMessage={this.allowHelloMessage}
+            recognitionPauseTimeout={this.recognitionPauseTimeout}
+            cameraExperienceStateDurations={this.cameraExperienceStateDurations}
+            engineLocation={this.engineLocation}
+            workerLocation={this.workerLocation}
+            licenseKey={this.licenseKey}
+            wasmType={this.wasmType}
+            blinkIdVariant={this.blinkIdVariant}
+            recognizers={this.finalRecognizers}
+            recognizerOptions={this.recognizerOptions}
+            recognitionTimeout={this.recognitionTimeout}
+            enableDrag={this.enableDrag}
+            hideLoadingAndErrorUi={this.hideLoadingAndErrorUi}
+            scanFromCamera={this.scanFromCamera}
+            scanFromImage={this.scanFromImage}
+            thoroughScanFromImage={this.thoroughScanFromImage}
+            galleryOverlayType={this.galleryOverlayType}
+            galleryDropType={this.galleryDropType}
+            showActionLabels={this.showActionLabels}
+            showModalWindows={this.showModalWindows}
+            showCameraFeedbackBarcodeMessage={
+              this.showCameraFeedbackBarcodeMessage
+            }
+            iconCameraDefault={this.iconCameraDefault}
+            iconCameraActive={this.iconCameraActive}
+            iconGalleryDefault={this.iconGalleryDefault}
+            iconGalleryActive={this.iconGalleryActive}
+            iconInvalidFormat={this.iconInvalidFormat}
+            iconSpinnerScreenLoading={this.iconSpinnerScreenLoading}
+            iconSpinnerFromGalleryExperience={
+              this.iconSpinnerFromGalleryExperience
+            }
+            iconGalleryScanningCompleted={this.iconGalleryScanningCompleted}
+            sdkService={this.sdkService}
+            translationService={this.translationService}
+            cameraId={this.cameraId}
+            allowHelpScreens={true}
+            pingProxyUrl={this.pingProxyUrl}
+            allowHelpScreensFab={this.allowHelpScreensFab}
+            allowHelpScreensOnboarding={this.allowHelpScreensOnboarding}
+            allowHelpScreensOnboardingPerpetuity={
+              this.allowHelpScreensOnboardingPerpetuity
+            }
+            helpScreensTooltipPauseTimeout={this.helpScreensTooltipPauseTimeout}
+            onBlock={(ev: CustomEvent<boolean>) => {
+              this.blocked = ev.detail;
+            }}
+            onFeedback={(ev: CustomEvent<FeedbackMessage>) =>
+              this.feedbackEl.show(ev.detail)
+            }
+          ></mb-component>
+          <mb-feedback
+            dir={this.hostEl.getAttribute("dir")}
+            visible={!this.hideFeedback}
+            ref={(el) => (this.feedbackEl = el as HTMLMbFeedbackElement)}
+          ></mb-feedback>
         </mb-container>
       </Host>
     );
@@ -623,5 +646,4 @@ export class BlinkidInBrowser implements MicroblinkUI {
 
   private feedbackEl!: HTMLMbFeedbackElement;
   private mbComponentEl!: HTMLMbComponentElement;
-
 }
