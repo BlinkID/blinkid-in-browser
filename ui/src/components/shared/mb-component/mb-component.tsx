@@ -791,6 +791,16 @@ export class MbComponent {
           );
           break;
 
+        case RecognitionStatus.DetectionStatusSuccess:
+          this.detectionSuccessLock = true;
+          window.setTimeout(() => {
+            if (this.detectionSuccessLock) {
+              this.cameraExperience.setState(CameraExperienceState.Detection);
+              this.scanReset = false;
+            }
+          }, 100);
+          break;
+
         case RecognitionStatus.DetectionStatusCameraTooHigh:
           this.cameraExperience
             .setState(CameraExperienceState.MoveCloser)
@@ -891,25 +901,22 @@ export class MbComponent {
           break;
 
         case RecognitionStatus.ScanSuccessful:
-          const resultIsValid =
-            recognitionEvent.data.result.recognizer.processingStatus === 0 &&
-            recognitionEvent.data.result.recognizer.state === 2;
+          this.cameraExperience
+            .setState(CameraExperienceState.DoneAll, false, true)
+            .then(() => {
+              this.cameraExperience.resetState();
+              this.terminateHelpScreens();
+              this.cameraExperience.classList.add("hide");
 
-          if (resultIsValid) {
-            this.scanSuccess.emit(recognitionEvent.data?.result);
-            this.feedback.emit({
-              code: FeedbackCode.ScanSuccessful,
-              state: "FEEDBACK_OK",
-              message: "",
+              this.scanSuccess.emit(recognitionEvent.data?.result);
+              this.feedback.emit({
+                code: FeedbackCode.ScanSuccessful,
+                state: "FEEDBACK_OK",
+                message: "",
+              });
+
+              this.showOverlay("");
             });
-          } else if (!recognitionEvent.data.initiatedByUser) {
-            this.scanError.emit({
-              code: Code.EmptyResult,
-              fatal: true,
-              message: "Could not extract information from video feed!",
-              recognizerName: recognitionEvent.data.recognizerName,
-            });
-          }
           break;
 
         case RecognitionStatus.CameraNotAllowed:

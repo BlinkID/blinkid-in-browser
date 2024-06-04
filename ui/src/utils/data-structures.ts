@@ -246,7 +246,6 @@ export interface RecognitionEvent {
 export interface RecognitionResults {
   recognizer: BlinkIDSDK.RecognizerResult;
   recognizerName: string;
-  imageCapture?: boolean;
   resultSignedJSON?: BlinkIDSDK.SignedPayload;
 }
 

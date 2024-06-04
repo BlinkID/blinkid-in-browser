@@ -1,5 +1,11 @@
 # Release notes
 
+## 6.7.2
+
+### Bugfix
+
+- Fixes an issue introduced in 6.7.1 where the  UI component overlay would not hide after finishing a scanning session.
+
 ## 6.7.1
 
 ### New Features
