@@ -29,7 +29,7 @@ function main() {
     }
 
     // 1. It's possible to obtain a free trial license key on microblink.com
-    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJnWLQMdzzxvWwjQZHI4s2rd7I0KHMw86xb35WSEee0cmaLw/OJMDQfwG1HOOk8gruABnd4HLxGb1oJDEFooQhjkDNTU8KIeo7zDMvJ1RnDaC2z4lLatC2iMZOI9mwLB40Iisq2/CK3nw7FyXOwvXsTbvw86gKoAXMuNPFc3fjA7bJTHXP13inz/gEHBW1rvzoVQnV9tXeOuIepQeuCDHRYWcOUtzRiCUEutpVGvdaebYGZKdxI2HJokvoM7VnOUMs2/4YdKeyfnjAXQJagAwW72EM6SJxvSaA1KyiDoC6AAvKCVWSVgetFpRJTafnJ79+U=";
+    const licenseKey = "sRwAAAYJbG9jYWxob3N0r/lOPk4/w35CpJlWKoMczzAp/iKR2qW/4nwtcCXSiSKu9YoFzoKTmMO8IKRerT6WDMIFQRt1U41dS0kPoxLWxHvcQIdWXm8AnRy6BfyX5avZswYQKidGTDqOEmn/wnhBTOPoMyBwEdEksInZPAelmlMZR7pLX4EaNg30x2G4+hX7CKdpY/MGx2SxDljR4QT+7ElLMI99Oqj89ixZeUr5Gk3rJ8y8NmO6jLlc+FjYWKVviCvccPPWyk8xPBL1Jh0AlmK0hx92IMWZzgIiuMebNZ6TGwSQ5AdWBwPzAe+kNHdxKU8nAm5ptkEaIMBxmht5y5L47RsMSKB0HDY=";
 
     // 2. Create instance of SDK load settings with your license key
     const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(licenseKey);

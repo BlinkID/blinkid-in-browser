@@ -81,6 +81,9 @@ export interface VIZResult
     /** Blood type on a document owner. */
     readonly bloodType: StringResult;
 
+    /** Subtype of a document */
+    readonly documentSubtype: StringResult;
+
     /* Whether the result is empty */
     readonly empty: boolean;
 }
