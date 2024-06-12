@@ -1,10 +1,20 @@
 # Release notes
 
+## 6.8.0
+
+### New Features
+
+-   BlinkID now extracts precise information about subtypes of driver’s licenses and ID cards (e.g., conditional driver’s license, learner’s permit, provision, enhanced, etc.). This information is included in the scanning results as a `documentSubtype` field allowing you to tailor workflows or processes based on document limitations.
+
+#### Bugfixes
+
+-   Fixed data match for Paraguay ID 2023 to cover inconsistencies between the MRZ and Visual Inspection Zone (VIZ)
+
 ## 6.7.2
 
 ### Bugfix
 
-- Fixes an issue introduced in 6.7.1 where the  UI component overlay would not hide after finishing a scanning session.
+-   Fixes an issue introduced in 6.7.1 where the UI component overlay would not hide after finishing a scanning session.
 
 ## 6.7.1
 
