@@ -1,6 +1,24 @@
 # BlinkID In-browser SDK
 
+⚠️ We're in the process of revamping this repo and the accompanying documentation in order to make it more developer friendly 🤗. For now, we'd like to show you how easy it is to get started, so that you get the feel of how easy it is to integrate our solution.
+
+## How to run this repo?
+
+Test this repo out in under 3 minutes on your machine (if you have Node and Git installed) by doing the following steps:
+
+- in your terminal, clone [this](https://github.com/BlinkID/blinkid-in-browser) repo with `git clone https://github.com/BlinkID/blinkid-in-browser`
+- run `cd blinkid-in-browser/examples/getting-started && npm install && npm run dev`
+- get the license at [Microblink DevHub](https://developer.microblink.com/) and add it to the `LICENSE` variable in the `main.js` file in the `examples/getting-started` folder
+- open [http://localhost:5173/](http://localhost:5173/) and point your ID towards the camera
+
+If you prefer a short video for running this project, feel free to check it out [here](https://www.youtube.com/watch?v=c0ZA8af9oBc).
+
+If you want to recreate this project from scratch, step by step, please check out this tutorial: [Integrating ID Scanning and Extraction In Web Apps With BlinkID SDK](examples/getting-started/).
+
+---
+
 [![Build Status](https://travis-ci.org/BlinkID/blinkid-in-browser.svg?branch=master)](https://travis-ci.org/BlinkID/blinkid-in-browser) [![npm version](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk.svg)](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk)
+
 
 BlinkID In-browser SDK enables scanning of various identity documents, including driving licenses, national identity cards, passports and others. The SDK provides real-time in-browser data extraction, without any need for sending images to servers for processing.
 
@@ -28,6 +46,7 @@ Please keep in mind that BlinkID In-browser SDK is meant to be used natively in 
 ## Table of contents
 
 - [BlinkID In-browser SDK](#blinkid-in-browser-sdk)
+  - [How to run this repo?](#how-to-run-this-repo)
   - [Table of contents](#table-of-contents)
   - [ Components of SDK](#-components-of-sdk)
   - [ Integration instructions](#-integration-instructions)
