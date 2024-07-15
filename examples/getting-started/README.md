@@ -200,7 +200,7 @@ if (BlinkIDSDK.isBrowserSupported()) {
 Line by line:
 - we defined a constant called `LICENSE` (we'll tackle this in the next section)
 - imported all the exported members from the `@microblink/blinkid-in-browser-sdk` package, and assigned them to the `BlinkIDSDK` object
-- checked if the current browser is supported by the BlinkID SDK (you can see the list of supported browsers in their [documentation](https://github.com/BlinkID/blinkid-in-browser?tab=readme-ov-file#-supported-browsers))
+- checked if the current browser is supported by the BlinkID SDK (you can see the list of supported browsers in our [documentation](https://github.com/BlinkID/blinkid-in-browser?tab=readme-ov-file#-supported-browsers))
 
 ```javascript
 const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(LICENSE);
@@ -273,11 +273,7 @@ Uncaught Error
 This is because we haven't defined the license in the `LICENSE` variable.
 
 ## Getting the license
-To fix this, we need to go to [https://microblink.com/](https://microblink.com/) and scroll down to the `Start your free trial` section:
-
-![](https://i.imgur.com/ERsT4Dz.png)
-
-After that you'll be prompted with the standard signup form:
+To fix this, we need to go to https://login.microblink.com/ to create an account in Developer Hub. Scroll down to the Start your free trial section and you'll be prompted with the standard signup form:
 
 ![](https://i.imgur.com/f5W8Qko.png)
 
@@ -293,7 +289,7 @@ Once you sign in, you'll see a dashboard like this:
 
 ![](https://i.imgur.com/7MIYUV8.png)
 
-Here you should click on the `Start New Trial` button, and in the following screen select `BlinkID` as the product, `InBrowser` as the platform, and `localhost` as the domain name (for testing; before going into production, you should update this to your actual domain)
+Here you should click on the `Start New Trial` button, and in the following screen select `BlinkID` as the product, `InBrowser` as the platform, and `localhost` as the domain name for the testing environment. Before going into production, you should update the domain name to your actual domain.
 
 ![](https://i.imgur.com/l0CsJ51.png)
 
@@ -303,7 +299,7 @@ Then you'll get to a screen like this, where you can copy the code (it'll be a l
 
 Paste this code into the `LICENSE` variable in the `main.js` file, and we'll be all set.
 
-BTW, if you're curious, they indeed support a lot of platforms:
+BTW, if you're curious, BlinkID is available for lots of platforms:
 
 ![](https://i.imgur.com/vXhYuMG.png)
 
