@@ -1,7 +1,5 @@
 # BlinkID In-browser SDK
 
-⚠️ We're in the process of revamping this repo and the accompanying documentation in order to make it more developer-friendly 🤗. For now, we'd like to show you how to get started quickly, so that you get the feel for integrating our solution.
-
 ## How to run this repo?
 
 Test this repo quickly on your machine (assuming you have Node and Git installed) by doing the following steps:
