@@ -1,17 +1,19 @@
 # BlinkID In-browser SDK
 
-⚠️ We're in the process of revamping this repo and the accompanying documentation in order to make it more developer friendly 🤗. For now, we'd like to show you how easy it is to get started, so that you get the feel of how easy it is to integrate our solution.
+⚠️ We're in the process of revamping this repo and the accompanying documentation in order to make it more developer-friendly 🤗. For now, we'd like to show you how to get started quickly, so that you get the feel for integrating our solution.
 
 ## How to run this repo?
 
-Test this repo out in under 3 minutes on your machine (if you have Node and Git installed) by doing the following steps:
+Test this repo quickly on your machine (assuming you have Node and Git installed) by doing the following steps:
 
-- in your terminal, clone [this](https://github.com/BlinkID/blinkid-in-browser) repo with `git clone https://github.com/BlinkID/blinkid-in-browser`
+- clone [this](https://github.com/BlinkID/blinkid-in-browser) repo by running `git clone https://github.com/BlinkID/blinkid-in-browser` in your Terminal
 - run `cd blinkid-in-browser/examples/getting-started && npm install && npm run dev`
 - get the license at [Microblink DevHub](https://developer.microblink.com/) and add it to the `LICENSE` variable in the `main.js` file in the `examples/getting-started` folder
-- open [http://localhost:5173/](http://localhost:5173/) and point your ID towards the camera
+- open [http://localhost:5173/](http://localhost:5173/)
+  - port may be different in your case, check the output of the `npm run dev` command noted above
+- point your ID towards the camera
 
-If you prefer a short video for running this project, feel free to check it out [here](https://www.youtube.com/watch?v=c0ZA8af9oBc).
+If you prefer a short, 3 minute, video for running this project, feel free to check it out [here](https://www.youtube.com/watch?v=c0ZA8af9oBc).
 
 If you want to recreate this project from scratch, step by step, please check out this tutorial: [Integrating ID Scanning and Extraction In Web Apps With BlinkID SDK](examples/getting-started/).
 

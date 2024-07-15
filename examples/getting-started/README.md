@@ -63,7 +63,7 @@ Done. Now run:
 ## Running our scaffolded project
 Let’s run the commands (in terminal) noted at the end of the previous output:
 
-```
+```bash
 cd blinkid-integration
 npm install
 npm run dev
@@ -71,7 +71,7 @@ npm run dev
 
 Once this finishes, you should get an output similar to this:
 
-```
+```bash
 added 10 packages, and audited 11 packages in 10s
 
 3 packages are looking for funding
@@ -111,11 +111,11 @@ If you open the scafolded project in your favorite editor (I'm using VSCode), yo
 
 ![](https://i.imgur.com/rLHmqyW.png)
 
-If you're interested and haven't used Vite before, I encourage you to check out the code. It showcases the ability to use the `import` command (which traditionally can't be used in the plain JS world without using a module bundler)
+If you're interested and haven't used Vite before, I encourage you to check out the code. It showcases the ability to use the `import` command.
 
 Now, let's replace the current contents of the `index.html` file with the following:
 
-```
+```html
 <!doctype html>
 <html lang="en">
   <head>
@@ -136,7 +136,7 @@ You will notice that we only changed the `title`, and instead of `<div id="app">
 ## Adding JavaScript for document scanning and extraction
 Replace all the contents of `main.js` file with the following code:
 
-```
+```javascript
 const LICENSE = '';
 import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 
@@ -190,7 +190,7 @@ else {
 
 Now, let's understand what this code is doing...
 
-```
+```javascript
 const LICENSE = '';
 import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 
@@ -202,7 +202,7 @@ Line by line:
 - imported all the exported members from the `@microblink/blinkid-in-browser-sdk` package, and assigned them to the `BlinkIDSDK` object
 - checked if the current browser is supported by the BlinkID SDK (you can see the list of supported browsers in their [documentation](https://github.com/BlinkID/blinkid-in-browser?tab=readme-ov-file#-supported-browsers))
 
-```
+```javascript
 const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(LICENSE);
 loadSettings.engineLocation = window.location.origin + "/resources/";
 ```
@@ -215,7 +215,7 @@ Line by line:
 - called the `loadWasmModule` method to load the WASM module with the specified settings.
   - this method returns a promise, and once it resolves succesfully, the asynchronous callback function is executed, exposing the `wasmSDK` variable
 
-```
+```javascript
 const recognizer = await BlinkIDSDK.createBlinkIdSingleSideRecognizer(wasmSDK);
 const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
     wasmSDK,
@@ -229,7 +229,7 @@ Line by line:
 - created a `RecognizerRunner` instance which manages the recognition process
   - it takes the Wasm SDK instance, an array of recognizers, and a boolean flag indicating whether the recognizer should allow multiple results or not (read more about it [here](https://github.com/BlinkID/blinkid-in-browser?tab=readme-ov-file#-recognizerrunner))
 
-```
+```javascript
 const cameraFeed = document.getElementById("myCameraVideoElement");
 const videoRecognizer = await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
     cameraFeed,
@@ -241,7 +241,7 @@ Line by line:
 - selected the video element from the DOM which will be used to display the camera feed
 - in a `try/catch` block we created a `VideoRecognizer` instance from the camera stream using the selected video element (`cameraFeed`) and the recognizer runner (`recognizerRunner`)
 
-```
+```javascript
 const processResult = await videoRecognizer.recognize();
 console.log(processResult);
 
@@ -264,7 +264,7 @@ Finally, we catch any errors from the `try/catch` and promise.
 ## Testing the integration - take #1
 If you open the `index.html` file in a web browser, you'll see and error, something along the lines of:
 
-```
+```javascript
 Uncaught Error
     at new WasmSDKLoadSettings (@microblink_blinkid-in-browser-sdk.js?v=1a0eef98:1868:13)
     at main.js:5:24
