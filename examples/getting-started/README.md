@@ -31,8 +31,8 @@ Intrigued? OK, let's go through a step by step process in getting started with t
 
 ## Prerequisites
 Make sure that you have the following tools installed:
-- Node.js – here’s a free but a bit outdated [step by step guide/book](https://leanpub.com/meantodo) for both Windows and Mac. Or, really, just go to the [main website](https://nodejs.org/en) and download the executable for your machine
-- Git – here’s a fun [getting started tutorial](https://nikola-breznjak.com/blog/miscellaneou/learn-git-fast-job-depends/) in case you’re new to it
+- Node.js – go to the [main website](https://nodejs.org/en) and download the executable for your machine
+- Git – go to the [main website](https://git-scm.com/downloads) and download the executable for your machine
 
 ## Starting a new project with Vite
 As you can see in the latest [State of JS report](https://2023.stateofjs.com/en-US/libraries/build_tools/), [Vite](https://vitejs.dev/) has become one of the most belowed build tools, so we'll use it here.
