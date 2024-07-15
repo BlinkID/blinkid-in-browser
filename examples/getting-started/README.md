@@ -2,7 +2,7 @@
 
 ## How to run this repo?
 Test this repo out in under a minute on your machine (if you have Node and Git installed) by doing the following steps:
-- in your terminal, clone [this](https://github.com/Hitman666/BlinkID-InBrowserSDK-GettingStarted) repo with `git clone https://github.com/Hitman666/BlinkID-InBrowserSDK-GettingStarted.git`
+- in your terminal, clone [this](https://github.com/BlinkID/blinkid-in-browser) repo with `git clone https://github.com/BlinkID/blinkid-in-browser`
 - get the license at [Microblink DevHub](https://developer.microblink.com/) and add it to the `LICENSE` variable in the `main.js` file
 - run `cd BlinkID-InBrowserSDK-GettingStarted && npm install && npm run dev`
 - open [http://localhost:5173/](http://localhost:5173/) and point your ID towards the camera
@@ -257,7 +257,7 @@ else {
 Line by line:
 - started the recognition process and logged the result to the console
 - checked if the process result is not empty, then waited for the results from the recognizer and logged them in the console
-- if process result is empty, we log the approprite message
+- if process result is empty, we log the appropriate message
 
 Finally, we catch any errors from the `try/catch` and promise.
 
