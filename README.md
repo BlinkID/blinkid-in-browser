@@ -1,6 +1,26 @@
 # BlinkID In-browser SDK
 
+⚠️ We're in the process of revamping this repo and the accompanying documentation in order to make it more developer-friendly 🤗. For now, we'd like to show you how to get started quickly, so that you get the feel for integrating our solution.
+
+## How to run this repo?
+
+Test this repo quickly on your machine (assuming you have Node and Git installed) by doing the following steps:
+
+- clone [this](https://github.com/BlinkID/blinkid-in-browser) repo by running `git clone https://github.com/BlinkID/blinkid-in-browser` in your Terminal
+- run `cd blinkid-in-browser/examples/getting-started && npm install && npm run dev`
+- get the license at [Microblink DevHub](https://developer.microblink.com/) and add it to the `LICENSE` variable in the `main.js` file in the `examples/getting-started` folder
+- open [http://localhost:5173/](http://localhost:5173/)
+  - port may be different in your case, check the output of the `npm run dev` command noted above
+- point your ID towards the camera
+
+If you prefer a short, 3 minute, video for running this project, feel free to check it out [here](https://www.youtube.com/watch?v=c0ZA8af9oBc).
+
+If you want to recreate this project from scratch, step by step, please check out this tutorial: [Integrating ID Scanning and Extraction In Web Apps With BlinkID SDK](examples/getting-started/).
+
+---
+
 [![Build Status](https://travis-ci.org/BlinkID/blinkid-in-browser.svg?branch=master)](https://travis-ci.org/BlinkID/blinkid-in-browser) [![npm version](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk.svg)](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk)
+
 
 BlinkID In-browser SDK enables scanning of various identity documents, including driving licenses, national identity cards, passports and others. The SDK provides real-time in-browser data extraction, without any need for sending images to servers for processing.
 
@@ -9,17 +29,11 @@ For more information on how to integrate BlinkID SDK into your web app, read the
 Check out the [official demo app](https://demo.microblink.com/in-browser-sdk/blinkid/) or live examples of BlinkID SDK in action:
 
 1. [BlinkID SDK with built-in UI](https://blinkid.github.io/blinkid-in-browser/ui/demo.html)
-    * See what the bare UI looks like at [Codepen](https://codepen.io/microblink/pen/GRZGQab)
 2. [Scan the front side of an identity document with a web camera](https://blinkid.github.io/blinkid-in-browser/examples/blinkid-camera/javascript/index.html)
-    * See example at [Codepen](https://codepen.io/microblink/pen/gOPJoRp)
 3. [Scan the front side of an identity document by uploading its image](https://blinkid.github.io/blinkid-in-browser/examples/blinkid-file/javascript/index.html)
-    * See example at [Codepen](https://codepen.io/microblink/pen/ExPzzda)
 4. [Scan both sides of an identity document with a web camera](https://blinkid.github.io/blinkid-in-browser/examples/multi-side/javascript/index.html)
-    * See example at [Codepen](https://codepen.io/microblink/pen/BajeeMx)
 5. [Scan both sides of an identity document by uploading its image](https://blinkid.github.io/blinkid-in-browser/examples/multi-side-file/javascript/index.html)
-    * See example at [Codepen](https://codepen.io/microblink/pen/MWboMrr)
 6. [Scan barcode from an identity document from web camera](https://blinkid.github.io/blinkid-in-browser/examples/idbarcode/javascript/index.html)
-    * See example at [Codepen](https://codepen.io/microblink/pen/NWxVVJO)
 
 To see the source code of the above examples, check out the [examples directory](examples). If you'd like to run examples of the UI component, either through the browser or locally, see the [ui/examples](ui/examples) directory.
 
@@ -28,6 +42,7 @@ Please keep in mind that BlinkID In-browser SDK is meant to be used natively in 
 ## Table of contents
 
 - [BlinkID In-browser SDK](#blinkid-in-browser-sdk)
+  - [How to run this repo?](#how-to-run-this-repo)
   - [Table of contents](#table-of-contents)
   - [ Components of SDK](#-components-of-sdk)
   - [ Integration instructions](#-integration-instructions)
