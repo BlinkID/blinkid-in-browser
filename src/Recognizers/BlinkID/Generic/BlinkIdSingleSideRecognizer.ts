@@ -31,22 +31,27 @@ import { Recognizer, RecognizerResult, RecognizerSettings, WasmSDK } from "../..
 import { ClassAnonymizationSettings } from "./ClassAnonymizationSettings";
 import { Rectangle } from "../../../MicroblinkSDK/Geometry";
 import { DocumentSide } from "../../../MicroblinkSDK/DocumentSide";
+import { CustomClassRules } from "./CustomClassRules";
 
 // required for the final SDK
 export * from "./AddressDetailedInfo";
+export * from "./AlphabetType";
 export * from "./AnonymizationMode";
 export * from "./BarcodeResult";
+export * from "./ClassFilter";
 export * from "./ClassInfo";
+export * from "./CustomClassRules";
+export * from "./DetailedFieldType";
+export * from "./DocumentNumberAnonymizationSettings";
 export * from "./DriverLicenseDetailedInfo";
-export * from "./ImageAnalysisResult";
+export * from "./FieldType";
 export * from "./GenericResultStructures";
+export * from "./ImageAnalysisResult";
 export * from "./ProcessingStatus";
 export * from "./RecognitionMode";
-export * from "./FieldType";
-export * from "./DocumentNumberAnonymizationSettings";
 export * from "./RecognitionModeFilter";
-export * from "./VIZResult";
 export * from "./StrictnessLevel";
+export * from "./VIZResult";
 
 /**
  * A barcode scanning started callback function.
@@ -144,6 +149,15 @@ implements RecognizerSettings, FullDocumentImageOptions, FaceImageOptions, Signa
      * Based on anonymizationMode setting, data will be redacted from the image, the result or both.
      */
     additionalAnonymization: Array<ClassAnonymizationSettings>  | null = null ;
+
+    /**
+     * Define custom rules for specific document class.
+     *
+     * The new class rules will be a combination of our internal and user-defined rules.
+     *
+     * The more detailed class filter will have priority over the other.
+     */
+    customClassRules: Array<CustomClassRules> | null = null;
 
     /**
      * Called when barcode scanning step starts.
@@ -432,6 +446,26 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult {
      * Blood type on a document owner.
      */
     readonly bloodType: StringResult;
+
+    /**
+     * Subtype of a document
+     */
+    readonly documentSubtype: StringResult;
+
+    /**
+     * Remarks on a document
+     */
+    readonly remarks: StringResult;
+
+    /**
+     * Type of residence permit
+     */
+    readonly residencePermitType: StringResult;
+
+    /**
+     * Type of visa
+     */
+    readonly visaType: StringResult;
 }
 
 /**

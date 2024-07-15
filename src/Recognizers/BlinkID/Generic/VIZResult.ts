@@ -84,6 +84,15 @@ export interface VIZResult
     /** Subtype of a document */
     readonly documentSubtype: StringResult;
 
-    /* Whether the result is empty */
+    /** Whether the result is empty */
     readonly empty: boolean;
+
+    /** Remarks on a document */
+    readonly remarks: StringResult;
+
+    /** Type of residence permit */
+    readonly residencePermitType: StringResult;
+
+    /** Type of visa */
+    readonly visaType: StringResult;
 }

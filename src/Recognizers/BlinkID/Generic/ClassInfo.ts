@@ -426,7 +426,8 @@ export enum Region
     GUERRERO_ACAPULCO_DE_JUAREZ = 135,
     HARYANA = 136,
     SERGIPE = 137,
-    COUNT = 138
+    ALAGOAS = 138,
+    COUNT = 139
 }
 
 export enum DocumentType
@@ -498,5 +499,9 @@ export enum DocumentType
     NBI_CLEARANCE = 64,
     PROOF_OF_REGISTRATION = 65,
     TEMPORARY_PROTECTION_PERMIT = 66,
-    COUNT = 67
+    AFGHAN_CITIZEN_CARD = 67,
+    EID = 68,
+    PASS = 69,
+    SIS_ID = 70,
+    COUNT = 71
 }
