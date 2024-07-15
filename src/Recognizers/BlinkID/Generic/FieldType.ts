@@ -43,7 +43,10 @@ export enum FieldType
     VehicleClass = 35,
     BloodType = 36,
     Sponsor = 37,
-    DocumentSubtype = 38,
+    VisaType = 38,
+    DocumentSubtype = 39,
+    Remarks = 40,
+    ResidencePermitType = 41,
 
     /** Number of possible field types. */
     Count
