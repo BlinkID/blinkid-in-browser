@@ -316,7 +316,7 @@ Integrating the BlinkID SDK into your web application is a straightforward proce
 
 By following these steps, you can quickly set up document scanning and OCR functionalities to extract data from driver's licenses, improving both user experience and efficiency.
 
-## For those who to learn more
+## For those who want to learn more
 This was a barebones example just to get you started quickly.
 
 Now, if you wish to learn more, you can check out the official [repo on Github](https://github.com/BlinkID/blinkid-in-browser?tab=readme-ov-file#-supported-browsers), and you can also try to add some modifications yourself, like:
