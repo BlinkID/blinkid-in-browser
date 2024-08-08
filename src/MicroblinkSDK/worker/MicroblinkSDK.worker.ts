@@ -152,6 +152,11 @@ export default class MicroblinkWorker
                         msg as Messages.SetPingProxyUrl
                     );
                     break;
+                case Messages.SetPingData.action:
+                    this.setPingData(
+                        msg as Messages.SetPingData,
+                    );
+                    break;
                 default:
                     throw new SDKError( {
                         code: ErrorTypes.ErrorCodes
@@ -1044,7 +1049,6 @@ export default class MicroblinkWorker
 
     private setPingProxyUrl( msg: Messages.SetPingProxyUrl )
     {
-        console.log( "Setting ping proxy url...", msg );
         if ( this.nativeRecognizerRunner === null )
         {
             this.notifyError(
@@ -1070,7 +1074,7 @@ export default class MicroblinkWorker
                 this.notifyError(
                     msg,
                     new SerializableSDKError(
-                        ErrorTypes.pingProxyErrors.permissionNotGranted,
+                        ErrorTypes.pingErrors.permissionNotGranted,
                         error,
                     ),
                 );
@@ -1085,6 +1089,82 @@ export default class MicroblinkWorker
                     ),
                 );
             }
+        }
+    }
+
+    private setPingData( msg: Messages.SetPingData )
+    {
+        if ( this.nativeRecognizerRunner === null )
+        {
+            this.notifyError(
+                msg,
+                new SerializableSDKError( ErrorTypes.workerErrors.runnerMissing ),
+            );
+            return;
+        }
+
+        try
+        {
+            /* eslint-disable @typescript-eslint/no-unsafe-call,
+                              @typescript-eslint/no-unsafe-member-access */
+            this.nativeRecognizerRunner.setPingData(
+                msg.data,
+            );
+            this.notifySuccess( msg );
+        }
+        catch ( error: any )
+        {
+            if ( "cause" in error )
+            {
+                console.log( "there is cause in error", error.cause );
+
+                switch ( error.cause )
+                {
+                    case "PING_EXTRAS_TOO_MANY_KEYS":
+                        this.notifyError(
+                            msg,
+                            new SerializableSDKError(
+                                ErrorTypes.pingErrors.dataKeysAmountExceeded,
+                                error,
+                            ),
+                        );
+                        break;
+                    case "PING_EXTRAS_KEY_TOO_LONG":
+                        this.notifyError(
+                            msg,
+                            new SerializableSDKError(
+                                ErrorTypes.pingErrors.dataKeyLengthExceeded,
+                                error,
+                            ),
+                        );
+                        break;
+                    case "PING_EXTRAS_VALUE_TOO_LONG":
+                        this.notifyError(
+                            msg,
+                            new SerializableSDKError(
+                                ErrorTypes.pingErrors.dataValueLengthExceeded,
+                                error,
+                            ),
+                        );
+                        break;
+                    default:
+                        this.notifyError(
+                            msg,
+                            new SerializableSDKError(
+                                ErrorTypes.workerErrors.runnerMissing,
+                                error,
+                            ),
+                        );
+                }
+            }
+
+            this.notifyError(
+                msg,
+                new SerializableSDKError(
+                    ErrorTypes.workerErrors.runnerMissing,
+                    error,
+                ),
+            );
         }
     }
 

@@ -489,7 +489,7 @@ class RemoteRecognizerRunner implements RecognizerRunner
     {
         if ( !isValidURL( url ) )
         {
-            throw new SDKError( ErrorTypes.pingProxyErrors.invalidProxyUrl );
+            throw new SDKError( ErrorTypes.pingErrors.invalidProxyUrl );
         }
 
         return new Promise< void >
@@ -497,6 +497,19 @@ class RemoteRecognizerRunner implements RecognizerRunner
             ( resolve, reject ) =>
             {
                 const msg = new Messages.SetPingProxyUrl( url );
+                const handler = defaultEventHandler( resolve, reject );
+                this.wasmSDKWorker.postMessage( msg, handler );
+            }
+        );
+    }
+
+    setPingData( data: Record<string, string> ): Promise< void >
+    {
+        return new Promise< void >
+        (
+            ( resolve, reject ) =>
+            {
+                const msg = new Messages.SetPingData( data );
                 const handler = defaultEventHandler( resolve, reject );
                 this.wasmSDKWorker.postMessage( msg, handler );
             }

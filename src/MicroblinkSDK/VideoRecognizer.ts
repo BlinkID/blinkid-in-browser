@@ -204,6 +204,8 @@ export class VideoRecognizer
             preferredCameraType,
         );
 
+        await recognizerRunner.setPingData( { selectedCamera: selectedCamera.label } );
+
         return new VideoRecognizer(
             cameraFeed,
             recognizerRunner,
@@ -484,6 +486,8 @@ export class VideoRecognizer
             this.videoElement,
             PreferredCameraType.BackFacingCamera,
         );
+
+        await this.recognizerRunner.setPingData( { selectedCamera: camera.label } );
 
         await this.resumeRecognition( true );
     };
