@@ -58,6 +58,9 @@ export enum ErrorCodes {
 
     INVALID_PING_PROXY_URL                     = "INVALID_PROXY_URL",
     PING_PROXY_PERMISSION_NOT_GRANTED          = "PING_PROXY_PERMISSION_NOT_GRANTED",
+    PING_DATA_KEYS_AMOUNT_EXCEEDED             = "PING_DATA_KEYS_AMOUNT_EXCEEDED",
+    PING_DATA_KEY_LENGTH_EXCEEDED              = "PING_DATA_KEY_LENGTH_EXCEEDED",
+    PING_DATA_VALUE_LENGTH_EXCEEDED            = "PING_DATA_VALUE_LENGTH_EXCEEDED"
 }
 
 export enum ErrorMessages {
@@ -111,6 +114,9 @@ export enum ErrorMessages {
 
     INVALID_PING_PROXY_URL                     = "Provided ping proxy URL is not a valid secure URL in format 'https://{host}:{port?}'.",
     PING_PROXY_PERMISSION_NOT_GRANTED          = "Allow ping proxy permission not found in license.",
+    PING_DATA_KEYS_AMOUNT_EXCEEDED             = "Maximum number of ping data keys exceeded.",
+    PING_DATA_KEY_LENGTH_EXCEEDED              = "Ping data key is too long.",
+    PING_DATA_VALUE_LENGTH_EXCEEDED            = "Ping data value is too long."
 }
 
 export const videoRecognizerErrors = {
@@ -297,7 +303,7 @@ export const workerErrors = {
     },
 };
 
-export const pingProxyErrors = {
+export const pingErrors = {
     invalidProxyUrl: {
         message: ErrorMessages.INVALID_PING_PROXY_URL,
         code: ErrorCodes.INVALID_PING_PROXY_URL,
@@ -306,4 +312,16 @@ export const pingProxyErrors = {
         message: ErrorMessages.PING_PROXY_PERMISSION_NOT_GRANTED,
         code: ErrorCodes.PING_PROXY_PERMISSION_NOT_GRANTED,
     },
+    dataKeysAmountExceeded: {
+        message: ErrorMessages.PING_DATA_KEYS_AMOUNT_EXCEEDED,
+        code: ErrorCodes.PING_DATA_KEYS_AMOUNT_EXCEEDED,
+    },
+    dataKeyLengthExceeded: {
+        message: ErrorMessages.PING_DATA_KEY_LENGTH_EXCEEDED,
+        code: ErrorCodes.PING_DATA_KEY_LENGTH_EXCEEDED,
+    },
+    dataValueLengthExceeded: {
+        message: ErrorMessages.PING_DATA_VALUE_LENGTH_EXCEEDED,
+        code: ErrorCodes.PING_DATA_VALUE_LENGTH_EXCEEDED,
+    }
 };

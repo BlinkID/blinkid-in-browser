@@ -317,6 +317,19 @@ export class SetPingProxyUrl extends BaseRequestMessage
     }
 }
 
+export class SetPingData extends BaseRequestMessage
+{
+    static readonly action: string = "setPingData";
+
+    readonly data: Record<string, string>;
+
+    constructor( data: Record<string, string> )
+    {
+        super( SetPingData.action );
+        this.data = data;
+    }
+}
+
 // ===================================== /
 // Response messages
 // ===================================== /

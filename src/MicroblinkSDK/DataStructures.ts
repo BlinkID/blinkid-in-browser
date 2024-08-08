@@ -208,6 +208,13 @@ export interface RecognizerRunner extends WasmNativeObject
      * @param url Url of a server where ping proxy is hosted.
      */
     setPingProxyUrl( url: string ): Promise< void >;
+
+    /**
+     * Sets custom data to be sent with ping message. This data will be sent inside "extra" field in ping message.
+     * Data should be in key-value format, where key is a string and value is a string.
+     * @param data Data to be sent with ping message.
+     */
+    setPingData( data: Record<string, string> ): Promise<void>;
 }
 
 /**

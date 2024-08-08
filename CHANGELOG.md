@@ -1,5 +1,9 @@
 # Release notes
 
+## 6.9.1
+
+- Fixes iOS camera selection logic when the system locale is set to Spanish
+
 ## 6.9.0
 
 ### New features

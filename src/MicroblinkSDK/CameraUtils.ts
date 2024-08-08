@@ -23,6 +23,7 @@ const backCameraKeywords: string[] = [
     "trás",
     "traseira",
     "posteriore",
+    "posterior",
     "后面",
     "後面",
     "背面",
@@ -302,7 +303,7 @@ export async function selectCamera(
     if ( isIOSDevice() && preferredCameraType === PreferredCameraType.BackFacingCamera )
     {
         // If device is an iOS and preferred camera is back facing
-        // pick camera which matches the localized 'Back Camera'
+        // pick camera which matches the localized 'Back Dual Wide Camera'
 
         let selectedCamera = backCameras.find
         ( camera => backDualWideCameraLocalizations.includes( camera.label ) );
