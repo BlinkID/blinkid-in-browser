@@ -1,5 +1,10 @@
 # Release notes
 
+## 6.9.2
+
+- added new member `barcodeStepUsed` to `BlinkIDSingleSideRecognizer` and `BlinkIDMultiSideRecognizer` results
+- improved barcode scanning
+
 ## 6.9.1
 
 - Fixes iOS camera selection logic when the system locale is set to Spanish
