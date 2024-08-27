@@ -281,6 +281,15 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult {
      * The data extracted from the barcode.
      */
     readonly barcode: BarcodeResult;
+    /**
+    * This member indicates whether the barcode scanning step was utilized during the
+    * process.
+    * If the barcode scanning step was executed: a parsable barcode image will be stored in the
+    * `barcodeCameraFrame`.
+    * If the barcode scanning step was not executed: a parsable barcode image will be stored in the
+    * `fullDocumentFrontImage` or `fullDocumentBackImage` depending on which side the barcode was on.
+    * */
+    readonly barcodeStepUsed: boolean;
 
     /**
      * The class info
