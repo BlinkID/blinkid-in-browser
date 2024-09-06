@@ -462,6 +462,18 @@ export class MbCameraExperience {
         );
       }
 
+      case CameraExperienceState.WrongSide: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-wrong-side"),
+        );
+      }
+
+      case CameraExperienceState.FacePhotoCovered: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-face-photo-covered"),
+        );
+      }
+
       case CameraExperienceState.Flip:
         return getStateMessageAsHTML(
           this.translationService.i("camera-feedback-flip"),

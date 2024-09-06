@@ -844,6 +844,16 @@ export class MbComponent {
           this.cameraExperience.setState(CameraExperienceState.BlurDetected);
           break;
 
+        case RecognitionStatus.WrongSide:
+          this.cameraExperience.setState(CameraExperienceState.WrongSide);
+          break;
+
+        case RecognitionStatus.FacePhotoCovered:
+          this.cameraExperience.setState(
+            CameraExperienceState.FacePhotoCovered,
+          );
+          break;
+
         case RecognitionStatus.DetectionStatusSuccess:
           this.detectionSuccessLock = true;
           window.setTimeout(() => {

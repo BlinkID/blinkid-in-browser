@@ -27,6 +27,27 @@ export interface CheckConclusion {
   message?: string;
 }
 
+/**
+ * Get the additional processing information from the BlinkIdResult.
+ * @param result
+ * @returns
+ */
+export function getAdditionalProcessingInfo(result: BlinkIDSDK.BlinkIDResult) {
+  const isMultiside = "scanningFirstSideDone" in result;
+
+  const additionalProcessingInfo = (() => {
+    if (isMultiside) {
+      return !result.scanningFirstSideDone
+        ? result.frontAdditionalProcessingInfo
+        : result.backAdditionalProcessingInfo;
+    }
+
+    return result.additionalProcessingInfo;
+  })();
+
+  return additionalProcessingInfo;
+}
+
 export async function getCameraDevices(): Promise<Array<CameraEntry>> {
   const devices = await BlinkIDSDK.getCameraDevices();
   const allDevices = devices.frontCameras.concat(devices.backCameras);
@@ -206,9 +227,31 @@ export class SdkService {
 
       const recognizerSettings = await activeRecognizer.currentSettings();
 
-      // add callbacks for blur and glare
+      // add callbacks for blur, glare and processing statuses
       this.videoRecognizer.setOnFrameProcessed(async (result) => {
         const isMultiside = "scanningFirstSideDone" in result;
+
+        const additionalProcessingInfo = getAdditionalProcessingInfo(result);
+
+        if (
+          additionalProcessingInfo.imageExtractionFailures.includes(
+            BlinkIDSDK.ImageExtractionType.Face,
+          )
+        ) {
+          eventCallback({
+            status: RecognitionStatus.FacePhotoCovered,
+          });
+          return;
+        }
+
+        if (
+          result.processingStatus ===
+          BlinkIDSDK.ProcessingStatus.ScanningWrongSide
+        ) {
+          eventCallback({
+            status: RecognitionStatus.WrongSide,
+          });
+        }
 
         const imageAnalysisResult = (() => {
           if (isMultiside) {

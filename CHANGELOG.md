@@ -1,137 +1,186 @@
 # Release notes
 
+## 6.10.0
+
+### New features
+
+-   **Improved reliability and first-time successful scanning experience**
+    -   **_Avoiding Double Scans of the Front Side_**: For a more reliable scanning process, BlinkID now prompts users to flip the document when they scan the front side twice. This improves the overall experience and reduces the chance of mistakes.
+    -   **_Starting with the Right Side_**: If users attempt to scan the back side of a document first, BlinkID will prompt them to begin with the front side. This feature ensures that users follow the correct order, leading to a more reliable and user-friendly experience.
+
+### Expanded document coverage
+
+#### New document versions for supported documents
+
+-   Sweden - Social Security Card - Back side
+-   Bolivia - Driver's License - Back side
+-   Brazil, Distrito Federal - Identity Card - Back side
+
+#### Out of beta
+
+-   Colombia - Temporary Protection Permit
+
+#### New beta documents support
+
+-   France - Professional ID
+-   Mexico - Tax ID
+
+#### New document versions for beta-supported documents
+
+-   Brazil, Parana - Identity Card - Back side
+-   Brazil, Santa Catarina - Identity Card - Back side
+
+#### New segments supported on documents
+
+-   Peru - Alien ID - MRZ
+
+### Other changes
+
+-   Added `imageExtractionFailures` to `AdditionalProcessingInfo` - this allows clients to actively track if any `ImageExtractionType` (`FullDocument`, `Face`, `Signature`) is not visible on the presented document.
+-   Added a new result member, `barcodeStepUsed`, to both `BlinkIdSingleSideRecognizer` and `BlinkIdMultiSideRecognizer`. This member indicates whether the barcode scanning step was utilized during the process.
+-   Added two new settings for `BlinkIdSingleSideRecognizer` and `BlinkIdMultiSideRecognizer`:
+    -   `allowBarcodeScanOnly` - allows barcode recognition to proceed even if the initial extraction fails - set to `false` by default
+    -   `combineFrameResults` - enables the aggregation of data from multiple frames - set to `true` by default
+
 ## 6.9.2
 
-- added new member `barcodeStepUsed` to `BlinkIDSingleSideRecognizer` and `BlinkIDMultiSideRecognizer` results
-- improved barcode scanning
+-   added new member `barcodeStepUsed` to `BlinkIDSingleSideRecognizer` and `BlinkIDMultiSideRecognizer` results
+-   improved barcode scanning
 
 ## 6.9.1
 
-- Fixes iOS camera selection logic when the system locale is set to Spanish
+-   Fixes iOS camera selection logic when the system locale is set to Spanish
 
 ## 6.9.0
 
 ### New features
 
 **Custom mandatory fields**
-  - We’re introducing the option for customers to define their own set of mandatory fields. This feature allows greater flexibility in the scanning process by enabling the extraction of only the necessary information from identity documents. Now you can customize the process and focus on only those fields that are relevant to your use case.  
-  - Custom mandatory fields can be set at the document level or applied universally to all document types.
+
+-   We’re introducing the option for customers to define their own set of mandatory fields. This feature allows greater flexibility in the scanning process by enabling the extraction of only the necessary information from identity documents. Now you can customize the process and focus on only those fields that are relevant to your use case.
+-   Custom mandatory fields can be set at the document level or applied universally to all document types.
 
 ### Expanded Document Coverage
 
 #### New Documents Support
-- Austria - Polycarbonate Passport
-- Canada - Polycarbonate Passport
-- Ecuador - Paper Passport
-- Germany - eID
-- Guatemala - Alien ID
-- Iraq - Polycarbonate Passport
-- Namibia - Identity Card
-- Nepal - Polycarbonate Passport
-- Sweden - SIS ID
-- USA, Delaware - Identity Card
-- USA, Louisiana - Identity Card
-- USA, Vermont - Identity Card
+
+-   Austria - Polycarbonate Passport
+-   Canada - Polycarbonate Passport
+-   Ecuador - Paper Passport
+-   Germany - eID
+-   Guatemala - Alien ID
+-   Iraq - Polycarbonate Passport
+-   Namibia - Identity Card
+-   Nepal - Polycarbonate Passport
+-   Sweden - SIS ID
+-   USA, Delaware - Identity Card
+-   USA, Louisiana - Identity Card
+-   USA, Vermont - Identity Card
 
 #### New Document Versions for Supported Documents
-- Bolivia - Identity Card
-- Canada, British Columbia - Public Services Card
-- Finland - Identity Card
-- Greece - Identity Card
-- Malaysia - iKAD
-- Mexico, Nuevo Leon - Driver's License
-- Mexico, Tlaxcala - Driver's License
-- Morocco - Driver's License
-- Thailand - Polycarbonate Passport
-- USA - Alaska - Driver's License
-- USA - Alaska - Identity Card
-- USA - Connecticut - Identity Card
-- USA - Delaware - Driver's License
-- USA - District of Columbia - Driver's License
-- USA - Hawaii - Identity Card
-- USA - Idaho - Driver's License
-- USA - Indiana - Driver's License
-- USA - Indiana - Identity Card
-- USA - Iowa - Identity Card
-- USA - Kansas - Identity Card
-- USA - Kentucky - Identity Card
-- USA - Kentucky - Driver's License
-- USA - Maine - Identity Card
-- USA - Maine - Driver's License
-- USA - Michigan - Driver's License
-- USA - Minnesota - Driver's License
-- USA - Minnesota - Identity Card
-- USA - Montana - Identity Card
-- USA - Montana - Driver's License
-- USA - New Hampshire - Identity Card
-- USA - New Mexico - Driver's License
-- USA - New Mexico - Identity Card
-- USA - New York - Identity Card
-- USA - North Dakota - Identity Card
-- USA - Oregon - Identity Card
-- USA - Pennsylvania - Driver's License
-- USA - Rhode Island - Identity Card
-- USA - South Carolina - Identity Card
-- USA - Vermont - Driver's License
-- USA - Washington - Identity Card
-- USA - Wyoming - Driver's License
-- USA - Wyoming - Identity Card
+
+-   Bolivia - Identity Card
+-   Canada, British Columbia - Public Services Card
+-   Finland - Identity Card
+-   Greece - Identity Card
+-   Malaysia - iKAD
+-   Mexico, Nuevo Leon - Driver's License
+-   Mexico, Tlaxcala - Driver's License
+-   Morocco - Driver's License
+-   Thailand - Polycarbonate Passport
+-   USA - Alaska - Driver's License
+-   USA - Alaska - Identity Card
+-   USA - Connecticut - Identity Card
+-   USA - Delaware - Driver's License
+-   USA - District of Columbia - Driver's License
+-   USA - Hawaii - Identity Card
+-   USA - Idaho - Driver's License
+-   USA - Indiana - Driver's License
+-   USA - Indiana - Identity Card
+-   USA - Iowa - Identity Card
+-   USA - Kansas - Identity Card
+-   USA - Kentucky - Identity Card
+-   USA - Kentucky - Driver's License
+-   USA - Maine - Identity Card
+-   USA - Maine - Driver's License
+-   USA - Michigan - Driver's License
+-   USA - Minnesota - Driver's License
+-   USA - Minnesota - Identity Card
+-   USA - Montana - Identity Card
+-   USA - Montana - Driver's License
+-   USA - New Hampshire - Identity Card
+-   USA - New Mexico - Driver's License
+-   USA - New Mexico - Identity Card
+-   USA - New York - Identity Card
+-   USA - North Dakota - Identity Card
+-   USA - Oregon - Identity Card
+-   USA - Pennsylvania - Driver's License
+-   USA - Rhode Island - Identity Card
+-   USA - South Carolina - Identity Card
+-   USA - Vermont - Driver's License
+-   USA - Washington - Identity Card
+-   USA - Wyoming - Driver's License
+-   USA - Wyoming - Identity Card
 
 #### Out of Beta
-- European Union - Health Insurance Card
+
+-   European Union - Health Insurance Card
 
 #### New Beta Documents Support
-- Democratic Republic of the Congo - Voter ID
-- Philippines - Alien ID
-- Philippines - Postal ID
-- Philippines - Work Permit
-- Philippines - Health Insurance Card
+
+-   Democratic Republic of the Congo - Voter ID
+-   Philippines - Alien ID
+-   Philippines - Postal ID
+-   Philippines - Work Permit
+-   Philippines - Health Insurance Card
 
 #### New Document Versions for Beta-Supported Documents
-- Honduras - Paper Passport
-- Mexico, Sonora - Driver's License
-- Peru - Alien ID
-- Philippines - Alien ID
+
+-   Honduras - Paper Passport
+-   Mexico, Sonora - Driver's License
+-   Peru - Alien ID
+-   Philippines - Alien ID
 
 #### New Segments Supported on Documents
-- China Exit Entry Permit - MRZ
-- China Mainland Travel Permit Taiwan - MRZ
-- France Residence permit - `Remarks` & `ResidencePermitType`
-- Philippines Alien ID - `visaType`
+
+-   China Exit Entry Permit - MRZ
+-   China Mainland Travel Permit Taiwan - MRZ
+-   France Residence permit - `Remarks` & `ResidencePermitType`
+-   Philippines Alien ID - `visaType`
 
 #### Bug Fixes
-- German ID - Fixed issues in cases when documents contain multiple surnames.
-- Paraguay ID - Added support for parsing the smaller barcode found on the back side of the ID. 
-- Bulgaria Driver’s License - The Address field is set to optional, improving the extraction process. 
-- Improved MRZ parsing for the back side of the following identity documents:
-  - Brazil Alien ID
-  - Kenya ID
-  - Bosnia and Herzegovina ID
-  - Ivory Coast ID
-  - Paraguay ID
 
+-   German ID - Fixed issues in cases when documents contain multiple surnames.
+-   Paraguay ID - Added support for parsing the smaller barcode found on the back side of the ID.
+-   Bulgaria Driver’s License - The Address field is set to optional, improving the extraction process.
+-   Improved MRZ parsing for the back side of the following identity documents:
+    -   Brazil Alien ID
+    -   Kenya ID
+    -   Bosnia and Herzegovina ID
+    -   Ivory Coast ID
+    -   Paraguay ID
 
 ### API changes
 
-- `ClassAnonymizationSettings` type now uses `classFilter` property of type `ClassFilter` instead of `country`, `region` and `type` properties
+-   `ClassAnonymizationSettings` type now uses `classFilter` property of type `ClassFilter` instead of `country`, `region` and `type` properties
 
-- New result members: `remarks`, `residencePermitType` and `visaType` added to `BlinkIdMultiSideRecognizerResult`, `BlinkIdSingleSideRecognizerResult` and `VIZResult`
+-   New result members: `remarks`, `residencePermitType` and `visaType` added to `BlinkIdMultiSideRecognizerResult`, `BlinkIdSingleSideRecognizerResult` and `VIZResult`
 
-- New field types: `Remarks`, `ResidencePermitType` and `VisaType` to `FieldType` enum
+-   New field types: `Remarks`, `ResidencePermitType` and `VisaType` to `FieldType` enum
 
-- Added new enum `AlphabetType`
+-   Added new enum `AlphabetType`
 
-- Added new type `DetailedFieldType`
+-   Added new type `DetailedFieldType`
 
-- Added new type `ClassFilter`
+-   Added new type `ClassFilter`
 
-- Added new type `CustomClassRules`
+-   Added new type `CustomClassRules`
 
-- Added new settings `customClassRules` as an array of `CustomClassRules` types for defining custom mandatory fields
+-   Added new settings `customClassRules` as an array of `CustomClassRules` types for defining custom mandatory fields
 
-- Added new region: `ALAGOAS` to `Region` enum
+-   Added new region: `ALAGOAS` to `Region` enum
 
-- Added new document types: `AFGHAN_CITIZEN_CARD`, `EID`, `PASS`, `SIS_ID` to `DocumentType` enum
+-   Added new document types: `AFGHAN_CITIZEN_CARD`, `EID`, `PASS`, `SIS_ID` to `DocumentType` enum
 
 ## 6.8.0
 
