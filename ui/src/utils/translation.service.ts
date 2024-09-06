@@ -44,7 +44,9 @@ export const defaultTranslations: { [key: string]: string | Array<string> } = {
   "camera-feedback-adjust-angle": "Adjust the angle",
   "camera-feedback-blur": "Keep still",
   "camera-feedback-glare": "Tilt or move document to remove reflections",
-  "camera-feedback-barcode": ["Bring barcode closer", "and keep it centered"],
+  "camera-feedback-wrong-side": "Flip the document",
+  "camera-feedback-face-photo-covered": "Keep face photo fully visible",
+  "camera-feedback-barcode": ["Scan the barcode"],
   "drop-info": "Drop image here",
   "drop-error":
     "Whoops, we don't support that image format. Please upload a JPEG or PNG file.",

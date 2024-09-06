@@ -204,6 +204,8 @@ export enum RecognitionStatus {
   Ready = "Ready",
   Processing = "Processing",
   DetectionFailed = "DetectionFailed",
+  WrongSide = "WrongSide",
+  FacePhotoCovered = "FacePhotoCovered",
   EmptyResultState = "EmptyResultState",
   OnFirstSideResult = "OnFirstSideResult",
   ScanSuccessful = "ScanSuccessful",
@@ -265,10 +267,12 @@ export enum CameraExperienceState {
   Done = "Done",
   DoneAll = "DoneAll",
   Flip = "Flip",
+  WrongSide = "WrongSide",
   MoveCloser = "MoveCloser",
   MoveFarther = "MoveFarther",
   BlurDetected = "BlurDetected",
   GlareDetected = "GlareDetected",
+  FacePhotoCovered = "FacePhotoCovered",
 }
 
 export type CameraExperienceStateKey = keyof typeof CameraExperienceState;
@@ -284,6 +288,7 @@ export interface CameraExperienceStateDurations {
   done: number;
   doneAll: number;
   flip: number;
+  wrongSide: number;
   moveCloser: number;
   moveFarther: number;
 }
@@ -295,10 +300,12 @@ export const CameraExperienceStateDuration = new Map([
   [CameraExperienceState.Done, 300],
   [CameraExperienceState.DoneAll, 400],
   [CameraExperienceState.Flip, 3500],
+  [CameraExperienceState.WrongSide, 1500],
   [CameraExperienceState.MoveCloser, 2500],
   [CameraExperienceState.MoveFarther, 2500],
   [CameraExperienceState.BlurDetected, 2500],
   [CameraExperienceState.GlareDetected, 2500],
+  [CameraExperienceState.FacePhotoCovered, 2500],
 ]);
 
 /**

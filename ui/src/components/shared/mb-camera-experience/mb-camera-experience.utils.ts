@@ -22,6 +22,11 @@ function getStateClass(state: CameraExperienceState): string {
       stateClass = "is-detection";
       break;
 
+    case CameraExperienceState.FacePhotoCovered:
+      stateClass = "is-error-move-closer";
+      console.log("Face photo covered");
+      break;
+
     case CameraExperienceState.MoveFarther:
       stateClass = "is-error-move-farther";
       break;
@@ -49,6 +54,8 @@ function getStateClass(state: CameraExperienceState): string {
     // We use the same class for blur and glare
     case CameraExperienceState.BlurDetected:
     case CameraExperienceState.GlareDetected:
+    // and for wrong side
+    case CameraExperienceState.WrongSide:
       stateClass = "is-error-move-closer";
       break;
 

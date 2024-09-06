@@ -87,6 +87,8 @@ export class VideoRecognizer
 
     private cameraFlipped = false;
 
+    private threadBusy = false;
+
     private declare frameCallback:
         | HTMLVideoElement["requestVideoFrameCallback"]
         | typeof requestAnimationFrame;
@@ -516,6 +518,11 @@ export class VideoRecognizer
      */
     private recognitionLoop = async () =>
     {
+        if ( this.threadBusy )
+        {
+            return;
+        }
+
         // exit without side-effects when paused
         if ( this.recognitionPauseRequested )
         {
@@ -546,9 +553,11 @@ export class VideoRecognizer
         // queue everything below in a macrotask
         await new Promise( ( f ) => setTimeout( f, 0 ) );
 
+        this.threadBusy = true;
         const processResult = await this.recognizerRunner.processImage(
             cameraFrame
         );
+        this.threadBusy = false;
 
         // assumption: only one recognizer is used
         const currentFrameResult = await this.recognizerRunner.recognizers[0].getResult() as BlinkIDResult;

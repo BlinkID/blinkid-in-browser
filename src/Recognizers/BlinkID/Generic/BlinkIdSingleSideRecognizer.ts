@@ -45,6 +45,7 @@ export * from "./DetailedFieldType";
 export * from "./DocumentNumberAnonymizationSettings";
 export * from "./DriverLicenseDetailedInfo";
 export * from "./FieldType";
+export * from "./ImageExtractionType";
 export * from "./GenericResultStructures";
 export * from "./ImageAnalysisResult";
 export * from "./ProcessingStatus";
@@ -95,6 +96,10 @@ implements RecognizerSettings, FullDocumentImageOptions, FaceImageOptions, Signa
      * Final recognizer state is not affected.
      */
     allowUnparsedMrzResults = false;
+
+    allowBarcodeScanOnly = false;
+
+    combineFrameResults = true;
 
     /**
      * Allow reading of standard MRZ (Machine Readable Zone) which gets successfully parsed, but check digits are

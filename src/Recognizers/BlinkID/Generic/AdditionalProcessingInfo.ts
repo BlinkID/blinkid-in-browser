@@ -3,6 +3,7 @@
  */
 
 import { FieldType } from "./FieldType";
+import { ImageExtractionType } from "./ImageExtractionType";
 
 /**
  * Detailed information about missing, invalid and extra fields.
@@ -17,4 +18,6 @@ export interface AdditionalProcessingInfo
 
     /** List of fields that weren't expected on the document but were present. */
     readonly extraPresentFields: Array< FieldType >;
+
+    readonly imageExtractionFailures: Array< ImageExtractionType >;
 }
