@@ -1,5 +1,9 @@
 # Release notes
 
+## 6.10.1
+
+-   Barcode scanning is now optional for Paraguay ID documents.
+
 ## 6.10.0
 
 ### New features
