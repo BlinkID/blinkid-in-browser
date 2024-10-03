@@ -8,5 +8,6 @@ export enum AlphabetType
     Latin = 0,
     Arabic = 1,
     Cyrillic = 2,
-    Count = 3
+    Greek = 3,
+    Count = 4
 }

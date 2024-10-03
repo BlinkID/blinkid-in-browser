@@ -27,12 +27,15 @@ export interface StringResult
     readonly arabic?: string;
     readonly cyrillic?: string;
     readonly latin?: string;
+    readonly greek?: string;
 
     readonly arabicLocation: Rectangle | undefined;
     readonly cyrillicLocation: Rectangle | undefined;
     readonly latinLocation: Rectangle | undefined;
+    readonly greekLocation: Rectangle | undefined;
 
     readonly arabicSide: DocumentSide | undefined;
     readonly cyrillicSide: DocumentSide | undefined;
     readonly latinSide: DocumentSide | undefined;
+    readonly greekSide: DocumentSide | undefined;
 }

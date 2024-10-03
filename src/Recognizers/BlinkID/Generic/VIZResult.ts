@@ -4,6 +4,7 @@
 
 import { DriverLicenseDetailedInfo } from "./DriverLicenseDetailedInfo";
 import { DateResult, StringResult } from "./GenericResultStructures";
+import { DependentInfo } from "./DependentInfo";
 
 /**
  * VIZResult contains data extracted from the Visual Inspection Zone.
@@ -81,18 +82,33 @@ export interface VIZResult
     /** Blood type on a document owner. */
     readonly bloodType: StringResult;
 
-    /** Subtype of a document */
+    /** Subtype of a document. */
     readonly documentSubtype: StringResult;
 
-    /** Whether the result is empty */
+    /** Whether the result is empty. */
     readonly empty: boolean;
 
-    /** Remarks on a document */
+    /** Remarks on a document. */
     readonly remarks: StringResult;
 
-    /** Type of residence permit */
+    /** Type of residence permit. */
     readonly residencePermitType: StringResult;
 
-    /** Type of visa */
+    /** Type of visa. */
     readonly visaType: StringResult;
+
+    /** The manufacturing year. */
+    readonly manufacturingYear: StringResult;
+
+    /** The vehicle type. */
+    readonly vehicleType: StringResult;
+
+    /** The eligibility category. */
+    readonly eligibilityCategory: StringResult;
+
+    /** The specific document validity. */
+    readonly specificDocumentValidity: StringResult;
+
+    /** The dependents info. */
+    readonly dependentsInfo: Array< DependentInfo >;
 }

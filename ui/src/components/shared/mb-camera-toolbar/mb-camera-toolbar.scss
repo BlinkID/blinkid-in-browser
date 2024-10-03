@@ -21,15 +21,15 @@
   backdrop-filter: blur(var(--mb-blur-filter));
 
   header {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     height: 44px;
     align-items: center;
-    justify-content: space-between;
   }
 
   .camera-selection-wrapper {
+    min-width: 0;
     position: relative;
-    margin-inline: auto;
   }
 }
 
@@ -51,8 +51,13 @@
 $button-size: 40px;
 
 :host {
+  .close-button {
+    justify-self: flex-end;
+  }
+
   .toolbar-button {
     all: unset;
+    flex-shrink: 0;
     appearance: none;
     cursor: pointer;
     width: $button-size;
@@ -87,6 +92,8 @@ $button-size: 40px;
     transform-style: preserve-3d;
     perspective: 600px;
     z-index: 1;
+
+    justify-self: flex-start;
 
     svg {
       transition: transform 300ms;
