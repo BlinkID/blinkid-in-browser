@@ -427,7 +427,8 @@ export enum Region
     HARYANA = 136,
     SERGIPE = 137,
     ALAGOAS = 138,
-    COUNT = 139
+    BANGSAMORO = 139,
+    COUNT = 140
 }
 
 export enum DocumentType
@@ -503,5 +504,11 @@ export enum DocumentType
     EID = 68,
     PASS = 69,
     SIS_ID = 70,
-    COUNT = 71
+    ASIC_CARD = 71,
+    BIDOON_CARD = 72,
+    INTERIM_HEALTH_INSURANCE_CARD = 73,
+    NON_VOTER_ID = 74,
+    RECIPROCAL_HEALTH_INSURANCE_CARD = 75,
+    VEHICLE_REGISTRATION = 76,
+    COUNT = 77
 }

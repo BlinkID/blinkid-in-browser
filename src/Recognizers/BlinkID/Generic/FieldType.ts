@@ -47,6 +47,14 @@ export enum FieldType
     DocumentSubtype = 39,
     Remarks = 40,
     ResidencePermitType = 41,
+    ManufacturingYear = 42,
+    VehicleType = 43,
+    DependentDateOfBirth = 44,
+    DependentSex = 45,
+    DependentDocumentNumber = 46,
+    DependentFullName = 47,
+    EligibilityCategory = 48,
+    SpecificDocumentValidity = 49,
 
     /** Number of possible field types. */
     Count

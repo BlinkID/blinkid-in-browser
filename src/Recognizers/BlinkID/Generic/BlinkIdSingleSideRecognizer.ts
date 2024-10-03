@@ -14,6 +14,7 @@ import { RecognitionMode } from "./RecognitionMode";
 import { RecognitionModeFilter } from "./RecognitionModeFilter";
 import { VIZResult } from "./VIZResult";
 import { StrictnessLevel } from "./StrictnessLevel";
+import { DependentInfo } from "./DependentInfo";
 
 import {
     CameraFrameResult,
@@ -480,6 +481,31 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult {
      * Type of visa
      */
     readonly visaType: StringResult;
+
+    /**
+     * The manufacturing year.
+     */
+    readonly manufacturingYear: StringResult;
+
+    /**
+     * The vehicle type.
+     */
+    readonly vehicleType: StringResult;
+
+    /**
+     * The eligibility category.
+     */
+    readonly eligibilityCategory: StringResult;
+
+    /**
+     * The specific document validity.
+     */
+    readonly specificDocumentValidity: StringResult;
+
+    /**
+     * The dependents info.
+     */
+    readonly dependentsInfo: Array< DependentInfo >;
 }
 
 /**
