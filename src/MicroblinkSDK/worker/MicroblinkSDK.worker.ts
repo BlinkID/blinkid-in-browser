@@ -34,11 +34,31 @@ function mbToWasmPages( mb: number )
     return Math.ceil( mb * 1024 * 1024 / 64 / 1024 );
 }
 
+/**
+ * Checks if the current environment is Safari browser.
+ * @returns {boolean} True if running on Safari, false otherwise.
+ */
+function isSafari(): boolean
+{
+    const userAgent = self.navigator.userAgent.toLowerCase();
+    return userAgent.includes( "safari" ) && !userAgent.includes( "chrome" );
+}
+
+
 // https://twitter.com/subzey/status/1711117272142471398/
 // This is used as a "black hole" port to force GC of ImageData
+// Works reliably on Chrome and Firefox, although it has a larger performance impact on Firefox
+//
+// CAUSES MEMORY LEAKS IN SAFARI!
+
 const { port1, port2 } = new MessageChannel();
 // "Black hole" port
 port2.close();
+
+if ( isSafari() )
+{
+    port1.close();
+}
 
 /**
  * This function returns the path to the resources variant
@@ -996,7 +1016,12 @@ export default class MicroblinkWorker
                              @typescript-eslint/no-unsafe-assignment */
 
             // deref the image to an empty MessagePort to force GC
-            port1.postMessage( msg.frame.imageData.data, [msg.frame.imageData.data.buffer] );
+            // CAUSES MEMORY LEAKS IN SAFARI!
+            if ( !isSafari() )
+            {
+                port1.postMessage( msg.frame.imageData.data, [msg.frame.imageData.data.buffer] );
+
+            }
 
             this.context.postMessage(
                 new Messages.ImageProcessResultMessage( msg.messageID, result ),
