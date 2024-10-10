@@ -51,10 +51,6 @@
 $button-size: 40px;
 
 :host {
-  .close-button {
-    justify-self: flex-end;
-  }
-
   .toolbar-button {
     all: unset;
     flex-shrink: 0;
@@ -66,6 +62,10 @@ $button-size: 40px;
     border-radius: var(--mb-toolbar-border-radius);
     display: grid;
     place-content: center;
+
+    &.close-button {
+      justify-self: end;
+    }
 
     svg {
       filter: drop-shadow(0px 1px 4px rgba(0, 0, 0, 0.4));

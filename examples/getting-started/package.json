@@ -12,6 +12,6 @@
     "vite": "^5.3.1"
   },
   "dependencies": {
-    "@microblink/blinkid-in-browser-sdk": "~6.11.0"
+    "@microblink/blinkid-in-browser-sdk": "~6.11.1"
   }
 }

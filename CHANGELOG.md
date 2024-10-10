@@ -1,5 +1,12 @@
 # Release notes
 
+## 6.11.1
+
+### Bug fixes
+
+-   Fixed memory leak in Safari
+-   Fixed incorrect positioning of the close button introduced in 6.11.0
+
 ## 6.11.0
 
 ### Expanded Document Coverage
