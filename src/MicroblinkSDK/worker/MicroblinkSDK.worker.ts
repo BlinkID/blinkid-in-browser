@@ -1020,7 +1020,6 @@ export default class MicroblinkWorker
             if ( !isSafari() )
             {
                 port1.postMessage( msg.frame.imageData.data, [msg.frame.imageData.data.buffer] );
-
             }
 
             this.context.postMessage(

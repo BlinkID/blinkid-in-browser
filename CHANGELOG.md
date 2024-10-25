@@ -1,5 +1,12 @@
 # Release notes
 
+## 6.11.2
+
+### Bug fixes
+
+-   NYC Municipal ID & USA Border Crossing Card - Resolved an issue where the scanning process could get stuck on the back side during multi-side scanning.
+-   Multithreaded builds are no longer loaded on Safari by default due to a [memory leak](https://bugs.webkit.org/show_bug.cgi?id=281657#c1) in the browser.
+
 ## 6.11.1
 
 ### Bug fixes
