@@ -15,11 +15,19 @@ import {
 import { BlinkIDResource } from "./BlinkIdVariant";
 import { WasmType } from "./WasmType";
 
+export function isSafari()
+{
+    const userAgent = navigator.userAgent.toLowerCase();
+    return userAgent.includes( "safari" ) && !userAgent.includes( "chrome" );
+}
+
 export function isIOSUserAgent()
 {
     const pattern = /iOS|iPhone|iPad|iPod/i; // 'i' flag for case-insensitive matching
     return pattern.test( navigator.userAgent );
 }
+
+
 /* eslint-disable max-len */
 /**
  * Safari 16 shipped with WASM threads support, but it didn't ship with nested
@@ -39,7 +47,7 @@ export default async function checkThreadsSupport(): Promise<boolean>
 
     // Safari has issues with shared memory
     // https://github.com/emscripten-core/emscripten/issues/19374
-    if ( isIOSUserAgent() )
+    if ( isSafari() )
     {
         return false;
     }
