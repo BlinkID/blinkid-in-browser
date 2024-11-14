@@ -39,6 +39,12 @@ export class BlinkIdMultiSideRecognizerSettings extends BlinkIdSingleSideRecogni
      * either is present.
      */
     skipUnsupportedBack = false;
+
+    /**
+     * Scan only the data page ( page containing MRZ ) of the passport.
+     * If set to `false`, it will be required to scan the second page of certain passports.
+     */
+    scanPassportDataPageOnly = false;
 }
 
 /**

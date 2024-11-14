@@ -21,6 +21,7 @@ import {
   SDKError,
 } from "./data-structures";
 import * as ErrorTypes from "./error-structures";
+import { globalState } from "./state-lifter";
 
 export interface CheckConclusion {
   status: boolean;
@@ -34,19 +35,52 @@ export interface CheckConclusion {
  */
 export function getAdditionalProcessingInfo(result: BlinkIDSDK.BlinkIDResult) {
   const isMultiside = "scanningFirstSideDone" in result;
+  const isOnFirstSide = isMultiside && !result.scanningFirstSideDone;
+  const isFrontSuccessFrame =
+    result.processingStatus === BlinkIDSDK.ProcessingStatus.AwaitingOtherSide;
 
-  const additionalProcessingInfo = (() => {
-    if (isMultiside) {
-      return !result.scanningFirstSideDone
-        ? result.frontAdditionalProcessingInfo
-        : result.backAdditionalProcessingInfo;
-    }
-
+  if (!isMultiside) {
     return result.additionalProcessingInfo;
-  })();
+  }
 
-  return additionalProcessingInfo;
+  if (!isOnFirstSide) {
+    return result.frontAdditionalProcessingInfo;
+  }
+
+  // `scanningFirstSideDone` is true, but we are still technically on the first side
+  if (isFrontSuccessFrame) {
+    return result.frontAdditionalProcessingInfo;
+  }
+
+  return result.backAdditionalProcessingInfo;
 }
+
+export function getImageAnalyisResult(result: BlinkIDSDK.BlinkIDResult) {
+  const isMultiside = "scanningFirstSideDone" in result;
+  const isOnFirstSide = isMultiside && !result.scanningFirstSideDone;
+
+  const isFrontSuccessFrame =
+    result.processingStatus === BlinkIDSDK.ProcessingStatus.AwaitingOtherSide;
+
+  if (!isMultiside) {
+    return result.imageAnalysisResult;
+  }
+
+  if (!isOnFirstSide || isFrontSuccessFrame) {
+    return result.frontImageAnalysisResult;
+  }
+
+  // `scanningFirstSideDone` is true, but we are still technically on the first side
+  if (isFrontSuccessFrame) {
+    return result.frontImageAnalysisResult;
+  }
+
+  return result.backImageAnalysisResult;
+}
+
+export const isFirstSideDone = (result: BlinkIDSDK.BlinkIDResult) => {
+  return "scanningFirstSideDone" in result && result.scanningFirstSideDone;
+};
 
 export async function getCameraDevices(): Promise<Array<CameraEntry>> {
   const devices = await BlinkIDSDK.getCameraDevices();
@@ -73,6 +107,11 @@ export class SdkService {
   public videoRecognizer: BlinkIDSDK.VideoRecognizer;
 
   public showOverlay: boolean = false;
+
+  private lastKnownCardRotation = BlinkIDSDK.CardRotation.None;
+
+  private lastDetectionStatus: BlinkIDSDK.DetectionStatus =
+    BlinkIDSDK.DetectionStatus.Failed;
 
   constructor() {
     this.eventEmitter$ = document.createElement("a");
@@ -199,10 +238,7 @@ export class SdkService {
       eventCallback,
     );
 
-    const recognizerRunner = await this.createRecognizerRunner(
-      recognizers,
-      eventCallback,
-    );
+    const recognizerRunner = await this.createRecognizerRunner(recognizers);
 
     if (configuration.pingProxyUrl) {
       await recognizerRunner.setPingProxyUrl(configuration.pingProxyUrl);
@@ -227,12 +263,147 @@ export class SdkService {
 
       const recognizerSettings = await activeRecognizer.currentSettings();
 
-      // add callbacks for blur, glare and processing statuses
-      this.videoRecognizer.setOnFrameProcessed(async (result) => {
+      // We do per-frame operations here
+      this.videoRecognizer.setOnFrameProcessed((result) => {
+        window.setTimeout(() => {
+          // detection status callback is triggered before the video frame callback
+          // reset it after each frame is done processing
+          this.lastDetectionStatus = BlinkIDSDK.DetectionStatus.Failed;
+        }, 0);
+
         const isMultiside = "scanningFirstSideDone" in result;
+        const isFrontSuccessFrame =
+          result.processingStatus ===
+          BlinkIDSDK.ProcessingStatus.AwaitingOtherSide;
+
+        //We start scanning the second side only after not the success frame
+        const isOnSecondSide =
+          isMultiside && result.scanningFirstSideDone && !isFrontSuccessFrame;
 
         const additionalProcessingInfo = getAdditionalProcessingInfo(result);
+        const imageAnalysisResult = getImageAnalyisResult(result);
 
+        const isPassport =
+          result.classInfo.documentType === BlinkIDSDK.DocumentType.PASSPORT;
+
+        // horrible hack to get the passport status to the global state
+        globalState.isPassport = isPassport;
+
+        const notDetected =
+          this.lastDetectionStatus === BlinkIDSDK.DetectionStatus.Failed;
+
+        if (imageAnalysisResult.cardRotation) {
+          // save last known rotation in case we lose the document
+          this.lastKnownCardRotation = imageAnalysisResult.cardRotation;
+        }
+
+        // framing
+        switch (this.lastDetectionStatus) {
+          case BlinkIDSDK.DetectionStatus.CameraTooFar:
+            eventCallback({
+              status: RecognitionStatus.DetectionStatusCameraTooHigh,
+            });
+            break;
+
+          case BlinkIDSDK.DetectionStatus.FallbackSuccess:
+            eventCallback({
+              status: RecognitionStatus.DetectionStatusFallbackSuccess,
+            });
+            break;
+
+          case BlinkIDSDK.DetectionStatus.DocumentPartiallyVisible:
+            eventCallback({ status: RecognitionStatus.DetectionStatusPartial });
+            break;
+
+          case BlinkIDSDK.DetectionStatus.CameraAngleTooSteep:
+            eventCallback({
+              status: RecognitionStatus.DetectionStatusCameraAtAngle,
+            });
+            break;
+
+          case BlinkIDSDK.DetectionStatus.CameraTooClose:
+            eventCallback({
+              status: RecognitionStatus.DetectionStatusCameraTooNear,
+            });
+            break;
+
+          case BlinkIDSDK.DetectionStatus.DocumentTooCloseToCameraEdge:
+            eventCallback({
+              status: RecognitionStatus.DetectionStatusDocumentTooCloseToEdge,
+            });
+            break;
+        }
+
+        // handle no detection
+        if (notDetected) {
+          if (!isPassport) {
+            eventCallback({
+              // this status doesn't seem to do anything
+              // the logic is probably handled as a "default" state somewhere else
+              status: RecognitionStatus.DetectionStatusFail,
+            });
+          } else {
+            // Get the user to scan the passport
+            // again, refer to the page relative to the last one scanned
+            if (isOnSecondSide) {
+              switch (this.lastKnownCardRotation) {
+                case BlinkIDSDK.CardRotation.None: {
+                  eventCallback({
+                    status: RecognitionStatus.MovePassportUpError,
+                  });
+                  break;
+                }
+
+                case BlinkIDSDK.CardRotation.Clockwise90: {
+                  eventCallback({
+                    status: RecognitionStatus.MovePassportRightError,
+                  });
+                  break;
+                }
+
+                case BlinkIDSDK.CardRotation.CounterClockwise90: {
+                  eventCallback({
+                    status: RecognitionStatus.MovePassportLeftError,
+                  });
+                  break;
+                }
+
+                case BlinkIDSDK.CardRotation.UpsideDown: {
+                  eventCallback({
+                    status: RecognitionStatus.MovePassportDownError,
+                  });
+                  break;
+                }
+              }
+            }
+          }
+
+          return;
+        }
+
+        // handle glare
+        if (
+          imageAnalysisResult.glareDetected &&
+          recognizerSettings.enableGlareFilter
+        ) {
+          eventCallback({
+            status: RecognitionStatus.GlareDetected,
+          });
+          return;
+        }
+
+        // handle blur
+        if (
+          imageAnalysisResult.blurDetected &&
+          recognizerSettings.enableBlurFilter
+        ) {
+          eventCallback({
+            status: RecognitionStatus.BlurDetected,
+          });
+          return;
+        }
+
+        // handle face occlusion
         if (
           additionalProcessingInfo.imageExtractionFailures.includes(
             BlinkIDSDK.ImageExtractionType.Face,
@@ -244,44 +415,97 @@ export class SdkService {
           return;
         }
 
+        // first side done - show flip/move. This status triggers only once
+        if (isFrontSuccessFrame) {
+          if (!isPassport) {
+            eventCallback({ status: RecognitionStatus.OnFirstSideResult });
+          } else {
+            // Passport only branch
+            switch (this.lastKnownCardRotation) {
+              case BlinkIDSDK.CardRotation.None: {
+                eventCallback({
+                  status: RecognitionStatus.MovePassportUp,
+                });
+                break;
+              }
+
+              case BlinkIDSDK.CardRotation.Clockwise90: {
+                eventCallback({
+                  status: RecognitionStatus.MovePassportRight,
+                });
+                break;
+              }
+
+              case BlinkIDSDK.CardRotation.CounterClockwise90: {
+                eventCallback({
+                  status: RecognitionStatus.MovePassportLeft,
+                });
+                break;
+              }
+
+              case BlinkIDSDK.CardRotation.UpsideDown: {
+                eventCallback({
+                  status: RecognitionStatus.MovePassportDown,
+                });
+                break;
+              }
+            }
+          }
+
+          return;
+        }
+
+        // scanning wrong side
         if (
           result.processingStatus ===
           BlinkIDSDK.ProcessingStatus.ScanningWrongSide
         ) {
-          eventCallback({
-            status: RecognitionStatus.WrongSide,
-          });
-        }
+          if (isPassport) {
+            // Passport only branch
+            switch (this.lastKnownCardRotation) {
+              case BlinkIDSDK.CardRotation.None: {
+                eventCallback({
+                  status: RecognitionStatus.MovePassportUpError,
+                });
+                break;
+              }
 
-        const imageAnalysisResult = (() => {
-          if (isMultiside) {
-            return !result.scanningFirstSideDone
-              ? result.frontImageAnalysisResult
-              : result.backImageAnalysisResult;
+              case BlinkIDSDK.CardRotation.Clockwise90: {
+                eventCallback({
+                  status: RecognitionStatus.MovePassportRightError,
+                });
+                break;
+              }
+
+              case BlinkIDSDK.CardRotation.CounterClockwise90: {
+                eventCallback({
+                  status: RecognitionStatus.MovePassportLeftError,
+                });
+                break;
+              }
+
+              case BlinkIDSDK.CardRotation.UpsideDown: {
+                eventCallback({
+                  status: RecognitionStatus.MovePassportDownError,
+                });
+                break;
+              }
+            }
+          } else {
+            // some other document, maybe unclassified?
+            eventCallback({
+              status: RecognitionStatus.WrongSide,
+            });
           }
 
-          return result.imageAnalysisResult;
-        })();
-
-        if (
-          imageAnalysisResult.glareDetected &&
-          recognizerSettings.enableGlareFilter
-        ) {
-          eventCallback({
-            status: RecognitionStatus.GlareDetected,
-          });
+          return;
         }
 
-        if (
-          imageAnalysisResult.blurDetected &&
-          recognizerSettings.enableBlurFilter
-        ) {
-          eventCallback({
-            status: RecognitionStatus.BlurDetected,
-          });
-        }
+        // fallback - success?
+        eventCallback({ status: RecognitionStatus.DetectionStatusSuccess });
       });
 
+      //////////////////////////////////////////////////
       // Start recognition
 
       await this.videoRecognizer
@@ -423,10 +647,7 @@ export class SdkService {
       eventCallback,
     );
 
-    const recognizerRunner = await this.createRecognizerRunner(
-      recognizers,
-      eventCallback,
-    );
+    const recognizerRunner = await this.createRecognizerRunner(recognizers);
 
     if (configuration.pingProxyUrl) {
       await recognizerRunner.setPingProxyUrl(configuration.pingProxyUrl);
@@ -573,10 +794,7 @@ export class SdkService {
       eventCallback,
     );
 
-    const recognizerRunner = await this.createRecognizerRunner(
-      recognizers,
-      eventCallback,
-    );
+    const recognizerRunner = await this.createRecognizerRunner(recognizers);
 
     if (configuration.pingProxyUrl) {
       await recognizerRunner.setPingProxyUrl(configuration.pingProxyUrl);
@@ -795,7 +1013,6 @@ export class SdkService {
 
         settings.barcodeScanningStartedCallback = () => {
           eventCallback({ status: RecognitionStatus.BarcodeScanningStarted });
-          console.log("Barcode scanning started");
         };
 
         settings.classifierCallback = (supported: boolean) => {
@@ -823,75 +1040,14 @@ export class SdkService {
 
   private async createRecognizerRunner(
     recognizers: Array<RecognizerInstance>,
-    eventCallback: (ev: RecognitionEvent) => void,
+    // eventCallback: (ev: RecognitionEvent) => void,
   ): Promise<BlinkIDSDK.RecognizerRunner> {
     const metadataCallbacks: BlinkIDSDK.MetadataCallbacks = {
-      onDetectionFailed: () =>
-        eventCallback({ status: RecognitionStatus.DetectionFailed }),
       onQuadDetection: (quad: BlinkIDSDK.Displayable) => {
-        eventCallback({
-          status: RecognitionStatus.DetectionStatusChange,
-          data: quad,
-        });
-
-        const detectionStatus = quad.detectionStatus;
-        switch (detectionStatus) {
-          case BlinkIDSDK.DetectionStatus.Failed:
-            eventCallback({ status: RecognitionStatus.DetectionStatusSuccess });
-            break;
-
-          case BlinkIDSDK.DetectionStatus.Success:
-            eventCallback({ status: RecognitionStatus.DetectionStatusSuccess });
-            break;
-
-          case BlinkIDSDK.DetectionStatus.CameraTooFar:
-            eventCallback({
-              status: RecognitionStatus.DetectionStatusCameraTooHigh,
-            });
-            break;
-
-          case BlinkIDSDK.DetectionStatus.FallbackSuccess:
-            eventCallback({
-              status: RecognitionStatus.DetectionStatusFallbackSuccess,
-            });
-            break;
-
-          case BlinkIDSDK.DetectionStatus.DocumentPartiallyVisible:
-            eventCallback({ status: RecognitionStatus.DetectionStatusPartial });
-            break;
-
-          case BlinkIDSDK.DetectionStatus.CameraAngleTooSteep:
-            eventCallback({
-              status: RecognitionStatus.DetectionStatusCameraAtAngle,
-            });
-            break;
-
-          case BlinkIDSDK.DetectionStatus.CameraTooClose:
-            eventCallback({
-              status: RecognitionStatus.DetectionStatusCameraTooNear,
-            });
-            break;
-
-          case BlinkIDSDK.DetectionStatus.DocumentTooCloseToCameraEdge:
-            eventCallback({
-              status: RecognitionStatus.DetectionStatusDocumentTooCloseToEdge,
-            });
-            break;
-
-          default:
-          // Send nothing
-        }
+        this.lastDetectionStatus = quad.detectionStatus;
       },
     };
 
-    const blinkIdMultiSide = recognizers.find(
-      (el) => el.recognizer.recognizerName === "BlinkIdMultiSideRecognizer",
-    );
-
-    if (blinkIdMultiSide) {
-      metadataCallbacks.onFirstSideResult = () =>
-        eventCallback({ status: RecognitionStatus.OnFirstSideResult });
-    }
     const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
       this.sdk,
       recognizers.map((el: RecognizerInstance) => el.recognizer),

@@ -557,10 +557,12 @@ export class VideoRecognizer
         const processResult = await this.recognizerRunner.processImage(
             cameraFrame
         );
-        this.threadBusy = false;
+
 
         // assumption: only one recognizer is used
         const currentFrameResult = await this.recognizerRunner.recognizers[0].getResult() as BlinkIDResult;
+
+        this.threadBusy = false;
 
         // Trigger onFrameProcessed callback
         if ( typeof this.onFrameProcessed === "function" )

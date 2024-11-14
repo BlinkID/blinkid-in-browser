@@ -74,6 +74,8 @@ export class MbComponent {
     modal: null,
   };
 
+  private gracePeriodEntered: Boolean = false;
+
   private cameraExperience!: HTMLMbCameraExperienceElement;
   private dragAndDropZone!: HTMLDivElement;
   private errorMessage!: HTMLParagraphElement;
@@ -727,7 +729,7 @@ export class MbComponent {
 
     this.isBackSide = false;
 
-    const eventHandler = (recognitionEvent: RecognitionEvent) => {
+    const eventHandler = async (recognitionEvent: RecognitionEvent) => {
       switch (recognitionEvent.status) {
         case RecognitionStatus.Preparing:
           this.feedback.emit({
@@ -778,10 +780,6 @@ export class MbComponent {
             this.isBackSide,
           );
           this.detectionSuccessLock = false;
-          break;
-
-        case RecognitionStatus.DetectionStatusChange:
-          // Use this event if information about card location is required
           break;
 
         case RecognitionStatus.DetectionStatusFail:
@@ -848,20 +846,63 @@ export class MbComponent {
           this.cameraExperience.setState(CameraExperienceState.WrongSide);
           break;
 
+        // scan passport - error spinner
+        case RecognitionStatus.MovePassportDownError: {
+          if (this.gracePeriodEntered) {
+            this.cameraExperience.setState(
+              CameraExperienceState.ScanPassportDown,
+            );
+          } else {
+            this.cameraExperience.setState(
+              CameraExperienceState.MovePassportDownError,
+            );
+          }
+          break;
+        }
+
+        case RecognitionStatus.MovePassportUpError: {
+          if (this.gracePeriodEntered) {
+            this.cameraExperience.setState(
+              CameraExperienceState.ScanPassportUp,
+            );
+          } else {
+            this.cameraExperience.setState(
+              CameraExperienceState.MovePassportUpError,
+            );
+          }
+          break;
+        }
+
+        case RecognitionStatus.MovePassportLeftError: {
+          if (this.gracePeriodEntered) {
+            this.cameraExperience.setState(
+              CameraExperienceState.ScanPassportLeft,
+            );
+          } else {
+            this.cameraExperience.setState(
+              CameraExperienceState.MovePassportLeftError,
+            );
+          }
+          break;
+        }
+
+        case RecognitionStatus.MovePassportRightError: {
+          if (this.gracePeriodEntered) {
+            this.cameraExperience.setState(
+              CameraExperienceState.ScanPassportRight,
+            );
+          } else {
+            this.cameraExperience.setState(
+              CameraExperienceState.MovePassportRightError,
+            );
+          }
+          break;
+        }
+
         case RecognitionStatus.FacePhotoCovered:
           this.cameraExperience.setState(
             CameraExperienceState.FacePhotoCovered,
           );
-          break;
-
-        case RecognitionStatus.DetectionStatusSuccess:
-          this.detectionSuccessLock = true;
-          window.setTimeout(() => {
-            if (this.detectionSuccessLock) {
-              this.cameraExperience.setState(CameraExperienceState.Detection);
-              this.scanReset = false;
-            }
-          }, 100);
           break;
 
         case RecognitionStatus.BarcodeScanningStarted:
@@ -883,6 +924,97 @@ export class MbComponent {
           this.cameraExperience.setState(CameraExperienceState.Classification);
           break;
 
+        // passport
+
+        // "flip" passport
+        case RecognitionStatus.MovePassportDown:
+        case RecognitionStatus.MovePassportUp:
+        case RecognitionStatus.MovePassportLeft:
+        case RecognitionStatus.MovePassportRight: {
+          // handle all as "flip card"
+          this.sdkService.videoRecognizer.pauseRecognition();
+
+          window.setTimeout(async () => {
+            if (this.areHelpScreensOpen) {
+              return; // help screens close will resume
+            }
+            await this.sdkService.videoRecognizer.resumeRecognition(false);
+          }, this.recognitionPauseTimeout);
+
+          // This state doesn't seem to do anything
+          await this.cameraExperience.setState(
+            CameraExperienceState.Done,
+            false,
+            true,
+          );
+
+          // treat each case separately here
+          if (recognitionEvent.status === RecognitionStatus.MovePassportDown) {
+            await this.cameraExperience.setState(
+              CameraExperienceState.MovePassportDown,
+            );
+          }
+
+          if (recognitionEvent.status === RecognitionStatus.MovePassportUp) {
+            await this.cameraExperience.setState(
+              CameraExperienceState.MovePassportUp,
+            );
+          }
+
+          if (recognitionEvent.status === RecognitionStatus.MovePassportLeft) {
+            await this.cameraExperience.setState(
+              CameraExperienceState.MovePassportLeft,
+            );
+          }
+
+          if (recognitionEvent.status === RecognitionStatus.MovePassportRight) {
+            await this.cameraExperience.setState(
+              CameraExperienceState.MovePassportRight,
+            );
+          }
+
+          this.gracePeriodEntered = true;
+
+          window.setTimeout(() => {
+            this.gracePeriodEntered = false;
+          }, 3000);
+
+          if (!this.scanReset) {
+            this.isBackSide = true;
+            this.cameraExperience.setState(
+              CameraExperienceState.Default,
+              this.isBackSide,
+            );
+          }
+
+          break;
+        }
+
+        // just "scan" passport
+        case RecognitionStatus.ScanPassportDown:
+          this.cameraExperience.setState(
+            CameraExperienceState.ScanPassportDown,
+          );
+          break;
+
+        case RecognitionStatus.ScanPassportUp:
+          this.cameraExperience.setState(CameraExperienceState.ScanPassportUp);
+          break;
+
+        case RecognitionStatus.ScanPassportLeft:
+          this.cameraExperience.setState(
+            CameraExperienceState.ScanPassportLeft,
+          );
+          break;
+
+        case RecognitionStatus.ScanPassportRight:
+          this.cameraExperience.setState(
+            CameraExperienceState.ScanPassportRight,
+          );
+          break;
+
+        // handle flipping of other documents
+
         case RecognitionStatus.OnFirstSideResult:
           this.sdkService.videoRecognizer.pauseRecognition();
 
@@ -894,6 +1026,7 @@ export class MbComponent {
           }, this.recognitionPauseTimeout);
 
           this.cameraExperience
+            // This state doesn't seem to do anything
             .setState(CameraExperienceState.Done, false, true)
             .then(() => {
               this.cameraExperience

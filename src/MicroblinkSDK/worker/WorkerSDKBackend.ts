@@ -638,7 +638,7 @@ export class WasmSDKWorker implements WasmSDK
 {
     /* eslint-disable lines-between-class-members */
     readonly mbWasmModule            : WasmModuleWorkerProxy;
-    private readonly mbWasmWorker            : Worker;
+    readonly mbWasmWorker            : Worker;
     private          eventHandlers           : { [ key: number ] : EventHandler } = {};
     private          metadataCallbacks       : MetadataCallbacks = {};
     private          loadCallback            : OptionalLoadProgressCallback;

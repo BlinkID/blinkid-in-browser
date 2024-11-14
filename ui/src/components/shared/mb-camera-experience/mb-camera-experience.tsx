@@ -34,6 +34,7 @@ import { TranslationService } from "../../../utils/translation.service";
 import * as Utils from "./mb-camera-experience.utils";
 
 import { MbHelpCallbacks } from "../mb-help/mb-help.model";
+import { globalState } from "../../../utils/state-lifter";
 
 @Component({
   tag: "mb-camera-experience",
@@ -417,6 +418,11 @@ export class MbCameraExperience {
 
     switch (state) {
       case CameraExperienceState.Default:
+        // Do not take this into consideration if passport is detected
+        if (globalState.isPassport) {
+          break;
+        }
+
         if (
           type === CameraExperience.Barcode &&
           this.showCameraFeedbackBarcodeMessage
@@ -425,9 +431,11 @@ export class MbCameraExperience {
             this.translationService.i("camera-feedback-barcode-message"),
           );
         }
+
         const key = isBackSide
           ? "camera-feedback-scan-back"
           : "camera-feedback-scan-front";
+
         if (this.barcodeScanningInProgress) {
           return getStateMessageAsHTML(
             this.translationService.i("camera-feedback-barcode"),
@@ -465,6 +473,75 @@ export class MbCameraExperience {
       case CameraExperienceState.WrongSide: {
         return getStateMessageAsHTML(
           this.translationService.i("camera-feedback-wrong-side"),
+        );
+      }
+
+      case CameraExperienceState.MovePassportUp: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-move-top-page"),
+        );
+      }
+
+      case CameraExperienceState.MovePassportRight: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-move-right-page"),
+        );
+      }
+
+      case CameraExperienceState.MovePassportDown: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-move-bottom-page"),
+        );
+      }
+
+      case CameraExperienceState.MovePassportLeft: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-move-left-page"),
+        );
+      }
+
+      case CameraExperienceState.ScanPassportUp: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-scan-top-page"),
+        );
+      }
+      case CameraExperienceState.ScanPassportDown: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-scan-bottom-page"),
+        );
+      }
+      case CameraExperienceState.ScanPassportRight: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-scan-right-page"),
+        );
+      }
+      case CameraExperienceState.ScanPassportLeft: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-scan-left-page"),
+        );
+      }
+
+      case CameraExperienceState.MovePassportUpError: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-move-top-page"),
+        );
+      }
+
+      case CameraExperienceState.MovePassportDownError: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-move-bottom-page"),
+        );
+      }
+
+      case CameraExperienceState.MovePassportRightError: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-move-right-page"),
+        );
+      }
+
+      case CameraExperienceState.MovePassportLeftError: {
+        return getStateMessageAsHTML(
+          this.translationService.i("camera-feedback-move-left-page"),
         );
       }
 

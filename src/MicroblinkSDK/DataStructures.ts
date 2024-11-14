@@ -252,6 +252,8 @@ export interface WasmSDK
      */
     readonly mbWasmModule: WasmModuleProxy;
 
+    readonly mbWasmWorker: Worker
+
     delete: () => void;
 
     getProductIntegrationInfo: () => Promise<ProductIntegrationInfo>;
