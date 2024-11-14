@@ -390,10 +390,7 @@ $reticle-bg: (
   }
 
   // Front side scanning is over (BlinkID Multi-side)
-  &.is-done {
-    display: none;
-  }
-
+  &.is-done,
   &.is-done-all {
     background-color: map-get(
       map-get(map-get($base-colors, background-primary), onlight),

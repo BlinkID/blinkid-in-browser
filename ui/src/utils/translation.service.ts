@@ -2,7 +2,7 @@
  * Copyright (c) Microblink Ltd. All rights reserved.
  */
 
-export const defaultTranslations: { [key: string]: string | Array<string> } = {
+export const defaultTranslations = {
   /* Help Screens */
   "help-button-lobby-tooltip": "Need help?",
   "help-button-back": "Back",
@@ -47,6 +47,15 @@ export const defaultTranslations: { [key: string]: string | Array<string> } = {
   "camera-feedback-wrong-side": "Flip the document",
   "camera-feedback-face-photo-covered": "Keep face photo fully visible",
   "camera-feedback-barcode": ["Scan the barcode"],
+  // passport
+  "camera-feedback-move-top-page": "Move to the top page",
+  "camera-feedback-move-bottom-page": "Move to the bottom page",
+  "camera-feedback-move-left-page": "Move to the left page",
+  "camera-feedback-move-right-page": "Move to the right page",
+  "camera-feedback-scan-top-page": "Scan the top page",
+  "camera-feedback-scan-bottom-page": "Scan the bottom page",
+  "camera-feedback-scan-left-page": "Scan the left page",
+  "camera-feedback-scan-right-page": "Scan the right page",
   "drop-info": "Drop image here",
   "drop-error":
     "Whoops, we don't support that image format. Please upload a JPEG or PNG file.",
@@ -70,15 +79,20 @@ export const defaultTranslations: { [key: string]: string | Array<string> } = {
   "network-error": "Network error.",
   "scanning-not-available": "Scanning not available.",
   "modal-window-close": "Close",
-};
+} as const;
+// we can't use `satisfies Record<string, TranslationValue>` here because Stencil's compiler doesn't like it
+// even when overriding the typescript version
+
+export type Translations = typeof defaultTranslations;
+export type TranslationKey = keyof Translations;
+export type TranslationValue = string | string[];
+export type GenericTranslations = Record<TranslationKey, TranslationValue>;
 
 export class TranslationService {
-  public translations: { [key: string]: string | Array<string> };
+  public translations: GenericTranslations;
 
-  constructor(alternativeTranslations?: {
-    [key: string]: string | Array<string>;
-  }) {
-    this.translations = defaultTranslations;
+  constructor(alternativeTranslations?: Partial<GenericTranslations>) {
+    this.translations = defaultTranslations as unknown as GenericTranslations;
 
     for (const key in alternativeTranslations) {
       if (key in defaultTranslations) {
@@ -89,16 +103,17 @@ export class TranslationService {
     }
   }
 
-  public i(key: string): string | Array<string> {
-    if (this.translations[key]) {
-      if (Array.isArray(this.translations[key])) {
-        return JSON.parse(JSON.stringify(this.translations[key]));
+  public i(key: TranslationKey): TranslationValue {
+    const translation = this.translations[key] as TranslationValue;
+    if (translation) {
+      if (Array.isArray(translation)) {
+        return JSON.parse(JSON.stringify(translation));
       }
-      return this.translations[key];
+      return translation;
     }
   }
 
-  private isExpectedValue(value: string | Array<string>): boolean {
+  private isExpectedValue(value: TranslationValue): boolean {
     if (Array.isArray(value)) {
       const notValidFound = value.filter((item) => typeof item !== "string");
       return notValidFound.length == 0;

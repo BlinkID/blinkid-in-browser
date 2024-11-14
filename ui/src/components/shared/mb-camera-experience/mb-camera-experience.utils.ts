@@ -56,6 +56,11 @@ function getStateClass(state: CameraExperienceState): string {
     case CameraExperienceState.GlareDetected:
     // and for wrong side
     case CameraExperienceState.WrongSide:
+    // and for passport page errors
+    case CameraExperienceState.MovePassportDownError:
+    case CameraExperienceState.MovePassportUpError:
+    case CameraExperienceState.MovePassportLeftError:
+    case CameraExperienceState.MovePassportRightError:
       stateClass = "is-error-move-closer";
       break;
 

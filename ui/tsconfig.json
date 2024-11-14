@@ -9,8 +9,6 @@
     "moduleResolution": "node",
     "module": "esnext",
     "target": "ES2021",
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "jsx": "react",
     "jsxFactory": "h"
   },

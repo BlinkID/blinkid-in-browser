@@ -5,14 +5,14 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/cli
 │  └─ licenseFile: node_modules/@babel/cli/LICENSE
-├─ @babel/code-frame@7.25.9
+├─ @babel/code-frame@7.26.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/code-frame
 │  └─ licenseFile: node_modules/@babel/code-frame/LICENSE
-├─ @babel/compat-data@7.25.9
+├─ @babel/compat-data@7.26.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -26,7 +26,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/core
 │  └─ licenseFile: node_modules/@babel/core/LICENSE
-├─ @babel/generator@7.25.9
+├─ @babel/generator@7.26.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -94,7 +94,7 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-module-imports
 │  └─ licenseFile: node_modules/@babel/helper-module-imports/LICENSE
-├─ @babel/helper-module-transforms@7.25.9
+├─ @babel/helper-module-transforms@7.26.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -171,21 +171,14 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helper-wrap-function
 │  └─ licenseFile: node_modules/@babel/helper-wrap-function/LICENSE
-├─ @babel/helpers@7.25.9
+├─ @babel/helpers@7.26.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/helpers
 │  └─ licenseFile: node_modules/@babel/helpers/LICENSE
-├─ @babel/highlight@7.25.9
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/babel/babel
-│  ├─ publisher: The Babel Team
-│  ├─ url: https://babel.dev/team
-│  ├─ path: node_modules/@babel/highlight
-│  └─ licenseFile: node_modules/@babel/highlight/LICENSE
-├─ @babel/parser@7.25.9
+├─ @babel/parser@7.26.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -623,7 +616,7 @@
 │  ├─ repository: https://github.com/babel/preset-modules
 │  ├─ path: node_modules/@babel/preset-modules
 │  └─ licenseFile: node_modules/@babel/preset-modules/LICENSE
-├─ @babel/runtime@7.25.9
+├─ @babel/runtime@7.26.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
@@ -644,20 +637,20 @@
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/traverse
 │  └─ licenseFile: node_modules/@babel/traverse/LICENSE
-├─ @babel/types@7.25.9
+├─ @babel/types@7.26.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/babel/babel
 │  ├─ publisher: The Babel Team
 │  ├─ url: https://babel.dev/team
 │  ├─ path: node_modules/@babel/types
 │  └─ licenseFile: node_modules/@babel/types/LICENSE
-├─ @eslint-community/eslint-utils@4.4.0
+├─ @eslint-community/eslint-utils@4.4.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/eslint-community/eslint-utils
 │  ├─ publisher: Toru Nagashima
 │  ├─ path: node_modules/@eslint-community/eslint-utils
 │  └─ licenseFile: node_modules/@eslint-community/eslint-utils/LICENSE
-├─ @eslint-community/regexpp@4.11.1
+├─ @eslint-community/regexpp@4.12.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/eslint-community/regexpp
 │  ├─ publisher: Toru Nagashima
@@ -733,10 +726,10 @@
 │  ├─ email: justin@ridgewell.name
 │  ├─ path: node_modules/@jridgewell/trace-mapping
 │  └─ licenseFile: node_modules/@jridgewell/trace-mapping/LICENSE
-├─ @microblink/blinkid-in-browser-sdk@6.11.2
+├─ @microblink/blinkid-in-browser-sdk@6.12.0
 │  ├─ licenses: Custom: https://github.com/BlinkID/blinkid-in-browser
 │  ├─ repository: https://github.com/BlinkID/blinkid-in-browser
-│  ├─ path: /opt/jenkins/jenkinsData/E3/sdk-blinkid-in-browser/blinkid-in-browser
+│  ├─ path: /opt/jenkins/android-arm64-huawei-p30-pro/root/E0/sdk-blinkid-in-browser/blinkid-in-browser
 │  └─ licenseFile: README.md
 ├─ @nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents.2
 │  ├─ licenses: MIT
@@ -790,7 +783,7 @@
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/json-schema
 │  └─ licenseFile: node_modules/@types/json-schema/LICENSE
-├─ @types/node@22.8.0
+├─ @types/node@22.9.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/DefinitelyTyped/DefinitelyTyped
 │  ├─ path: node_modules/@types/node
@@ -850,7 +843,7 @@
 │  ├─ repository: https://github.com/acornjs/acorn-jsx
 │  ├─ path: node_modules/acorn-jsx
 │  └─ licenseFile: node_modules/acorn-jsx/LICENSE
-├─ acorn@8.13.0
+├─ acorn@8.14.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/acornjs/acorn
 │  ├─ path: node_modules/acorn
@@ -869,7 +862,7 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/ansi-regex
 │  └─ licenseFile: node_modules/ansi-regex/license
-├─ ansi-styles@3.2.1
+├─ ansi-styles@4.3.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/chalk/ansi-styles
 │  ├─ publisher: Sindre Sorhus
@@ -877,14 +870,6 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/ansi-styles
 │  └─ licenseFile: node_modules/ansi-styles/license
-├─ ansi-styles@4.3.0
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/chalk/ansi-styles
-│  ├─ publisher: Sindre Sorhus
-│  ├─ email: sindresorhus@gmail.com
-│  ├─ url: sindresorhus.com
-│  ├─ path: node_modules/eslint/node_modules/ansi-styles
-│  └─ licenseFile: node_modules/eslint/node_modules/ansi-styles/license
 ├─ anymatch@2.0.0
 │  ├─ licenses: ISC
 │  ├─ repository: https://github.com/micromatch/anymatch
@@ -1065,7 +1050,7 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/callsites
 │  └─ licenseFile: node_modules/callsites/license
-├─ caniuse-lite@1.0.30001669
+├─ caniuse-lite@1.0.30001680
 │  ├─ licenses: CC-BY-4.0
 │  ├─ repository: https://github.com/browserslist/caniuse-lite
 │  ├─ publisher: Ben Briggs
@@ -1073,16 +1058,11 @@
 │  ├─ url: http://beneb.info
 │  ├─ path: node_modules/caniuse-lite
 │  └─ licenseFile: node_modules/caniuse-lite/LICENSE
-├─ chalk@2.4.2
+├─ chalk@4.1.2
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/chalk/chalk
 │  ├─ path: node_modules/chalk
 │  └─ licenseFile: node_modules/chalk/license
-├─ chalk@4.1.2
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/chalk/chalk
-│  ├─ path: node_modules/eslint/node_modules/chalk
-│  └─ licenseFile: node_modules/eslint/node_modules/chalk/license
 ├─ chokidar@3.6.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/paulmillr/chokidar
@@ -1104,34 +1084,20 @@
 │  ├─ url: https://github.com/jonschlinkert
 │  ├─ path: node_modules/collection-visit
 │  └─ licenseFile: node_modules/collection-visit/LICENSE
-├─ color-convert@1.9.3
+├─ color-convert@2.0.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/Qix-/color-convert
 │  ├─ publisher: Heather Arthur
 │  ├─ email: fayearthur@gmail.com
 │  ├─ path: node_modules/color-convert
 │  └─ licenseFile: node_modules/color-convert/LICENSE
-├─ color-convert@2.0.1
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/Qix-/color-convert
-│  ├─ publisher: Heather Arthur
-│  ├─ email: fayearthur@gmail.com
-│  ├─ path: node_modules/eslint/node_modules/color-convert
-│  └─ licenseFile: node_modules/eslint/node_modules/color-convert/LICENSE
-├─ color-name@1.1.3
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/dfcreative/color-name
-│  ├─ publisher: DY
-│  ├─ email: dfcreative@gmail.com
-│  ├─ path: node_modules/color-name
-│  └─ licenseFile: node_modules/color-name/LICENSE
 ├─ color-name@1.1.4
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/colorjs/color-name
 │  ├─ publisher: DY
 │  ├─ email: dfcreative@gmail.com
-│  ├─ path: node_modules/eslint/node_modules/color-name
-│  └─ licenseFile: node_modules/eslint/node_modules/color-name/LICENSE
+│  ├─ path: node_modules/color-name
+│  └─ licenseFile: node_modules/color-name/LICENSE
 ├─ commander@2.20.3
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/tj/commander.js
@@ -1182,7 +1148,7 @@
 │  ├─ url: https://github.com/jonschlinkert
 │  ├─ path: node_modules/copy-descriptor
 │  └─ licenseFile: node_modules/copy-descriptor/LICENSE
-├─ core-js-compat@3.38.1
+├─ core-js-compat@3.39.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/zloirock/core-js
 │  ├─ publisher: Denis Pushkarev
@@ -1198,7 +1164,7 @@
 │  ├─ url: http://blog.izs.me/
 │  ├─ path: node_modules/core-util-is
 │  └─ licenseFile: node_modules/core-util-is/LICENSE
-├─ cross-spawn@7.0.3
+├─ cross-spawn@7.0.5
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/moxystudio/node-cross-spawn
 │  ├─ publisher: André Cruz
@@ -1274,7 +1240,7 @@
 │  ├─ repository: https://github.com/eslint/doctrine
 │  ├─ path: node_modules/doctrine
 │  └─ licenseFile: node_modules/doctrine/LICENSE
-├─ electron-to-chromium@1.5.45
+├─ electron-to-chromium@1.5.58
 │  ├─ licenses: ISC
 │  ├─ repository: https://github.com/kilian/electron-to-chromium
 │  ├─ publisher: Kilian Valkhof
@@ -1288,22 +1254,14 @@
 │  ├─ url: https://lukeed.com
 │  ├─ path: node_modules/escalade
 │  └─ licenseFile: node_modules/escalade/license
-├─ escape-string-regexp@1.0.5
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/sindresorhus/escape-string-regexp
-│  ├─ publisher: Sindre Sorhus
-│  ├─ email: sindresorhus@gmail.com
-│  ├─ url: sindresorhus.com
-│  ├─ path: node_modules/escape-string-regexp
-│  └─ licenseFile: node_modules/escape-string-regexp/license
 ├─ escape-string-regexp@4.0.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/sindresorhus/escape-string-regexp
 │  ├─ publisher: Sindre Sorhus
 │  ├─ email: sindresorhus@gmail.com
 │  ├─ url: https://sindresorhus.com
-│  ├─ path: node_modules/eslint/node_modules/escape-string-regexp
-│  └─ licenseFile: node_modules/eslint/node_modules/escape-string-regexp/license
+│  ├─ path: node_modules/escape-string-regexp
+│  └─ licenseFile: node_modules/escape-string-regexp/license
 ├─ eslint-scope@5.1.1
 │  ├─ licenses: BSD-2-Clause
 │  ├─ repository: https://github.com/eslint/eslint-scope
@@ -1610,7 +1568,7 @@
 │  ├─ publisher: Orlin Georgiev
 │  ├─ path: node_modules/grapheme-splitter
 │  └─ licenseFile: node_modules/grapheme-splitter/LICENSE
-├─ has-flag@3.0.0
+├─ has-flag@4.0.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/sindresorhus/has-flag
 │  ├─ publisher: Sindre Sorhus
@@ -1618,14 +1576,6 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/has-flag
 │  └─ licenseFile: node_modules/has-flag/license
-├─ has-flag@4.0.0
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/sindresorhus/has-flag
-│  ├─ publisher: Sindre Sorhus
-│  ├─ email: sindresorhus@gmail.com
-│  ├─ url: sindresorhus.com
-│  ├─ path: node_modules/jest-worker/node_modules/has-flag
-│  └─ licenseFile: node_modules/jest-worker/node_modules/has-flag/license
 ├─ has-value@0.3.1
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/jonschlinkert/has-value
@@ -2419,7 +2369,7 @@
 │  ├─ url: https://ofcr.se/
 │  ├─ path: node_modules/regjsgen
 │  └─ licenseFile: node_modules/regjsgen/LICENSE-MIT.txt
-├─ regjsparser@0.11.1
+├─ regjsparser@0.11.2
 │  ├─ licenses: BSD-2-Clause
 │  ├─ repository: https://github.com/jviereck/regjsparser
 │  ├─ publisher: 'Julian Viereck'
@@ -2711,7 +2661,7 @@
 │  ├─ url: https://sindresorhus.com
 │  ├─ path: node_modules/strip-json-comments
 │  └─ licenseFile: node_modules/strip-json-comments/license
-├─ supports-color@5.5.0
+├─ supports-color@7.2.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/chalk/supports-color
 │  ├─ publisher: Sindre Sorhus
@@ -2719,14 +2669,6 @@
 │  ├─ url: sindresorhus.com
 │  ├─ path: node_modules/supports-color
 │  └─ licenseFile: node_modules/supports-color/license
-├─ supports-color@7.2.0
-│  ├─ licenses: MIT
-│  ├─ repository: https://github.com/chalk/supports-color
-│  ├─ publisher: Sindre Sorhus
-│  ├─ email: sindresorhus@gmail.com
-│  ├─ url: sindresorhus.com
-│  ├─ path: node_modules/jest-worker/node_modules/supports-color
-│  └─ licenseFile: node_modules/jest-worker/node_modules/supports-color/license
 ├─ supports-preserve-symlinks-flag@1.0.0
 │  ├─ licenses: MIT
 │  ├─ repository: https://github.com/inspect-js/node-supports-preserve-symlinks-flag

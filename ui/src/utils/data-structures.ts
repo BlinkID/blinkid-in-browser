@@ -224,6 +224,22 @@ export enum RecognitionStatus {
   BlurDetected = "BlurDetected",
   GlareDetected = "GlareDetected",
 
+  // Passport states
+  MovePassportLeft = "MovePassportLeft",
+  MovePassportRight = "MovePassportRight",
+  MovePassportUp = "MovePassportUp",
+  MovePassportDown = "MovePassportDown",
+
+  MovePassportDownError = "MovePassportDownError",
+  MovePassportUpError = "MovePassportUpError",
+  MovePassportRightError = "MovePassportRightError",
+  MovePassportLeftError = "MovePassportLeftError",
+
+  ScanPassportLeft = "ScanPassportLeft",
+  ScanPassportRight = "ScanPassportRight",
+  ScanPassportUp = "ScanPassportUp",
+  ScanPassportDown = "ScanPassportDown",
+
   // Errors
   UnknownError = "UnknownError",
 
@@ -256,6 +272,7 @@ export enum CameraExperience {
   CardMultiSide = "CARD_MULTI_SIDE",
   CardSingleSide = "CARD_SINGLE_SIDE",
   PaymentCard = "PAYMENT_CARD",
+  Passport = "PASSPORT",
 }
 
 export enum CameraExperienceState {
@@ -273,6 +290,21 @@ export enum CameraExperienceState {
   BlurDetected = "BlurDetected",
   GlareDetected = "GlareDetected",
   FacePhotoCovered = "FacePhotoCovered",
+  // passport states
+  MovePassportLeft = "MovePassportLeft",
+  MovePassportRight = "MovePassportRight",
+  MovePassportUp = "MovePassportUp",
+  MovePassportDown = "MovePassportDown",
+
+  ScanPassportLeft = "ScanPassportLeft",
+  ScanPassportRight = "ScanPassportRight",
+  ScanPassportUp = "ScanPassportUp",
+  ScanPassportDown = "ScanPassportDown",
+
+  MovePassportDownError = "MovePassportDownError",
+  MovePassportUpError = "MovePassportUpError",
+  MovePassportRightError = "MovePassportRightError",
+  MovePassportLeftError = "MovePassportLeftError",
 }
 
 export type CameraExperienceStateKey = keyof typeof CameraExperienceState;
@@ -297,7 +329,7 @@ export const CameraExperienceStateDuration = new Map([
   [CameraExperienceState.BarcodeScanning, 3500],
   [CameraExperienceState.AdjustAngle, 2500],
   [CameraExperienceState.Default, 500],
-  [CameraExperienceState.Done, 300],
+  [CameraExperienceState.Done, 1000],
   [CameraExperienceState.DoneAll, 400],
   [CameraExperienceState.Flip, 3500],
   [CameraExperienceState.WrongSide, 1500],
@@ -306,6 +338,18 @@ export const CameraExperienceStateDuration = new Map([
   [CameraExperienceState.BlurDetected, 2500],
   [CameraExperienceState.GlareDetected, 2500],
   [CameraExperienceState.FacePhotoCovered, 2500],
+  [CameraExperienceState.MovePassportLeft, 2500],
+  [CameraExperienceState.MovePassportRight, 2500],
+  [CameraExperienceState.MovePassportUp, 2500],
+  [CameraExperienceState.MovePassportDown, 2500],
+  [CameraExperienceState.ScanPassportLeft, 1500],
+  [CameraExperienceState.ScanPassportRight, 1500],
+  [CameraExperienceState.ScanPassportUp, 1500],
+  [CameraExperienceState.ScanPassportDown, 1500],
+  [CameraExperienceState.MovePassportDownError, 2500],
+  [CameraExperienceState.MovePassportUpError, 2500],
+  [CameraExperienceState.MovePassportRightError, 2500],
+  [CameraExperienceState.MovePassportLeftError, 2500],
 ]);
 
 /**
