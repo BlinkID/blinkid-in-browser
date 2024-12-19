@@ -510,5 +510,6 @@ export enum DocumentType
     NON_VOTER_ID = 74,
     RECIPROCAL_HEALTH_INSURANCE_CARD = 75,
     VEHICLE_REGISTRATION = 76,
-    COUNT = 77
+    ESAAD_CARD= 77,
+    COUNT = 78
 }

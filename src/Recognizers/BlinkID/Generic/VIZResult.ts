@@ -9,8 +9,7 @@ import { DependentInfo } from "./DependentInfo";
 /**
  * VIZResult contains data extracted from the Visual Inspection Zone.
  */
-export interface VIZResult
-{
+export interface VIZResult {
     /** The first name of the document owner. */
     readonly firstName: StringResult;
     /** The last name of the document owner. */
@@ -110,5 +109,10 @@ export interface VIZResult
     readonly specificDocumentValidity: StringResult;
 
     /** The dependents info. */
-    readonly dependentsInfo: Array< DependentInfo >;
+    readonly dependentsInfo: Array<DependentInfo>;
+
+    /**
+     * The vehicle owner.
+     */
+    readonly vehicleOwner: StringResult;
 }

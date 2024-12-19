@@ -506,6 +506,11 @@ export interface BaseBlinkIdRecognizerResult extends RecognizerResult {
      * The dependents info.
      */
     readonly dependentsInfo: Array< DependentInfo >;
+
+    /**
+     * The vehicle owner.
+     */
+    readonly vehicleOwner: StringResult;
 }
 
 /**
