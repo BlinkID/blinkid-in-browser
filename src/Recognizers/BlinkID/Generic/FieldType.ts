@@ -55,6 +55,7 @@ export enum FieldType
     DependentFullName = 47,
     EligibilityCategory = 48,
     SpecificDocumentValidity = 49,
+    VehicleOwner = 50,
 
     /** Number of possible field types. */
     Count
