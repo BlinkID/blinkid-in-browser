@@ -34,7 +34,7 @@ Check out the [official demo app](https://demo.microblink.com/in-browser-sdk/bli
 
 To see the source code of the above examples, check out the [examples directory](examples). If you'd like to run examples of the UI component, either through the browser or locally, see the [ui/examples](ui/examples) directory.
 
-Please keep in mind that BlinkID In-browser SDK is meant to be used natively in a web browser. It will not work correctly within a NodeJS backend service. If you are looking for Cordova/PhoneGap version, please go [here](https://github.com/BlinkID/blinkid-cordova). If you want to use BlinkID as a backend service, check out [BlinkID Cloud API](https://microblink.com/products/blinkid/cloud-api) or [BlinkID Self-hosted API](https://microblink.com/products/blinkid/self-hosted-api).
+Please keep in mind that BlinkID In-browser SDK is meant to be used natively in a web browser. It may not work correctly within an embedded browser (WebView) or a NodeJS backend service. If you are looking for Cordova/PhoneGap version, please go [here](https://github.com/BlinkID/blinkid-cordova). If you want to use BlinkID as a backend service, check out [BlinkID Cloud API](https://microblink.com/products/blinkid/cloud-api) or [BlinkID Self-hosted API](https://microblink.com/products/blinkid/self-hosted-api).
 
 ## Table of contents
 
@@ -777,6 +777,8 @@ The SDK can be used within a `SFSafariViewController` on iOS and `WebView` on An
 
 -   https://github.com/BlinkID/example-ios-webview-blinkid
 -   https://github.com/BlinkID/example-android-webview-blinkid
+
+Microblink doesn't officially support webview integrations but following the principles in the example applications should allow the SDK to function in a webview context.
 
 ## <a name="troubleshoot"></a> Troubleshooting
 
