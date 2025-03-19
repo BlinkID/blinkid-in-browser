@@ -1,5 +1,11 @@
 # Release notes
 
+## v6.13.1
+
+## Bug fixes
+
+-   Fixed a bug that prevented user feedback for blur and glare from appearing in the UI component.
+
 ## v6.13.0
 
 ### What's New

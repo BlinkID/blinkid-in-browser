@@ -20,6 +20,6 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "@microblink/blinkid-in-browser-sdk": "~v6.13.0"
+    "@microblink/blinkid-in-browser-sdk": "~v6.13.1"
   }
 }
