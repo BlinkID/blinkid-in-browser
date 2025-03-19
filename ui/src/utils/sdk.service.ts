@@ -34,48 +34,23 @@ export interface CheckConclusion {
  * @returns
  */
 export function getAdditionalProcessingInfo(result: BlinkIDSDK.BlinkIDResult) {
-  const isMultiside = "scanningFirstSideDone" in result;
-  const isOnFirstSide = isMultiside && !result.scanningFirstSideDone;
-  const isFrontSuccessFrame =
-    result.processingStatus === BlinkIDSDK.ProcessingStatus.AwaitingOtherSide;
-
-  if (!isMultiside) {
+  if ("scanningFirstSideDone" in result) {
+    return !result.scanningFirstSideDone
+      ? result.frontAdditionalProcessingInfo
+      : result.backAdditionalProcessingInfo;
+  } else {
     return result.additionalProcessingInfo;
   }
-
-  if (!isOnFirstSide) {
-    return result.frontAdditionalProcessingInfo;
-  }
-
-  // `scanningFirstSideDone` is true, but we are still technically on the first side
-  if (isFrontSuccessFrame) {
-    return result.frontAdditionalProcessingInfo;
-  }
-
-  return result.backAdditionalProcessingInfo;
 }
 
-export function getImageAnalyisResult(result: BlinkIDSDK.BlinkIDResult) {
-  const isMultiside = "scanningFirstSideDone" in result;
-  const isOnFirstSide = isMultiside && !result.scanningFirstSideDone;
-
-  const isFrontSuccessFrame =
-    result.processingStatus === BlinkIDSDK.ProcessingStatus.AwaitingOtherSide;
-
-  if (!isMultiside) {
+export function getImageAnalysisResult(result: BlinkIDSDK.BlinkIDResult) {
+  if ("scanningFirstSideDone" in result) {
+    return !result.scanningFirstSideDone
+      ? result.frontImageAnalysisResult
+      : result.backImageAnalysisResult;
+  } else {
     return result.imageAnalysisResult;
   }
-
-  if (!isOnFirstSide || isFrontSuccessFrame) {
-    return result.frontImageAnalysisResult;
-  }
-
-  // `scanningFirstSideDone` is true, but we are still technically on the first side
-  if (isFrontSuccessFrame) {
-    return result.frontImageAnalysisResult;
-  }
-
-  return result.backImageAnalysisResult;
 }
 
 export const isFirstSideDone = (result: BlinkIDSDK.BlinkIDResult) => {
@@ -281,7 +256,7 @@ export class SdkService {
           isMultiside && result.scanningFirstSideDone && !isFrontSuccessFrame;
 
         const additionalProcessingInfo = getAdditionalProcessingInfo(result);
-        const imageAnalysisResult = getImageAnalyisResult(result);
+        const imageAnalysisResult = getImageAnalysisResult(result);
 
         const isPassport =
           result.classInfo.documentType === BlinkIDSDK.DocumentType.PASSPORT;

@@ -4,12 +4,12 @@
 
 Test this repo quickly on your machine (assuming you have Node and Git installed) by doing the following steps:
 
--   clone [this](https://github.com/BlinkID/blinkid-in-browser) repo by running `git clone https://github.com/BlinkID/blinkid-in-browser` in your Terminal
--   run `cd blinkid-in-browser/examples/getting-started && npm install && npm run dev`
--   get the license at [Microblink DevHub](https://developer.microblink.com/) and add it to the `LICENSE` variable in the `main.js` file in the `examples/getting-started` folder
--   open [http://localhost:5173/](http://localhost:5173/)
-    -   port may be different in your case, check the output of the `npm run dev` command noted above
--   point your ID towards the camera
+- clone [this](https://github.com/BlinkID/blinkid-in-browser) repo by running `git clone https://github.com/BlinkID/blinkid-in-browser` in your Terminal
+- run `cd blinkid-in-browser/examples/getting-started && npm install && npm run dev`
+- get the license at [Microblink DevHub](https://developer.microblink.com/) and add it to the `LICENSE` variable in the `main.js` file in the `examples/getting-started` folder
+- open [http://localhost:5173/](http://localhost:5173/)
+  - port may be different in your case, check the output of the `npm run dev` command noted above
+- point your ID towards the camera
 
 If you prefer a short, 3 minute, video for running this project, feel free to check it out [here](https://www.youtube.com/watch?v=c0ZA8af9oBc).
 
@@ -18,6 +18,7 @@ If you want to recreate this project from scratch, step by step, please check ou
 ---
 
 [![Build Status](https://travis-ci.org/BlinkID/blinkid-in-browser.svg?branch=master)](https://travis-ci.org/BlinkID/blinkid-in-browser) [![npm version](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk.svg)](https://badge.fury.io/js/%40microblink%2Fblinkid-in-browser-sdk)
+
 
 BlinkID In-browser SDK enables scanning of various identity documents, including driving licenses, national identity cards, passports and others. The SDK provides real-time in-browser data extraction, without any need for sending images to servers for processing.
 
@@ -34,70 +35,73 @@ Check out the [official demo app](https://demo.microblink.com/in-browser-sdk/bli
 
 To see the source code of the above examples, check out the [examples directory](examples). If you'd like to run examples of the UI component, either through the browser or locally, see the [ui/examples](ui/examples) directory.
 
-Please keep in mind that BlinkID In-browser SDK is meant to be used natively in a web browser. It may not work correctly within an embedded browser (WebView) or a NodeJS backend service. If you are looking for Cordova/PhoneGap version, please go [here](https://github.com/BlinkID/blinkid-cordova). If you want to use BlinkID as a backend service, check out [BlinkID Cloud API](https://microblink.com/products/blinkid/cloud-api) or [BlinkID Self-hosted API](https://microblink.com/products/blinkid/self-hosted-api).
+Please keep in mind that BlinkID In-browser SDK is meant to be used natively in a web browser. It will not work correctly within a iOS/Android WebView or NodeJS backend service. If you are looking for Cordova/PhoneGap version, please go [here](https://github.com/BlinkID/blinkid-cordova). If you want to use BlinkID as a backend service, check out [BlinkID Cloud API](https://microblink.com/products/blinkid/cloud-api) or [BlinkID Self-hosted API](https://microblink.com/products/blinkid/self-hosted-api).
 
 ## Table of contents
 
--   [BlinkID In-browser SDK](#blinkid-in-browser-sdk)
-    -   [How to run this repo?](#how-to-run-this-repo)
-    -   [Table of contents](#table-of-contents)
-    -   [ Components of SDK](#-components-of-sdk)
-    -   [ Integration instructions](#-integration-instructions)
-        -   [ Obtaining a license key](#-obtaining-a-license-key)
-        -   [ Installation](#-installation)
-            -   [WASM Resources](#wasm-resources)
-            -   [Versions and backward compatibility](#versions-and-backward-compatibility)
-        -   [ Performing your first scan](#-performing-your-first-scan)
-        -   [ Recognizing still images](#-recognizing-still-images)
-        -   [ Configuration of SDK](#-configuration-of-sdk)
-        -   [ Deployment guidelines](#-deployment-guidelines)
-            -   [HTTPS](#https)
-            -   [Deployment of WASM files](#deployment-of-wasm-files)
-                -   [Server Configuration](#server-configuration)
-                -   [ Location of WASM and related support files](#-location-of-wasm-and-related-support-files)
-            -   [Setting up multiple licenses](#setting-up-multiple-licenses)
-                -   [Multiple apps](#multiple-apps)
-                -   [Single app](#single-app)
-    -   [ The `Recognizer` concept, `RecognizerRunner` and `VideoRecognizer`](#-the-recognizer-concept-recognizerrunner-and-videorecognizer)
-        -   [ The `Recognizer` concept](#-the-recognizer-concept)
-        -   [ `RecognizerRunner`](#-recognizerrunner)
-        -   [ Performing recognition of video streams using `VideoRecognizer`](#-performing-recognition-of-video-streams-using-videorecognizer)
-            -   [Recognizing a video file](#recognizing-a-video-file)
-        -   [ Custom UX with `VideoRecognizer`](#-custom-ux-with-videorecognizer)
-    -   [ Handling processing events with `MetadataCallbacks`](#-handling-processing-events-with-metadatacallbacks)
-    -   [ List of available recognizers](#-list-of-available-recognizers)
-        -   [ ID barcode recognizer](#-id-barcode-recognizer)
-        -   [ BlinkID Single-side recognizer](#-blinkid-single-side-recognizer)
-        -   [ BlinkID Multi-side recognizer](#-blinkid-multi-side-recognizer)
-    -   [ Recognizer settings](#-recognizer-settings)
-    -   [ Technical requirements](#-technical-requirements)
-    -   [ Supported browsers](#-supported-browsers)
-    -   [ Camera devices](#-camera-devices)
-    -   [ Device support](#-device-support)
-    -   [ WebView usage](#-webview-usage)
-    -   [ Troubleshooting](#-troubleshooting)
-        -   [ Integration problems](#-integration-problems)
-        -   [ SDK problems](#-sdk-problems)
-            -   [ Licensing problems](#-licensing-problems)
-            -   [ Other problems](#-other-problems)
-    -   [ FAQ and known issues](#-faq-and-known-issues)
-    -   [ Additional info](#-additional-info)
+- [BlinkID In-browser SDK](#blinkid-in-browser-sdk)
+  - [How to run this repo?](#how-to-run-this-repo)
+  - [Table of contents](#table-of-contents)
+  - [ Components of SDK](#-components-of-sdk)
+  - [ Integration instructions](#-integration-instructions)
+    - [ Obtaining a license key](#-obtaining-a-license-key)
+    - [ Installation](#-installation)
+      - [WASM Resources](#wasm-resources)
+      - [Versions and backward compatibility](#versions-and-backward-compatibility)
+    - [ Performing your first scan](#-performing-your-first-scan)
+    - [ Recognizing still images](#-recognizing-still-images)
+    - [ Configuration of SDK](#-configuration-of-sdk)
+    - [ Deployment guidelines](#-deployment-guidelines)
+      - [HTTPS](#https)
+      - [Deployment of WASM files](#deployment-of-wasm-files)
+        - [Server Configuration](#server-configuration)
+        - [ Location of WASM and related support files](#-location-of-wasm-and-related-support-files)
+      - [Setting up multiple licenses](#setting-up-multiple-licenses)
+        - [Multiple apps](#multiple-apps)
+        - [Single app](#single-app)
+  - [ The `Recognizer` concept, `RecognizerRunner` and `VideoRecognizer`](#-the-recognizer-concept-recognizerrunner-and-videorecognizer)
+    - [ The `Recognizer` concept](#-the-recognizer-concept)
+    - [ `RecognizerRunner`](#-recognizerrunner)
+    - [ Performing recognition of video streams using `VideoRecognizer`](#-performing-recognition-of-video-streams-using-videorecognizer)
+      - [Recognizing a video file](#recognizing-a-video-file)
+    - [ Custom UX with `VideoRecognizer`](#-custom-ux-with-videorecognizer)
+  - [ Handling processing events with `MetadataCallbacks`](#-handling-processing-events-with-metadatacallbacks)
+  - [ List of available recognizers](#-list-of-available-recognizers)
+    - [ ID barcode recognizer](#-id-barcode-recognizer)
+    - [ BlinkID Single-side recognizer](#-blinkid-single-side-recognizer)
+    - [ BlinkID Multi-side recognizer](#-blinkid-multi-side-recognizer)
+  - [ Recognizer settings](#-recognizer-settings)
+  - [ Technical requirements](#-technical-requirements)
+  - [ Supported browsers](#-supported-browsers)
+  - [ Camera devices](#-camera-devices)
+  - [ Device support](#-device-support)
+  - [ SDK and *WebView*/*WKWebView*/*SFSafariViewController*](#-sdk-and-webviewwkwebviewsfsafariviewcontroller)
+    - [Android and *WebView*](#android-and-webview)
+    - [iOS, *WKWebView* and *SFSafariViewController*](#ios-wkwebview-and-sfsafariviewcontroller)
+    - [Conclusion](#conclusion)
+  - [ Troubleshooting](#-troubleshooting)
+    - [ Integration problems](#-integration-problems)
+    - [ SDK problems](#-sdk-problems)
+      - [ Licensing problems](#-licensing-problems)
+      - [ Other problems](#-other-problems)
+  - [ FAQ and known issues](#-faq-and-known-issues)
+  - [ Additional info](#-additional-info)
 
 ## <a name="components-of-sdk"></a> Components of SDK
 
-BlinkID In-browser SDK consists of:
+BlinkID In-browser SDK consists of: 
 
--   WASM library that recognizes a document a user is holding and extracts an image of the most suitable frame from the camera feed.
--   Web component with a prebuilt and customizable UI, which acts as a wrapper for the WASM library to provide a straightforward integration.
+* WASM library that recognizes a document a user is holding and extracts an image of the most suitable frame from the camera feed. 
+* Web component with a prebuilt and customizable UI, which acts as a wrapper for the WASM library to provide a straightforward integration. 
 
 You can add it to your website or web app in two ways:
 
 1. For the simplest form of integration, use a web component with a prebuilt and customizable UI.
-    - Follow the integration instructions in the [ui/README.md](ui/README.md) file.
-    - You can find the source code of example applications in the [ui/examples](ui/examples) directory.
+    * Follow the integration instructions in the [ui/README.md](ui/README.md) file.
+    * You can find the source code of example applications in the [ui/examples](ui/examples) directory.
 2. For an advanced form of integration where UI has to be built from scratch, use a WASM library instead.
-    - See the integration instructions [here](#integration).
-    - Find the source code of example applications in the [examples](examples) directory.
+    * See the integration instructions [here](#integration).
+    * Find the source code of example applications in the [examples](examples) directory.
 
 ## <a name="integration"></a> Integration instructions
 
@@ -195,101 +199,105 @@ _Note: the following code snippets are written in TypeScript, but it's possible 
 
 3. Initialize the SDK using the following code snippet:
 
-    ```typescript
-    import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
+   ```typescript
+   import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 
-    // Check if browser is supported
-    if (BlinkIDSDK.isBrowserSupported()) {
-        const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings(
-            "your-base64-license-key"
-        );
+   // Check if browser is supported
+   if ( BlinkIDSDK.isBrowserSupported() )
+   {
+       const loadSettings = new BlinkIDSDK.WasmSDKLoadSettings( "your-base64-license-key" );
 
-        BlinkIDSDK.loadWasmModule(loadSettings).then(
-            (wasmSDK: BlinkIDSDK.WasmSDK) => {
-                // The SDK was initialized successfully, save the wasmSDK for future use
-            },
-            (error: any) => {
-                // Error happened during the initialization of the SDK
-                console.log(
-                    "Error during the initialization of the SDK!",
-                    error
-                );
-            }
-        );
-    } else {
-        console.log("This browser is not supported by the SDK!");
-    }
-    ```
+       BlinkIDSDK.loadWasmModule( loadSettings ).then
+       (
+           ( wasmSDK: BlinkIDSDK.WasmSDK ) =>
+           {
+               // The SDK was initialized successfully, save the wasmSDK for future use
+           },
+           ( error: any ) =>
+           {
+               // Error happened during the initialization of the SDK
+               console.log( "Error during the initialization of the SDK!", error );
+           }
+       )
+   }
+   else
+   {
+       console.log( "This browser is not supported by the SDK!" );
+   }
+   ```
 
 4. Create recognizer objects that will perform image recognition, configure them to your needs (to scan specific types of documents, for example) and use them to create a `RecognizerRunner` object:
 
-    ```typescript
-    import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
 
-    const recognizer = await BlinkIDSDK.createBlinkIdSingleSideRecognizer(
-        wasmSDK
-    );
-    const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
-        wasmSDK,
-        [recognizer],
-        true
-    );
-    ```
+   ```typescript
+   import * as BlinkIDSDK from "@microblink/blinkid-in-browser-sdk";
+
+   const recognizer = await BlinkIDSDK.createBlinkIdSingleSideRecognizer( wasmSDK );
+   const recognizerRunner = await BlinkIDSDK.createRecognizerRunner(
+       wasmSDK,
+       [ recognizer ],
+       true
+   );
+   ```
 
 5. Obtain a reference to your HTML video element and create a `VideoRecognizer` using the element and your instance of `RecognizerRunner` which then can be used to process input video stream:
 
-    ```typescript
-    const cameraFeed = document.getElementById(
-        "myCameraVideoElement"
-    ) as HTMLVideoElement;
-    try {
-        const videoRecognizer =
-            await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
-                cameraFeed,
-                recognizerRunner
-            );
+   ```typescript
+   const cameraFeed = document.getElementById( "myCameraVideoElement" ) as HTMLVideoElement;
+   try
+   {
+       const videoRecognizer = await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
+           cameraFeed,
+           recognizerRunner
+       );
 
-        // There is more than one way to handle recognition
+       // There is more than one way to handle recognition
 
-        // Using the recognize() method will provide you with the default behavior,
-        // such as built-in error handling, timeout and video feed pausing.
-        const processResult = await videoRecognizer.recognize();
+       // Using the recognize() method will provide you with the default behavior,
+       // such as built-in error handling, timeout and video feed pausing.
+       const processResult = await videoRecognizer.recognize();
 
-        // Using the startRecognition() method allows you to pass your own onScanningDone callback,
-        // giving you the option to create custom behavior.
-        const processResult = await videoRecognizer.startRecognition(
-            async (recognitionState) => {
-                videoRecognizer.pauseRecognition();
-                return recognitionState;
-            }
-        );
+       // Using the startRecognition() method allows you to pass your own onScanningDone callback,
+       // giving you the option to create custom behavior.
+       const processResult = await videoRecognizer.startRecognition(
+           async ( recognitionState ) =>
+           {
+               videoRecognizer.pauseRecognition();
+               return recognitionState;
+           }
+       );
 
-        // To obtain recognition results see next step
-    } catch (error) {
-        console.error(error);
-    }
-    ```
+       // To obtain recognition results see next step
+   }
+   catch ( error )
+   {
+       console.error(error);
+   }
+   ```
 
 6. If `processResult` returned from `VideoRecognizer's` method `recognize` or `startRecognition` is not `BlinkIDSDK.RecognizerResultState.Empty`, then at least one recognizer given to the `RecognizerRunner` above contains a recognition result. You can extract the result from each recognizer using its `getResult` method:
 
-    ```typescript
-    if (processResult !== BlinkIDSDK.RecognizerResultState.Empty) {
-        const recognitionResult = await recognizer.getResult();
-        console.log(recognitionResult);
-    } else {
-        console.log("Recognition was not successful!");
-    }
-    ```
+   ```typescript
+   if ( processResult !== BlinkIDSDK.RecognizerResultState.Empty )
+   {
+       const recognitionResult = await recognizer.getResult();
+       console.log( recognitionResult );
+   }
+   else
+   {
+       console.log( "Recognition was not successful!" );
+   }
+   ```
 
 7. Finally, release the memory on the WebAssembly heap by calling `delete` method on both `RecognizerRunner` and each of your recognizers. Also, release the camera stream by calling `releaseVideoFeed` on instance of `VideoRecognizer`:
 
-    ```typescript
-    videoRecognizer.releaseVideoFeed();
-    recognizerRunner.delete();
-    recognizer.delete();
-    ```
+   ```typescript
+   videoRecognizer.releaseVideoFeed();
+   recognizerRunner.delete();
+   recognizer.delete();
+   ```
 
-    Note that after releasing those objects it is not valid to call any methods on them, as they are literally destroyed. This is required to release memory resources on WebAssembly heap which are not automatically released with JavaScript's garbage collector. Also, note that results returned from `getResult` method are placed on JavaScript's heap and will be cleaned by its garbage collector, just like any other normal JavaScript object.
+   Note that after releasing those objects it is not valid to call any methods on them, as they are literally destroyed. This is required to release memory resources on WebAssembly heap which are not automatically released with JavaScript's garbage collector. Also, note that results returned from `getResult` method are placed on JavaScript's heap and will be cleaned by its garbage collector, just like any other normal JavaScript object.
 
 ### <a name="stillImagesRecognition"></a> Recognizing still images
 
@@ -299,20 +307,20 @@ If you just want to perform recognition of still images and do not need live cam
 
 2. Make sure you have the image set to a `HTMLImageElement`. If you only have the URL of the image that needs recognizing, you can attach it to the image element with following code snippet:
 
-    ```typescript
-    const imageElement = document.getElementById(
-        "imageToProcess"
-    ) as HTMLImageElement;
-    imageElement.src = URL.createObjectURL(imageURL);
-    await imageElement.decode();
-    ```
+   ```typescript
+   const imageElement = document.getElementById(
+     "imageToProcess"
+   ) as HTMLImageElement;
+   imageElement.src = URL.createObjectURL(imageURL);
+   await imageElement.decode();
+   ```
 
 3. Obtain the `CapturedFrame` object using function `captureFrame` and give it to the `processImage` method of the `RecognizerRunner`:
 
-    ```typescript
-    const imageFrame = BlinkIDSDK.captureFrame(imageElement);
-    const processResult = await recognizerRunner.processImage(imageFrame);
-    ```
+   ```typescript
+   const imageFrame = BlinkIDSDK.captureFrame( imageElement );
+   const processResult = await recognizerRunner.processImage( imageFrame );
+   ```
 
 4. Proceed as in [steps 6-7 above](#firstScan). Note that you don't have to release any resources of `VideoRecognizer` here as we were only recognizing a single image, but `RecognizerRunner` and recognizers must be deleted using the `delete` method.
 
@@ -400,38 +408,39 @@ Otherwise, the browser will block access to a web camera and remote scripts due 
 
 The SDK contains multiple builds tailored for different devices' capabilities.
 
--   `Basic`
+- `Basic`
 
-    -   The WASM that will be loaded will be most compatible with all browsers that support the WASM, but will lack features that could be used to improve performance.
+  - The WASM that will be loaded will be most compatible with all browsers that support the WASM, but will lack features that could be used to improve performance.
 
--   `Advanced`
+- `Advanced`
 
-    -   The WASM that will be loaded will be built with advanced WASM features, such as bulk memory, SIMD, non-trapping floating point and sign extension. Such WASM can only be executed in browsers that support those features. Attempting to run this WASM in a non-compatible browser will crash your app.
+  - The WASM that will be loaded will be built with advanced WASM features, such as bulk memory, SIMD, non-trapping floating point and sign extension. Such WASM can only be executed in browsers that support those features. Attempting to run this WASM in a non-compatible browser will crash your app.
 
--   `AdvancedWithThreads`
+- `AdvancedWithThreads`
 
-    -   The WASM that will be loaded will be build with advanced WASM features, just like above. Additionally, it will be also built with support for multi-threaded processing. This feature requires a browser with support for both advanced WASM features and `SharedArrayBuffer`.
+  - The WASM that will be loaded will be build with advanced WASM features, just like above. Additionally, it will be also built with support for multi-threaded processing. This feature requires a browser with support for both advanced WASM features and `SharedArrayBuffer`.
 
-    -   For multi-threaded processing there are some things that needs to be set up additionally, like COOP and COEP headers, more info about web server setup can be found [here](#wasmsetup).
+  - For multi-threaded processing there are some things that needs to be set up additionally, like COOP and COEP headers, more info about web server setup can be found [here](#wasmsetup).
 
-    -   Keep in mind that this WASM bundle requires that all resources are on the same origin. So, for example, it's not possible to load WASM files from some CDN. This limitation exists due to browser security rules.
+  - Keep in mind that this WASM bundle requires that all resources are on the same origin. So, for example, it's not possible to load WASM files from some CDN. This limitation exists due to browser security rules.
 
 Additionally, there's two different BlinkID variants:
 
--   **Full**
+- **Full**
+  - Regular build that has barcode deblurring models. This build is loaded automatically on desktop devices. 
 
-    -   Regular build that has barcode deblurring models. This build is loaded automatically on desktop devices.
-
--   **Lightweight**
-    -   Build without deblurring models. This build is loaded automatically on mobile devices. Deblurring models are usually not necessary due to better quality cameras compared to front-facing laptop cameras.
+- **Lightweight**
+  - Build without deblurring models. This build is loaded automatically on mobile devices. Deblurring models are usually not necessary due to better quality cameras compared to front-facing laptop cameras.
 
 These builds each contain previous build variants present so far: basic, advanced with SIMD and advanced with multithreading making a total of 6 possible builds.
 
 These builds can be overridden by using a new property on the settings objects `WasmSDKLoadSettings.blinkIdVariant`:
 
+
 ```ts
 export type BlinkIDVariant = "full" | "lightweight";
 ```
+
 
 ##### Server Configuration
 
@@ -467,9 +476,9 @@ The location should point to folder containing folders `basic`, `advanced` and `
 
 The difference between `basic`, `advanced` and `advanced-threads` folders are in the way the WebAssembly file was built:
 
--   WebAssembly files in `basic` folder were built to be most compatible, but less performant.
--   WebAssembly files in `advanced` folder can yield better scanning performance, but requires more modern browser
--   WebAssembly files in the `advanced-threads` folder uses advanced WASM features as the WASM in the `advanced` folder but will additionally use WebWorkers for multi-threaded processing which will yield best performance.
+- WebAssembly files in `basic` folder were built to be most compatible, but less performant.
+- WebAssembly files in `advanced` folder can yield better scanning performance, but requires more modern browser
+- WebAssembly files in the `advanced-threads` folder uses advanced WASM features as the WASM in the `advanced` folder but will additionally use WebWorkers for multi-threaded processing which will yield best performance.
 
 Depending on what features the browser actually supports, the correct WASM file will be loaded automatically.
 
@@ -505,9 +514,9 @@ There are two most common approaches regarding setup of your license key(s):
 
 Common approach when working with modern frameworks/libraries.
 
--   [Using environment variables in React](https://medium.com/@trekinbami/using-environment-variables-in-react-6b0a99d83cf5#:~:text=In%20short%3A%20environment%20variables,re%20going%20to%20need%20webpack.)
--   [Building and serving Angular apps](https://angular.io/guide/build)
--   [Vue.js: Modes and Environment Variables](https://cli.vuejs.org/guide/mode-and-env.html#environment-variables)
+- [Using environment variables in React](https://medium.com/@trekinbami/using-environment-variables-in-react-6b0a99d83cf5#:~:text=In%20short%3A%20environment%20variables,re%20going%20to%20need%20webpack.)
+- [Building and serving Angular apps](https://angular.io/guide/build)
+- [Vue.js: Modes and Environment Variables](https://cli.vuejs.org/guide/mode-and-env.html#environment-variables)
 
 ##### Single app
 
@@ -566,10 +575,10 @@ const currentSettings = await myRecognizerInUse.currentSettings();
 
 // Modify currentSettings as you need
 const newRecognizer = await BlinkIDSDK.createRecognizer(); // use appropriate recognizer creation function
-await newRecognizer.updateSettings(currentSettings);
+await newRecognizer.updateSettings( currentSettings );
 
 // Reconfigure recognizerRunner
-await recognizerRunner.reconfigureRecognizers([newRecognizer], true); // use `true` or `false` depending of what you want to achieve (see below for the description)
+await recognizerRunner.reconfigureRecognizers( [ newRecognizer ], true ); // use `true` or `false` depending of what you want to achieve (see below for the description)
 
 // newRecognizer is now in use and myRecognizerInUse is no longer in use -
 // you can delete it if you don't need it anymore
@@ -603,15 +612,17 @@ To perform live camera recognition using the `VideoRecognizer`, you will need an
 To perform the recognition, you should simply write:
 
 ```typescript
-const cameraFeed = <HTMLVideoElement>document.getElementById("cameraFeed");
-try {
-    const videoRecognizer =
-        await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
-            cameraFeed,
-            recognizerRunner
-        );
+const cameraFeed = <HTMLVideoElement> document.getElementById( "cameraFeed" );
+try
+{
+    const videoRecognizer = await BlinkIDSDK.VideoRecognizer.createVideoRecognizerFromCameraStream(
+        cameraFeed,
+        recognizerRunner
+    );
     const processResult = await videoRecognizer.recognize();
-} catch (error) {
+}
+catch ( error )
+{
     // Handle camera error
 }
 ```
@@ -638,8 +649,10 @@ The procedure for using `VideoRecognizer` described [above](#videoRecognizer) is
 However, if you need to perform multiple recognitions in single camera session, without pausing the camera preview, you can use the `startRecognition` method, as described in the example below:
 
 ```typescript
-videoRecognizer.startRecognition(
-    (recognitionState: BlinkIDSDK.RecognizerResultState) => {
+videoRecognizer.startRecognition
+(
+    ( recognitionState: BlinkIDSDK.RecognizerResultState ) =>
+    {
         // Pause recognition before performing any async operation - this will make sure that
         // recognition will not continue while returning the control flow back from this function.
         videoRecognizer.pauseRecognition();
@@ -647,10 +660,13 @@ videoRecognizer.startRecognition(
         // Obtain recognition results directly from recognizers associated with the RecognizerRunner
         // that is associated with the VideoRecognizer
 
-        if (shouldContinueScanning) {
+        if ( shouldContinueScanning )
+        {
             // Resume recognition
-            videoRecognizer.resumeRecognition(true);
-        } else {
+            videoRecognizer.resumeRecognition( true );
+        }
+        else
+        {
             // Pause the camera feed
             videoRecognizer.pauseVideoFeed();
             // After this line, the VideoRecognizer is in the same state as if promise returned from
@@ -674,8 +690,8 @@ This means that if you, for example, set `onQuadDetection` to `MetadataCallbacks
 
 Similarly, if you remove the `onQuadDetection` from `MetadataCallbacks` object after you already called `setMetadataCallbacks` method, your app will crash in attempt to invoke a non-existing function when our processing code attempts to invoke it. We **deliberately** do not perform null check here because of two reasons:
 
--   It is inefficient
--   Having no callback, while still being registered to native code is illegal state of your program and it should therefore crash
+- It is inefficient
+- Having no callback, while still being registered to native code is illegal state of your program and it should therefore crash
 
 **Remember** that whenever you make some changes to the `MetadataCallbacks` object, you need to apply those changes to your `RecognizerRunner` by calling its `setMetadataCallbacks` method.
 
@@ -739,29 +755,31 @@ Requirements:
 2. The browser [has access to camera device](#camera-devices).
 3. The device has [enough computing power](#device-support) to extract data from an image.
 
+**Important**: BlinkID may not work correctly in *WebView*/*WKWebView*/*SFSafariViewController*. See [this section](#embedded).
+
 ## <a name="webassembly-support"></a> Supported browsers
 
 Minimal browser versions with support for all features required by BlinkID.
 
-| Chrome | Safari | Edge | Firefox | Opera | iOS Safari | Android Browser | Chrome for Android | Firefox for Android |
-| ------ | ------ | ---- | ------- | ----- | ---------- | --------------- | ------------------ | ------------------- |
-| 96     | 15     | 93   | 79      | 82    | 15         | 81              | 96                 | 79                  |
+|Chrome|Safari|Edge|Firefox|Opera|iOS Safari|Android Browser|Chrome for Android|Firefox for Android|
+|------|------|----|-------|-----|----------|---------------|------------------|-------------------|
+|    96|    15|  93|     79|   82|        15|             81|                96|                 79|
 
 Internet Explorer is **not supported**.
 
-_Sources: [caniuse](https://caniuse.com/wasm) and [WebAssembly Roadmap](https://webassembly.org/roadmap/)_
+*Sources: [caniuse](https://caniuse.com/wasm) and [WebAssembly Roadmap](https://webassembly.org/roadmap/)*
 
 ## <a name="camera-devices"></a> Camera devices
 
-_Keep in mind that camera device is optional, since BlinkID can extract data from still images._
+*Keep in mind that camera device is optional, since BlinkID can extract data from still images.*
 
 SDK cannot access camera on **iOS 14.2** and older versions when the end-user is using a web browser **other than Safari**. Apple does not allow access to camera via WebRTC specification for other browsers.
 
 **Notes & Guidelines**
 
--   For optimal data extraction use high-quality camera device in well-lit space and don't move the camera too much.
--   It's recommended to use camera devices with autofocus functionality for fastest data extraction.
--   Camera devices on MacBook laptops don't work well with low ambient light, i.e. scanning will take longer than usual.
+* For optimal data extraction use high-quality camera device in well-lit space and don't move the camera too much.
+* It's recommended to use camera devices with autofocus functionality for fastest data extraction.
+* Camera devices on MacBook laptops don't work well with low ambient light, i.e. scanning will take longer than usual.
 
 ## <a name="device-support"></a> Device support
 
@@ -769,16 +787,36 @@ It's hard to pinpoint exact hardware specifications for successful data extracti
 
 **Notes & Guidelines**
 
--   Browsers supported by BlinkID can run on older devices, where extraction can take much longer to execute, e.g. around 30 or even 40 seconds.
+* Browsers supported by BlinkID can run on older devices, where extraction can take much longer to execute, e.g. around 30 or even 40 seconds.
 
-## <a name="webview-usage"> WebView usage</a>
+## <a name="embedded"> SDK and *WebView*/*WKWebView*/*SFSafariViewController*</a>
 
-The SDK can be used within a `SFSafariViewController` on iOS and `WebView` on Android. Usage examples can be found in the following repositories:
+### Android and *WebView*
 
--   https://github.com/BlinkID/example-ios-webview-blinkid
--   https://github.com/BlinkID/example-android-webview-blinkid
+*WebView* is not supported for a couple of reasons:
 
-Microblink doesn't officially support webview integrations but following the principles in the example applications should allow the SDK to function in a webview context.
+* There is no guarantee that developers of mobile apps are using *WebView* with all necessary features enabled.
+* It's up to developers of mobile apps to provide support for camera access from *WebView* (which is integral part of our experience), which requires additional work compared to classic camera permission in mobile apps.
+
+Also, it's possible for mobile app developers to use *WebView* alternatives like *GeckoView* and similar, which have their own constraints.
+
+### iOS, *WKWebView* and *SFSafariViewController*
+
+As for now, it's not possible to access the camera from *WKWebView* and *SFSafariViewController*.
+
+Camera access on iOS, i.e. WebRTC, is only supported in Safari browser. Other browsers like Chrome and Firefox won't work as expected.
+
+### Conclusion
+
+There is a general technical constraint when using BlinkID from in-app browser - it's not possible to know for sure if the SDK has or hasn't got camera access. That is, it's not possible to notify the user if the camera is not available during the initialization.
+
+However, majority of widely used apps with in-app browsers, e.g. Facebook and Snapchat, are using standard *WebView* or embedded Safari with all the features. For example, WASM and modern JS are supported.
+
+But the major problem still remains, how to get an image from the camera? Currently, we can advise two approaches:
+
+1. Detect via UA string if in-app browser is used and prompt the user to use the native browser.
+2. Detect via UA string if in-app browser is used and enable classic image upload via `<input type="file" accept="image/*" capture="environment" />` element.
+    * Based on the operating system and software version, users will be able to select an image from the gallery, or to capture an image from the camera.
 
 ## <a name="troubleshoot"></a> Troubleshooting
 
@@ -790,10 +828,10 @@ If you have followed the instructions to the letter and you still have problems,
 
 When contacting us, please make sure you include the following information:
 
--   Log from the web console.
--   High resolution scan/photo of the document that you are trying to scan.
--   Information about the device and browser that you are using — we need the exact version of the browser and operating system it runs on. Also, if it runs on a mobile device, we also need the model of the device in question (camera management is specific to browser, OS and device).
--   Please stress out that you are reporting a problem related to the WebAssembly version of the BlinkID SDK.
+* Log from the web console.
+* High resolution scan/photo of the document that you are trying to scan.
+* Information about the device and browser that you are using — we need the exact version of the browser and operating system it runs on. Also, if it runs on a mobile device, we also need the model of the device in question (camera management is specific to browser, OS and device).
+* Please stress out that you are reporting a problem related to the WebAssembly version of the BlinkID SDK.
 
 ### <a name="sdkProblems"></a> SDK problems
 
@@ -805,10 +843,10 @@ If you are getting an "invalid license key" error or having other license-relate
 
 When you can't determine the license-related problem or you simply do not understand the log information, you should contact us at [help.microblink.com](http://help.microblink.com). When contacting us, please make sure you provide following information:
 
--   Exact fully qualified domain name of your app, i.e. where the app is hosted.
--   License that is causing problems.
--   Please stress out that you are reporting a problem related to the WebAssembly version of the BlinkID SDK.
--   If unsure about the problem, you should also provide an excerpt from the web console containing the license error.
+* Exact fully qualified domain name of your app, i.e. where the app is hosted.
+* License that is causing problems.
+* Please stress out that you are reporting a problem related to the WebAssembly version of the BlinkID SDK.
+* If unsure about the problem, you should also provide an excerpt from the web console containing the license error.
 
 #### <a name="otherProblems"></a> Other problems
 
@@ -816,15 +854,15 @@ If you are having problems with scanning certain items, undesired behaviour on s
 
 ## <a name="faq"></a> FAQ and known issues
 
--   **After switching from trial to production license I get error `This entity is not allowed by currently active license!` when I create a specific `Recognizer` object.**
+* **After switching from trial to production license I get error `This entity is not allowed by currently active license!` when I create a specific `Recognizer` object.**
 
 Each license key contains information about which features are allowed to use and which are not. This error indicates that your production license does not allow the use of a specific `Recognizer` object. You should contact [support](http://help.microblink.com) to check if the provided license is OK and that it really contains the features you've requested.
 
--   **Why am I getting No internet connection error if I'm on a private network?**
+* **Why am I getting No internet connection error if I'm on a private network?**
 
 Versions BlinkID 5.8.0 and above require an internet connection to work under our new License Management Program.
 
-This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of documents still happens offline, in the browser itself.
+This means your web app has to be connected to the Internet in order for us to validate your trial license key. Scanning or data extraction of documents still happens offline, in the browser itself. 
 
 Once the validation is complete, you can continue using the SDK in an offline mode (or over a private network) until the next check.
 
