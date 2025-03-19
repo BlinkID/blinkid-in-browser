@@ -117,7 +117,7 @@ BlinkID will work in any browser that supports [WebAssembly](https://webassembly
 
 Using BlinkID in your web app requires a valid license key.
 
-A valid license key is required to initialize scanning. You can request a free trial license key, after you register, at [Microblink Developer Hub](https://account.microblink.com/signin).
+A valid license key is required to initialize scanning. You can request a free trial license key, after you register, at [Microblink Developer Hub](https://developer.microblink.com/).
 
 Make sure you enter a [fully qualified domain name](https://en.wikipedia.org/wiki/Fully_qualified_domain_name) of your web app when filling out the form — the license key will be bound to it. Also, if you plan to serve your web app from different domains, you'll need a license key for each one.
 
