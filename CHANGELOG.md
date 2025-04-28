@@ -1,5 +1,11 @@
 # Release notes
 
+## v6.13.2
+
+## Bug fixes
+
+- Fixed an issue in the `SDKError` constructor where the `details` property could be set but undefined, causing a `TypeError` when using the `in` operator. This issue has been resolved by adding a check to ensure `details` is defined before accessing it. [#161](https://github.com/BlinkID/blinkid-in-browser/issues/161)
+
 ## v6.13.1
 
 ## Bug fixes
