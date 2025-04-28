@@ -27,19 +27,16 @@ export class SDKError extends Error
         this.message = error.message;
         this.code = error.code;
 
-        if ( "details" in error )
+        if ( error instanceof SerializableSDKError && error.details && "message" in error.details )
         {
-            if ( "message" in error.details )
+            const errorObj = new Error( ( error.details as CustomError ).message );
+
+            if ( "stack" in error.details )
             {
-                const errorObj = new Error( ( error.details as CustomError ).message );
-
-                if ( "stack" in error.details )
-                {
-                    errorObj.stack = ( error.details as CustomError ).stack;
-                }
-
-                this.details = errorObj;
+                errorObj.stack = ( error.details as CustomError ).stack;
             }
+
+            this.details = errorObj;
         }
         else
         {
