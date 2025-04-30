@@ -33,7 +33,9 @@ export interface CheckConclusion {
  * @param result
  * @returns
  */
-export function getAdditionalProcessingInfo(result: BlinkIDSDK.BlinkIDResult) {
+export function getAdditionalProcessingInfo(
+  result: BlinkIDSDK.BlinkIDResult,
+): BlinkIDSDK.AdditionalProcessingInfo {
   if ("scanningFirstSideDone" in result) {
     return !result.scanningFirstSideDone
       ? result.frontAdditionalProcessingInfo
