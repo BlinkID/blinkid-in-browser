@@ -36,6 +36,7 @@ import { CustomClassRules } from "./CustomClassRules";
 
 // required for the final SDK
 export * from "./AddressDetailedInfo";
+export * from "./AdditionalProcessingInfo";
 export * from "./AlphabetType";
 export * from "./AnonymizationMode";
 export * from "./BarcodeResult";
