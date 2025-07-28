@@ -1,3 +1,11 @@
+# ⚠️⚠️⚠️ DEPRECATED REPOSITORY ⚠️⚠️⚠️
+
+> 🛑 **This repository is archived and no longer maintained.**  
+> 👉 Please use the new repository instead:  
+> 🔗 [github.com/BlinkID/blinkid-web](https://github.com/BlinkID/blinkid-web)
+
+---
+
 # BlinkID In-browser SDK
 
 ## How to run this repo?
